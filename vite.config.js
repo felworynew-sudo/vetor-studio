@@ -45,7 +45,6 @@ function runGit(args) {
       cwd: process.cwd(),
       env: process.env,
       windowsHide: true,
-      shell: process.platform === 'win32',
     });
 
     let stdout = '';
