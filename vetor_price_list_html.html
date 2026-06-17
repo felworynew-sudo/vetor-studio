@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vetor — прайс-лист</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
+    :root {
+      --bg: #06000f;
+      --panel: rgba(12, 6, 24, 0.78);
+      --panel-2: rgba(17, 8, 32, 0.9);
+      --purple: #8a00ff;
+      --purple-2: #5d00b8;
+      --purple-soft: #a000ff;
+      --yellow: #fff600;
+      --white: #ffffff;
+      --muted: #bfb4cc;
+      --line: rgba(143, 0, 255, 0.58);
+      --line-soft: rgba(255, 255, 255, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: #151515;
+      font-family: Montserrat, Arial, Helvetica, sans-serif;
+      color: var(--white);
+    }
+
+    .price-poster {
+      position: relative;
+      width: min(100vw, 1024px);
+      aspect-ratio: 2 / 3;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 17% 10%, rgba(45, 0, 96, 0.36), transparent 32%),
+        radial-gradient(circle at 78% 24%, rgba(92, 0, 180, 0.25), transparent 34%),
+        linear-gradient(140deg, #090315 0%, #03000a 56%, #080014 100%);
+      padding: 48px 54px 40px;
+    }
+
+    .content {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .site {
+      font-size: 24px;
+      line-height: 1;
+      opacity: 0.95;
+      letter-spacing: -0.03em;
+      margin-bottom: 42px;
+    }
+
+    .brand {
+      position: absolute;
+      top: 28px;
+      right: 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 3;
+    }
+
+    .brand-text strong {
+      display: block;
+      font-family: Montserrat, Arial, Helvetica, sans-serif;
+      font-size: 44px;
+      letter-spacing: 0.02em;
+      line-height: 0.82;
+      color: var(--yellow);
+    }
+
+    .brand-text span {
+      display: block;
+      margin-top: 4px;
+      font-size: 14px;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: 0.24em;
+      color: #fff;
+      text-transform: lowercase;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 670px;
+      font-family: Montserrat, Arial, Helvetica, sans-serif;
+      font-size: 72px;
+      line-height: 0.93;
+      letter-spacing: -0.03em;
+      color: var(--yellow);
+      text-transform: uppercase;
+      text-shadow: 0 4px 14px rgba(255, 246, 0, 0.12);
+    }
+
+    .subtitle {
+      margin: 10px 0 24px;
+      font-family: Montserrat, Arial, Helvetica, sans-serif;
+      font-size: 38px;
+      line-height: 1;
+      color: var(--purple-soft);
+      letter-spacing: -0.03em;
+    }
+
+    .lead {
+      margin: 0 0 31px;
+      color: rgba(255, 255, 255, 0.92);
+      font-size: 20px;
+      line-height: 1.25;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 23px 28px;
+      margin-bottom: 24px;
+    }
+
+    .service {
+      border-bottom: 1px solid var(--line-soft);
+      padding-bottom: 18px;
+    }
+
+    .service-head {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .service h2 {
+      margin: 0;
+      font-family: Montserrat, Arial, Helvetica, sans-serif;
+      font-size: 32px;
+      line-height: 0.92;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .service .desc {
+      margin-top: 6px;
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 16px;
+      line-height: 1.15;
+    }
+
+    .price-table {
+      width: 100%;
+      border: 1px solid rgba(143, 0, 255, 0.45);
+      border-radius: 10px;
+      overflow: hidden;
+      background: rgba(0, 0, 0, 0.22);
+    }
+
+    .row {
+      min-height: 38px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      padding: 7px 18px;
+      border-bottom: 1px solid rgba(143, 0, 255, 0.38);
+      font-size: 16px;
+      line-height: 1.1;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .row:last-child {
+      border-bottom: none;
+    }
+
+    .price {
+      padding-left: 12px;
+      color: var(--yellow);
+      font-weight: 900;
+      font-size: 22px;
+      letter-spacing: -0.03em;
+      white-space: nowrap;
+    }
+
+    .note {
+      margin-top: 7px;
+      border: 1px solid var(--purple-soft);
+      border-radius: 9px;
+      min-height: 50px;
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      align-items: center;
+      padding: 9px 14px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.16;
+      background: rgba(14, 3, 27, 0.55);
+    }
+
+    .star {
+      color: var(--purple-soft);
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    .bottom-panels {
+      display: grid;
+      grid-template-columns: 1.09fr 0.91fr;
+      gap: 26px;
+      margin-top: auto;
+    }
+
+    .extras {
+      background: linear-gradient(135deg, #7a00df 0%, #8d00ff 53%, #5600b0 100%);
+      border-radius: 14px;
+      padding: 24px 24px 22px;
+      min-height: 165px;
+      box-shadow: 0 20px 36px rgba(91, 0, 184, 0.24);
+    }
+
+    .extras h3,
+    .conditions h3 {
+      margin: 0 0 13px;
+      font-family: Montserrat, Arial, Helvetica, sans-serif;
+      font-size: 28px;
+      line-height: 1;
+      color: var(--yellow);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .extras ul,
+    .conditions ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 7px;
+    }
+
+    .extras li {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 10px;
+      color: rgba(255, 255, 255, 0.92);
+      font-size: 16px;
+      line-height: 1.15;
+    }
+
+    .extras li::before,
+    .conditions li::before {
+      content: "•";
+      color: var(--yellow);
+      font-weight: 900;
+    }
+
+    .conditions li::before {
+      margin-right: 9px;
+    }
+
+    .extras .item-text,
+    .conditions .item-text {
+      display: inline;
+    }
+
+    .extras .item-text {
+      min-width: 0;
+    }
+
+    .extras .extra-price {
+      color: #fff;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .conditions {
+      position: relative;
+      border: 2px solid var(--purple-soft);
+      border-radius: 14px;
+      padding: 24px 28px 20px;
+      min-height: 165px;
+      background: rgba(6, 0, 15, 0.8);
+    }
+
+    .conditions h3::before {
+      content: "★";
+      display: inline-block;
+      margin-right: 13px;
+      color: var(--yellow);
+      font-size: 24px;
+      transform: translateY(-2px);
+    }
+
+    .conditions li {
+      color: rgba(255, 255, 255, 0.88);
+      font-size: 16px;
+      line-height: 1.15;
+    }
+
+    .footer {
+      display: grid;
+      grid-template-columns: repeat(3, auto);
+      justify-content: center;
+      align-items: center;
+      gap: 54px;
+      margin-top: 25px;
+      color: rgba(255, 255, 255, 0.94);
+      font-size: 19px;
+      line-height: 1;
+    }
+
+    .contact {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      white-space: nowrap;
+    }
+
+    .divider {
+      position: absolute;
+      top: 340px;
+      bottom: 275px;
+      left: 50%;
+      width: 1px;
+      background: rgba(255, 255, 255, 0.28);
+    }
+
+    .service:nth-child(2n) {
+      padding-left: 10px;
+    }
+
+    @media (max-width: 720px) {
+      body {
+        display: block;
+        background: var(--bg);
+      }
+
+      .price-poster {
+        width: 100%;
+        min-height: 100vh;
+        aspect-ratio: auto;
+        padding: 28px 20px 34px;
+      }
+
+      .top-drip {
+        right: -170px;
+        top: -115px;
+        transform: scale(0.8);
+      }
+
+      .brand {
+        top: 24px;
+        right: 20px;
+        transform: scale(0.76);
+        transform-origin: top right;
+      }
+
+      .site {
+        margin-bottom: 30px;
+        font-size: 17px;
+      }
+
+      h1 {
+        font-size: clamp(50px, 14vw, 70px);
+        max-width: 92%;
+      }
+
+      .subtitle {
+        font-size: 32px;
+      }
+
+      .lead {
+        font-size: 17px;
+      }
+
+      .grid,
+      .bottom-panels,
+      .footer {
+        grid-template-columns: 1fr;
+      }
+
+      .divider {
+        display: none;
+      }
+
+      .service:nth-child(2n) {
+        padding-left: 0;
+      }
+
+      .footer {
+        justify-content: start;
+        gap: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="price-poster" aria-label="Прайс-лист Vetor на дизайн-услуги">
+    
+
+    <div class="brand" aria-label="Vetor студия дизайна">
+      <div class="brand-text"><strong>VETOR</strong><span>студия дизайна</span></div>
+    </div>
+
+    <div class="content">
+      <div class="site">vetor-studio.ru</div>
+
+      <header>
+        <h1>Прайс-лист</h1>
+        <div class="subtitle">на дизайн-услуги</div>
+        <p class="lead">Качественный дизайн для вашего бизнеса<br />Быстро, стильно, в срок.</p>
+      </header>
+
+      <div class="divider"></div>
+
+      <section class="grid">
+        <article class="service">
+          <div class="service-head">
+            <div>
+              <h2>Превью</h2>
+              <div class="desc">Превью для YouTube и других платформ</div>
+            </div>
+          </div>
+          <div class="price-table">
+            <div class="row"><span>Простое превью</span><b class="price">1 500 ₽</b></div>
+            <div class="row"><span>Сложное превью</span><b class="price">2 500 ₽</b></div>
+            <div class="row"><span>Сложное превью + персонаж</span><b class="price">3 500 ₽</b></div>
+            <div class="row"><span>Пакет 5 превью</span><b class="price">10 000 ₽</b></div>
+          </div>
+          <div class="note"><span class="star">★</span><span>Правки включены. Исходники — по запросу.</span></div>
+        </article>
+
+        <article class="service">
+          <div class="service-head">
+            <div>
+              <h2>Логотип</h2>
+              <div class="desc">Разработка логотипа и фирменного знака</div>
+            </div>
+          </div>
+          <div class="price-table">
+            <div class="row"><span>Базовый логотип</span><b class="price">5 000 ₽</b></div>
+            <div class="row"><span>Стандартный логотип</span><b class="price">8 000 ₽</b></div>
+            <div class="row"><span>Премиум логотип</span><b class="price">12 000 ₽</b></div>
+            <div class="row"><span>Редизайн логотипа</span><b class="price">от 6 000 ₽</b></div>
+          </div>
+          <div class="note"><span class="star">★</span><span>Включены 2–3 концепции и до 3 правок.<br />Исходники + все форматы.</span></div>
+        </article>
+
+        <article class="service">
+          <div class="service-head">
+            <div>
+              <h2>Визитка</h2>
+              <div class="desc">Дизайн визитных карт</div>
+            </div>
+          </div>
+          <div class="price-table">
+            <div class="row"><span>Односторонняя</span><b class="price">1 500 ₽</b></div>
+            <div class="row"><span>Двусторонняя</span><b class="price">2 000 ₽</b></div>
+            <div class="row"><span>Срочный дизайн (24ч)</span><b class="price">+50% к стоимости</b></div>
+          </div>
+          <div class="note"><span class="star">★</span><span>Исходники + готовые файлы для печати.</span></div>
+        </article>
+
+        <article class="service">
+          <div class="service-head">
+            <div>
+              <h2>Обложка</h2>
+              <div class="desc">Оформление для соцсетей и каналов</div>
+            </div>
+          </div>
+          <div class="price-table">
+            <div class="row"><span>Обложка для YouTube</span><b class="price">2 500 ₽</b></div>
+            <div class="row"><span>Аватар / Лого для соцсетей</span><b class="price">1 500 ₽</b></div>
+            <div class="row"><span>Пакет (обложка + аватар)</span><b class="price">3 500 ₽</b></div>
+          </div>
+          <div class="note"><span class="star">★</span><span>Учитываем все требования площадок.</span></div>
+        </article>
+
+        <article class="service">
+          <div class="service-head">
+            <div>
+              <h2>Полиграфия</h2>
+              <div class="desc">Дизайн печатной продукции</div>
+            </div>
+          </div>
+          <div class="price-table">
+            <div class="row"><span>Листовка / Флаер</span><b class="price">2 000 ₽</b></div>
+            <div class="row"><span>Буклет / Брошюра (до 4 полос)</span><b class="price">3 500 ₽</b></div>
+            <div class="row"><span>Плакат / Постер</span><b class="price">3 000 ₽</b></div>
+            <div class="row"><span>Баннер / Роллап</span><b class="price">3 500 ₽</b></div>
+          </div>
+          <div class="note"><span class="star">★</span><span>Готовые файлы для печати + исходники.</span></div>
+        </article>
+
+        <article class="service">
+          <div class="service-head">
+            <div>
+              <h2>Брендинг</h2>
+              <div class="desc">Комплексное создание бренда</div>
+            </div>
+          </div>
+          <div class="price-table">
+            <div class="row"><span>Фирменный стиль (базовый)</span><b class="price">15 000 ₽</b></div>
+            <div class="row"><span>Фирменный стиль (расширенный)</span><b class="price">25 000 ₽</b></div>
+            <div class="row"><span>Брендбук</span><b class="price">от 30 000 ₽</b></div>
+          </div>
+          <div class="note"><span class="star">★</span><span>Логотип, цвета, шрифты, носители, гайдлайны.</span></div>
+        </article>
+      </section>
+
+      <section class="bottom-panels">
+        <div class="extras">
+          <h3>Дополнительно</h3>
+          <ul>
+            <li><span class="item-text">Исходники</span><span class="extra-price">от 1 000 ₽</span></li>
+            <li><span class="item-text">Доп. правки (свыше тарифа)</span><span class="extra-price">500 ₽/шт</span></li>
+            <li><span class="item-text">Срочный заказ (менее 24ч)</span><span class="extra-price">+50% к стоимости</span></li>
+          </ul>
+        </div>
+
+        <div class="conditions">
+          <h3>Условия</h3>
+          <ul>
+            <li><span class="item-text">Предоплата 50%</span></li>
+            <li><span class="item-text">Сроки от 1 до 5 рабочих дней</span></li>
+            <li><span class="item-text">Оплата: карта, СБП, PayPal, Tinkoff</span></li>
+            <li><span class="item-text">Работаю по договору (по запросу)</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <div class="contact"><span>@Felwory</span></div>
+        <div class="contact"><span>Vetor-studio@yandex.com</span></div>
+        <div class="contact"><span>vetor-studio.ru</span></div>
+      </footer>
+    </div>
+  </main>
+</body>
+</html>

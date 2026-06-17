@@ -1,0 +1,14 @@
+---
+permalink: false
+---
+{% macro titleBlock(eyebrow, title, text) %}
+<header class="nf-title-block">
+  <p class="nf-eyebrow">{{ eyebrow }}</p>
+  <h1>{{ title }}</h1>
+  <p>{{ text }}</p>
+</header>
+{% endmacro %}
+
+{% macro ctaButton(label, href = "/") %}
+<a class="nf-button" href="{{ href }}">{{ label }}</a>
+{% endmacro %}

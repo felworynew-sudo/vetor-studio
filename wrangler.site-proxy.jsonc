@@ -1,0 +1,21 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "vetor-site-proxy",
+  "main": "cloudflare/site-proxy.js",
+  "compatibility_date": "2026-06-12",
+  "workers_dev": true,
+  "preview_urls": false,
+  "routes": [
+    {
+      "pattern": "vetor-studio.ru/*",
+      "zone_name": "vetor-studio.ru"
+    },
+    {
+      "pattern": "www.vetor-studio.ru/*",
+      "zone_name": "vetor-studio.ru"
+    }
+  ],
+  "observability": {
+    "enabled": true
+  }
+}

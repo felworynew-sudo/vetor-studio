@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /*?studio=1
+Disallow: /*&studio=1
+
+Host: vetor-studio.ru
+Sitemap: https://vetor-studio.ru/sitemap.xml

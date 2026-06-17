@@ -1,0 +1,52 @@
+[
+  {
+    "slug": "psd",
+    "ru": "PSD",
+    "en": "PSD"
+  },
+  {
+    "slug": "gaming",
+    "ru": "Гейминг",
+    "en": "Gaming"
+  },
+  {
+    "slug": "podcast",
+    "ru": "Подкаст",
+    "en": "Podcast"
+  },
+  {
+    "slug": "historical",
+    "ru": "Историческое",
+    "en": "Historical"
+  },
+  {
+    "slug": "music",
+    "ru": "Музыка",
+    "en": "Music"
+  },
+  {
+    "slug": "travel",
+    "ru": "Путешествия",
+    "en": "Travel"
+  },
+  {
+    "slug": "education",
+    "ru": "Обучение",
+    "en": "Education"
+  },
+  {
+    "slug": "redesign",
+    "ru": "Редизайн",
+    "en": "Redesign"
+  },
+  {
+    "slug": "design",
+    "ru": "Дизайн",
+    "en": "Design"
+  },
+  {
+    "slug": "process",
+    "ru": "Процесс",
+    "en": "Process"
+  }
+]

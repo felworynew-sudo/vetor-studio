@@ -1,0 +1,447 @@
+[
+  {
+    "id": "video-001",
+    "type": "video",
+    "ruTitle": "Я пройду весь World of Warcraft.. НА ГЕЙМПАДЕ",
+    "enTitle": "I'll play WoW.. ON A GAMEPAD",
+    "channelName": "inmyalyaska",
+    "channelUrl": "https://www.youtube.com/@inmyalxska",
+    "channelAvatar": "/avatars/alxska.jpg",
+    "videoUrl": "https://www.youtube.com/watch?v=Sbt-7v2JZqI",
+    "thumbnail": "/thumbs/preview-wow.jpg",
+    "tags": [
+      "channel",
+      "wow",
+      "gaming",
+      "ctr"
+    ],
+    "featured": true,
+    "createdAt": "2026-04-06"
+  },
+  {
+    "id": "video-002",
+    "type": "video",
+    "ruTitle": "R.E.P.O. (2 серия) - Трогали меня?",
+    "enTitle": "R.E.P.O. (2 серия) - Трогали меня?",
+    "description": "",
+    "channelName": "teopraktik",
+    "channelUrl": "https://www.youtube.com/@teopraktik",
+    "channelAvatar": "/avatars/teopractic.jpg",
+    "videoUrl": "https://www.youtube.com/watch?v=fDrVaDr6sa0",
+    "thumbnail": "/thumbs/trogaliMena.jpg",
+    "tags": [
+      "gaming",
+      "talking-head",
+      "redesign",
+      "featured"
+    ],
+    "featured": true,
+    "createdAt": "2026-03-29"
+  },
+  {
+    "id": "video-003",
+    "type": "video",
+    "ruTitle": "RV There Yet (2 серия) - Козел-терминатор",
+    "enTitle": "RV There Yet (2 серия) - Козел-терминатор",
+    "channelName": "teopraktik",
+    "channelUrl": "https://www.youtube.com/@teopraktik",
+    "channelAvatar": "/avatars/teopractic.jpg",
+    "videoUrl": "https://www.youtube.com/watch?v=fDrVaDr6sa0",
+    "thumbnail": "/thumbs/dobegalsa.jpg",
+    "tags": [
+      "gaming",
+      "talking-head",
+      "redesign"
+    ],
+    "featured": false,
+    "createdAt": "2026-03-29"
+  },
+  {
+    "id": "video-004",
+    "type": "video",
+    "ruTitle": "PEAK (1 серия) - Уморительный подъем",
+    "enTitle": "PEAK (1 серия) - Уморительный подъем",
+    "channelName": "teopraktik",
+    "channelUrl": "https://www.youtube.com/@teopraktik",
+    "channelAvatar": "/avatars/teopractic.jpg",
+    "videoUrl": "https://www.youtube.com/watch?v=fDrVaDr6sa0",
+    "thumbnail": "/thumbs/Peak1.jpg",
+    "tags": [
+      "gaming",
+      "talking-head",
+      "redesign"
+    ],
+    "featured": false,
+    "createdAt": "2026-03-29"
+  },
+  {
+    "id": "video-005",
+    "type": "video",
+    "ruTitle": "V There Yet (1 серия) - Дави",
+    "enTitle": "V There Yet (1 серия) - Дави",
+    "channelName": "teopraktik",
+    "channelUrl": "https://www.youtube.com/@teopraktik",
+    "channelAvatar": "/avatars/teopractic.jpg",
+    "videoUrl": "https://www.youtube.com/watch?v=fDrVaDr6sa0",
+    "thumbnail": "/thumbs/davi.png",
+    "tags": [
+      "gaming",
+      "talking-head",
+      "redesign"
+    ],
+    "featured": false,
+    "createdAt": "2026-03-29"
+  },
+  {
+    "id": "video-006",
+    "type": "video",
+    "ruTitle": "Вознесение нейронок!",
+    "enTitle": "The ascension of AI!",
+    "description": "",
+    "channelName": "Vetor",
+    "channelUrl": "https://www.youtube.com",
+    "channelAvatar": "/avatars/vetor.jpg",
+    "videoUrl": "https://youtube.com/watch?v=example004",
+    "thumbnail": "/thumbs/zahvat.jpg",
+    "tags": [
+      "clean",
+      "education",
+      "light-accent"
+    ],
+    "featured": false,
+    "createdAt": "2025-04-01"
+  },
+  {
+    "id": "video-007",
+    "type": "video",
+    "ruTitle": "18+ товары на вайлдберис",
+    "enTitle": "18+ товары на вайлдберис",
+    "description": "",
+    "channelName": "svetikzla",
+    "channelUrl": "https://www.youtube.com/",
+    "channelAvatar": "/avatars/photo_2025-03-08_10-43-39.jpg",
+    "videoUrl": "https://www.youtube.com/",
+    "thumbnail": "/thumbs/what.png",
+    "tags": [
+      "light-accent",
+      "cover",
+      "clean"
+    ],
+    "featured": false,
+    "createdAt": "2023-03-20"
+  },
+  {
+    "id": "video-008",
+    "type": "video",
+    "ruTitle": "Адам и Ева. Лучше бы они не встречались. История с Artifex",
+    "enTitle": "Abam and Eva",
+    "description": "",
+    "channelName": "История и искусство / Artifex",
+    "channelUrl": "https://www.youtube.com/@History-Artifex",
+    "channelAvatar": "/avatars/arty.jpg",
+    "videoUrl": "https://www.youtube.com/watch?v=WVOLJWpgmBo",
+    "thumbnail": "/thumbs/adameva1.jpg",
+    "tags": [
+      "education"
+    ],
+    "featured": false,
+    "createdAt": "2025-12-11"
+  },
+  {
+    "id": "video-009",
+    "type": "video",
+    "ruTitle": "Ну хитрец! Peak",
+    "enTitle": "Ну хитрец! Peak",
+    "description": "",
+    "channelName": "teopraktik",
+    "channelUrl": "https://www.youtube.com/@teopraktik",
+    "channelAvatar": "/avatars/teopractic.jpg",
+    "videoUrl": "https://www.youtube.com",
+    "thumbnail": "/thumbs/hitretc.png",
+    "tags": [
+      "gaming"
+    ],
+    "featured": false,
+    "createdAt": "2026-04-07"
+  },
+  {
+    "id": "video-010",
+    "type": "video",
+    "ruTitle": "Что делает дизайнер?",
+    "enTitle": "What does a designer do?",
+    "description": "",
+    "channelName": "Vetor",
+    "channelUrl": "https://www.youtube.com",
+    "channelAvatar": "/avatars/vetor.jpg",
+    "videoUrl": "https://www.youtube.com",
+    "thumbnail": "/thumbs/DesignerWork.jpg",
+    "tags": [
+      "education"
+    ],
+    "featured": false,
+    "createdAt": "2023-04-03"
+  },
+  {
+    "id": "video-011",
+    "type": "video",
+    "ruTitle": "Я и моя шиза)",
+    "enTitle": "Me and my shiz)",
+    "description": "",
+    "channelName": "Ryega",
+    "channelUrl": "https://www.youtube.com/",
+    "channelAvatar": "/avatars/ЦВУРП.jpg",
+    "videoUrl": "https://www.youtube.com/",
+    "thumbnail": "/thumbs/shiza.png",
+    "tags": [
+      "gaming",
+      "cover"
+    ],
+    "featured": false,
+    "createdAt": "2023-02-03"
+  },
+  {
+    "id": "video-012",
+    "type": "video",
+    "ruTitle": "На что способен Adobe Photoshop?",
+    "enTitle": "What is Adobe Photoshop capable of?",
+    "description": "",
+    "channelName": "Vetor",
+    "channelUrl": "https://www.youtube.com",
+    "channelAvatar": "/avatars/vetor.jpg",
+    "videoUrl": "https://www.youtube.com/",
+    "thumbnail": "/thumbs/PS.jpg",
+    "tags": [
+      "education"
+    ],
+    "featured": false,
+    "createdAt": "2020-02-02"
+  },
+  {
+    "id": "video-013",
+    "type": "video",
+    "ruTitle": "Считаем чужие деньги. Duolingo",
+    "enTitle": "Counting other people's money. Duolingo",
+    "description": "",
+    "channelName": "Vetor",
+    "channelUrl": "https://www.youtube.com",
+    "channelAvatar": "/avatars/vetor.jpg",
+    "videoUrl": "https://www.youtube.com/",
+    "thumbnail": "/thumbs/bisnessman.png",
+    "tags": [
+      "cover"
+    ],
+    "featured": false,
+    "createdAt": "2021-07-14"
+  },
+  {
+    "id": "video-014",
+    "type": "video",
+    "ruTitle": "Halloween salle",
+    "enTitle": "halloween salle",
+    "description": "",
+    "channelName": "Vetor",
+    "channelUrl": "https://www.youtube.com",
+    "channelAvatar": "/avatars/vetor.jpg",
+    "videoUrl": "https://www.youtube.com/",
+    "thumbnail": "/thumbs/halloween.jpg",
+    "tags": [
+      "cover",
+      "dark"
+    ],
+    "featured": false,
+    "createdAt": "2025-04-07"
+  },
+  {
+    "id": "video-015",
+    "type": "video",
+    "ruTitle": "Follaut #1",
+    "enTitle": "Follaut #1",
+    "description": "",
+    "channelName": "Ryega",
+    "channelUrl": "https://www.youtube.com/",
+    "channelAvatar": "/avatars/ЦВУРП.jpg",
+    "videoUrl": "https://www.youtube.com/",
+    "thumbnail": "/thumbs/follaut.jpg",
+    "tags": [
+      "cover",
+      "gaming"
+    ],
+    "featured": false,
+    "createdAt": "2020-12-05"
+  },
+  {
+    "id": "video-016",
+    "type": "video",
+    "ruTitle": "Африка: Первый контакт",
+    "enTitle": "Africa: First contact",
+    "description": "",
+    "channelName": "Контакт",
+    "channelUrl": "https://www.youtube.com/watch?v=TwqcvdjVgrg",
+    "channelAvatar": "/avatars/placeholder-channel.svg",
+    "videoUrl": "https://www.youtube.com/watch?v=TwqcvdjVgrg",
+    "thumbnail": "/thumbs/afrika.png",
+    "tags": [
+      "cover",
+      "education",
+      "bold"
+    ],
+    "featured": false,
+    "createdAt": "2026-04-07"
+  },
+  {
+    "id": "video-017",
+    "type": "video",
+    "ruTitle": "Продавец из космоса",
+    "enTitle": "A salesman from space",
+    "description": "",
+    "channelName": "Ryega",
+    "channelUrl": "https://www.youtube.com/",
+    "channelAvatar": "/avatars/ЦВУРП.jpg",
+    "videoUrl": "https://www.youtube.com",
+    "thumbnail": "/thumbs/alien.jpg",
+    "tags": [
+      "cover",
+      "gaming"
+    ],
+    "featured": false,
+    "createdAt": "2026-04-07"
+  },
+  {
+    "id": "video-018",
+    "type": "video",
+    "ruTitle": "Пиратство. Каково это?",
+    "enTitle": "Piracy. What's it like?",
+    "description": "",
+    "channelName": "История и искусство / Artifex",
+    "channelUrl": "https://www.youtube.com/@History-Artifex",
+    "channelAvatar": "/avatars/arty.jpg",
+    "videoUrl": "https://www.youtube.com",
+    "thumbnail": "/thumbs/pirate.jpg",
+    "tags": [
+      "cover",
+      "education"
+    ],
+    "featured": false,
+    "createdAt": "2026-04-07"
+  },
+  {
+    "id": "video-019",
+    "type": "video",
+    "ruTitle": "Алкоголизм",
+    "enTitle": "alco",
+    "description": "",
+    "channelName": "DdDdDash",
+    "channelUrl": "https://www.youtube.com",
+    "channelAvatar": "/avatars/placeholder-channel.svg",
+    "videoUrl": "https://www.youtube.com",
+    "thumbnail": "/thumbs/alko.jpg",
+    "tags": [
+      "cover",
+      "education"
+    ],
+    "featured": false,
+    "createdAt": "2026-04-07"
+  },
+  {
+    "id": "video-020",
+    "type": "video",
+    "ruTitle": "Работа некроманта",
+    "enTitle": "The work of a necromancer",
+    "description": "",
+    "channelName": "Vetor",
+    "channelUrl": "https://www.youtube.com",
+    "channelAvatar": "/avatars/vetor.jpg",
+    "videoUrl": "https://www.youtube.com",
+    "thumbnail": "/thumbs/Слой 14.png",
+    "tags": [
+      "cover"
+    ],
+    "featured": false,
+    "createdAt": "0025-12-03"
+  },
+  {
+    "id": "video-021",
+    "type": "video",
+    "ruTitle": "допишу",
+    "enTitle": "допишу",
+    "description": "",
+    "channelName": "DdDdDash",
+    "channelUrl": "https://www.youtube.com",
+    "channelAvatar": "/avatars/ддд.jpg",
+    "videoUrl": "https://www.youtube.com",
+    "thumbnail": "/thumbs/3.jpg",
+    "tags": [
+      "cover"
+    ],
+    "featured": false,
+    "createdAt": "2026-04-07"
+  },
+  {
+    "id": "video-022",
+    "type": "video",
+    "ruTitle": "Как прокормиться на нейросетях?",
+    "enTitle": "How to survive on neural networks?",
+    "description": "",
+    "channelName": "DdDdDash",
+    "channelUrl": "https://www.youtube.com",
+    "channelAvatar": "/avatars/placeholder-channel.svg",
+    "videoUrl": "https://www.youtube.com",
+    "thumbnail": "/thumbs/limon.jpg",
+    "tags": [
+      "cover"
+    ],
+    "featured": false,
+    "createdAt": "2026-04-07"
+  },
+  {
+    "id": "video-023",
+    "type": "video",
+    "ruTitle": "Как снимать радужку?",
+    "enTitle": "Как снимать радужку?",
+    "description": "",
+    "channelName": "Wow My Eyes",
+    "channelUrl": "https://youtube.com",
+    "channelAvatar": "/avatars/vetor.jpg",
+    "videoUrl": "https://youtube.com",
+    "thumbnail": "/thumbs/makro.jpg",
+    "tags": [
+      "education"
+    ],
+    "featured": false,
+    "createdAt": "2026-04-14"
+  },
+  {
+    "id": "video-021",
+    "type": "video",
+    "ruTitle": "Я купил рейд за 30 000 рублей",
+    "enTitle": "I bought a raid for 30,000 rubles",
+    "description": "",
+    "channelName": "inmyalyaska",
+    "channelUrl": "https://www.youtube.com/@inmyalxska",
+    "channelAvatar": "/avatars/alxska.jpg",
+    "videoUrl": "https://www.youtube.com/watch?v=s_29y0D5VHk",
+    "thumbnail": "/thumbs/30k-1.jpg",
+    "tags": [
+      "gaming"
+    ],
+    "featured": false,
+    "createdAt": "2026-05-22"
+  },
+  {
+    "id": "video-024",
+    "type": "video",
+    "ruTitle": "Так и будет пройден WOW на гймпаде",
+    "enTitle": "This is how you play WOW on a gamepad",
+    "description": "",
+    "channelName": "inmyalyaska",
+    "channelUrl": "https://www.youtube.com/@inmyalxska",
+    "channelAvatar": "/avatars/alxska.jpg",
+    "videoUrl": "https://www.youtube.com/watch?v=GdmYfR70axk",
+    "thumbnail": "/thumbs/44.jpg",
+    "tags": [
+      "gaming"
+    ],
+    "featured": false,
+    "createdAt": "2026-05-23"
+  }
+]

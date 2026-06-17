@@ -1,0 +1,14 @@
+﻿node_modules
+dist
+.vscode
+.DS_Store
+Thumbs.db
+*.log
+PortfoloVetor/
+screenshots/
+*.psd
+*.psb
+.wrangler/
+.tmp
+.tmp-*
+tmp-live-*

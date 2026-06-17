@@ -1,0 +1,172 @@
+[
+  {
+    "id": "music-001",
+    "type": "music",
+    "ruTitle": "Obsession sleep (RU)",
+    "enTitle": "Obsession sleep",
+    "description": "",
+    "artistName": "GONCHAROFF",
+    "artistUrl": "https://music.yandex.ru/artist/21602477",
+    "trackUrl": "https://music.yandex.ru/album/39092088",
+    "cover": "/music/goncharoff4.jpg",
+    "tags": [
+      "music",
+      "cover",
+      "featured"
+    ],
+    "featured": true,
+    "createdAt": "2026-04-02"
+  },
+  {
+    "id": "music-002",
+    "type": "music",
+    "ruTitle": "Город после полуночи",
+    "enTitle": "City After Midnight",
+    "description": "",
+    "artistName": "GONCHAROFF",
+    "artistUrl": "https://music.yandex.ru/artist/21602477",
+    "trackUrl": "https://music.yandex.ru/album/39092088/track/144947591",
+    "cover": "/music/600x600.jpg",
+    "tags": [
+      "music",
+      "cover",
+      "cinematic"
+    ],
+    "featured": false,
+    "createdAt": "2025-05-01"
+  },
+  {
+    "id": "music-003",
+    "type": "music",
+    "ruTitle": "ОВНЫ",
+    "enTitle": "Aries",
+    "description": "",
+    "artistName": "AnsiaEn",
+    "artistUrl": "https://music.yandex.ru/artist/22683575",
+    "trackUrl": "https://music.yandex.ru/album/34021105",
+    "cover": "/music/ovni.png",
+    "tags": [
+      "music",
+      "clean",
+      "cover"
+    ],
+    "featured": false,
+    "createdAt": "2024-04-13"
+  },
+  {
+    "id": "music-004",
+    "type": "music",
+    "ruTitle": "Cыщик",
+    "enTitle": "The Detective",
+    "description": "",
+    "artistName": "Felwory",
+    "artistUrl": "https://music.yandex.ru/artist/22650579",
+    "trackUrl": "https://music.yandex.ru/album/36914661/track/139827896",
+    "cover": "/music/shihik.png",
+    "tags": [
+      "music",
+      "cover",
+      "light-accent"
+    ],
+    "featured": false,
+    "createdAt": "2025-12-01"
+  },
+  {
+    "id": "music-005",
+    "type": "music",
+    "ruTitle": "Карслон",
+    "enTitle": "Karlson",
+    "description": "",
+    "artistName": "Felwory",
+    "artistUrl": "https://music.yandex.ru/artist/22650579",
+    "trackUrl": "https://music.yandex.ru/album/40866840",
+    "cover": "/music/karlson.png",
+    "tags": [
+      "music",
+      "featured"
+    ],
+    "featured": true,
+    "createdAt": "2026-10-03"
+  },
+  {
+    "id": "music-006",
+    "type": "music",
+    "ruTitle": "Russian baby (RU)",
+    "enTitle": "Russian baby (RU)",
+    "description": "",
+    "artistName": "Lady Milana, Lady Kristina",
+    "artistUrl": "https://music.yandex.ru/artist/23272428",
+    "trackUrl": "https://music.yandex.ru/album/36167796/track/138065585",
+    "cover": "/music/devki.png",
+    "tags": [
+      "cover",
+      "music"
+    ],
+    "featured": false,
+    "createdAt": "2026-04-07"
+  },
+  {
+    "id": "music-007",
+    "type": "music",
+    "ruTitle": "Тебя искала",
+    "enTitle": "looking for you",
+    "description": "",
+    "artistName": "Sunguru",
+    "artistUrl": "https://music.yandex.ru/artist/23858737",
+    "trackUrl": "https://music.yandex.ru/album/35628734/track/136648889",
+    "cover": "/music/iskala.png",
+    "tags": [
+      "music",
+      "cover"
+    ],
+    "featured": false,
+    "createdAt": "2025-07-05"
+  },
+  {
+    "id": "music-008",
+    "type": "music",
+    "ruTitle": "Языки",
+    "enTitle": "Tongue",
+    "description": "",
+    "artistName": "sedream",
+    "artistUrl": "https://music.yandex.ru",
+    "trackUrl": "https://music.yandex.ru",
+    "cover": "/music/tongue.png",
+    "tags": [
+      "music",
+      "cover"
+    ],
+    "featured": false,
+    "createdAt": "2020-04-07"
+  },
+  {
+    "id": "music-009",
+    "type": "music",
+    "ruTitle": "Новый день настал",
+    "enTitle": "Новый день настал",
+    "description": "",
+    "artistName": "GONCHAROFF",
+    "artistUrl": "https://yandex.ru",
+    "trackUrl": "https://yandex.ru",
+    "cover": "/music/day.jpg",
+    "tags": [
+      "music"
+    ],
+    "featured": false,
+    "createdAt": "2026-04-15"
+  },
+  {
+    "id": "music-010",
+    "type": "music",
+    "ruTitle": "Проволоки",
+    "enTitle": "Wires",
+    "description": "",
+    "artistName": "Felwory",
+    "artistUrl": "https://music.yandex.ru/",
+    "trackUrl": "https://music.yandex.ru/",
+    "cover": "/music/Wires.jpg",
+    "tags": [],
+    "featured": false,
+    "createdAt": "2026-05-23"
+  }
+]

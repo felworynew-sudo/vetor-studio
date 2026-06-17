@@ -1,0 +1,41 @@
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/optimized/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/favicon.ico
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/favicon-20260612.ico
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/favicon-20260612.png
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/favicon-20260612.svg
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/favicon/*
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/favicon.png
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/favicon.svg
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/apple-touch-icon.png
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/site.webmanifest
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/logos/*
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/index.html
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/
+  Cache-Control: no-cache, no-store, must-revalidate

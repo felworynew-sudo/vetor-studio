@@ -1,0 +1,41 @@
+{
+  "siteName": {
+    "ru": "Студия дизайна Vetor",
+    "en": "Vetor Design Studio"
+  },
+  "siteTagline": {
+    "ru": "Превью YouTube, обложки, логотипы и фирменный стиль для медиа-проектов",
+    "en": "YouTube thumbnails, covers, logos, and brand identity for media projects"
+  },
+  "heroEyebrow": {
+    "ru": "Студия дизайна Vetor",
+    "en": "Vetor Design Studio"
+  },
+  "owner": {
+    "name": "Kirill",
+    "avatar": "/owner/z2.jpg",
+    "url": "https://t.me/Felwory"
+  },
+  "contacts": {
+    "telegram": "@felwory",
+    "telegramUrl": "https://t.me/felwory",
+    "email": "Vetor-studio@yandex.com",
+    "phone": "+7 918 381 96 48",
+    "phoneRaw": "+79183819648"
+  },
+  "logo": "/logos/logo-mark.svg",
+  "desktopLogo": "/logos/vetorlogo.svg",
+  "mobileLogo": "/logos/logo-mark.svg",
+  "domain": "https://vetor-studio.ru",
+  "sections": {
+    "home": true,
+    "blog": true,
+    "gallery": true,
+    "price": true,
+    "plugins": true
+  },
+  "defaultLanguage": "ru",
+  "telegram": {
+    "enabled": false
+  }
+}

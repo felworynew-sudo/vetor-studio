@@ -1,0 +1,135 @@
+{
+  "hero": {
+    "ruTitle": "Хочешь такое же превью?",
+    "enTitle": "Want a thumbnail like this?",
+    "ruText": "Открой прайс и выбери формат: от одиночного превью до полного оформления канала.",
+    "enText": "Open the price list and choose a format: from one thumbnail to a full channel package."
+  },
+  "thumbnailSegments": [
+    {
+      "ruName": "Превью старт",
+      "enName": "Thumbnail Start",
+      "ruDescription": "Чистая композиция, 1 концепт, 1 правка, 24–48 ч.",
+      "enDescription": "Clean composition, 1 concept, 1 revision, 24-48h.",
+      "price": "1 900 ₽",
+      "accentColor": "#ff5c63"
+    },
+    {
+      "ruName": "CTR-превью",
+      "enName": "CTR thumbnail",
+      "ruDescription": "Работа на кликабельность, эмоцию и readable text, 2 правки.",
+      "enDescription": "Focused on clickability, emotion, and readable text, 2 revisions.",
+      "price": "3 200 ₽",
+      "accentColor": "#ff8a3d"
+    },
+    {
+      "ruName": "Арт-кадр",
+      "enName": "Art Frame",
+      "ruDescription": "Сложный коллаж, свет, персонажи, постерная подача.",
+      "enDescription": "Complex collage, lighting, characters, and poster-like presentation.",
+      "price": "от 6 500 ₽",
+      "accentColor": "#f5c84c"
+    }
+  ],
+  "services": [
+    {
+      "ruName": "Логотип",
+      "enName": "Logo",
+      "ruDescription": "Текстовый, комбинированный или mini identity. 2 варианта, 2 правки.",
+      "enDescription": "Text, combined mark, or mini identity. 2 options, 2 revisions.",
+      "price": "от 7 000 ₽",
+      "accentColor": "#75d0ff"
+    },
+    {
+      "ruName": "Баннер",
+      "enName": "Banner",
+      "ruDescription": "Статичный digital-баннер. Концептуальные ad creative: от 4 000 ₽.",
+      "enDescription": "Static digital banner. Concept ad creatives start at 4 000 RUB.",
+      "price": "от 2 900 ₽",
+      "accentColor": "#ff8a3d"
+    },
+    {
+      "ruName": "Музыкальная обложка",
+      "enName": "Music cover",
+      "ruDescription": "Для релизов, синглов и EP. Сложная иллюстративная композиция: от 7 500 ₽.",
+      "enDescription": "For releases, singles, and EPs. Complex illustrative compositions: from 7 500 RUB.",
+      "price": "от 4 500 ₽",
+      "accentColor": "#f5c84c"
+    }
+  ],
+  "channelPackages": [
+    {
+      "theme": "mini",
+      "ruName": "Мини-пакет канала",
+      "enName": "Channel Mini Pack",
+      "price": "13 000 ₽",
+      "ruItems": [
+        "Шапка + аватар + 1 превью",
+        "1 концепт на каждую позицию",
+        "1 раунд правок",
+        "Срок: 3–5 дней"
+      ],
+      "enItems": [
+        "YouTube banner",
+        "Avatar",
+        "1 thumbnail",
+        "1 concept per item",
+        "1 revision round",
+        "Timeline: 3-5 days"
+      ],
+      "accentColor": "#ffd45c"
+    },
+    {
+      "theme": "medium",
+      "ruName": "Пакет серии",
+      "enName": "Series Pack",
+      "price": "23 000 ₽",
+      "ruItems": [
+        "Шапка + аватар + 3 превью",
+        "Единый визуальный ритм",
+        "2 раунда правок",
+        "Срок: 5–7 дней"
+      ],
+      "enItems": [
+        "YouTube banner",
+        "Avatar",
+        "3 thumbnails",
+        "Unified visual rhythm",
+        "2 revision rounds",
+        "Timeline: 5-7 days"
+      ],
+      "accentColor": "#5aa8ff"
+    },
+    {
+      "theme": "ultra",
+      "ruName": "Полная система канала",
+      "enName": "Full Channel System",
+      "price": "36 000 ₽",
+      "ruItems": [
+        "Шапка + аватар + 5 превью",
+        "Единый стиль + расширение системы",
+        "3 раунда правок",
+        "Срок: 7–10 дней"
+      ],
+      "enItems": [
+        "YouTube banner",
+        "Avatar",
+        "5 thumbnails",
+        "Unified style + system expansion",
+        "3 revision rounds",
+        "Timeline: 7-10 days"
+      ],
+      "accentColor": "#b277ff"
+    }
+  ],
+  "footerNote": {
+    "ruText": "Цены указаны для личных брендов, контентных проектов и каналов малого/среднего масштаба. Для серийной работы, постоянного сопровождения и крупных запусков расчёт делается отдельно.",
+    "enText": "Prices apply to personal brands, content projects, and small to mid-size channels. Ongoing support, batch production, and major launches are quoted separately."
+  },
+  "contact": {
+    "ruLabel": "Связаться",
+    "enLabel": "Contact",
+    "url": "https://t.me/m/HtXmAbGXYmYy",
+    "color": "#229ED9"
+  }
+}
