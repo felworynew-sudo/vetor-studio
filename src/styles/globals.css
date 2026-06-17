@@ -1,6 +1,17 @@
+@font-face {
+  font-family: 'Vetor';
+  src:
+    url('/fonts/Vetor-Regular.woff2') format('woff2'),
+    url('/fonts/Vetor-Regular.woff') format('woff');
+  font-weight: 400 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   color-scheme: dark;
   font-family: 'Inter', 'Segoe UI', sans-serif;
+  --font-display: 'Vetor', 'Inter', 'Segoe UI', sans-serif;
   --bg: #0d0d11;
   --bg-soft: #12131a;
   --bg-end: #0f1015;
@@ -584,6 +595,17 @@ select {
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+/* Brand display font (Vetor) on large headings only — small UI labels stay on Inter for readability */
+.hero-block h1,
+.promo-copy h2,
+.detail-header h2,
+.gallery-topbar h2,
+.blog-reader-topbar h2,
+.design-youtube-copy h2,
+.not-found-copy h1 {
+  font-family: var(--font-display);
 }
 
 .hero-block h1 {
