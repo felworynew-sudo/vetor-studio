@@ -5,7 +5,7 @@
     <link>https://vetor-studio.ru/blog</link>
     <description>Превью YouTube, обложки, логотипы и фирменный стиль для медиа-проектов</description>
     <language>ru-RU</language>
-    <lastBuildDate>Wed, 17 Jun 2026 01:53:20 GMT</lastBuildDate>
+    <lastBuildDate>Thu, 18 Jun 2026 14:42:20 GMT</lastBuildDate>
     <atom:link href="https://vetor-studio.ru/rss.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Кликабельность визуальных материалов и психология внимания</title>
@@ -13,6 +13,27 @@
       <guid isPermaLink="true">https://vetor-studio.ru/blog/clickability-and-attention</guid>
       <pubDate>Fri, 12 Jun 2026 12:00:00 GMT</pubDate>
       <description>Исследование о том, как контраст, эмоции, лица, текст и композиция влияют на внимание, CTR и качество клика.</description>
+    </item>
+    <item>
+      <title>5 ошибок в превью, которые убивают просмотры — и как их исправить</title>
+      <link>https://vetor-studio.ru/blog/blog-003</link>
+      <guid isPermaLink="true">https://vetor-studio.ru/blog/blog-003</guid>
+      <pubDate>Thu, 28 May 2026 12:00:00 GMT</pubDate>
+      <description>Разбираю самые частые проблемы в дизайне превью: перегруженная композиция, слабый контраст, мелкий текст и ещё две, о которых почти никто не говорит.</description>
+    </item>
+    <item>
+      <title>Цвет в превью: как выбрать палитру и не потерять зрителя</title>
+      <link>https://vetor-studio.ru/blog/blog-002</link>
+      <guid isPermaLink="true">https://vetor-studio.ru/blog/blog-002</guid>
+      <pubDate>Thu, 07 May 2026 12:00:00 GMT</pubDate>
+      <description>Разбираем, как цвет работает в превью YouTube: насыщенность, контраст, психология цвета и три рабочих подхода к палитре.</description>
+    </item>
+    <item>
+      <title>Как я собираю превью, которое не теряется в ленте</title>
+      <link>https://vetor-studio.ru/blog/blog-001</link>
+      <guid isPermaLink="true">https://vetor-studio.ru/blog/blog-001</guid>
+      <pubDate>Tue, 14 Apr 2026 12:00:00 GMT</pubDate>
+      <description>Как я работаю с клиентами</description>
     </item>
   </channel>
 </rss>

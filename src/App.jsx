@@ -173,6 +173,31 @@ function cleanLegacyBlogSamples(items) {
     }));
 }
 
+function mergeBlogPostsWithSource(sourceItems, savedItems) {
+  const sourcePosts = cleanLegacyBlogSamples(sourceItems);
+  const savedPosts = cleanLegacyBlogSamples(savedItems);
+  const savedById = new Map(savedPosts.map((post) => [post.id, post]));
+  const sourceIds = new Set(sourcePosts.map((post) => post.id));
+  const mergedPosts = sourcePosts.map((sourcePost) => {
+    const savedPost = savedById.get(sourcePost.id);
+
+    if (!savedPost) {
+      return sourcePost;
+    }
+
+    return {
+      ...sourcePost,
+      ...savedPost,
+      cover: sourcePost.cover || savedPost.cover,
+    };
+  });
+
+  return [
+    ...mergedPosts,
+    ...savedPosts.filter((post) => !sourceIds.has(post.id)),
+  ];
+}
+
 function normalizeGalleryItem(item, index) {
   const normalizedCategory = normalizeDesignCategory(item?.designCategory || 'all');
   const youtubeChannel = item?.youtubeChannel && typeof item.youtubeChannel === 'object'
@@ -317,10 +342,6 @@ function App() {
   }, [tagsConfig]);
 
   useEffect(() => {
-    if (blogPosts.length > 0) {
-      return undefined;
-    }
-
     let cancelled = false;
 
     fetch(withBase('/data/blog.json'), { cache: 'no-cache' })
@@ -332,7 +353,9 @@ function App() {
 
         const parsed = JSON.parse(String(text || '').replace(/^\uFEFF/, ''));
         const initialBlogPosts = Array.isArray(parsed) ? parsed : [];
-        const posts = cleanLegacyBlogSamples(loadEditableData('portfolio-blog-json', initialBlogPosts));
+        const savedPosts = loadEditableData('portfolio-blog-json', initialBlogPosts);
+        const posts = mergeBlogPostsWithSource(initialBlogPosts, savedPosts);
+        saveEditableData('portfolio-blog-json', posts);
         setBlogPosts(posts);
       })
       .catch(() => {
@@ -342,7 +365,7 @@ function App() {
     return () => {
       cancelled = true;
     };
-  }, [blogPosts.length]);
+  }, []);
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -1314,4 +1337,3 @@ function App() {
 }
 
 export default App;
-
