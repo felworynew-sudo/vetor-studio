@@ -558,6 +558,7 @@ function ContentStudio({
     item: true,
   });
   const [status, setStatus] = useState({ type: 'idle', message: '' });
+  const [isDirty, setIsDirty] = useState(false);
   const [isSavingItem, setIsSavingItem] = useState(false);
   const [isSavingOwner, setIsSavingOwner] = useState(false);
   const [isSavingHero, setIsSavingHero] = useState(false);
@@ -702,18 +703,22 @@ function ContentStudio({
   const activeTypeLabel = contentTypeCopy[itemForm.type] || copy.video;
 
   function updateItemField(field, value) {
+    setIsDirty(true);
     setItemForm((current) => ({ ...current, [field]: value }));
   }
 
   function updateOwnerField(field, value) {
+    setIsDirty(true);
     setOwnerForm((current) => ({ ...current, [field]: value }));
   }
 
   function updateHeroField(field, value) {
+    setIsDirty(true);
     setHeroForm((current) => ({ ...current, [field]: value }));
   }
 
   function updateTagField(index, field, value) {
+    setIsDirty(true);
     setTagForms((current) =>
       current.map((tag, tagIndex) =>
         tagIndex === index ? { ...tag, [field]: value } : tag,
@@ -722,11 +727,24 @@ function ContentStudio({
   }
 
   function addTagForm() {
+    setIsDirty(true);
     setTagForms((current) => [...current, createTagForm()]);
   }
 
   function removeTagForm(index) {
+    setIsDirty(true);
     setTagForms((current) => current.filter((_, tagIndex) => tagIndex !== index));
+  }
+
+  function handleClose() {
+    if (isDirty) {
+      const msg = language === 'ru'
+        ? 'Есть несохранённые изменения. Закрыть без сохранения?'
+        : 'You have unsaved changes. Close without saving?';
+      if (!window.confirm(msg)) return;
+    }
+    setIsDirty(false);
+    onClose();
   }
 
   function toggleSection(sectionKey) {
@@ -737,6 +755,7 @@ function ContentStudio({
   }
 
   function handleAssetFileSelect(fileField, pathField, folder, file) {
+    setIsDirty(true);
     setItemForm((current) => ({
       ...current,
       [fileField]: file,
@@ -745,6 +764,7 @@ function ContentStudio({
   }
 
   function handleGalleryFilesSelect(files) {
+    setIsDirty(true);
     setItemForm((current) => {
       const generatedPaths = files.map((file) => `/gallery/${sanitizeFileName(file.name)}`);
       const existingPaths = current.galleryPaths
@@ -761,6 +781,7 @@ function ContentStudio({
   }
 
   function handleBlogImageFilesSelect(files) {
+    setIsDirty(true);
     setItemForm((current) => {
       const generatedPaths = files.map((file) => `/blog/${sanitizeFileName(file.name)}`);
       const existingPaths = current.blogImagePaths
@@ -777,6 +798,7 @@ function ContentStudio({
   }
 
   function handleOwnerAssetFileSelect(file) {
+    setIsDirty(true);
     setOwnerForm((current) => ({
       ...current,
       avatarFile: file,
@@ -785,6 +807,7 @@ function ContentStudio({
   }
 
   function toggleTag(slug) {
+    setIsDirty(true);
     setItemForm((current) => ({
       ...current,
       tags: current.tags.includes(slug)
@@ -936,6 +959,7 @@ function ContentStudio({
         avatarPath,
       }));
       setStatus({ type: 'success', message: copy.ownerSaved });
+      setIsDirty(false);
     } catch (error) {
       setStatus({ type: 'error', message: error.message });
     } finally {
@@ -994,6 +1018,7 @@ function ContentStudio({
       await writeJson(projectHandle, ['src', 'data', 'siteConfig.json'], nextConfig);
       onSiteConfigChange(nextConfig);
       setStatus({ type: 'success', message: showcaseCopy.saved });
+      setIsDirty(false);
     } catch (error) {
       setStatus({ type: 'error', message: error.message });
     } finally {
@@ -1029,6 +1054,7 @@ function ContentStudio({
         tags: current.tags.filter((slug) => nextTags.some((tag) => tag.slug === slug)),
       }));
       setStatus({ type: 'success', message: tagEditorCopy.saved });
+      setIsDirty(false);
     } catch (error) {
       setStatus({ type: 'error', message: error.message });
     } finally {
@@ -1190,6 +1216,7 @@ function ContentStudio({
       await writeJson(projectHandle, collectionPath, nextData);
       updateCollection?.(nextData);
       setStatus({ type: 'success', message: copy.success });
+      setIsDirty(false);
 
       if (isEditing) {
         return;
@@ -1238,6 +1265,7 @@ function ContentStudio({
       onSelectItem(null);
       setItemForm(createEmptyItemForm());
       setStatus({ type: 'success', message: copy.deleted });
+      setIsDirty(false);
     } catch (error) {
       setStatus({ type: 'error', message: error.message });
     } finally {
@@ -1250,7 +1278,7 @@ function ContentStudio({
   }
 
   return (
-    <div className="modal-backdrop studio-backdrop" role="presentation" onClick={onClose}>
+    <div className="modal-backdrop studio-backdrop" role="presentation" onClick={handleClose}>
       <aside className="studio-drawer" onClick={(event) => event.stopPropagation()}>
         <div className="studio-header">
           <div>
@@ -1258,7 +1286,7 @@ function ContentStudio({
             <h2>{copy.subtitle}</h2>
             <p className="studio-note">{copy.support}</p>
           </div>
-          <button type="button" className="modal-close" onClick={onClose} aria-label={copy.close}>
+          <button type="button" className="modal-close" onClick={handleClose} aria-label={copy.close}>
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M6.4 5 12 10.6 17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4L12 13.4 6.4 19 5 17.6 10.6 12 5 6.4 6.4 5Z" fill="currentColor" />
             </svg>
@@ -1293,8 +1321,6 @@ function ContentStudio({
             </p>
 
             <div className="studio-form">
-              {status.message && <div className={status.type === 'error' ? 'studio-alert error' : 'studio-alert success'}>{status.message}</div>}
-
               <section className="studio-section surface-subpanel">
                 <button
                   type="button"
@@ -1841,6 +1867,21 @@ function ContentStudio({
               </section>
             </div>
           </>
+        )}
+        {status.message && (
+          <div className={`studio-toast ${status.type === 'error' ? 'error' : 'success'}`} role="status">
+            <span>{status.message}</span>
+            <button
+              type="button"
+              className="studio-toast-dismiss"
+              onClick={() => setStatus({ type: 'idle', message: '' })}
+              aria-label={language === 'ru' ? 'Закрыть' : 'Dismiss'}
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true" width="16" height="16">
+                <path d="M6.4 5 12 10.6 17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4L12 13.4 6.4 19 5 17.6 10.6 12 5 6.4 6.4 5Z" fill="currentColor" />
+              </svg>
+            </button>
+          </div>
         )}
       </aside>
     </div>

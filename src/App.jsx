@@ -14,6 +14,7 @@ import GalleryPage from './components/GalleryPage';
 import GalleryModal from './components/GalleryModal';
 import PluginsPage from './components/PluginsPage';
 import NotFoundPage from './components/NotFoundPage';
+import Footer from './components/Footer';
 import initialVideos from './data/videos.json';
 import initialMusic from './data/music.json';
 import initialGalleryItems from './data/gallery.json';
@@ -1186,6 +1187,8 @@ function App() {
 
         {!isRouteNotFound && activeSection === 'plugins' && <PluginsPage language={language} />}
       </main>
+
+      <Footer language={language} />
 
       <DetailModal
         item={activeItem}

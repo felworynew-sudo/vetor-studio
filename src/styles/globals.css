@@ -597,17 +597,6 @@ select {
   text-transform: uppercase;
 }
 
-/* Brand display font (Vetor) on large headings only — small UI labels stay on Inter for readability */
-.hero-block h1,
-.promo-copy h2,
-.detail-header h2,
-.gallery-topbar h2,
-.blog-reader-topbar h2,
-.design-youtube-copy h2,
-.not-found-copy h1 {
-  font-family: var(--font-display);
-}
-
 .hero-block h1 {
   margin: 0;
   font-size: clamp(34px, 5vw, 58px);
@@ -5161,3 +5150,133 @@ select {
 
 
 
+
+/* ── Vetor brand display font on large headings ──────────────────────────
+   Placed last so it overrides the Inter-tuned negative letter-spacing on
+   these headings; lets Vetor use its own metrics + GPOS kerning. */
+.hero-block h1,
+.promo-copy h2,
+.detail-header h2,
+.gallery-topbar h2,
+.blog-reader-topbar h2,
+.design-youtube-copy h2,
+.not-found-copy h1,
+.section-page-head h1,
+.price-topbar h2,
+.pdf-topbar h2,
+.blog-card-content h2,
+.blog-reader-text h3 {
+  font-family: var(--font-display);
+  letter-spacing: normal;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+}
+
+
+/* ── Site footer ─────────────────────────────────────────────────────────── */
+.site-footer {
+  margin-top: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(13, 13, 17, 0.6);
+  backdrop-filter: blur(12px);
+}
+
+.site-footer-inner {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 20px 24px;
+  font-size: 13px;
+  color: var(--text-muted, #888);
+}
+
+.site-footer-brand {
+  font-weight: 500;
+  color: var(--text-secondary, #b0b0c0);
+  white-space: nowrap;
+}
+
+.site-footer-links {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: auto;
+}
+
+.site-footer-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted, #888);
+  text-decoration: none;
+  transition: color 0.18s;
+}
+
+.site-footer-link:hover {
+  color: var(--accent, #ff5c63);
+}
+
+.site-footer-copy {
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .site-footer-inner {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .site-footer-links {
+    margin-left: 0;
+  }
+}
+
+
+/* ── Studio toast notification (sticky bottom of drawer) ─────────────────── */
+.studio-toast {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  z-index: 2;
+}
+
+.studio-toast.success {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border-top-color: rgba(34, 197, 94, 0.2);
+}
+
+.studio-toast.error {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border-top-color: rgba(239, 68, 68, 0.2);
+}
+
+.studio-toast-dismiss {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  opacity: 0.6;
+  transition: opacity 0.15s;
+}
+
+.studio-toast-dismiss:hover {
+  opacity: 1;
+}
