@@ -195,7 +195,10 @@ async function persistEditableData(request) {
   if (payload.tagsConfig) writeJsonFile('src/data/tags.json', payload.tagsConfig);
   if (payload.videoItems) writeJsonFile('src/data/videos.json', payload.videoItems);
   if (payload.musicItems) writeJsonFile('src/data/music.json', payload.musicItems);
-  if (payload.blogPosts) writeJsonFile('src/data/blog.json', payload.blogPosts);
+  if (payload.blogPosts) {
+    writeJsonFile('src/data/blog.json', payload.blogPosts);
+    writeJsonFile('public/data/blog.json', payload.blogPosts);
+  }
   if (payload.galleryItems) writeJsonFile('src/data/gallery.json', payload.galleryItems);
   if (payload.pricing) writeJsonFile('src/data/pricing.json', payload.pricing);
   if (payload.sectionCopy) writeDefaultExportFile('src/data/sectionCopy.js', 'sectionCopy', payload.sectionCopy);
