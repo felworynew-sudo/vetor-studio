@@ -193,8 +193,9 @@ async function main() {
       description: 'Цены на превью YouTube, логотипы, баннеры и оформление канала. Прайс без созвонов.',
     },
     '/plugins': {
-      title: 'Плагины — Vetor Studio',
-      description: 'Плагины и инструменты студии дизайна Vetor.',
+      title: 'Resto — реставрация старых фото и макеты для памятников — Vetor Studio',
+      description: 'Resto — плагин для быстрой реставрации старых фотографий и сборки макетов портретов на памятники. Доступ по подписке через Telegram-бот @VetorPluginBOT.',
+      image: '/plugins/resto-og.jpg',
     },
   };
   for (const [pathname, value] of Object.entries(sectionMeta)) {

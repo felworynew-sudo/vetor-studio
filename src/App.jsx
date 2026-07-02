@@ -574,10 +574,12 @@ function App() {
         ? 'Дизайн-портфолио студии Vetor: логотипы, визитки, фирменный стиль, YouTube-оформление и стикеры.'
         : 'Vetor design portfolio: logos, business cards, brand identity, YouTube packaging, and stickers.';
     } else if (activeSection === 'plugins') {
-      title = language === 'ru' ? `Плагины${suffix}` : `Plugins${suffix}`;
+      title = language === 'ru'
+        ? `Resto — реставрация старых фото и макеты для памятников${suffix}`
+        : `Resto — restore old photos & build monument layouts${suffix}`;
       description = language === 'ru'
-        ? 'Раздел с плагинами, пресетами и дополнительными материалами студии.'
-        : 'Section with plugins, presets, and extra studio resources.';
+        ? 'Resto — плагин для быстрой реставрации старых фотографий и сборки макетов портретов на памятники. Доступ по подписке через Telegram-бот @VetorPluginBOT.'
+        : 'Resto — a plugin for fast restoration of old photos and building portrait layouts for monuments. Subscription access via the Telegram bot @VetorPluginBOT.';
     } else if (activeSection === 'price' || isPriceOpen) {
       title = language === 'ru' ? `Прайс${suffix}` : `Pricing${suffix}`;
       description = language === 'ru'
@@ -670,6 +672,59 @@ function App() {
       email: siteConfig.contacts?.email || undefined,
       telephone: siteConfig.contacts?.phoneRaw || siteConfig.contacts?.phone || undefined,
     });
+
+    if (activeSection === 'plugins') {
+      const restoBot = 'https://t.me/VetorPluginBOT';
+      upsertJsonLd('resto-plugin', {
+        '@context': 'https://schema.org',
+        '@type': 'SoftwareApplication',
+        name: 'Resto',
+        applicationCategory: 'MultimediaApplication',
+        applicationSubCategory: language === 'ru'
+          ? 'Реставрация фото и макеты памятников'
+          : 'Photo restoration and monument layouts',
+        operatingSystem: 'Windows, macOS',
+        url: `${canonicalDomain}/plugins`,
+        description: language === 'ru'
+          ? 'Плагин Resto для быстрой реставрации старых фотографий и сборки макетов портретов на памятники. Доступ по подписке.'
+          : 'Resto plugin for fast restoration of old photos and building portrait layouts for monuments. Subscription access.',
+        publisher: { '@type': 'Organization', name: 'Vetor Studio', url: canonicalDomain },
+        offers: {
+          '@type': 'Offer',
+          category: 'subscription',
+          availability: 'https://schema.org/InStock',
+          url: restoBot,
+        },
+        sameAs: [restoBot],
+      });
+      upsertJsonLd('resto-faq', {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: (language === 'ru'
+          ? [
+              ['Что такое Resto?', 'Плагин для быстрой реставрации старых фотографий и сборки макетов портретов на памятники. Он берёт на себя рутину, которую обычно делают вручную.'],
+              ['Как купить и активировать Resto?', 'Оформление подписки, оплата и активация проходят в Telegram-боте @VetorPluginBOT. Отдельная лицензия на конкретный компьютер не нужна.'],
+              ['Подходит ли Resto для мастерских памятников?', 'Да. Resto реставрирует портреты и собирает макеты под гравировку по готовым шаблонам — для граверов и ритуальных мастерских.'],
+              ['Нужен ли мощный компьютер?', 'Нет, особых требований к железу нет. Resto работает быстро на обычных рабочих машинах.'],
+            ]
+          : [
+              ['What is Resto?', 'A plugin for fast restoration of old photos and building portrait layouts for monuments. It takes over the routine you would otherwise do by hand.'],
+              ['How do I buy and activate Resto?', 'Subscription, payment, and activation all happen in the Telegram bot @VetorPluginBOT. No per-machine license needed.'],
+              ['Is Resto suitable for monument workshops?', 'Yes. Resto restores portraits and assembles engraving-ready layouts from templates, built for engravers and memorial workshops.'],
+              ['Do I need a powerful computer?', 'No special hardware requirements. Resto runs fast on ordinary work machines.'],
+            ]
+        ).map(([q, a]) => ({
+          '@type': 'Question',
+          name: q,
+          acceptedAnswer: { '@type': 'Answer', text: a },
+        })),
+      });
+    } else {
+      for (const id of ['resto-plugin', 'resto-faq']) {
+        const el = document.querySelector(`script[type="application/ld+json"][data-seo-id="${id}"]`);
+        if (el) el.remove();
+      }
+    }
   }, [
     activeBlogPost,
     activeGalleryItem,
