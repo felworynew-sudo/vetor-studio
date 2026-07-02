@@ -5289,10 +5289,7 @@ select {
 }
 
 .resto-hero {
-  display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
-  gap: 32px;
-  align-items: center;
+  max-width: 980px;
 }
 
 .resto-hero-copy {
@@ -5330,15 +5327,6 @@ select {
   color: var(--text-soft);
 }
 
-.resto-hero-media {
-  margin: 0;
-  border-radius: var(--radius-card);
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: var(--shadow-md);
-}
-
-.resto-hero-media img,
 .resto-media img {
   display: block;
   width: 100%;

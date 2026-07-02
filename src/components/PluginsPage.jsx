@@ -25,7 +25,6 @@ const CONTENT = {
     ctaPrimary: 'Оформить подписку в боте',
     ctaSecondary: 'Как это работает',
     botNote: `Покупка и активация — через Telegram-бот ${BOT_HANDLE}`,
-    heroAlt: 'Интерфейс плагина Resto: реставрация фотографии',
     valuesTitle: 'Зачем нужен Resto',
     values: [
       { t: 'Быстрая реставрация', d: 'Убирает царапины, трещины, заломы, пятна и выцветание, восстанавливает лицо и мелкие детали за несколько кликов.' },
@@ -72,7 +71,6 @@ const CONTENT = {
     ctaPrimary: 'Subscribe via the bot',
     ctaSecondary: 'How it works',
     botNote: `Purchase and activation happen in the Telegram bot ${BOT_HANDLE}`,
-    heroAlt: 'Resto plugin interface: photo restoration',
     valuesTitle: 'Why Resto',
     values: [
       { t: 'Fast restoration', d: 'Removes scratches, cracks, creases, stains, and fading; rebuilds faces and fine detail in a few clicks.' },
@@ -136,9 +134,6 @@ function PluginsPage({ language }) {
           </div>
           <p className="resto-bot-note">{copy.botNote}</p>
         </div>
-        <figure className="resto-hero-media">
-          <PluginImage src="/plugins/resto-hero.gif" alt={copy.heroAlt} />
-        </figure>
       </div>
 
       {/* Value props */}
