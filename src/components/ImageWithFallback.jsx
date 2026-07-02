@@ -26,7 +26,7 @@ function ImageWithFallback({
       alt={alt}
       loading={loading}
       decoding={decoding}
-      fetchPriority={fetchPriority}
+      fetchpriority={fetchPriority}
       className={className}
       {...rest}
       onError={() => {

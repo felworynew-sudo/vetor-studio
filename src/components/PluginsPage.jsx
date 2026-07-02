@@ -53,10 +53,12 @@ const CONTENT = {
     monumentAlt: 'Готовый макет портрета на памятник, собранный в Resto',
     priceTitle: 'Доступ по подписке',
     priceText: `Resto распространяется по подписке. Оформление, оплата и активация проходят прямо в Telegram-боте ${BOT_HANDLE} — быстро и без лишних шагов.`,
+    photoshopNote: 'Для работы Resto нужна установленная официальная версия Adobe Photoshop с активной подпиской. Если вы покупаете Photoshop из России, можно рассмотреть магазин Ukey24.',
     faqTitle: 'Частые вопросы',
     faq: [
       { q: 'Что такое Resto?', a: 'Это плагин для быстрой реставрации старых фотографий и сборки макетов портретов на памятники. Он берёт на себя рутину, которую обычно делают вручную.' },
       { q: 'Как купить и активировать?', a: `Всё проходит в Telegram-боте ${BOT_HANDLE}: оформляете подписку, оплачиваете и получаете доступ. Отдельная лицензия на конкретный компьютер не нужна.` },
+      { q: 'Нужен ли Photoshop?', a: 'Да. Resto устанавливается как плагин для Adobe Photoshop, поэтому для работы нужна официальная установленная версия Photoshop и активная подписка Adobe.' },
       { q: 'Подходит ли для мастерских памятников?', a: 'Да. Resto создан в том числе для граверов и ритуальных мастерских: реставрирует портреты и собирает макеты под гравировку по готовым шаблонам.' },
       { q: 'Нужен ли мощный компьютер?', a: 'Нет, особых требований к железу нет. Resto работает быстро на обычных рабочих машинах.' },
     ],
@@ -98,10 +100,12 @@ const CONTENT = {
     monumentAlt: 'Finished portrait layout for a monument, built in Resto',
     priceTitle: 'Subscription access',
     priceText: `Resto is available by subscription. Sign-up, payment, and activation all happen inside the Telegram bot ${BOT_HANDLE} — fast, with no extra steps.`,
+    photoshopNote: 'Resto requires an installed official Adobe Photoshop app with an active subscription. For users buying Photoshop from Russia, Ukey24 can be considered as an option.',
     faqTitle: 'FAQ',
     faq: [
       { q: 'What is Resto?', a: 'A plugin for fast restoration of old photos and building portrait layouts for monuments. It takes over the routine you would otherwise do by hand.' },
       { q: 'How do I buy and activate it?', a: `Everything happens in the Telegram bot ${BOT_HANDLE}: subscribe, pay, and get access. No per-machine license needed.` },
+      { q: 'Do I need Photoshop?', a: 'Yes. Resto is installed as an Adobe Photoshop plugin, so it requires the official Photoshop app and an active Adobe subscription.' },
       { q: 'Is it suitable for monument workshops?', a: 'Yes. Resto is built for engravers and memorial workshops: it restores portraits and assembles engraving-ready layouts from templates.' },
       { q: 'Do I need a powerful computer?', a: 'No special hardware requirements. Resto runs fast on ordinary work machines.' },
     ],
@@ -189,6 +193,7 @@ function PluginsPage({ language }) {
         <div className="resto-price surface-panel">
           <h2 className="resto-h2">{copy.priceTitle}</h2>
           <p>{copy.priceText}</p>
+          <p className="resto-photoshop-note">{copy.photoshopNote}</p>
           <a className="cta-button primary resto-bot-button" href={BOT_URL} target="_blank" rel="noopener noreferrer">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.941z" />

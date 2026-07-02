@@ -5509,6 +5509,13 @@ select {
   line-height: 1.6;
 }
 
+.resto-photoshop-note {
+  padding: 12px 14px;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--accent-25);
+  background: var(--accent-08);
+}
+
 .resto-faq {
   display: flex;
   flex-direction: column;
