@@ -12,3 +12,9 @@ screenshots/
 .tmp
 .tmp-*
 tmp-live-*
+
+# Portable flash setup (машинно-локальное, не коммитим)
+.nm-*
+.portable/
+github-token.txt
+.github-token

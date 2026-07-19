@@ -1,7 +1,8 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { spawn } from 'node:child_process';
-import { writeFileSync } from 'node:fs';
+import fs from 'node:fs';
+import { writeFileSync, readFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
 
 function runNodeScript(scriptPath, args) {
@@ -39,28 +40,119 @@ function runNodeScript(scriptPath, args) {
   });
 }
 
-function runGit(args) {
-  return new Promise((resolve, reject) => {
-    const child = spawn('git', args, {
-      cwd: process.cwd(),
-      env: process.env,
-      windowsHide: true,
-    });
+// Токен GitHub для публикации ищется по порядку: переменная окружения,
+// затем файл github-token.txt рядом с проектом или на уровень выше (корень флешки).
+function readGithubToken() {
+  if (process.env.GITHUB_TOKEN && process.env.GITHUB_TOKEN.trim()) {
+    return process.env.GITHUB_TOKEN.trim();
+  }
+  const relCandidates = [
+    '../github-token.txt',
+    './github-token.txt',
+    '../.github-token',
+    './.github-token',
+  ];
+  for (const rel of relCandidates) {
+    const p = path.join(process.cwd(), rel);
+    try {
+      if (existsSync(p)) {
+        const value = readFileSync(p, 'utf8').trim();
+        if (value) return value;
+      }
+    } catch {
+      // ignore and try the next candidate
+    }
+  }
+  return '';
+}
 
-    let stdout = '';
-    let stderr = '';
+// isomorphic-git не применяет нормализацию окончаний строк (core.autocrlf / text=auto),
+// поэтому на Windows он считает изменёнными все CRLF-файлы. Пропускаем те, где отличие
+// от HEAD только в CRLF↔LF — это повторяет поведение системного `git add -A` с text=auto.
+async function isOnlyEolDiff(git, dir, filepath, headOid) {
+  try {
+    const { blob } = await git.readBlob({ fs, dir, oid: headOid, filepath });
+    const work = fs.readFileSync(path.join(dir, filepath));
+    if (blob.includes(0) || work.includes(0)) return false; // бинарник — не трогаем EOL
+    const norm = (b) => Buffer.from(b).toString('latin1').replace(/\r\n/g, '\n');
+    return norm(blob) === norm(work);
+  } catch {
+    return false;
+  }
+}
 
-    child.stdout.on('data', (chunk) => { stdout += chunk.toString('utf8'); });
-    child.stderr.on('data', (chunk) => { stderr += chunk.toString('utf8'); });
-    child.on('error', reject);
-    child.on('close', (code) => {
-      const log = `${stdout}\n${stderr}`.trim();
-      if (code === 0) { resolve(log); return; }
-      const error = new Error(`git ${args[0]} завершился с кодом ${code}.`);
-      error.log = log;
-      reject(error);
+// Публикация без системного git: add/commit/push через isomorphic-git (чистый JS).
+async function publishWithIsomorphicGit() {
+  const git = (await import('isomorphic-git')).default;
+  const http = (await import('isomorphic-git/http/node')).default;
+  const dir = process.cwd();
+  const logLines = [];
+
+  const headOid = await git.resolveRef({ fs, dir, ref: 'HEAD' }).catch(() => null);
+
+  // Ставим в индекс изменённое (statusMatrix уважает .gitignore).
+  const matrix = await git.statusMatrix({ fs, dir });
+  let changed = 0;
+  for (const [filepath, head, workdir, stage] of matrix) {
+    if (head === 1 && workdir === 1 && stage === 1) continue; // без изменений
+    if (workdir === 0) {
+      await git.remove({ fs, dir, filepath });
+      changed += 1;
+      continue;
+    }
+    // Файл существовал и «изменился» — но, возможно, это только CRLF↔LF шум.
+    if (head === 1 && headOid && (await isOnlyEolDiff(git, dir, filepath, headOid))) {
+      continue;
+    }
+    await git.add({ fs, dir, filepath });
+    changed += 1;
+  }
+
+  const date = new Date().toISOString().slice(0, 10);
+  if (changed > 0) {
+    const name = (await git.getConfig({ fs, dir, path: 'user.name' })) || 'Vetor Studio';
+    const email = (await git.getConfig({ fs, dir, path: 'user.email' })) || 'felworynew@gmail.com';
+    const sha = await git.commit({
+      fs, dir,
+      message: `Update site content ${date}`,
+      author: { name, email },
     });
+    logLines.push(`Коммит ${sha.slice(0, 7)}: Update site content ${date}`);
+  } else {
+    logLines.push('Нет изменений для коммита.');
+  }
+
+  const token = readGithubToken();
+  if (!token) {
+    const err = new Error('Не найден токен GitHub.');
+    err.log = 'Создай файл github-token.txt в корне флешки с токеном доступа (см. README-portable.txt).';
+    throw err;
+  }
+
+  let url = await git.getConfig({ fs, dir, path: 'remote.origin.url' });
+  if (!url) {
+    const err = new Error('Не настроен remote origin.');
+    err.log = 'В репозитории нет remote.origin.url.';
+    throw err;
+  }
+  url = url.replace(/^https:\/\/[^@/]+@/, 'https://'); // убираем встроенный логин
+
+  const pushResult = await git.push({
+    fs, http, dir,
+    url,
+    ref: 'master',
+    remoteRef: 'master',
+    onAuth: () => ({ username: token }),
   });
+
+  if (pushResult && pushResult.ok === false) {
+    const err = new Error('git push отклонён сервером.');
+    err.log = JSON.stringify(pushResult.errors || pushResult, null, 2);
+    throw err;
+  }
+  logLines.push('Запушено в origin/master.');
+
+  return logLines.join('\n');
 }
 
 function readRequestBody(request) {
@@ -221,24 +313,13 @@ function localPublishPlugin() {
         try {
           await persistEditableData(request);
 
-          const date = new Date().toISOString().slice(0, 10);
-          await runGit(['add', '-A']);
-
-          let commitLog = '';
-          try {
-            commitLog = await runGit(['commit', '-m', `Update site content ${date}`]);
-          } catch (err) {
-            if (!(err.log || '').includes('nothing to commit')) throw err;
-            commitLog = 'Нет изменений для коммита.';
-          }
-
-          const pushLog = await runGit(['push']);
+          const publishLog = await publishWithIsomorphicGit();
 
           response.statusCode = 200;
           response.end(JSON.stringify({
             ok: true,
             url: 'https://vetor-studio.ru/',
-            log: [commitLog, pushLog].filter(Boolean).join('\n')
+            log: publishLog
               + '\n\n✓ Сайт обновится через ~2 минуты (GitHub Actions).',
           }));
         } catch (error) {
