@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import SearchBar from './SearchBar';
 import LanguageSwitch from './LanguageSwitch';
 import OwnerMenu from './OwnerMenu';
 import ContactMenu from './ContactMenu';
@@ -9,19 +8,25 @@ import { withBase } from '../utils/format';
 const tabLabels = {
   ru: {
     home: 'Главная',
+    previews: 'Превью',
     blog: 'Блог',
     gallery: 'Дизайн',
-    price: 'Прайс',
+    fonts: 'Шрифты',
+    price: 'Цены',
     plugins: 'Плагины',
   },
   en: {
     home: 'Home',
+    previews: 'Previews',
     blog: 'Blog',
     gallery: 'Design',
-    price: 'Price',
+    fonts: 'Fonts',
+    price: 'Pricing',
     plugins: 'Plugins',
   },
 };
+
+const HEADER_TABS = ['blog', 'price'];
 
 function HeaderShell({
   language,
@@ -44,7 +49,7 @@ function HeaderShell({
   const mobileMenuRef = useRef(null);
   const desktopLogo = siteConfig.desktopLogo || '/logos/vetorlogo.svg';
   const mobileLogo = siteConfig.mobileLogo || siteConfig.logo;
-  const visibleTabs = ['home', 'blog', 'gallery', 'price', 'plugins'].filter((section) => visibleSections?.[section]);
+  const visibleTabs = HEADER_TABS.filter((section) => visibleSections?.[section]);
   const contacts = siteConfig.contacts || {};
   const mobileCopy =
     language === 'ru'
@@ -141,10 +146,6 @@ function HeaderShell({
           />
         </div>
 
-        <div className="header-search-slot">
-          <SearchBar language={language} value={query} onChange={onQueryChange} />
-        </div>
-
         <div className="header-controls">
           <ContactMenu language={language} contacts={contacts} />
           <div className="header-desktop-language">
@@ -172,6 +173,7 @@ function HeaderShell({
                         <a
                           key={section}
                           href={getSectionHref ? getSectionHref(section) : '#'}
+                          data-section={section}
                           className={activeSection === section ? 'header-mobile-menu-link is-active' : 'header-mobile-menu-link'}
                           onClick={(event) => handleSectionClick(event, section)}
                         >

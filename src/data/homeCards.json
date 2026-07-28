@@ -1,0 +1,34 @@
+[
+  {
+    "key": "previews",
+    "section": "previews",
+    "ruTitle": "Превью",
+    "ruSubtitle": "Превью для YouTube и обложки",
+    "image": "/home/card-previews.jpg",
+    "accentColor": "#ff8a3d"
+  },
+  {
+    "key": "design",
+    "section": "gallery",
+    "ruTitle": "Дизайн",
+    "ruSubtitle": "Логотипы, визитки, фирменный стиль",
+    "image": "/home/card-design.jpg",
+    "accentColor": "#75d0ff"
+  },
+  {
+    "key": "fonts",
+    "section": "fonts",
+    "ruTitle": "Шрифты",
+    "ruSubtitle": "Авторские шрифты Vetor",
+    "image": "/home/card-fonts.jpg",
+    "accentColor": "#f5c84c"
+  },
+  {
+    "key": "plugins",
+    "section": "plugins",
+    "ruTitle": "Плагины",
+    "ruSubtitle": "Resto — реставрация и макеты",
+    "image": "/home/card-plugins.jpg",
+    "accentColor": "#9ae923"
+  }
+]

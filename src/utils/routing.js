@@ -90,7 +90,15 @@ export function parseRoute(locationLike) {
   }
 
   if (pathname === '/price') {
-    return { ...base, section: 'price', isPriceOpen: true };
+    return { ...base, section: 'price' };
+  }
+
+  if (pathname === '/previews' || pathname === '/works') {
+    return { ...base, section: 'previews' };
+  }
+
+  if (pathname === '/fonts') {
+    return { ...base, section: 'fonts' };
   }
 
   if (pathname === '/blog') {
@@ -118,7 +126,7 @@ export function parseRoute(locationLike) {
   }
 
   if (pathname.startsWith('/work/')) {
-    return { ...base, workId: pathname.slice('/work/'.length) };
+    return { ...base, section: 'previews', workId: pathname.slice('/work/'.length) };
   }
 
   if (pathname.startsWith('/blog/')) {
@@ -130,7 +138,7 @@ export function parseRoute(locationLike) {
   }
 
   if (pathname.startsWith('/tag/')) {
-    return { ...base, tags: unique([pathname.slice('/tag/'.length), ...tags]) };
+    return { ...base, section: 'previews', tags: unique([pathname.slice('/tag/'.length), ...tags]) };
   }
 
   return { ...base, isNotFound: true };
@@ -139,6 +147,14 @@ export function parseRoute(locationLike) {
 export function buildSectionPath(section) {
   if (section === 'price') {
     return '/price';
+  }
+
+  if (section === 'previews') {
+    return '/previews';
+  }
+
+  if (section === 'fonts') {
+    return '/fonts';
   }
 
   if (section === 'blog') {
@@ -202,7 +218,7 @@ export function buildUrl({
     pathname = buildPricePath();
   } else if (section === 'gallery' && designCategory && designCategory !== 'all') {
     pathname = buildDesignCategoryPath(designCategory);
-  } else if (section === 'home' && tags.length === 1 && !query) {
+  } else if (section === 'previews' && tags.length === 1 && !query) {
     pathname = buildTagPath(tags[0]);
   }
 

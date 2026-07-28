@@ -293,6 +293,10 @@ async function persistEditableData(request) {
   }
   if (payload.galleryItems) writeJsonFile('src/data/gallery.json', payload.galleryItems);
   if (payload.pricing) writeJsonFile('src/data/pricing.json', payload.pricing);
+  if (payload.homeCards) writeJsonFile('src/data/homeCards.json', payload.homeCards);
+  if (payload.fonts) writeJsonFile('src/data/fonts.json', payload.fonts);
+  if (payload.priceCategories) writeJsonFile('src/data/priceCategories.json', payload.priceCategories);
+  if (payload.pageCopy) writeDefaultExportFile('src/data/pageCopy.js', 'pageCopy', payload.pageCopy);
   if (payload.sectionCopy) writeDefaultExportFile('src/data/sectionCopy.js', 'sectionCopy', payload.sectionCopy);
   if (payload.palette) writePaletteFile(payload.palette);
 }
@@ -302,6 +306,31 @@ function localPublishPlugin() {
     name: 'local-publish',
     apply: 'serve',
     configureServer(server) {
+      server.middlewares.use('/__save-local', async (request, response, next) => {
+        if (request.method !== 'POST') {
+          next();
+          return;
+        }
+
+        response.setHeader('Content-Type', 'application/json; charset=utf-8');
+
+        try {
+          await persistEditableData(request);
+          response.statusCode = 200;
+          response.end(JSON.stringify({
+            ok: true,
+            message: 'Сохранено в исходники локально (без деплоя).',
+          }));
+        } catch (error) {
+          response.statusCode = 500;
+          response.end(JSON.stringify({
+            ok: false,
+            message: 'Не удалось сохранить локально.',
+            log: error.log || error.message,
+          }));
+        }
+      });
+
       server.middlewares.use('/__publish-cloudflare', async (request, response, next) => {
         if (request.method !== 'POST') {
           next();

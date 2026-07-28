@@ -1,21 +1,25 @@
 const tabLabels = {
   ru: {
     home: 'Главная',
+    previews: 'Превью',
     blog: 'Блог',
     gallery: 'Дизайн',
-    price: 'Прайс',
+    fonts: 'Шрифты',
+    price: 'Цены',
     plugins: 'Плагины',
   },
   en: {
     home: 'Home',
+    previews: 'Previews',
     blog: 'Blog',
     gallery: 'Design',
-    price: 'Price',
+    fonts: 'Fonts',
+    price: 'Pricing',
     plugins: 'Plugins',
   },
 };
 
-const tabs = ['home', 'blog', 'gallery', 'price', 'plugins'];
+const tabs = ['home', 'previews', 'blog', 'gallery', 'fonts', 'price', 'plugins'];
 
 function NavigationTabsLinked({ language, activeSection, onChange, visibleTabs = tabs, getHref }) {
   const labels = tabLabels[language] ?? tabLabels.ru;

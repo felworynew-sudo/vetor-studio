@@ -13,12 +13,19 @@ import BlogModal from './components/BlogModal';
 import GalleryPage from './components/GalleryPage';
 import GalleryModal from './components/GalleryModal';
 import PluginsPage from './components/PluginsPage';
+import HomeLauncher from './components/HomeLauncher';
+import FontsPage from './components/FontsPage';
+import PriceCategoriesPage from './components/PriceCategoriesPage';
 import NotFoundPage from './components/NotFoundPage';
 import Footer from './components/Footer';
 import initialVideos from './data/videos.json';
 import initialMusic from './data/music.json';
 import initialGalleryItems from './data/gallery.json';
 import initialPricing from './data/pricing.json';
+import initialHomeCards from './data/homeCards.json';
+import initialFonts from './data/fonts.json';
+import initialPriceCategories from './data/priceCategories.json';
+import initialPageCopy from './data/pageCopy';
 import initialTags from './data/tags.json';
 import initialSectionCopy from './data/sectionCopy';
 import { activePalette, defaultPalette, paletteStorageKey } from './data/palette';
@@ -34,12 +41,18 @@ import { buildUrl, parseRoute } from './utils/routing';
 const LOADING_DELAY = 280;
 const DEFAULT_SECTIONS_VISIBILITY = {
   home: true,
+  previews: true,
   blog: true,
   gallery: true,
+  fonts: true,
   price: true,
   plugins: true,
 };
+
+const KNOWN_SECTIONS = ['home', 'previews', 'blog', 'gallery', 'fonts', 'price', 'plugins'];
 const ContentStudio = lazy(() => import('./components/ContentStudio'));
+const PriceCategoryModal = lazy(() => import('./components/PriceCategoryModal'));
+const FormEditorModal = lazy(() => import('./components/FormEditorModal'));
 const PricingEditorModal = lazy(() => import('./components/PricingEditorModal'));
 const BlogComposerModal = lazy(() => import('./components/BlogComposerModal'));
 const GalleryItemEditorModal = lazy(() => import('./components/GalleryItemEditorModal'));
@@ -113,7 +126,7 @@ function normalizeSectionsConfig(value) {
 }
 
 function isSectionKnown(section) {
-  return ['home', 'blog', 'gallery', 'price', 'plugins'].includes(section);
+  return KNOWN_SECTIONS.includes(section);
 }
 
 function loadEditableData(storageKey, fallback) {
@@ -206,11 +219,20 @@ function normalizeGalleryItem(item, index) {
   const stickers = item?.stickers && typeof item.stickers === 'object'
     ? item.stickers
     : {};
+  const slider = item?.slider && typeof item.slider === 'object'
+    ? item.slider
+    : {};
 
   return {
     ...item,
     id: item?.id || `gallery-${String(index + 1).padStart(3, '0')}`,
     designCategory: normalizedCategory,
+    featured: Boolean(item?.featured),
+    slider: {
+      before: slider.before || '',
+      afterColor: slider.afterColor || '',
+      afterBw: slider.afterBw || '',
+    },
     youtubeChannel: {
       name: youtubeChannel.name || '',
       handle: youtubeChannel.handle || '',
@@ -302,12 +324,16 @@ function App() {
   const [isBlogComposerOpen, setIsBlogComposerOpen] = useState(false);
   const [activeGalleryItem, setActiveGalleryItem] = useState(null);
   const [editingGalleryItem, setEditingGalleryItem] = useState(null);
+  const [activeCaseItem, setActiveCaseItem] = useState(null);
+  const [editingCaseItem, setEditingCaseItem] = useState(null);
+  const [isCaseComposerOpen, setIsCaseComposerOpen] = useState(false);
   const [isPriceOpen, setIsPriceOpen] = useState(Boolean(routeState.isPriceOpen));
   const [isPricingEditorOpen, setIsPricingEditorOpen] = useState(false);
   const [editorTarget, setEditorTarget] = useState(null);
   const [textEditorTarget, setTextEditorTarget] = useState(null);
   const [isPaletteOpen, setIsPaletteOpen] = useState(false);
   const [publishStatus, setPublishStatus] = useState('idle');
+  const [saveLocalStatus, setSaveLocalStatus] = useState('idle');
   const [isLoading, setIsLoading] = useState(true);
   const [isStudioOpen, setIsStudioOpen] = useState(false);
   const [studioSelectionKey, setStudioSelectionKey] = useState(null);
@@ -323,6 +349,12 @@ function App() {
   const [galleryItems, setGalleryItems] = useState(() =>
     normalizeGalleryCollection(loadEditableData('portfolio-gallery-json', initialGalleryItems)),
   );
+  const [homeCards, setHomeCards] = useState(() => loadEditableData('portfolio-home-cards', initialHomeCards));
+  const [fonts, setFonts] = useState(() => loadEditableData('portfolio-fonts-json', initialFonts));
+  const [priceCategories, setPriceCategories] = useState(() => loadEditableData('portfolio-price-categories', initialPriceCategories));
+  const [activePriceCategory, setActivePriceCategory] = useState(null);
+  const [formEditorTarget, setFormEditorTarget] = useState(null);
+  const [pageCopy, setPageCopy] = useState(() => loadEditableData('portfolio-page-copy', initialPageCopy));
   const [isRouteNotFound, setIsRouteNotFound] = useState(Boolean(routeState.isNotFound));
 
   const studioEnabled = useMemo(() => isStudioModeEnabled(), []);
@@ -401,10 +433,14 @@ function App() {
   const filteredBlogPosts = useMemo(() => filterEditorialItems(blogPosts, query), [blogPosts, query]);
   const filteredGalleryItems = useMemo(() => filterEditorialItems(galleryItems, query), [galleryItems, query]);
   const filteredDesignItems = useMemo(() => {
-    if (activeDesignCategory === 'all') {
-      return filteredGalleryItems;
-    }
-    return filteredGalleryItems.filter((item) => normalizeDesignCategory(item.designCategory) === activeDesignCategory);
+    const base = activeDesignCategory === 'all'
+      ? filteredGalleryItems
+      : filteredGalleryItems.filter((item) => normalizeDesignCategory(item.designCategory) === activeDesignCategory);
+    // Featured items always float to the top, preserving order otherwise (stable sort).
+    return base
+      .map((item, index) => ({ item, index }))
+      .sort((a, b) => (Number(Boolean(b.item.featured)) - Number(Boolean(a.item.featured))) || (a.index - b.index))
+      .map((entry) => entry.item);
   }, [activeDesignCategory, filteredGalleryItems]);
 
   useEffect(() => {
@@ -418,7 +454,7 @@ function App() {
     const nextTags = Array.isArray(routeState.tags) ? routeState.tags : [];
     const nextDesignCategory = normalizeDesignCategory(routeState.designCategory || 'all');
     const targetSection = routeState.workId
-      ? 'home'
+      ? 'previews'
       : routeState.blogId
         ? 'blog'
         : routeState.galleryId
@@ -448,7 +484,7 @@ function App() {
       setActiveItem(nextWork);
       setActiveBlogPost(nextBlog);
       setActiveGalleryItem(nextGallery);
-      setIsPriceOpen(Boolean(routeState.isPriceOpen || normalizedSection === 'price'));
+      setIsPriceOpen(Boolean(routeState.isPriceOpen));
       setIsRouteNotFound(false);
     } else {
       setActiveSection('home');
@@ -749,8 +785,8 @@ function App() {
 
   function handleToggleTag(tagSlug) {
     setIsRouteNotFound(false);
-    if (activeSection !== 'home') {
-      setActiveSection('home');
+    if (activeSection !== 'previews') {
+      setActiveSection('previews');
     }
     setSelectedTags((current) =>
       current.includes(tagSlug)
@@ -761,7 +797,7 @@ function App() {
 
   function handleResetFilters() {
     setIsRouteNotFound(false);
-    setActiveSection('home');
+    setActiveSection('previews');
     setQuery('');
     setSelectedTags([]);
   }
@@ -777,9 +813,11 @@ function App() {
     setActiveBlogPost(null);
     setActiveGalleryItem(null);
 
+    setActivePriceCategory(null);
+
     if (nextSection === 'price') {
       setActiveSection('price');
-      setIsPriceOpen(true);
+      setIsPriceOpen(false);
       return;
     }
 
@@ -787,9 +825,182 @@ function App() {
     setIsPriceOpen(false);
   }
 
+  function handleOpenPriceCategory(category) {
+    if (!category) {
+      return;
+    }
+    if (category.kind === 'thumbnails') {
+      setIsPriceOpen(true);
+      return;
+    }
+    if (category.kind === 'contact') {
+      return;
+    }
+    setActivePriceCategory(category);
+  }
+
+  function handleSavePriceCategories(nextCategories) {
+    saveEditableData('portfolio-price-categories', nextCategories);
+    setPriceCategories(nextCategories);
+  }
+
+  const homeSectionOptions = [
+    { value: 'previews', label: 'Превью' },
+    { value: 'gallery', label: 'Дизайн' },
+    { value: 'fonts', label: 'Шрифты' },
+    { value: 'plugins', label: 'Плагины' },
+    { value: 'blog', label: 'Блог' },
+    { value: 'price', label: 'Цены' },
+  ];
+
+  function upsertById(list, item, idKey) {
+    const exists = list.some((entry) => entry[idKey] === item[idKey]);
+    return exists ? list.map((entry) => (entry[idKey] === item[idKey] ? item : entry)) : [...list, item];
+  }
+
+  // --- Home cards ---
+  function openHomeCardEditor(card) {
+    const isNew = !card;
+    const value = card || { key: `card-${Date.now()}`, section: 'previews', ruTitle: '', ruSubtitle: '', image: '', accentColor: '#ff8a3d' };
+    setFormEditorTarget({
+      title: isNew ? 'Новая карточка главной' : `Карточка: ${value.ruTitle || value.key}`,
+      value,
+      fields: [
+        { key: 'ruTitle', label: 'Заголовок', type: 'text' },
+        { key: 'ruSubtitle', label: 'Подзаголовок', type: 'text' },
+        { key: 'section', label: 'Куда ведёт', type: 'select', options: homeSectionOptions },
+        { key: 'image', label: 'Картинка', type: 'text', hint: 'путь в /public, напр. /home/card-previews.jpg' },
+        { key: 'accentColor', label: 'Акцент', type: 'color' },
+      ],
+      onSave: (next) => {
+        setHomeCards((current) => {
+          const updated = upsertById(current, next, 'key');
+          saveEditableData('portfolio-home-cards', updated);
+          return updated;
+        });
+      },
+    });
+  }
+
+  function deleteHomeCard(card) {
+    if (!window.confirm(`Удалить карточку "${card.ruTitle || card.key}"?`)) return;
+    setHomeCards((current) => {
+      const updated = current.filter((c) => c.key !== card.key);
+      saveEditableData('portfolio-home-cards', updated);
+      return updated;
+    });
+  }
+
+  // --- Price categories ---
+  function openPriceCategoryEditor(category) {
+    const isNew = !category;
+    const value = category || {
+      id: `cat-${Date.now()}`, kind: 'generic', ruTitle: '', ruSubtitle: '', image: '', accentColor: '#ff8a3d',
+      detail: { ruDescription: '', rows: [], ruNote: '' },
+    };
+    setFormEditorTarget({
+      title: isNew ? 'Новая категория цен' : `Категория: ${value.ruTitle || value.id}`,
+      value,
+      fields: [
+        { key: 'ruTitle', label: 'Заголовок', type: 'text' },
+        { key: 'ruSubtitle', label: 'Подзаголовок', type: 'text' },
+        { key: 'kind', label: 'Тип', type: 'select', options: [
+          { value: 'generic', label: 'Обычная (таблица цен)' },
+          { value: 'restoration', label: 'Реставрация (со слайдером)' },
+          { value: 'thumbnails', label: 'Превью (готовый прайс)' },
+          { value: 'contact', label: 'Плашка «Напишите нам»' },
+        ] },
+        { key: 'image', label: 'Картинка', type: 'text', hint: 'путь в /public' },
+        { key: 'accentColor', label: 'Акцент', type: 'color' },
+        { key: 'detail.ruDescription', label: 'Описание', type: 'textarea' },
+        { key: 'detail.ruNote', label: 'Примечание внизу', type: 'textarea' },
+      ],
+      rowsConfig: {
+        path: 'detail.rows',
+        label: 'Строки прайса',
+        addLabel: 'Добавить строку',
+        itemFields: [
+          { key: 'ruName', label: 'Название', type: 'text' },
+          { key: 'ruDescription', label: 'Описание', type: 'text' },
+          { key: 'price', label: 'Цена', type: 'text' },
+        ],
+      },
+      onSave: (next) => {
+        setPriceCategories((current) => {
+          const updated = upsertById(current, next, 'id');
+          saveEditableData('portfolio-price-categories', updated);
+          return updated;
+        });
+      },
+    });
+  }
+
+  function deletePriceCategory(category) {
+    if (!window.confirm(`Удалить категорию "${category.ruTitle || category.id}"?`)) return;
+    setPriceCategories((current) => {
+      const updated = current.filter((c) => c.id !== category.id);
+      saveEditableData('portfolio-price-categories', updated);
+      return updated;
+    });
+  }
+
+  // --- Fonts ---
+  function openFontEditor(font) {
+    const isNew = !font;
+    const value = font || { id: `font-${Date.now()}`, name: '', ruStyle: '', ruDescription: '', specimen: '', botUrl: 'https://t.me/VetorPluginBOT', accentColor: '#f5c84c' };
+    setFormEditorTarget({
+      title: isNew ? 'Новый шрифт' : `Шрифт: ${value.name || value.id}`,
+      value,
+      fields: [
+        { key: 'name', label: 'Название', type: 'text' },
+        { key: 'ruStyle', label: 'Стиль (тег)', type: 'text' },
+        { key: 'ruDescription', label: 'Описание', type: 'textarea' },
+        { key: 'specimen', label: 'Образец (картинка)', type: 'text', hint: 'путь в /public, напр. /fonts/lifecopy.png' },
+        { key: 'botUrl', label: 'Ссылка на бота', type: 'text' },
+        { key: 'accentColor', label: 'Акцент', type: 'color' },
+      ],
+      onSave: (next) => {
+        setFonts((current) => {
+          const updated = upsertById(current, next, 'id');
+          saveEditableData('portfolio-fonts-json', updated);
+          return updated;
+        });
+      },
+    });
+  }
+
+  function deleteFont(font) {
+    if (!window.confirm(`Удалить шрифт "${font.name || font.id}"?`)) return;
+    setFonts((current) => {
+      const updated = current.filter((f) => f.id !== font.id);
+      saveEditableData('portfolio-fonts-json', updated);
+      return updated;
+    });
+  }
+
+  // --- Page headings ---
+  function openPageCopyEditor(pageKey, pageLabel) {
+    setFormEditorTarget({
+      title: `Заголовок: ${pageLabel}`,
+      value: pageCopy[pageKey] || { eyebrow: '', title: '', lead: '' },
+      fields: [
+        { key: 'eyebrow', label: 'Надзаголовок (маленький)', type: 'text' },
+        { key: 'title', label: 'Заголовок (H1)', type: 'text' },
+        { key: 'lead', label: 'Подводка', type: 'textarea' },
+      ],
+      onSave: (next) => {
+        setPageCopy((current) => {
+          const updated = { ...current, [pageKey]: next };
+          saveEditableData('portfolio-page-copy', updated);
+          return updated;
+        });
+      },
+    });
+  }
+
   function handleOpenWork(item) {
     setIsRouteNotFound(false);
-    setActiveSection('home');
+    setActiveSection('previews');
     setActiveBlogPost(null);
     setActiveGalleryItem(null);
     setIsPriceOpen(false);
@@ -986,6 +1197,10 @@ function App() {
   }
 
   function handleCreateGalleryItem() {
+    if (activeDesignCategory === 'large-projects') {
+      handleCreateCase();
+      return;
+    }
     setEditingGalleryItem({
       id: '',
       ruTitle: '',
@@ -999,6 +1214,76 @@ function App() {
       youtubeChannel: {},
       stickers: {},
     });
+  }
+
+  function handleEditDesignItem(item) {
+    if (normalizeDesignCategory(item?.designCategory) === 'large-projects') {
+      setEditingCaseItem(item);
+      setIsCaseComposerOpen(true);
+    } else {
+      setEditingGalleryItem(item);
+    }
+  }
+
+  function handleOpenCase(item) {
+    setActiveCaseItem(item);
+  }
+
+  function handleSaveCase(nextPost) {
+    handleSaveGalleryItem({ ...nextPost, designCategory: 'large-projects' });
+    setActiveCaseItem((current) => (current && current.id === nextPost.id ? { ...current, ...nextPost, designCategory: 'large-projects' } : current));
+  }
+
+  function handleCreateCase() {
+    setEditingCaseItem(null);
+    setIsCaseComposerOpen(true);
+  }
+
+  function handleCloseCaseComposer() {
+    setIsCaseComposerOpen(false);
+    setEditingCaseItem(null);
+  }
+
+  async function handleSaveLocal() {
+    if (saveLocalStatus === 'saving') {
+      return;
+    }
+
+    setSaveLocalStatus('saving');
+
+    try {
+      const response = await fetch('/__save-local', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          siteConfig,
+          tagsConfig,
+          videoItems: stripStudioFields(videoItems),
+          musicItems: stripStudioFields(musicItems),
+          blogPosts,
+          galleryItems,
+          pricing,
+          sectionCopy,
+          palette,
+          homeCards,
+          fonts,
+          priceCategories,
+          pageCopy,
+        }),
+      });
+      const result = await response.json();
+
+      if (!response.ok || !result.ok) {
+        throw new Error(result.message || 'Save failed');
+      }
+
+      setSaveLocalStatus('success');
+      window.setTimeout(() => setSaveLocalStatus('idle'), 3000);
+    } catch (error) {
+      setSaveLocalStatus('error');
+      window.alert(`Не удалось сохранить локально.\n\n${error.message}`);
+      window.setTimeout(() => setSaveLocalStatus('idle'), 4000);
+    }
   }
 
   async function handlePublishCloudflare() {
@@ -1069,7 +1354,7 @@ function App() {
       : [...selectedTags, tagSlug];
 
     return buildUrl({
-      section: 'home',
+      section: 'previews',
       query,
       tags: nextTags,
     });
@@ -1077,7 +1362,7 @@ function App() {
 
   function buildResetFiltersHref() {
     return buildUrl({
-      section: 'home',
+      section: 'previews',
       query: '',
       tags: [],
     });
@@ -1144,12 +1429,55 @@ function App() {
           <NotFoundPage language={language} onGoHome={handleGoHomeFromNotFound} />
         )}
 
-        {!isRouteNotFound && (activeSection === 'home' || activeSection === 'price') && (
+        {!isRouteNotFound && activeSection === 'home' && (
+          <HomeLauncher
+            language={language}
+            copy={pageCopy.home}
+            cards={homeCards}
+            onSelect={handleSectionChange}
+            getSectionHref={buildSectionHref}
+            studioEnabled={studioEnabled}
+            onEditHeading={() => openPageCopyEditor('home', 'Главная')}
+            onCreateCard={() => openHomeCardEditor(null)}
+            onEditCard={openHomeCardEditor}
+            onDeleteCard={deleteHomeCard}
+          />
+        )}
+
+        {!isRouteNotFound && activeSection === 'price' && (
+          <PriceCategoriesPage
+            language={language}
+            copy={pageCopy.price}
+            categories={priceCategories}
+            contactUrl={pricing.contact?.url || siteConfig.contacts?.telegramUrl}
+            studioEnabled={studioEnabled}
+            onEditHeading={() => openPageCopyEditor('price', 'Цены')}
+            onOpenCategory={handleOpenPriceCategory}
+            onCreateItem={() => openPriceCategoryEditor(null)}
+            onEditItem={openPriceCategoryEditor}
+            onDeleteItem={deletePriceCategory}
+          />
+        )}
+
+        {!isRouteNotFound && activeSection === 'fonts' && (
+          <FontsPage
+            language={language}
+            copy={pageCopy.fonts}
+            fonts={fonts}
+            studioEnabled={studioEnabled}
+            onEditHeading={() => openPageCopyEditor('fonts', 'Шрифты')}
+            onCreateItem={() => openFontEditor(null)}
+            onEditItem={openFontEditor}
+            onDeleteItem={deleteFont}
+          />
+        )}
+
+        {!isRouteNotFound && activeSection === 'previews' && (
           <>
             <div className="page-top-stack">
               <section className="hero-block surface-panel">
                 <div className="hero-main">
-                  <div className="hero-mobile-search">
+                  <div className="hero-search">
                     <SearchBar language={language} value={query} onChange={handleQueryChange} placeholderKey="mobileSearchPlaceholder" />
                   </div>
                   <div className="hero-mobile-tags">
@@ -1255,11 +1583,12 @@ function App() {
             studioEnabled={studioEnabled}
             onEdit={() => openSectionTextEditor('gallery')}
             onCreateItem={handleCreateGalleryItem}
-            onEditItem={setEditingGalleryItem}
+            onEditItem={handleEditDesignItem}
             onDeleteItem={handleDeleteGalleryItem}
             onCategoryChange={handleDesignCategoryChange}
             getCategoryHref={buildDesignCategoryHref}
             onOpenItem={handleOpenGalleryItem}
+            onOpenCase={handleOpenCase}
           />
         )}
 
@@ -1267,6 +1596,24 @@ function App() {
       </main>
 
       <Footer language={language} />
+
+      {studioEnabled && canPublish && (
+        <button
+          type="button"
+          className={`save-local-fab ${saveLocalStatus}`}
+          onClick={handleSaveLocal}
+          disabled={saveLocalStatus === 'saving'}
+          title="Сохранить правки в исходники (без деплоя)"
+        >
+          {saveLocalStatus === 'saving'
+            ? 'Сохраняю…'
+            : saveLocalStatus === 'success'
+              ? '✓ Сохранено'
+              : saveLocalStatus === 'error'
+                ? 'Ошибка'
+                : '💾 Сохранить локально'}
+        </button>
+      )}
 
       <DetailModal
         item={activeItem}
@@ -1285,6 +1632,29 @@ function App() {
         onEditPricing={() => setIsPricingEditorOpen(true)}
         onClose={handleClosePrice}
       />
+
+      {activePriceCategory && (
+        <Suspense fallback={null}>
+          <PriceCategoryModal
+            category={activePriceCategory}
+            language={language}
+            contactUrl={pricing.contact?.url || siteConfig.contacts?.telegramUrl}
+            studioEnabled={studioEnabled}
+            onEdit={() => openPriceCategoryEditor(activePriceCategory)}
+            onClose={() => setActivePriceCategory(null)}
+          />
+        </Suspense>
+      )}
+
+      {formEditorTarget && (
+        <Suspense fallback={null}>
+          <FormEditorModal
+            target={formEditorTarget}
+            language={language}
+            onClose={() => setFormEditorTarget(null)}
+          />
+        </Suspense>
+      )}
 
       {isPricingEditorOpen && (
         <Suspense fallback={null}>
@@ -1331,6 +1701,26 @@ function App() {
         </Suspense>
       )}
       <GalleryModal item={activeGalleryItem} language={language} onClose={handleCloseGalleryItem} />
+
+      <BlogModal
+        post={activeCaseItem}
+        language={language}
+        studioEnabled={studioEnabled}
+        onEdit={activeCaseItem ? () => handleEditDesignItem(activeCaseItem) : undefined}
+        onClose={() => setActiveCaseItem(null)}
+      />
+      {isCaseComposerOpen && (
+        <Suspense fallback={null}>
+          <BlogComposerModal
+            isOpen={isCaseComposerOpen}
+            language={language}
+            post={editingCaseItem}
+            tags={tagsConfig}
+            onSave={handleSaveCase}
+            onClose={handleCloseCaseComposer}
+          />
+        </Suspense>
+      )}
       {editorTarget && (
         <Suspense fallback={null}>
           <JsonEditModal target={editorTarget} language={language} onClose={() => setEditorTarget(null)} />

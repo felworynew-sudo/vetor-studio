@@ -1,0 +1,29 @@
+[
+  {
+    "id": "vetor",
+    "name": "Vetor",
+    "ruStyle": "Геометричный",
+    "ruDescription": "Смелый геометричный шрифт с кириллицей и латиницей. Идеален для заголовков, постеров, логотипов и брендинга.",
+    "specimen": "/fonts/vetor.jpg",
+    "botUrl": "https://t.me/VetorPluginBOT",
+    "accentColor": "#6b8f71"
+  },
+  {
+    "id": "vetor-knight",
+    "name": "Vetor Knight",
+    "ruStyle": "Рыцарский",
+    "ruDescription": "Рыцарский шрифт с поддержкой кириллицы — для средневековой, геральдической и эпической стилистики.",
+    "specimen": "/fonts/vetor-knight.jpg",
+    "botUrl": "https://t.me/VetorPluginBOT",
+    "accentColor": "#b8894a"
+  },
+  {
+    "id": "lifecopy",
+    "name": "LifeCopy",
+    "ruStyle": "Гротескный",
+    "ruDescription": "Гротескный кириллический шрифт для смелых заголовков, обложек и леттеринга. Сделан по заказу LifeCopy, бесплатен для коммерческого использования.",
+    "specimen": "/fonts/lifecopy.jpg",
+    "botUrl": "https://t.me/VetorPluginBOT",
+    "accentColor": "#2b5cff"
+  }
+]

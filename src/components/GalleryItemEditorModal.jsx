@@ -9,6 +9,7 @@ const emptyItem = {
   enDescription: '',
   ratio: 'square',
   designCategory: 'logos',
+  featured: false,
   images: [],
   createdAt: '',
   youtubeChannel: {
@@ -29,6 +30,11 @@ const emptyItem = {
     secondaryRu: '',
     secondaryEn: '',
     secondaryUrl: '',
+  },
+  slider: {
+    before: '',
+    afterColor: '',
+    afterBw: '',
   },
 };
 
@@ -202,6 +208,16 @@ function GalleryItemEditorModal({ item, language, onSave, onClose }) {
     setForm((current) => ({ ...current, images: pathsToImages(value, current) }));
   }
 
+  function updateSliderField(field, value) {
+    setForm((current) => ({
+      ...current,
+      slider: {
+        ...(current.slider || {}),
+        [field]: value,
+      },
+    }));
+  }
+
   function handleSubmit(event) {
     event.preventDefault();
     const normalizedCategory = normalizeDesignCategory(form.designCategory);
@@ -265,6 +281,10 @@ function GalleryItemEditorModal({ item, language, onSave, onClose }) {
               </label>
 
               <label className="studio-field"><span>{copy.createdAt}</span><input type="date" value={form.createdAt || ''} onChange={(event) => updateField('createdAt', event.target.value)} /></label>
+              <label className="studio-field studio-field-check">
+                <input type="checkbox" checked={Boolean(form.featured)} onChange={(event) => updateField('featured', event.target.checked)} />
+                <span>{language === 'ru' ? 'Избранное (всегда сверху)' : 'Featured (always on top)'}</span>
+              </label>
             </div>
           </section>
 
@@ -278,6 +298,29 @@ function GalleryItemEditorModal({ item, language, onSave, onClose }) {
               />
             </label>
             <p className="gallery-editor-note">{copy.altHint}</p>
+          </section>
+
+          <section className="gallery-editor-section">
+            <h3>{language === 'ru' ? 'Слайдер «до/после» (необязательно)' : 'Before/after slider (optional)'}</h3>
+            <p className="gallery-editor-note">
+              {language === 'ru'
+                ? 'Для работ-сравнений (например, реставрация). Если заполнить «Оригинал», работа покажется как слайдер. Пути к картинкам в /public.'
+                : 'For comparison works (e.g. restoration). Fill "Original" to render this work as a slider. Image paths in /public.'}
+            </p>
+            <div className="gallery-editor-grid two">
+              <label className="studio-field">
+                <span>{language === 'ru' ? 'Оригинал (до)' : 'Original (before)'}</span>
+                <input value={form.slider?.before || ''} onChange={(event) => updateSliderField('before', event.target.value)} placeholder="/restoration/original.png" />
+              </label>
+              <label className="studio-field">
+                <span>{language === 'ru' ? 'Реставрация — цвет' : 'Restored — color'}</span>
+                <input value={form.slider?.afterColor || ''} onChange={(event) => updateSliderField('afterColor', event.target.value)} placeholder="/restoration/color.png" />
+              </label>
+              <label className="studio-field">
+                <span>{language === 'ru' ? 'Реставрация — ЧБ' : 'Restored — B/W'}</span>
+                <input value={form.slider?.afterBw || ''} onChange={(event) => updateSliderField('afterBw', event.target.value)} placeholder="/restoration/bw.png" />
+              </label>
+            </div>
           </section>
 
           {isYoutube ? (

@@ -1,5 +1,6 @@
 import ImageWithFallback from './ImageWithFallback';
 import DevEditButton from './DevEditButton';
+import BeforeAfterSlider from './BeforeAfterSlider';
 import defaultSectionCopy from '../data/sectionCopy';
 import { withBase } from '../utils/format';
 import { getResponsiveImageProps } from '../utils/responsiveImages';
@@ -38,6 +39,7 @@ function GalleryPage({
   onDeleteItem,
   onCategoryChange,
   getCategoryHref,
+  onOpenCase,
 }) {
   const copy = {
     ...(defaultSectionCopy.gallery[language] ?? defaultSectionCopy.gallery.ru),
@@ -102,6 +104,66 @@ function GalleryPage({
             const imageSrc = firstImage?.src || '/gallery/gallery-placeholder.svg';
             const responsiveImageProps = getResponsiveImageProps(imageSrc);
             const itemCategory = normalizeDesignCategory(item.designCategory || 'all');
+
+            if (itemCategory === 'large-projects') {
+              const coverSrc = item.cover || item.images?.[0]?.src || '/gallery/gallery-placeholder.svg';
+              return (
+                <article key={item.id} className="design-case-card" onClick={() => onOpenCase?.(item)}>
+                  {studioEnabled ? (
+                    <div className="gallery-tile-actions" onClick={(event) => event.stopPropagation()}>
+                      <button type="button" className="gallery-tile-action" onClick={() => onEditItem(item)} aria-label="Edit case" title="Edit case">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.73 3.69a2.25 2.25 0 0 1 3.18 3.18l-9.84 9.84-4.2.86.86-4.2 9.84-9.84Z" fill="currentColor" /></svg>
+                      </button>
+                      <button type="button" className="gallery-tile-action danger" onClick={() => onDeleteItem(item)} aria-label="Delete case" title="Delete case">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6l1 2h4v2H4V5h4l1-2Zm-2 6h10l-.7 11H7.7L7 9Z" fill="currentColor" /></svg>
+                      </button>
+                    </div>
+                  ) : null}
+                  <div className="design-case-media">
+                    <ImageWithFallback
+                      src={withBase(coverSrc)}
+                      fallback={withBase('/gallery/gallery-placeholder.svg')}
+                      alt={item[titleKey]}
+                    />
+                  </div>
+                  <div className="design-case-body">
+                    <span className="design-case-badge">{language === 'ru' ? 'Кейс' : 'Case'}</span>
+                    <h2>{item[titleKey]}</h2>
+                    {item[descriptionKey] ? <p>{item[descriptionKey]}</p> : null}
+                    <span className="design-case-more">{language === 'ru' ? 'Подробнее' : 'Read more'} →</span>
+                  </div>
+                </article>
+              );
+            }
+
+            if (item.slider?.before) {
+              return (
+                <article key={item.id} className="design-slider-card surface-panel">
+                  {studioEnabled ? (
+                    <div className="gallery-tile-actions">
+                      <button type="button" className="gallery-tile-action" onClick={() => onEditItem(item)} aria-label="Edit design item" title="Edit design item">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.73 3.69a2.25 2.25 0 0 1 3.18 3.18l-9.84 9.84-4.2.86.86-4.2 9.84-9.84Z" fill="currentColor" /></svg>
+                      </button>
+                      <button type="button" className="gallery-tile-action danger" onClick={() => onDeleteItem(item)} aria-label="Delete design item" title="Delete design item">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6l1 2h4v2H4V5h4l1-2Zm-2 6h10l-.7 11H7.7L7 9Z" fill="currentColor" /></svg>
+                      </button>
+                    </div>
+                  ) : null}
+                  <BeforeAfterSlider
+                    language={language}
+                    before={item.slider.before}
+                    afterColor={item.slider.afterColor}
+                    afterBw={item.slider.afterBw}
+                  />
+                  {(item[titleKey] || item[descriptionKey]) ? (
+                    <div className="design-slider-body">
+                      {item[titleKey] ? <h2>{item[titleKey]}</h2> : null}
+                      {item[descriptionKey] ? <p>{item[descriptionKey]}</p> : null}
+                    </div>
+                  ) : null}
+                </article>
+              );
+            }
 
             if (itemCategory === 'youtube') {
               const channel = item.youtubeChannel || {};
