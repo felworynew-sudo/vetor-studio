@@ -1577,6 +1577,7 @@ function App() {
           <GalleryPage
             language={language}
             items={filteredDesignItems}
+            allItems={filteredGalleryItems}
             sectionCopy={sectionCopy.gallery}
             activeCategory={activeDesignCategory}
             categories={designCategoryList}

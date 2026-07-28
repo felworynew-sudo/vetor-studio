@@ -28,6 +28,7 @@ function getLocalizedValue(item, language, ruField, enField) {
 function GalleryPage({
   language,
   items,
+  allItems,
   sectionCopy,
   activeCategory = 'all',
   categories = [],
@@ -49,8 +50,10 @@ function GalleryPage({
   const titleKey = language === 'ru' ? 'ruTitle' : 'enTitle';
   const descriptionKey = language === 'ru' ? 'ruDescription' : 'enDescription';
   const currentCategory = normalizeDesignCategory(activeCategory);
+  // Категории считаем от ПОЛНОГО набора работ (allItems), а не от уже
+  // отфильтрованных (items) — иначе при выборе категории остальные пропадают.
   const availableCategorySlugs = new Set(
-    items.map((item) => normalizeDesignCategory(item.designCategory || 'all')),
+    (allItems || items).map((item) => normalizeDesignCategory(item.designCategory || 'all')),
   );
   const visibleCategories = studioEnabled
     ? categories

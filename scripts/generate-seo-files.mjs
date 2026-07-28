@@ -120,6 +120,7 @@ async function main() {
 
   if (sections.home) {
     addRoute('/', null, 'daily', '1.0');
+    addRoute('/previews', null, 'daily', '0.9');
     for (const item of [...videos, ...music]) {
       if (item?.id) {
         addRoute(`/work/${encodeURIComponent(item.id)}`, item.createdAt, 'weekly', '0.8');
@@ -167,6 +168,10 @@ async function main() {
 
   if (sections.plugins) {
     addRoute('/plugins', null, 'monthly', '0.6');
+  }
+
+  if (sections.fonts !== false) {
+    addRoute('/fonts', null, 'monthly', '0.7');
   }
 
   const urlset = routes

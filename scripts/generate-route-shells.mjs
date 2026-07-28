@@ -180,6 +180,14 @@ async function main() {
 
   // Static section pages
   const sectionMeta = {
+    '/previews': {
+      title: 'Превью для YouTube и обложки — Vetor Studio',
+      description: 'Портфолио превью для YouTube, обложек видео и музыкальных релизов от студии дизайна Vetor.',
+    },
+    '/fonts': {
+      title: 'Авторские шрифты — Vetor Studio',
+      description: 'Авторские шрифты Vetor: акцидентные и текстовые гарнитуры для брендинга, обложек и оформления.',
+    },
     '/blog': {
       title: 'Блог — Vetor Studio',
       description: 'Статьи студии дизайна Vetor о превью, кликабельности, обложках и брендинге.',
