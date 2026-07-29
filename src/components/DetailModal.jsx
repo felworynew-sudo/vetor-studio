@@ -81,6 +81,9 @@ function DetailModal({ item, language, tagsMap, onClose, studioEnabled = false, 
           <div className="detail-header">
             <div className="detail-header-topline">
               <span className="content-type-badge subtle">{getLocalizedText(language, isPsd ? 'psdType' : isVideo ? 'videoType' : 'musicType')}</span>
+              {item.ourSound ? (
+                <span className="content-type-badge our-sound-badge">{language === 'ru' ? '🎧 Наш звук' : '🎧 Our sound'}</span>
+              ) : null}
               {studioEnabled && onEdit && (
                 <button
                   type="button"
@@ -96,14 +99,18 @@ function DetailModal({ item, language, tagsMap, onClose, studioEnabled = false, 
               )}
             </div>
             <h2>{title}</h2>
-            {!isPsd && (
+            {!isPsd && secondaryTitle ? (
               <p>
                 <span>{subtitleLabel}</span>
-                <a href={secondaryUrl} target="_blank" rel="noreferrer">
-                  {secondaryTitle}
-                </a>
+                {secondaryUrl ? (
+                  <a href={secondaryUrl} target="_blank" rel="noreferrer">
+                    {secondaryTitle}
+                  </a>
+                ) : (
+                  <span>{secondaryTitle}</span>
+                )}
               </p>
-            )}
+            ) : null}
             {item.description ? <div className="detail-description">{item.description}</div> : null}
           </div>
 
@@ -125,16 +132,31 @@ function DetailModal({ item, language, tagsMap, onClose, studioEnabled = false, 
             </div>
           </div>
 
-          <div className={isPsd ? 'detail-actions is-psd-actions' : 'detail-actions'}>
-            <a href={primaryUrl} target="_blank" rel="noreferrer" download={isPsd ? true : undefined} className={isPsd ? 'cta-button primary psd-download-button' : 'cta-button primary'}>
-              {primaryLabel}
-            </a>
-            {!isPsd && (
-              <a href={secondaryUrl} target="_blank" rel="noreferrer" className="cta-button secondary">
-                {secondaryLabel}
-              </a>
-            )}
-          </div>
+          {!isVideo && (item.audio || item.audioUrl) ? (
+            <audio
+              className="detail-audio"
+              controls
+              preload="none"
+              src={item.audio ? withBase(item.audio) : item.audioUrl}
+            >
+              {language === 'ru' ? 'Ваш браузер не поддерживает аудио.' : 'Your browser does not support audio.'}
+            </audio>
+          ) : null}
+
+          {(primaryUrl || (!isPsd && secondaryUrl)) ? (
+            <div className={isPsd ? 'detail-actions is-psd-actions' : 'detail-actions'}>
+              {primaryUrl ? (
+                <a href={primaryUrl} target="_blank" rel="noreferrer" download={isPsd ? true : undefined} className={isPsd ? 'cta-button primary psd-download-button' : 'cta-button primary'}>
+                  {primaryLabel}
+                </a>
+              ) : null}
+              {!isPsd && secondaryUrl ? (
+                <a href={secondaryUrl} target="_blank" rel="noreferrer" className="cta-button secondary">
+                  {secondaryLabel}
+                </a>
+              ) : null}
+            </div>
+          ) : null}
         </div>
       </div>
 

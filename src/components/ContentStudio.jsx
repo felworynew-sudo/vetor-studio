@@ -29,6 +29,11 @@ const studioText = {
     artistName: 'Имя исполнителя',
     artistUrl: 'Ссылка на исполнителя',
     trackUrl: 'Ссылка на трек',
+    audioTrackFile: 'Аудиофайл трека (mp3)',
+    audioTrackUrl: 'Прямая ссылка на аудио (mp3)',
+    audioHint: 'Плеер появится на карточке. Стриминг (Я.Музыка/Spotify) — в поле «Ссылка на трек».',
+    ourSound: 'Наш звук (музыку делали мы)',
+    optionalHint: 'Необязательно',
     tags: 'Теги',
     featured: 'Показывать в избранном',
     date: 'Дата',
@@ -88,6 +93,11 @@ const studioText = {
     artistName: 'Artist name',
     artistUrl: 'Artist URL',
     trackUrl: 'Track URL',
+    audioTrackFile: 'Track audio file (mp3)',
+    audioTrackUrl: 'Direct audio URL (mp3)',
+    audioHint: 'A player shows on the card. For streaming (Spotify/etc.) use the Track URL field.',
+    ourSound: 'Our sound (music made by us)',
+    optionalHint: 'Optional',
     tags: 'Tags',
     featured: 'Mark as featured',
     date: 'Date',
@@ -160,6 +170,10 @@ function createEmptyItemForm() {
     thumbnailPath: '',
     channelAvatarPath: '',
     coverPath: '',
+    audioPath: '',
+    audioFile: null,
+    audioUrl: '',
+    ourSound: false,
   };
 }
 
@@ -196,6 +210,10 @@ function createItemFormFromItem(item) {
     thumbnailPath: item.thumbnail || '',
     channelAvatarPath: item.channelAvatar || '',
     coverPath: item.cover || '',
+    audioPath: item.audio || '',
+    audioFile: null,
+    audioUrl: item.audioUrl || '',
+    ourSound: Boolean(item.ourSound),
   };
 }
 
@@ -570,6 +588,7 @@ function ContentStudio({
     thumbs: [],
     avatars: [],
     music: [],
+    audio: [],
     owner: [],
     blog: [],
     gallery: [],
@@ -648,24 +667,25 @@ function ContentStudio({
 
   useEffect(() => {
     if (!projectHandle) {
-      setAssetOptions({ thumbs: [], avatars: [], music: [], owner: [], blog: [], gallery: [] });
+      setAssetOptions({ thumbs: [], avatars: [], music: [], audio: [], owner: [], blog: [], gallery: [] });
       return undefined;
     }
 
     let isCancelled = false;
 
     async function loadAssets() {
-      const [thumbs, avatars, music, owner, blog, gallery] = await Promise.all([
+      const [thumbs, avatars, music, audio, owner, blog, gallery] = await Promise.all([
         listPublicFiles(projectHandle, 'thumbs'),
         listPublicFiles(projectHandle, 'avatars'),
         listPublicFiles(projectHandle, 'music'),
+        listPublicFiles(projectHandle, 'audio'),
         listPublicFiles(projectHandle, 'owner'),
         listPublicFiles(projectHandle, 'blog'),
         listPublicFiles(projectHandle, 'gallery'),
       ]);
 
       if (!isCancelled) {
-        setAssetOptions({ thumbs, avatars, music, owner, blog, gallery });
+        setAssetOptions({ thumbs, avatars, music, audio, owner, blog, gallery });
       }
     }
 
@@ -862,18 +882,12 @@ function ContentStudio({
     }
 
     if (isVideo) {
-      if (!itemForm.channelName.trim() || !itemForm.channelUrl.trim() || !itemForm.videoUrl.trim()) {
-        return copy.requiredField;
-      }
-
+      // Ссылки на канал/видео теперь необязательны — можно опубликовать одно превью.
       if (!itemForm.thumbnailPath.trim()) {
         return copy.requiredImage;
       }
     } else if (isMusic) {
-      if (!itemForm.artistName.trim() || !itemForm.artistUrl.trim() || !itemForm.trackUrl.trim()) {
-        return copy.requiredField;
-      }
-
+      // Ссылка на трек/исполнителя необязательна — можно опубликовать одну обложку.
       if (!itemForm.coverPath.trim()) {
         return copy.requiredImage;
       }
@@ -1113,6 +1127,9 @@ function ContentStudio({
         updateCollection = onMusicItemsChange;
 
         const coverPath = await copyAsset(projectHandle, itemForm.coverFile, 'music', itemForm.coverPath);
+        const audioPath = itemForm.audioFile
+          ? await copyAsset(projectHandle, itemForm.audioFile, 'audio', itemForm.audioPath)
+          : itemForm.audioPath.trim();
         nextItem = {
           id: isEditing ? selectedItem.id : nextId(musicItems, 'music'),
           type: 'music',
@@ -1123,6 +1140,9 @@ function ContentStudio({
           artistUrl: itemForm.artistUrl.trim(),
           trackUrl: itemForm.trackUrl.trim(),
           cover: coverPath,
+          ...(audioPath ? { audio: audioPath } : {}),
+          ...(itemForm.audioUrl.trim() ? { audioUrl: itemForm.audioUrl.trim() } : {}),
+          ...(itemForm.ourSound ? { ourSound: true } : {}),
           tags: itemForm.tags,
           featured: itemForm.featured,
           createdAt: itemForm.createdAt,
@@ -1634,20 +1654,28 @@ function ContentStudio({
                             label={copy.channelName}
                             value={itemForm.channelName}
                             onChange={syncChannelFields}
-                            required
                             list="studio-channel-options"
                             hint={copy.channelHint}
                           />
-                          <StudioField label={copy.channelUrl} value={itemForm.channelUrl} onChange={(value) => updateItemField('channelUrl', value)} required />
-                          <StudioField label={copy.videoUrl} value={itemForm.videoUrl} onChange={(value) => updateItemField('videoUrl', value)} required />
+                          <StudioField label={copy.channelUrl} value={itemForm.channelUrl} onChange={(value) => updateItemField('channelUrl', value)} hint={copy.optionalHint} />
+                          <StudioField label={copy.videoUrl} value={itemForm.videoUrl} onChange={(value) => updateItemField('videoUrl', value)} hint={copy.optionalHint} />
                         </>
                       )}
 
                       {isMusic && (
                         <>
-                          <StudioField label={copy.artistName} value={itemForm.artistName} onChange={(value) => updateItemField('artistName', value)} required />
-                          <StudioField label={copy.artistUrl} value={itemForm.artistUrl} onChange={(value) => updateItemField('artistUrl', value)} required />
-                          <StudioField label={copy.trackUrl} value={itemForm.trackUrl} onChange={(value) => updateItemField('trackUrl', value)} required />
+                          <StudioField label={copy.artistName} value={itemForm.artistName} onChange={(value) => updateItemField('artistName', value)} />
+                          <StudioField label={copy.artistUrl} value={itemForm.artistUrl} onChange={(value) => updateItemField('artistUrl', value)} hint={copy.optionalHint} />
+                          <StudioField label={copy.trackUrl} value={itemForm.trackUrl} onChange={(value) => updateItemField('trackUrl', value)} hint={copy.optionalHint} />
+                          <StudioField label={copy.audioTrackUrl} value={itemForm.audioUrl} onChange={(value) => updateItemField('audioUrl', value)} hint={copy.audioHint} />
+                          <label className="studio-checkbox">
+                            <input
+                              type="checkbox"
+                              checked={itemForm.ourSound}
+                              onChange={(event) => updateItemField('ourSound', event.target.checked)}
+                            />
+                            <span>{copy.ourSound}</span>
+                          </label>
                         </>
                       )}
 
@@ -1750,18 +1778,33 @@ function ContentStudio({
                     )}
 
                     {isMusic && (
-                      <AssetPicker
-                        label={copy.cover}
-                        folder="music"
-                        currentPath={itemForm.coverPath}
-                        selectedFileName={itemForm.coverFile?.name}
-                        options={assetOptions.music}
-                        onPathSelect={(value) =>
-                          setItemForm((current) => ({ ...current, coverPath: value, coverFile: null }))
-                        }
-                        onFileSelect={(file) => handleAssetFileSelect('coverFile', 'coverPath', 'music', file)}
-                        language={language}
-                      />
+                      <>
+                        <AssetPicker
+                          label={copy.cover}
+                          folder="music"
+                          currentPath={itemForm.coverPath}
+                          selectedFileName={itemForm.coverFile?.name}
+                          options={assetOptions.music}
+                          onPathSelect={(value) =>
+                            setItemForm((current) => ({ ...current, coverPath: value, coverFile: null }))
+                          }
+                          onFileSelect={(file) => handleAssetFileSelect('coverFile', 'coverPath', 'music', file)}
+                          language={language}
+                        />
+                        <AssetPicker
+                          label={copy.audioTrackFile}
+                          folder="audio"
+                          currentPath={itemForm.audioPath}
+                          selectedFileName={itemForm.audioFile?.name}
+                          options={assetOptions.audio}
+                          onPathSelect={(value) =>
+                            setItemForm((current) => ({ ...current, audioPath: value, audioFile: null }))
+                          }
+                          onFileSelect={(file) => handleAssetFileSelect('audioFile', 'audioPath', 'audio', file)}
+                          language={language}
+                          accept="audio/*"
+                        />
+                      </>
                     )}
 
                     {isGallery && (

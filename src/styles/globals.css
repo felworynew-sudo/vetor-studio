@@ -6227,3 +6227,15 @@ select {
   .design-case-card { grid-template-columns: 1fr; }
   .design-case-media { min-height: 180px; }
 }
+
+/* Audio player + "our sound" badge (music portfolio) */
+.detail-audio {
+  width: 100%;
+  margin-top: 14px;
+  height: 44px;
+  border-radius: 999px;
+}
+.our-sound-badge {
+  background: rgba(154, 233, 35, 0.92);
+  color: #12200a;
+}

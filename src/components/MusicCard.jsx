@@ -30,6 +30,7 @@ function MusicCard({ item, language, tagsMap, index = 0, onOpen }) {
           />
           <div className="card-media-overlay overlay-top">
             {item.featured && <span className="featured-badge">{getLocalizedText(language, 'featuredBadge')}</span>}
+            {item.ourSound && <span className="featured-badge our-sound-badge">{language === 'ru' ? '🎧 Наш звук' : '🎧 Our sound'}</span>}
           </div>
           <div className="card-media-overlay overlay-bottom overlay-right">
             <span className="content-type-badge media-corner-badge">{getLocalizedText(language, 'musicType')}</span>
