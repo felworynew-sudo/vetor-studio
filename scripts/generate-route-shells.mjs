@@ -183,27 +183,32 @@ async function main() {
     '/previews': {
       title: 'Превью для YouTube и обложки — Vetor Studio',
       description: 'Портфолио превью для YouTube, обложек видео и музыкальных релизов от студии дизайна Vetor.',
+      image: '/og/previews.png',
     },
     '/fonts': {
       title: 'Авторские шрифты — Vetor Studio',
       description: 'Авторские шрифты Vetor: акцидентные и текстовые гарнитуры для брендинга, обложек и оформления.',
+      image: '/og/fonts.png',
     },
     '/blog': {
       title: 'Блог — Vetor Studio',
       description: 'Статьи студии дизайна Vetor о превью, кликабельности, обложках и брендинге.',
+      image: '/og/blog.png',
     },
     '/design': {
       title: 'Дизайн и брендинг — Vetor Studio',
       description: 'Логотипы, фирменный стиль и оформление YouTube-каналов — работы студии дизайна Vetor.',
+      image: '/og/design.png',
     },
     '/price': {
       title: 'Прайс — Vetor Studio',
       description: 'Цены на превью YouTube, логотипы, баннеры и оформление канала. Прайс без созвонов.',
+      image: '/og/price.png',
     },
     '/plugins': {
       title: 'Resto — реставрация старых фото и макеты для памятников — Vetor Studio',
       description: 'Resto — плагин для быстрой реставрации старых фотографий и сборки макетов портретов на памятники. Доступ по подписке через Telegram-бот @VetorPluginBOT.',
-      image: '/plugins/resto-og.jpg',
+      image: '/og/plugins.png',
     },
   };
   for (const [pathname, value] of Object.entries(sectionMeta)) {
@@ -242,6 +247,7 @@ async function main() {
       const img = absoluteImage(m.image);
       if (img) {
         html = setMetaProp(html, 'og:image', img);
+        html = setMetaName(html, 'twitter:image', img);
         html = setMetaName(html, 'twitter:card', 'summary_large_image');
       }
       enriched += 1;
