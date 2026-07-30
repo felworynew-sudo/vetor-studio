@@ -468,6 +468,10 @@ function App() {
     const nextGallery = routeState.galleryId
       ? galleryItems.find((item) => item.id === routeState.galleryId) ?? null
       : null;
+    // Кейсы (large-projects) открываются как кейс (BlogModal), обычные элементы — как модалка галереи.
+    const nextIsCase = nextGallery
+      ? normalizeDesignCategory(nextGallery.designCategory) === 'large-projects'
+      : false;
 
     const hasMissingLinkedEntity = Boolean(
       (routeState.workId && !nextWork)
@@ -483,7 +487,8 @@ function App() {
       setActiveSection(normalizedSection);
       setActiveItem(nextWork);
       setActiveBlogPost(nextBlog);
-      setActiveGalleryItem(nextGallery);
+      setActiveGalleryItem(nextIsCase ? null : nextGallery);
+      setActiveCaseItem(nextIsCase ? nextGallery : null);
       setIsPriceOpen(Boolean(routeState.isPriceOpen));
       setIsRouteNotFound(false);
     } else {
@@ -491,6 +496,7 @@ function App() {
       setActiveItem(null);
       setActiveBlogPost(null);
       setActiveGalleryItem(null);
+      setActiveCaseItem(null);
       setIsPriceOpen(false);
       setIsRouteNotFound(true);
     }
@@ -513,7 +519,7 @@ function App() {
       tags: selectedTags,
       workId: activeItem?.id || '',
       blogId: activeBlogPost?.id || '',
-      galleryId: activeGalleryItem?.id || '',
+      galleryId: activeGalleryItem?.id || activeCaseItem?.id || '',
       designCategory: activeDesignCategory,
       isPriceOpen,
     });
@@ -526,6 +532,7 @@ function App() {
   }, [
     activeBlogPost?.id,
     activeGalleryItem?.id,
+    activeCaseItem?.id,
     activeItem?.id,
     activeSection,
     isPriceOpen,
@@ -599,6 +606,11 @@ function App() {
       const galleryDescription = activeGalleryItem[language === 'ru' ? 'ruDescription' : 'enDescription'];
       title = `${galleryTitle}${suffix}`;
       description = galleryDescription || localizedTagline;
+    } else if (activeCaseItem) {
+      const caseTitle = activeCaseItem[language === 'ru' ? 'ruTitle' : 'enTitle'] || localizedSiteName;
+      const caseDescription = activeCaseItem[language === 'ru' ? 'ruDescription' : 'enDescription'];
+      title = `${caseTitle}${suffix}`;
+      description = caseDescription || localizedTagline;
     } else if (activeSection === 'blog') {
       title = language === 'ru' ? `Блог${suffix}` : `Blog${suffix}`;
       description = language === 'ru'
@@ -671,7 +683,7 @@ function App() {
 
     upsertMetaByProperty('og:title', title);
     upsertMetaByProperty('og:description', description);
-    upsertMetaByProperty('og:type', activeItem || activeBlogPost || activeGalleryItem ? 'article' : 'website');
+    upsertMetaByProperty('og:type', activeItem || activeBlogPost || activeGalleryItem || activeCaseItem ? 'article' : 'website');
     upsertMetaByProperty('og:url', canonicalUrl);
 
     upsertJsonLd('website', {
@@ -764,6 +776,7 @@ function App() {
   }, [
     activeBlogPost,
     activeGalleryItem,
+    activeCaseItem,
     activeItem,
     activeSection,
     isPriceOpen,
@@ -1226,6 +1239,13 @@ function App() {
   }
 
   function handleOpenCase(item) {
+    setIsRouteNotFound(false);
+    setActiveSection('gallery');
+    setActiveItem(null);
+    setActiveBlogPost(null);
+    setActiveGalleryItem(null);
+    setIsPriceOpen(false);
+    setActiveDesignCategory(normalizeDesignCategory(item?.designCategory || 'all'));
     setActiveCaseItem(item);
   }
 
