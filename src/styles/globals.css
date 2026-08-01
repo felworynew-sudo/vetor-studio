@@ -6239,3 +6239,11 @@ select {
   background: rgba(154, 233, 35, 0.92);
   color: #12200a;
 }
+
+/* Video inside case/blog image blocks */
+.blog-reader-image video {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 18px;
+}

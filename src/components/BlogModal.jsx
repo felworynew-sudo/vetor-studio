@@ -116,13 +116,21 @@ function renderTextPairBlock(headingBlock, bodyBlock, language, key) {
   );
 }
 
+function isVideoSrc(src) {
+  return /\.(mp4|webm|mov)(\?|$)/i.test(String(src || ''));
+}
+
 function renderImageBlock(block, language, title, key) {
   const caption = localizedBlockValue(block, language, 'caption');
   const alt = localizedBlockValue(block, language, 'alt') || caption || title;
 
   return (
     <figure key={key} className={`blog-reader-image ${block.ratio || 'wide'}`}>
-      <ImageWithFallback src={getOptimizedImageSrc(block.src, 1280)} fallback={withBase('/blog/pdf-cover.svg')} alt={alt} />
+      {isVideoSrc(block.src) ? (
+        <video src={withBase(block.src)} autoPlay loop muted playsInline preload="metadata" />
+      ) : (
+        <ImageWithFallback src={getOptimizedImageSrc(block.src, 1280)} fallback={withBase('/blog/pdf-cover.svg')} alt={alt} />
+      )}
       {caption ? <figcaption>{caption}</figcaption> : null}
     </figure>
   );

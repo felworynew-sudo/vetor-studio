@@ -7,13 +7,13 @@
     "enTitle": "",
     "ruDescription": "Фотобокс, дизайн-система, ИИ-агент с характером и CRM — из чего собрана студия, превращающая макро-снимок радужки в украшение, картину или светильник.",
     "enDescription": "",
-    "cover": "",
+    "cover": "/cases/wowmyeyes/cover.jpg",
     "images": [],
     "blocks": [
       {
         "id": "wme-b1",
         "type": "text",
-        "ruText": "Всё начинается с одного макро-кадра. Мы снимаем радужку глаза — тот самый неповторимый узор, который есть только у тебя, — и превращаем его в интерьерную картину, акриловый светильник, ювелирное украшение или просто фотографию на память. У этой идеи оказалась неожиданно большая техническая начинка: собственный фотобокс для съёмки, дизайн-система, сайт, ИИ-агент с характером и CRM, которая работает так, что клиенту не нужно ничего уточнять по телефону. Ниже — из чего это всё собрано.",
+        "ruText": "Всё начинается с одного макро-кадра. Мы снимаем радужку глаза — тот самый неповторимый узор, который есть только у тебя, — и превращаем его в интерьерную картину, акриловый светильник, ювелирное украшение или просто фотографию на память. У этой идеи оказалась неожиданно большая техническая начинка: собственный фотобокс для съёмки, дизайн-система, сайт, ИИ-агент с характером и CRM. Ниже — из чего это всё собрано.",
         "enText": "",
         "size": "body",
         "bold": false,
@@ -25,18 +25,6 @@
       {
         "id": "wme-b2",
         "type": "text",
-        "ruText": "Курсивом — пометки, где логично поставить изображения/галереи. При вёрстке их можно убрать.",
-        "enText": "",
-        "size": "body",
-        "bold": false,
-        "italic": true,
-        "accent": true,
-        "linkUrl": "",
-        "linkStyle": "text"
-      },
-      {
-        "id": "wme-b3",
-        "type": "text",
         "ruText": "Фотобокс: как мы снимаем твою радужку",
         "enText": "",
         "size": "hero",
@@ -47,7 +35,7 @@
         "linkStyle": "text"
       },
       {
-        "id": "wme-b4",
+        "id": "wme-b3",
         "type": "text",
         "ruText": "Обычная камера не подберётся к глазу клиента так, чтобы получить чёткий, детализированный макро-кадр — свету и оптике нужна точная геометрия. Поэтому мы разработали собственный фотобокс: конструкцию, которая фиксирует свет, положение камеры и глаза клиента так, чтобы за один подход получить снимок, из которого потом можно печатать картину, светильник или делать украшение.",
         "enText": "",
@@ -59,19 +47,45 @@
         "linkStyle": "text"
       },
       {
-        "id": "wme-b5",
-        "type": "text",
-        "ruText": "🖼️ Фото фотобокса в процессе съёмки · 🎠 Карусель: кадр радужки → готовое украшение / картина / светильник",
-        "enText": "",
-        "size": "body",
-        "bold": false,
-        "italic": true,
-        "accent": true,
-        "linkUrl": "",
-        "linkStyle": "text"
+        "id": "wme-b4",
+        "type": "carousel",
+        "images": [
+          {
+            "src": "/cases/wowmyeyes/product-canvas.jpg",
+            "ratio": "wide",
+            "ruAlt": "",
+            "enAlt": ""
+          },
+          {
+            "src": "/cases/wowmyeyes/product-acryl.jpg",
+            "ratio": "wide",
+            "ruAlt": "",
+            "enAlt": ""
+          },
+          {
+            "src": "/cases/wowmyeyes/product-pendant.jpg",
+            "ratio": "wide",
+            "ruAlt": "",
+            "enAlt": ""
+          },
+          {
+            "src": "/cases/wowmyeyes/product-rings.jpg",
+            "ratio": "wide",
+            "ruAlt": "",
+            "enAlt": ""
+          },
+          {
+            "src": "/cases/wowmyeyes/product-polaroid.jpg",
+            "ratio": "wide",
+            "ruAlt": "",
+            "enAlt": ""
+          }
+        ],
+        "ruCaption": "Из одного кадра радужки — картина, акриловый светильник, кулон, кольцо или фото на память.",
+        "enCaption": ""
       },
       {
-        "id": "wme-b6",
+        "id": "wme-b5",
         "type": "text",
         "ruText": "Лицо бренда: то, что отращивали трижды",
         "enText": "",
@@ -83,9 +97,9 @@
         "linkStyle": "text"
       },
       {
-        "id": "wme-b7",
+        "id": "wme-b6",
         "type": "text",
-        "ruText": "Логотип у нас переделывался три раза — и каждый раз не потому, что предыдущий был плох, а потому что студия росла и старое лицо переставало ей подходить. Вокруг логотипа выросла целая система: фирменный шрифт, брендбук, прайсбук, упаковка, визитки, тейбл-тенты, листовки и рекламные промо-материалы — всё в одном визуальном языке, который сразу считывается на любой точке.",
+        "ruText": "Логотип переделывался три раза — и каждый раз не потому, что предыдущий был плох, а потому что студия росла и старое лицо переставало ей подходить. Вокруг логотипа выросла целая система: фирменный шрифт, брендбук, прайсбук, упаковка, визитки, тейбл-тенты, листовки и рекламные промо-материалы — всё в одном визуальном языке.",
         "enText": "",
         "size": "body",
         "bold": false,
@@ -93,45 +107,203 @@
         "accent": false,
         "linkUrl": "",
         "linkStyle": "text"
+      },
+      {
+        "id": "wme-b7",
+        "type": "carousel",
+        "images": [
+          {
+            "src": "/cases/wowmyeyes/logo-v1.jpg",
+            "ratio": "wide",
+            "ruAlt": "",
+            "enAlt": ""
+          },
+          {
+            "src": "/cases/wowmyeyes/logo-v2.jpg",
+            "ratio": "wide",
+            "ruAlt": "",
+            "enAlt": ""
+          },
+          {
+            "src": "/cases/wowmyeyes/logo-v3.jpg",
+            "ratio": "wide",
+            "ruAlt": "",
+            "enAlt": ""
+          }
+        ],
+        "ruCaption": "Эволюция логотипа: от ARTEYES до WOW My eyes.",
+        "enCaption": ""
       },
       {
         "id": "wme-b8",
-        "type": "text",
-        "ruText": "🎠 Карусель: эволюция логотипа (v1 → v2 → v3) + примеры визиток, тейбл-тентов и упаковки",
-        "enText": "",
-        "size": "body",
-        "bold": false,
-        "italic": true,
-        "accent": true,
-        "linkUrl": "",
-        "linkStyle": "text"
+        "type": "carousel",
+        "images": [
+          {
+            "src": "/cases/wowmyeyes/cards-preview.jpg",
+            "ratio": "wide",
+            "ruAlt": "",
+            "enAlt": ""
+          },
+          {
+            "src": "/cases/wowmyeyes/card-front.jpg",
+            "ratio": "wide",
+            "ruAlt": "",
+            "enAlt": ""
+          },
+          {
+            "src": "/cases/wowmyeyes/card-back.jpg",
+            "ratio": "wide",
+            "ruAlt": "",
+            "enAlt": ""
+          }
+        ],
+        "ruCaption": "Визитки и фирменные носители в едином стиле.",
+        "enCaption": ""
       },
       {
         "id": "wme-b9",
-        "type": "text",
-        "ruText": "Маскот. Наш ростовой костюм — забавная девочка-глазик, которая выходит «в люди» с промоутерами и участвует в создании контента для соцсетей. И да, у неё есть имя — Брунгильда. Та самая. Просто здесь она в мягкой оболочке, а не в коде — про её цифровую версию расскажем чуть ниже.",
-        "enText": "",
-        "size": "body",
-        "bold": false,
-        "italic": false,
-        "accent": false,
-        "linkUrl": "",
-        "linkStyle": "text"
+        "type": "carousel",
+        "images": [
+          {
+            "src": "/cases/wowmyeyes/brand-hoodie.jpg",
+            "ratio": "wide",
+            "ruAlt": "",
+            "enAlt": ""
+          },
+          {
+            "src": "/cases/wowmyeyes/brand-bag.jpg",
+            "ratio": "wide",
+            "ruAlt": "",
+            "enAlt": ""
+          },
+          {
+            "src": "/cases/wowmyeyes/brand-lightbox.jpg",
+            "ratio": "wide",
+            "ruAlt": "",
+            "enAlt": ""
+          },
+          {
+            "src": "/cases/wowmyeyes/brand-booklet.jpg",
+            "ratio": "wide",
+            "ruAlt": "",
+            "enAlt": ""
+          },
+          {
+            "src": "/cases/wowmyeyes/brand-promo.jpg",
+            "ratio": "wide",
+            "ruAlt": "",
+            "enAlt": ""
+          }
+        ],
+        "ruCaption": "Фирменный стиль на носителях: мерч, упаковка, вывеска, полиграфия и промо.",
+        "enCaption": ""
       },
       {
         "id": "wme-b10",
         "type": "text",
-        "ruText": "🖼️ Фото/видео: маскот на мероприятии или в сторис",
+        "ruText": "Отдельно для студии разработаны фирменный шрифт и фирменный стикерпак — набор стикеров с маскотом для соцсетей, чатов и оформления контента.",
         "enText": "",
         "size": "body",
         "bold": false,
-        "italic": true,
-        "accent": true,
+        "italic": false,
+        "accent": false,
         "linkUrl": "",
         "linkStyle": "text"
       },
       {
         "id": "wme-b11",
+        "type": "image",
+        "src": "/cases/wowmyeyes/stickerpack.jpg",
+        "ratio": "wide",
+        "ruCaption": "Фирменный стикерпак WOW My eyes с маскотом Брунгильдой.",
+        "enCaption": ""
+      },
+      {
+        "id": "wme-b12",
+        "type": "text",
+        "ruText": "Маскот Брунгильда",
+        "enText": "",
+        "size": "hero",
+        "bold": true,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "wme-b13",
+        "type": "text",
+        "ruText": "Маскот студии — Брунгильда, девочка-глазик в красном платье. Она существует и как 3D-персонаж (стикеры, аватары, оформление), и как ИИ-агент — про её цифровую версию расскажем чуть ниже.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "wme-b14",
+        "type": "carousel",
+        "images": [
+          {
+            "src": "/cases/wowmyeyes/mascot.jpg",
+            "ratio": "wide",
+            "ruAlt": "",
+            "enAlt": ""
+          },
+          {
+            "src": "/cases/wowmyeyes/mascot-close.jpg",
+            "ratio": "wide",
+            "ruAlt": "",
+            "enAlt": ""
+          }
+        ],
+        "ruCaption": "Маскот Брунгильда.",
+        "enCaption": ""
+      },
+      {
+        "id": "wme-b15",
+        "type": "text",
+        "ruText": "Ростовая кукла-глаз",
+        "enText": "",
+        "size": "hero",
+        "bold": true,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "wme-b16",
+        "type": "text",
+        "ruText": "Это не Брунгильда, а отдельный большой костюм-глаз для промоутера. В нём выходят «в люди» на мероприятиях, раздают промо и снимают контент для соцсетей, а на костюме — QR-код со ссылкой на студию.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "wme-b17",
+        "type": "image",
+        "src": "/cases/wowmyeyes/costume.mp4",
+        "ratio": "wide",
+        "ruCaption": "Ростовая кукла-глаз для промо.",
+        "enCaption": ""
+      },
+      {
+        "id": "wme-b18",
+        "type": "image",
+        "src": "/cases/wowmyeyes/costume.jpg",
+        "ratio": "wide",
+        "ruCaption": "Костюм в мастерской.",
+        "enCaption": ""
+      },
+      {
+        "id": "wme-b19",
         "type": "text",
         "ruText": "Сайт и киоски: витрина, которая работает без продавца",
         "enText": "",
@@ -143,105 +315,9 @@
         "linkStyle": "text"
       },
       {
-        "id": "wme-b12",
-        "type": "text",
-        "ruText": "На сайте — все услуги, цены на товары и расценки на выезды на мероприятия, так что человек может всё прикинуть ещё до звонка. А на самих точках продаж стоят планшеты-киоски с интерактивным прайсом: клиент листает варианты сам, пока ждёт своей очереди или просто разглядывает готовые работы.",
-        "enText": "",
-        "size": "body",
-        "bold": false,
-        "italic": false,
-        "accent": false,
-        "linkUrl": "",
-        "linkStyle": "text"
-      },
-      {
-        "id": "wme-b13",
-        "type": "text",
-        "ruText": "🖼️ Скриншот сайта (главная + страница цен) · 🖼️ Фото планшета-киоска в интерьере точки",
-        "enText": "",
-        "size": "body",
-        "bold": false,
-        "italic": true,
-        "accent": true,
-        "linkUrl": "",
-        "linkStyle": "text"
-      },
-      {
-        "id": "wme-b14",
-        "type": "text",
-        "ruText": "Брунгильда: та же девочка-глазик, только теперь в Telegram",
-        "enText": "",
-        "size": "hero",
-        "bold": true,
-        "italic": false,
-        "accent": false,
-        "linkUrl": "",
-        "linkStyle": "text"
-      },
-      {
-        "id": "wme-b15",
-        "type": "text",
-        "ruText": "Это наша особая гордость. Внутри — та же Брунгильда, что бродит в костюме по мероприятиям, только здесь она живёт как ИИ-агент на собственном VPS-сервере, и говорить с ней можно прямо через Telegram-бота. В личных чатах она консультирует клиентов, а в рабочих групповых чатах решает реальные задачи — не изображает помощника, а действительно берёт часть работы на себя.",
-        "enText": "",
-        "size": "body",
-        "bold": false,
-        "italic": false,
-        "accent": false,
-        "linkUrl": "",
-        "linkStyle": "text"
-      },
-      {
-        "id": "wme-b16",
-        "type": "text",
-        "ruText": "Что она делает изо дня в день:",
-        "enText": "",
-        "size": "body",
-        "bold": false,
-        "italic": false,
-        "accent": false,
-        "linkUrl": "",
-        "linkStyle": "text"
-      },
-      {
-        "id": "wme-b17",
-        "type": "text",
-        "ruText": "•  уведомляет клиентов о статусе готовности их картины, украшения или светильника, а иногда и сама переписывается с ними без нашего участия;",
-        "enText": "",
-        "size": "body",
-        "bold": false,
-        "italic": false,
-        "accent": false,
-        "linkUrl": "",
-        "linkStyle": "text"
-      },
-      {
-        "id": "wme-b18",
-        "type": "text",
-        "ruText": "•  ведёт и заполняет таблицы, следит за отдельными телеграм-каналами с чеками и выручкой;",
-        "enText": "",
-        "size": "body",
-        "bold": false,
-        "italic": false,
-        "accent": false,
-        "linkUrl": "",
-        "linkStyle": "text"
-      },
-      {
-        "id": "wme-b19",
-        "type": "text",
-        "ruText": "•  предварительно считает сотрудникам зарплату;",
-        "enText": "",
-        "size": "body",
-        "bold": false,
-        "italic": false,
-        "accent": false,
-        "linkUrl": "",
-        "linkStyle": "text"
-      },
-      {
         "id": "wme-b20",
         "type": "text",
-        "ruText": "•  помогает команде с техническими проблемами — делегирует задачи урезанным копиям самой себя, которые живут на рабочих устройствах сотрудников и выводят на экран уведомление, вопрос или просьбу;",
+        "ruText": "На сайте — все услуги, цены на товары и расценки на выезды на мероприятия, так что человек может всё прикинуть ещё до звонка. А на самих точках продаж стоят планшеты-киоски с интерактивным прайсом: клиент листает варианты сам, пока ждёт своей очереди или разглядывает готовые работы.",
         "enText": "",
         "size": "body",
         "bold": false,
@@ -253,10 +329,10 @@
       {
         "id": "wme-b21",
         "type": "text",
-        "ruText": "•  присматривает за тем, кто и насколько компетентно справляется с задачами;",
+        "ruText": "Брунгильда: та же девочка-глазик, только теперь в Telegram",
         "enText": "",
-        "size": "body",
-        "bold": false,
+        "size": "hero",
+        "bold": true,
         "italic": false,
         "accent": false,
         "linkUrl": "",
@@ -265,7 +341,7 @@
       {
         "id": "wme-b22",
         "type": "text",
-        "ruText": "•  оформляет доставку и создаёт/редактирует записи о сертификатах в базе;",
+        "ruText": "Это наша особая гордость. Внутри — та же Брунгильда, только здесь она живёт как ИИ-агент на собственном VPS-сервере, и говорить с ней можно прямо через Telegram-бота. В личных чатах она консультирует клиентов, а в рабочих групповых чатах решает реальные задачи — не изображает помощника, а действительно берёт часть работы на себя.",
         "enText": "",
         "size": "body",
         "bold": false,
@@ -277,7 +353,7 @@
       {
         "id": "wme-b23",
         "type": "text",
-        "ruText": "•  предупреждает сотрудников о плохой погоде и важных событиях.",
+        "ruText": "Что она делает изо дня в день:",
         "enText": "",
         "size": "body",
         "bold": false,
@@ -289,7 +365,7 @@
       {
         "id": "wme-b24",
         "type": "text",
-        "ruText": "А ещё у неё есть хобби, которое мы ей не заказывали: Брунгильда пишет музыку с помощью кода. Зачем — не знаем, но композиции присылать разрешили.",
+        "ruText": "•  уведомляет клиентов о статусе готовности их картины, украшения или светильника, а иногда и сама переписывается с ними без нашего участия;",
         "enText": "",
         "size": "body",
         "bold": false,
@@ -301,22 +377,22 @@
       {
         "id": "wme-b25",
         "type": "text",
-        "ruText": "🖼️ Иллюстрация/аватар Брунгильды · 🖼️ Скриншот переписки в Telegram-боте",
+        "ruText": "•  ведёт и заполняет таблицы, следит за отдельными телеграм-каналами с чеками и выручкой;",
         "enText": "",
         "size": "body",
         "bold": false,
-        "italic": true,
-        "accent": true,
+        "italic": false,
+        "accent": false,
         "linkUrl": "",
         "linkStyle": "text"
       },
       {
         "id": "wme-b26",
         "type": "text",
-        "ruText": "Effector и SertGen: инструменты для тех, кто рисует и печатает",
+        "ruText": "•  предварительно считает сотрудникам зарплату;",
         "enText": "",
-        "size": "hero",
-        "bold": true,
+        "size": "body",
+        "bold": false,
         "italic": false,
         "accent": false,
         "linkUrl": "",
@@ -325,7 +401,7 @@
       {
         "id": "wme-b27",
         "type": "text",
-        "ruText": "Effector — плагин для Photoshop, который ускоряет работу дизайнера на этапе подготовки макетов. Он пришёл на смену нашей более ранней собственной разработке — плагину SertGen, который генерировал макет сертификата с уникальным номером. Номер автоматически попадал в базу данных — это и есть способ проверить подлинность и действительность сертификата.",
+        "ruText": "•  помогает команде с техническими проблемами — делегирует задачи урезанным копиям самой себя на рабочих устройствах сотрудников;",
         "enText": "",
         "size": "body",
         "bold": false,
@@ -337,17 +413,111 @@
       {
         "id": "wme-b28",
         "type": "text",
-        "ruText": "🖼️ Скриншот интерфейса плагина · 🖼️ Пример макета сертификата",
+        "ruText": "•  присматривает за тем, кто и насколько компетентно справляется с задачами;",
         "enText": "",
         "size": "body",
         "bold": false,
-        "italic": true,
-        "accent": true,
+        "italic": false,
+        "accent": false,
         "linkUrl": "",
         "linkStyle": "text"
       },
       {
         "id": "wme-b29",
+        "type": "text",
+        "ruText": "•  оформляет доставку и создаёт/редактирует записи о сертификатах в базе;",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "wme-b30",
+        "type": "text",
+        "ruText": "•  предупреждает сотрудников о плохой погоде и важных событиях.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "wme-b31",
+        "type": "carousel",
+        "images": [
+          {
+            "src": "/cases/wowmyeyes/bot1.jpg",
+            "ratio": "wide",
+            "ruAlt": "",
+            "enAlt": ""
+          },
+          {
+            "src": "/cases/wowmyeyes/bot2.jpg",
+            "ratio": "wide",
+            "ruAlt": "",
+            "enAlt": ""
+          },
+          {
+            "src": "/cases/wowmyeyes/bot3.jpg",
+            "ratio": "wide",
+            "ruAlt": "",
+            "enAlt": ""
+          }
+        ],
+        "ruCaption": "Брунгильда в рабочих чатах: напоминания, склад, отчёты по выручке.",
+        "enCaption": ""
+      },
+      {
+        "id": "wme-b32",
+        "type": "text",
+        "ruText": "А ещё у неё есть хобби, которое мы ей не заказывали: Брунгильда пишет музыку с помощью кода. Зачем — не знаем, но композиции присылать разрешили.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "wme-b33",
+        "type": "text",
+        "ruText": "Effector и SertGen: инструменты для тех, кто рисует и печатает",
+        "enText": "",
+        "size": "hero",
+        "bold": true,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "wme-b34",
+        "type": "text",
+        "ruText": "Effector — плагин для Photoshop, который ускоряет работу дизайнера на этапе подготовки макетов. Он пришёл на смену более ранней собственной разработке — плагину SertGen, который генерировал макет сертификата с уникальным номером. Номер автоматически попадал в базу данных — это и есть способ проверить подлинность и действительность сертификата.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "wme-b35",
+        "type": "image",
+        "src": "/cases/wowmyeyes/certificate.jpg",
+        "ratio": "wide",
+        "ruCaption": "Сертификат с уникальным номером и QR — проверка подлинности.",
+        "enCaption": ""
+      },
+      {
+        "id": "wme-b36",
         "type": "text",
         "ruText": "CRM: как всё это связано между собой",
         "enText": "",
@@ -359,7 +529,7 @@
         "linkStyle": "text"
       },
       {
-        "id": "wme-b30",
+        "id": "wme-b37",
         "type": "text",
         "ruText": "Клиент может в любой момент отследить статус своего заказа — украшения, интерьерной картины или акрилового светильника — через собственный трекер заказов. Параллельно работает система учёта всех заказов сразу: без персональных данных клиентов, зато с графиками работ и статистикой.",
         "enText": "",
@@ -371,9 +541,9 @@
         "linkStyle": "text"
       },
       {
-        "id": "wme-b31",
+        "id": "wme-b38",
         "type": "text",
-        "ruText": "Вся эта система завязана на Брунгильду. Именно поэтому она может сама писать нужным клиентам по конкретным заказам, редактировать данные, вести складской учёт и — если чего-то не хватает — вовремя сообщать об этом закупщику. Оформление доставки тоже на ней.",
+        "ruText": "Вся эта система завязана на Брунгильду. Именно поэтому она может сама писать нужным клиентам по конкретным заказам, редактировать данные, вести складской учёт и — если чего-то не хватает — вовремя сообщать закупщику. Оформление доставки тоже на ней.",
         "enText": "",
         "size": "body",
         "bold": false,
@@ -383,19 +553,15 @@
         "linkStyle": "text"
       },
       {
-        "id": "wme-b32",
-        "type": "text",
-        "ruText": "🖼️ Скриншот интерфейса CRM/трекера заказов",
-        "enText": "",
-        "size": "body",
-        "bold": false,
-        "italic": true,
-        "accent": true,
-        "linkUrl": "",
-        "linkStyle": "text"
+        "id": "wme-b39",
+        "type": "image",
+        "src": "/cases/wowmyeyes/tracker.jpg",
+        "ratio": "wide",
+        "ruCaption": "Трекер заказа: клиент видит статус в реальном времени.",
+        "enCaption": ""
       },
       {
-        "id": "wme-b33",
+        "id": "wme-b40",
         "type": "text",
         "ruText": "Фотобокс, дизайн, код и один ИИ с характером — вот что стоит за украшением, картиной или светильником, сделанными из твоей собственной радужки.",
         "enText": "",
@@ -405,9 +571,45 @@
         "accent": true,
         "linkUrl": "",
         "linkStyle": "text"
+      },
+      {
+        "id": "wme-b41",
+        "type": "text",
+        "ruText": "Кто это сделал",
+        "enText": "",
+        "size": "hero",
+        "bold": true,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "wme-b42",
+        "type": "text",
+        "ruText": "Весь проект — от сайта и Telegram-бота до визиток, сертификатов, фирменного шрифта, маскота и стикерпака — в одиночку реализовал дизайнер Кирилл, строго по ТЗ заказчика.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "wme-b43",
+        "type": "text",
+        "ruText": "Связаться с Кириллом — @felwory",
+        "enText": "",
+        "size": "body",
+        "bold": true,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "https://t.me/felwory",
+        "linkStyle": "button"
       }
     ],
-    "createdAt": "2026-07-28"
+    "createdAt": "2026-08-01"
   },
   {
     "id": "gallery-restoration-001",
