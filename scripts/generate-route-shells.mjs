@@ -74,6 +74,14 @@ function setMetaProp(html, property, content) {
   return html.replace(re, `<meta property="${property}" content="${escAttr(content)}" />`);
 }
 
+function injectJsonLd(html, data) {
+  const script = `<script type="application/ld+json">${JSON.stringify(data)}</script>`;
+  if (html.includes('</head>')) {
+    return html.replace('</head>', `    ${script}\n  </head>`);
+  }
+  return `${html}\n${script}`;
+}
+
 function getSafeRouteDirectory(pathname) {
   const segments = pathname.split('/').filter(Boolean).map((segment) => decodeURIComponent(segment));
   if (segments.length === 0) return null;
@@ -178,17 +186,22 @@ async function main() {
     });
   }
 
-  // Static section pages
+  // Static section pages — titles/descriptions carry the commercial-intent
+  // queries we want each page to rank for (see keywords per entry).
   const sectionMeta = {
     '/previews': {
-      title: 'Превью для YouTube и обложки — Vetor Studio',
-      description: 'Портфолио превью для YouTube, обложек видео и музыкальных релизов от студии дизайна Vetor.',
+      title: 'Заказать превью для YouTube и обложки — Vetor Studio',
+      description: 'Сделаем превью для YouTube и обложки для музыкальных релизов: кликабельные превью и музыкальные обложки на заказ. Студия дизайна Vetor, работаем удалённо.',
+      keywords: 'заказать превью, сделать превью, превью для youtube, дизайн превью, музыкальная обложка, обложка трека, обложка для сингла',
       image: '/og/previews.png',
+      service: 'Дизайн превью для YouTube и музыкальных обложек',
     },
     '/fonts': {
-      title: 'Авторские шрифты — Vetor Studio',
-      description: 'Авторские шрифты Vetor: акцидентные и текстовые гарнитуры для брендинга, обложек и оформления.',
+      title: 'Разработка шрифта на заказ — авторские шрифты | Vetor Studio',
+      description: 'Разработка шрифта на заказ: акцидентные и текстовые гарнитуры для брендинга, обложек и оформления. Закажите разработать фирменный шрифт в студии Vetor.',
+      keywords: 'разработка шрифта, разработать шрифт, шрифт на заказ, заказать шрифт, авторский шрифт, фирменный шрифт, кастомный шрифт',
       image: '/og/fonts.png',
+      service: 'Разработка шрифта на заказ',
     },
     '/blog': {
       title: 'Блог — Vetor Studio',
@@ -196,9 +209,11 @@ async function main() {
       image: '/og/blog.png',
     },
     '/design': {
-      title: 'Дизайн и брендинг — Vetor Studio',
-      description: 'Логотипы, фирменный стиль и оформление YouTube-каналов — работы студии дизайна Vetor.',
+      title: 'Дизайн на заказ — логотипы, фирменный стиль, оформление | Vetor Studio',
+      description: 'Дизайн на заказ: логотипы, фирменный стиль, оформление YouTube-каналов и стикеры. Студия дизайна Vetor — заказать дизайн удалённо.',
+      keywords: 'дизайн, дизайн на заказ, заказать дизайн, графический дизайн, логотип, фирменный стиль, оформление канала',
       image: '/og/design.png',
+      service: 'Графический дизайн на заказ',
     },
     '/price': {
       title: 'Прайс — Vetor Studio',
@@ -216,6 +231,46 @@ async function main() {
       image: '/og/plugins.png',
     },
   };
+
+  // Design-category landing pages (already in the sitemap) — give each one a
+  // commercial-intent title/description so it can rank for "заказать <услуга>".
+  const categoryMeta = {
+    logos: {
+      title: 'Заказать логотип — разработка логотипа на заказ | Vetor Studio',
+      description: 'Разработка логотипа на заказ: лаконичные знаки, логотипы для брендов, каналов и проектов. Закажите логотип в студии дизайна Vetor — работаем удалённо.',
+      keywords: 'логотип заказать, заказать логотип, разработка логотипа, логотип на заказ, создание логотипа, дизайн логотипа',
+      service: 'Разработка логотипа на заказ',
+    },
+    'brand-identity': {
+      title: 'Фирменный стиль на заказ — разработка айдентики | Vetor Studio',
+      description: 'Разработка фирменного стиля и айдентики на заказ: логотип, цвета, шрифты и носители. Закажите фирменный стиль в студии Vetor.',
+      keywords: 'фирменный стиль, фирменный стиль на заказ, разработка айдентики, брендинг, айдентика на заказ',
+      service: 'Разработка фирменного стиля',
+    },
+    youtube: {
+      title: 'Оформление YouTube-канала на заказ — шапка, аватар, превью | Vetor Studio',
+      description: 'Оформление YouTube-канала на заказ: шапка, аватар, превью и единый визуальный стиль. Закажите оформление канала в студии Vetor.',
+      keywords: 'оформление youtube канала, оформление канала, шапка для youtube, дизайн канала, оформление ютуб канала на заказ',
+      service: 'Оформление YouTube-канала',
+    },
+    stickers: {
+      title: 'Стикеры на заказ — стикерпаки для Telegram и соцсетей | Vetor Studio',
+      description: 'Стикеры и стикерпаки на заказ для Telegram, WhatsApp и соцсетей: маскоты и фирменные наборы. Закажите стикеры в студии Vetor.',
+      keywords: 'стикеры на заказ, заказать стикеры, стикерпак, стикеры для telegram, дизайн стикеров',
+      service: 'Дизайн стикеров и стикерпаков',
+    },
+    'business-cards': {
+      title: 'Дизайн визиток на заказ | Vetor Studio',
+      description: 'Дизайн визиток на заказ: аккуратные и запоминающиеся макеты под печать. Закажите визитку в студии дизайна Vetor.',
+      keywords: 'визитка на заказ, дизайн визитки, заказать визитку, макет визитки',
+      service: 'Дизайн визиток',
+    },
+  };
+  for (const [slug, value] of Object.entries(categoryMeta)) {
+    const pathname = `/design/category/${slug}`;
+    if (!meta.has(pathname)) meta.set(pathname, { image: '/og/design.png', ...value });
+  }
+
   for (const [pathname, value] of Object.entries(sectionMeta)) {
     if (!meta.has(pathname)) meta.set(pathname, value);
   }
@@ -245,6 +300,9 @@ async function main() {
       const ogTitle = m.ogTitle || m.title;
       html = setTitle(html, m.title);
       html = setMetaName(html, 'description', m.description);
+      if (m.keywords) {
+        html = setMetaName(html, 'keywords', m.keywords);
+      }
       html = setMetaProp(html, 'og:title', ogTitle);
       html = setMetaProp(html, 'og:description', m.description);
       html = setMetaName(html, 'twitter:title', ogTitle);
@@ -254,6 +312,23 @@ async function main() {
         html = setMetaProp(html, 'og:image', img);
         html = setMetaName(html, 'twitter:image', img);
         html = setMetaName(html, 'twitter:card', 'summary_large_image');
+      }
+      // Service schema helps commercial-intent pages surface as a concrete offer.
+      if (m.service) {
+        html = injectJsonLd(html, {
+          '@context': 'https://schema.org',
+          '@type': 'Service',
+          name: m.service,
+          serviceType: m.service,
+          description: m.description,
+          url: selfUrl,
+          areaServed: ['RU', 'Worldwide'],
+          provider: {
+            '@type': 'Organization',
+            name: 'Vetor Studio',
+            url: domain,
+          },
+        });
       }
       enriched += 1;
     }

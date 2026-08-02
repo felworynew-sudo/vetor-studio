@@ -639,10 +639,52 @@ function App() {
         ? 'Публикации, процессы и разборы по превью, дизайну и упаковке медиа-проектов.'
         : 'Posts, process notes, and breakdowns on thumbnails, design, and media packaging.';
     } else if (activeSection === 'gallery') {
-      title = language === 'ru' ? `Дизайн${suffix}` : `Design${suffix}`;
+      const categorySeo = language === 'ru' ? {
+        logos: {
+          title: `Заказать логотип — разработка логотипа на заказ${suffix}`,
+          description: 'Разработка логотипа на заказ: знаки для брендов, каналов и проектов. Закажите логотип в студии дизайна Vetor.',
+        },
+        'brand-identity': {
+          title: `Фирменный стиль на заказ — разработка айдентики${suffix}`,
+          description: 'Разработка фирменного стиля и айдентики на заказ: логотип, цвета, шрифты и носители. Студия Vetor.',
+        },
+        youtube: {
+          title: `Оформление YouTube-канала на заказ${suffix}`,
+          description: 'Оформление YouTube-канала: шапка, аватар, превью и единый визуальный стиль. Закажите в студии Vetor.',
+        },
+        stickers: {
+          title: `Стикеры на заказ — стикерпаки для Telegram${suffix}`,
+          description: 'Стикеры и стикерпаки на заказ для Telegram и соцсетей: маскоты и фирменные наборы. Студия Vetor.',
+        },
+        'business-cards': {
+          title: `Дизайн визиток на заказ${suffix}`,
+          description: 'Дизайн визиток на заказ: аккуратные макеты под печать. Закажите визитку в студии Vetor.',
+        },
+      } : {};
+      const catSeo = categorySeo[activeDesignCategory];
+      if (catSeo) {
+        title = catSeo.title;
+        description = catSeo.description;
+      } else {
+        title = language === 'ru' ? `Дизайн на заказ — логотипы, фирменный стиль, оформление${suffix}` : `Design${suffix}`;
+        description = language === 'ru'
+          ? 'Дизайн на заказ: логотипы, визитки, фирменный стиль, оформление YouTube-каналов и стикеры. Студия дизайна Vetor.'
+          : 'Vetor design portfolio: logos, business cards, brand identity, YouTube packaging, and stickers.';
+      }
+    } else if (activeSection === 'previews') {
+      title = language === 'ru'
+        ? `Заказать превью для YouTube и обложки${suffix}`
+        : `Thumbnails and covers${suffix}`;
       description = language === 'ru'
-        ? 'Дизайн-портфолио студии Vetor: логотипы, визитки, фирменный стиль, YouTube-оформление и стикеры.'
-        : 'Vetor design portfolio: logos, business cards, brand identity, YouTube packaging, and stickers.';
+        ? 'Сделаем превью для YouTube и обложки для музыкальных релизов: кликабельные превью и музыкальные обложки на заказ. Студия Vetor.'
+        : 'YouTube thumbnails and music covers on order — clickable previews by Vetor Studio.';
+    } else if (activeSection === 'fonts') {
+      title = language === 'ru'
+        ? `Разработка шрифта на заказ — авторские шрифты${suffix}`
+        : `Custom font development${suffix}`;
+      description = language === 'ru'
+        ? 'Разработка шрифта на заказ: акцидентные и текстовые гарнитуры для брендинга и обложек. Закажите разработать фирменный шрифт в студии Vetor.'
+        : 'Custom font development: display and text typefaces for branding and covers by Vetor Studio.';
     } else if (activeSection === 'plugins' && activePlugin === 'resto') {
       title = language === 'ru'
         ? `Resto — реставрация старых фото и макеты для памятников${suffix}`
@@ -807,6 +849,7 @@ function App() {
     activeItem,
     activePlugin,
     activeSection,
+    activeDesignCategory,
     isPriceOpen,
     isRouteNotFound,
     language,
