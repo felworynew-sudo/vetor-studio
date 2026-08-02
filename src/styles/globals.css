@@ -304,6 +304,17 @@ select {
   display: none;
 }
 
+.header-contact-desktop {
+  display: inline-flex;
+}
+
+.header-price-mobile {
+  display: none;
+  align-items: center;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
 .header-menu-toggle {
   min-width: 42px;
   min-height: 42px;
@@ -3200,6 +3211,15 @@ select {
   }
 
   .header-inner.is-client .header-mobile-menu-wrap {
+    display: inline-flex !important;
+  }
+
+  /* На мобилке: убираем «Контакты», показываем «Цены» */
+  .header-inner.is-client .header-contact-desktop {
+    display: none !important;
+  }
+
+  .header-inner.is-client .header-price-mobile {
     display: inline-flex !important;
   }
 
@@ -6246,4 +6266,11 @@ select {
   height: auto;
   display: block;
   border-radius: 18px;
+}
+
+/* Телефон в подвале скрываем на мобилках (остаются Telegram/WhatsApp/Pinterest) */
+@media (max-width: 640px) {
+  .footer-phone {
+    display: none;
+  }
 }

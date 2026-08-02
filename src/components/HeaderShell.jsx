@@ -147,7 +147,24 @@ function HeaderShell({
         </div>
 
         <div className="header-controls">
-          <ContactMenu language={language} contacts={contacts} />
+          <div className="header-contact-desktop">
+            <ContactMenu language={language} contacts={contacts} />
+          </div>
+          {visibleSections?.price && (
+            <a
+              className="utility-button header-price-mobile"
+              href={getSectionHref ? getSectionHref('price') : '/price'}
+              onClick={(event) => {
+                if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button === 1) {
+                  return;
+                }
+                event.preventDefault();
+                onSectionChange('price');
+              }}
+            >
+              {tabLabels[language].price}
+            </a>
+          )}
           <div className="header-desktop-language">
             <LanguageSwitch language={language} onChange={onLanguageChange} />
           </div>

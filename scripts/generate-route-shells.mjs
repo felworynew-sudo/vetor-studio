@@ -206,6 +206,11 @@ async function main() {
       image: '/og/price.png',
     },
     '/plugins': {
+      title: 'Плагины Vetor — инструменты для графических редакторов',
+      description: 'Плагины Vetor: инструменты, которые ускоряют рутину в графических редакторах. Сейчас доступен Resto — реставрация фото и макеты для памятников.',
+      image: '/og/plugins.png',
+    },
+    '/plugins/resto': {
       title: 'Resto — реставрация старых фото и макеты для памятников — Vetor Studio',
       description: 'Resto — плагин для быстрой реставрации старых фотографий и сборки макетов портретов на памятники. Доступ по подписке через Telegram-бот @VetorPluginBOT.',
       image: '/og/plugins.png',

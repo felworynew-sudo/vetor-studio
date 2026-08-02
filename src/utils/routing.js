@@ -80,6 +80,7 @@ export function parseRoute(locationLike) {
     workId: '',
     blogId: '',
     galleryId: '',
+    pluginId: '',
     designCategory: queryDesignCategory || 'all',
     isPriceOpen: params.get('price') === '1',
     isNotFound: false,
@@ -119,6 +120,10 @@ export function parseRoute(locationLike) {
 
   if (pathname === '/plugins') {
     return { ...base, section: 'plugins' };
+  }
+
+  if (pathname.startsWith('/plugins/')) {
+    return { ...base, section: 'plugins', pluginId: pathname.slice('/plugins/'.length) };
   }
 
   if (pathname.startsWith('/design/item/')) {
@@ -196,6 +201,10 @@ export function buildPricePath() {
   return '/price';
 }
 
+export function buildPluginPath(slug) {
+  return `/plugins/${encodeURIComponent(slug)}`;
+}
+
 export function buildUrl({
   section = 'home',
   query = '',
@@ -203,6 +212,7 @@ export function buildUrl({
   workId = '',
   blogId = '',
   galleryId = '',
+  pluginId = '',
   designCategory = 'all',
   isPriceOpen = false,
 }) {
@@ -214,6 +224,8 @@ export function buildUrl({
     pathname = buildBlogPath(blogId);
   } else if (galleryId) {
     pathname = buildGalleryPath(galleryId);
+  } else if (section === 'plugins' && pluginId) {
+    pathname = buildPluginPath(pluginId);
   } else if (section === 'price') {
     pathname = buildPricePath();
   } else if (section === 'gallery' && designCategory && designCategory !== 'all') {

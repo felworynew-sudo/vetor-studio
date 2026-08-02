@@ -168,6 +168,7 @@ async function main() {
 
   if (sections.plugins) {
     addRoute('/plugins', null, 'monthly', '0.6');
+    addRoute('/plugins/resto', null, 'monthly', '0.7');
   }
 
   if (sections.fonts !== false) {

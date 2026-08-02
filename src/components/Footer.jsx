@@ -35,7 +35,7 @@ function Footer({ language }) {
           </a>
           <a
             href="tel:+79183819648"
-            className="site-footer-link"
+            className="site-footer-link footer-phone"
             aria-label="+7 918 381-96-48"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">

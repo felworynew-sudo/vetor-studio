@@ -13,6 +13,7 @@ import BlogModal from './components/BlogModal';
 import GalleryPage from './components/GalleryPage';
 import GalleryModal from './components/GalleryModal';
 import PluginsPage from './components/PluginsPage';
+import PluginsCatalogPage from './components/PluginsCatalogPage';
 import HomeLauncher from './components/HomeLauncher';
 import FontsPage from './components/FontsPage';
 import PriceCategoriesPage from './components/PriceCategoriesPage';
@@ -51,6 +52,21 @@ const DEFAULT_SECTIONS_VISIBILITY = {
 };
 
 const KNOWN_SECTIONS = ['home', 'previews', 'blog', 'gallery', 'fonts', 'price', 'plugins'];
+
+const FONTS_PROMO_COPY = {
+  ru: {
+    eyebrow: 'Цены',
+    title: 'Нужен свой шрифт?',
+    text: 'Разработаем авторский или фирменный шрифт под твой бренд — от акцидентного начертания до полного набора с кириллицей.',
+    button: 'Смотреть прайс',
+  },
+  en: {
+    eyebrow: 'Pricing',
+    title: 'Need your own typeface?',
+    text: 'We craft custom and brand fonts — from a display face to a full character set with Cyrillic.',
+    button: 'See pricing',
+  },
+};
 const ContentStudio = lazy(() => import('./components/ContentStudio'));
 const FormEditorModal = lazy(() => import('./components/FormEditorModal'));
 const PricingEditorModal = lazy(() => import('./components/PricingEditorModal'));
@@ -353,6 +369,7 @@ function App() {
   const [fonts, setFonts] = useState(() => loadEditableData('portfolio-fonts-json', initialFonts));
   const [priceCategories, setPriceCategories] = useState(() => loadEditableData('portfolio-price-categories', initialPriceCategories));
   const [activePriceCategory, setActivePriceCategory] = useState(null);
+  const [activePlugin, setActivePlugin] = useState(routeState.pluginId || '');
   const [formEditorTarget, setFormEditorTarget] = useState(null);
   const [pageCopy, setPageCopy] = useState(() => loadEditableData('portfolio-page-copy', initialPageCopy));
   const [isRouteNotFound, setIsRouteNotFound] = useState(Boolean(routeState.isNotFound));
@@ -489,6 +506,7 @@ function App() {
       setActiveBlogPost(nextBlog);
       setActiveGalleryItem(nextIsCase ? null : nextGallery);
       setActiveCaseItem(nextIsCase ? nextGallery : null);
+      setActivePlugin(normalizedSection === 'plugins' ? (routeState.pluginId || '') : '');
       setIsPriceOpen(Boolean(routeState.isPriceOpen));
       setIsRouteNotFound(false);
     } else {
@@ -497,6 +515,7 @@ function App() {
       setActiveBlogPost(null);
       setActiveGalleryItem(null);
       setActiveCaseItem(null);
+      setActivePlugin('');
       setIsPriceOpen(false);
       setIsRouteNotFound(true);
     }
@@ -520,6 +539,7 @@ function App() {
       workId: activeItem?.id || '',
       blogId: activeBlogPost?.id || '',
       galleryId: activeGalleryItem?.id || activeCaseItem?.id || '',
+      pluginId: activeSection === 'plugins' ? activePlugin : '',
       designCategory: activeDesignCategory,
       isPriceOpen,
     });
@@ -534,6 +554,7 @@ function App() {
     activeGalleryItem?.id,
     activeCaseItem?.id,
     activeItem?.id,
+    activePlugin,
     activeSection,
     isPriceOpen,
     isRouteNotFound,
@@ -621,13 +642,18 @@ function App() {
       description = language === 'ru'
         ? 'Дизайн-портфолио студии Vetor: логотипы, визитки, фирменный стиль, YouTube-оформление и стикеры.'
         : 'Vetor design portfolio: logos, business cards, brand identity, YouTube packaging, and stickers.';
-    } else if (activeSection === 'plugins') {
+    } else if (activeSection === 'plugins' && activePlugin === 'resto') {
       title = language === 'ru'
         ? `Resto — реставрация старых фото и макеты для памятников${suffix}`
         : `Resto — restore old photos & build monument layouts${suffix}`;
       description = language === 'ru'
         ? 'Resto — плагин для быстрой реставрации старых фотографий и сборки макетов портретов на памятники. Доступ по подписке через Telegram-бот @VetorPluginBOT.'
         : 'Resto — a plugin for fast restoration of old photos and building portrait layouts for monuments. Subscription access via the Telegram bot @VetorPluginBOT.';
+    } else if (activeSection === 'plugins') {
+      title = language === 'ru' ? `Плагины Vetor${suffix}` : `Vetor plugins${suffix}`;
+      description = language === 'ru'
+        ? 'Плагины Vetor для графических редакторов: инструменты, которые ускоряют рутину. Сейчас доступен Resto — реставрация фото и макеты для памятников.'
+        : 'Vetor plugins for graphics editors — tools that speed up routine work. Resto is available now: photo restoration and monument layouts.';
     } else if (activeSection === 'price' || isPriceOpen) {
       title = language === 'ru' ? `Прайс${suffix}` : `Pricing${suffix}`;
       description = language === 'ru'
@@ -721,7 +747,7 @@ function App() {
       telephone: siteConfig.contacts?.phoneRaw || siteConfig.contacts?.phone || undefined,
     });
 
-    if (activeSection === 'plugins') {
+    if (activeSection === 'plugins' && activePlugin === 'resto') {
       const restoBot = 'https://t.me/VetorPluginBOT';
       upsertJsonLd('resto-plugin', {
         '@context': 'https://schema.org',
@@ -732,7 +758,7 @@ function App() {
           ? 'Реставрация фото и макеты памятников'
           : 'Photo restoration and monument layouts',
         operatingSystem: 'Windows, macOS',
-        url: `${canonicalDomain}/plugins`,
+        url: `${canonicalDomain}/plugins/resto`,
         description: language === 'ru'
           ? 'Плагин Resto для быстрой реставрации старых фотографий и сборки макетов портретов на памятники. Доступ по подписке.'
           : 'Resto plugin for fast restoration of old photos and building portrait layouts for monuments. Subscription access.',
@@ -778,6 +804,7 @@ function App() {
     activeGalleryItem,
     activeCaseItem,
     activeItem,
+    activePlugin,
     activeSection,
     isPriceOpen,
     isRouteNotFound,
@@ -825,6 +852,8 @@ function App() {
     setActiveItem(null);
     setActiveBlogPost(null);
     setActiveGalleryItem(null);
+    setActiveCaseItem(null);
+    setActivePlugin('');
 
     setActivePriceCategory(null);
 
@@ -850,6 +879,31 @@ function App() {
       return;
     }
     setActivePriceCategory(category);
+  }
+
+  function handleOpenFontPrice() {
+    const category = priceCategories.find((item) => item.id === 'font');
+    if (category) {
+      setActivePriceCategory(category);
+    } else {
+      handleSectionChange('price');
+    }
+  }
+
+  function handleOpenPlugin(slug) {
+    setIsRouteNotFound(false);
+    setActiveItem(null);
+    setActiveBlogPost(null);
+    setActiveGalleryItem(null);
+    setActiveCaseItem(null);
+    setActivePriceCategory(null);
+    setIsPriceOpen(false);
+    setActiveSection('plugins');
+    setActivePlugin(slug);
+  }
+
+  function buildPluginHref(slug) {
+    return buildUrl({ section: 'plugins', pluginId: slug });
   }
 
   function handleSavePriceCategories(nextCategories) {
@@ -1480,16 +1534,24 @@ function App() {
         )}
 
         {!isRouteNotFound && activeSection === 'fonts' && (
-          <FontsPage
-            language={language}
-            copy={pageCopy.fonts}
-            fonts={fonts}
-            studioEnabled={studioEnabled}
-            onEditHeading={() => openPageCopyEditor('fonts', 'Шрифты')}
-            onCreateItem={() => openFontEditor(null)}
-            onEditItem={openFontEditor}
-            onDeleteItem={deleteFont}
-          />
+          <>
+            <FontsPage
+              language={language}
+              copy={pageCopy.fonts}
+              fonts={fonts}
+              studioEnabled={studioEnabled}
+              onEditHeading={() => openPageCopyEditor('fonts', 'Шрифты')}
+              onCreateItem={() => openFontEditor(null)}
+              onEditItem={openFontEditor}
+              onDeleteItem={deleteFont}
+            />
+            <PromoBanner
+              language={language}
+              sectionCopy={FONTS_PROMO_COPY}
+              onOpen={handleOpenFontPrice}
+              href="/price"
+            />
+          </>
         )}
 
         {!isRouteNotFound && activeSection === 'previews' && (
@@ -1613,7 +1675,11 @@ function App() {
           />
         )}
 
-        {!isRouteNotFound && activeSection === 'plugins' && <PluginsPage language={language} />}
+        {!isRouteNotFound && activeSection === 'plugins' && (
+          activePlugin === 'resto'
+            ? <PluginsPage language={language} />
+            : <PluginsCatalogPage language={language} onOpenPlugin={handleOpenPlugin} getPluginHref={buildPluginHref} />
+        )}
       </main>
 
       <Footer language={language} />
