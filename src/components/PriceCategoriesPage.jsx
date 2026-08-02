@@ -4,6 +4,30 @@ import { withBase } from '../utils/format';
 
 const PLACEHOLDER = '/gallery/gallery-placeholder.svg';
 
+// Parse a Russian ruble price string ("от 5 000 ₽", "по запросу") to a number.
+function parseRub(value) {
+  const digits = String(value || '').replace(/[\s ]/g, '').match(/\d+/g);
+  if (!digits) {
+    return null;
+  }
+  const amount = Number(digits.join(''));
+  return Number.isFinite(amount) && amount > 0 ? amount : null;
+}
+
+// Cheapest concrete price for a category → "от N ₽" (skips "по запросу").
+function categoryFromText(category, pricing, language) {
+  const sources = category.kind === 'thumbnails'
+    ? (pricing?.thumbnailSegments || []).map((segment) => segment.price)
+    : ((category.detail && category.detail.rows) || []).map((row) => row.price);
+  const amounts = sources.map(parseRub).filter((value) => value != null);
+  if (!amounts.length) {
+    return '';
+  }
+  const min = Math.min(...amounts);
+  const prefix = language === 'en' ? 'from' : 'от';
+  return `${prefix} ${min.toLocaleString('ru-RU')} ₽`;
+}
+
 const priceCatText = {
   ru: {
     eyebrow: 'Цены',
@@ -25,6 +49,7 @@ function PriceCategoriesPage({
   language,
   copy,
   categories = [],
+  pricing,
   contactUrl,
   studioEnabled = false,
   onEditHeading,
@@ -65,6 +90,7 @@ function PriceCategoriesPage({
           const subtitle = category[subtitleKey] || category.ruSubtitle || '';
           const style = category.accentColor ? { '--price-cat-accent': category.accentColor } : undefined;
           const isContact = category.kind === 'contact';
+          const fromText = categoryFromText(category, pricing, language);
 
           if (isContact) {
             return (
@@ -130,6 +156,7 @@ function PriceCategoriesPage({
                 <div className="price-cat-copy">
                   <h2>{title}</h2>
                   {subtitle ? <p>{subtitle}</p> : null}
+                  {fromText ? <span className="price-cat-from">{fromText}</span> : null}
                 </div>
                 <span className="price-cat-go" aria-hidden="true">
                   <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>

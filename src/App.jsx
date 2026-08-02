@@ -1575,6 +1575,7 @@ function App() {
             language={language}
             copy={pageCopy.price}
             categories={priceCategories}
+            pricing={pricing}
             contactUrl={pricing.contact?.url || siteConfig.contacts?.telegramUrl}
             studioEnabled={studioEnabled}
             onEditHeading={() => openPageCopyEditor('price', 'Цены')}
