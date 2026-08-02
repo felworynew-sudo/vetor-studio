@@ -214,7 +214,7 @@ export function buildUrl({
     pathname = buildBlogPath(blogId);
   } else if (galleryId) {
     pathname = buildGalleryPath(galleryId);
-  } else if (section === 'price' || isPriceOpen) {
+  } else if (section === 'price') {
     pathname = buildPricePath();
   } else if (section === 'gallery' && designCategory && designCategory !== 'all') {
     pathname = buildDesignCategoryPath(designCategory);
@@ -234,6 +234,12 @@ export function buildUrl({
 
   if (section === 'gallery' && designCategory && designCategory !== 'all' && !pathname.startsWith('/design/category/')) {
     params.set('design', designCategory);
+  }
+
+  // Открытая модалка прайса (превью) кодируется как ?price=1 на текущем пути —
+  // тогда URL round-trip'ится и модалка не закрывается редиректом на /price.
+  if (isPriceOpen) {
+    params.set('price', '1');
   }
 
   const queryString = params.toString();

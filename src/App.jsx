@@ -16,6 +16,7 @@ import PluginsPage from './components/PluginsPage';
 import HomeLauncher from './components/HomeLauncher';
 import FontsPage from './components/FontsPage';
 import PriceCategoriesPage from './components/PriceCategoriesPage';
+import PriceCategoryModal from './components/PriceCategoryModal';
 import NotFoundPage from './components/NotFoundPage';
 import Footer from './components/Footer';
 import initialVideos from './data/videos.json';
@@ -51,7 +52,6 @@ const DEFAULT_SECTIONS_VISIBILITY = {
 
 const KNOWN_SECTIONS = ['home', 'previews', 'blog', 'gallery', 'fonts', 'price', 'plugins'];
 const ContentStudio = lazy(() => import('./components/ContentStudio'));
-const PriceCategoryModal = lazy(() => import('./components/PriceCategoryModal'));
 const FormEditorModal = lazy(() => import('./components/FormEditorModal'));
 const PricingEditorModal = lazy(() => import('./components/PricingEditorModal'));
 const BlogComposerModal = lazy(() => import('./components/BlogComposerModal'));
@@ -1052,18 +1052,18 @@ function App() {
   }
 
   function handleOpenPrice() {
+    // Прайс превью — это модалка (PriceModal). Секцию НЕ меняем, чтобы URL был
+    // текущий путь + ?price=1 и корректно восстанавливался (иначе редирект на /price).
     setIsRouteNotFound(false);
-    setActiveSection('price');
     setActiveItem(null);
     setActiveBlogPost(null);
     setActiveGalleryItem(null);
+    setActiveCaseItem(null);
+    setActivePriceCategory(null);
     setIsPriceOpen(true);
   }
 
   function handleClosePrice() {
-    if (activeSection === 'price') {
-      setActiveSection('home');
-    }
     setIsPriceOpen(false);
   }
 
@@ -1655,16 +1655,14 @@ function App() {
       />
 
       {activePriceCategory && (
-        <Suspense fallback={null}>
-          <PriceCategoryModal
-            category={activePriceCategory}
-            language={language}
-            contactUrl={pricing.contact?.url || siteConfig.contacts?.telegramUrl}
-            studioEnabled={studioEnabled}
-            onEdit={() => openPriceCategoryEditor(activePriceCategory)}
-            onClose={() => setActivePriceCategory(null)}
-          />
-        </Suspense>
+        <PriceCategoryModal
+          category={activePriceCategory}
+          language={language}
+          contactUrl={pricing.contact?.url || siteConfig.contacts?.telegramUrl}
+          studioEnabled={studioEnabled}
+          onEdit={() => openPriceCategoryEditor(activePriceCategory)}
+          onClose={() => setActivePriceCategory(null)}
+        />
       )}
 
       {formEditorTarget && (
