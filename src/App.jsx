@@ -1701,6 +1701,7 @@ function App() {
             posts={filteredBlogPosts}
             tagsMap={tagsMap}
             sectionCopy={sectionCopy.blog}
+            loading={!blogLoaded}
             studioEnabled={studioEnabled}
             onEdit={() => openSectionTextEditor('blog')}
             onCreatePost={() => openBlogComposer(null)}

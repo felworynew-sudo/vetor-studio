@@ -319,6 +319,11 @@ select {
   white-space: nowrap;
   text-decoration: none;
 }
+.header-mobile-cta.cta-button {
+  width: 100%;
+  min-height: 44px;
+  text-decoration: none;
+}
 
 .header-price-mobile {
   display: none;

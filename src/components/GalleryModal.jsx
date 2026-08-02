@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import ImageWithFallback from './ImageWithFallback';
+import BeforeAfterSlider from './BeforeAfterSlider';
 import { withBase } from '../utils/format';
 import { getOptimizedImageSrc } from '../utils/responsiveImages';
 import { useModalAccessibility } from '../hooks/useModalAccessibility';
@@ -78,6 +79,8 @@ function GalleryModal({ item, language, onClose }) {
   const activeImage = images[activeIndex] || images[0];
   const alt = activeImage?.[language === 'ru' ? 'ruAlt' : 'enAlt'] || title;
   const hasCarousel = images.length > 1;
+  // Restoration-style items store a before/after slider instead of an image array.
+  const hasSlider = Boolean(item.slider?.before);
 
   function goToPrevious() {
     const nextIndex = Math.max(0, activeIndex - 1);
@@ -133,6 +136,16 @@ function GalleryModal({ item, language, onClose }) {
           </button>
         </div>
 
+        {hasSlider ? (
+          <div className="gallery-viewer gallery-viewer-slider">
+            <BeforeAfterSlider
+              language={language}
+              before={item.slider.before}
+              afterColor={item.slider.afterColor}
+              afterBw={item.slider.afterBw}
+            />
+          </div>
+        ) : (
         <div
           className="gallery-viewer"
           onTouchStart={(event) => {
@@ -184,6 +197,7 @@ function GalleryModal({ item, language, onClose }) {
             </>
           )}
         </div>
+        )}
 
         {hasCarousel && (
           <div className="gallery-thumbs">

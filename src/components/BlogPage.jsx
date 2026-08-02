@@ -4,7 +4,7 @@ import defaultSectionCopy from '../data/sectionCopy';
 import { formatDate, withBase } from '../utils/format';
 import { getOptimizedImageSrc } from '../utils/responsiveImages';
 
-function BlogPage({ language, posts, tagsMap, sectionCopy, studioEnabled = false, onEdit, onCreatePost, onEditPost, onOpenPost }) {
+function BlogPage({ language, posts, tagsMap, sectionCopy, loading = false, studioEnabled = false, onEdit, onCreatePost, onEditPost, onOpenPost }) {
   const copy = {
     ...(defaultSectionCopy.blog[language] ?? defaultSectionCopy.blog.ru),
     ...(sectionCopy?.[language] || {}),
@@ -72,6 +72,10 @@ function BlogPage({ language, posts, tagsMap, sectionCopy, studioEnabled = false
               </button>
             </article>
           ))}
+        </div>
+      ) : loading ? (
+        <div className="empty-state surface-panel">
+          <h2>{language === 'ru' ? 'Загружаем публикации…' : 'Loading posts…'}</h2>
         </div>
       ) : (
         <div className="empty-state surface-panel">

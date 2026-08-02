@@ -209,6 +209,18 @@ function HeaderShell({
                   </section>
                   <div className="owner-menu-divider" />
                   <section className="header-mobile-menu-section">
+                    <a
+                      className="cta-button primary header-mobile-cta"
+                      href={contacts.telegramUrl || 'https://t.me/felwory'}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      {language === 'ru' ? 'Обсудить проект' : 'Start a project'}
+                    </a>
+                  </section>
+                  <div className="owner-menu-divider" />
+                  <section className="header-mobile-menu-section">
                     <span className="header-mobile-menu-section-title">{mobileCopy.language}</span>
                     <LanguageSwitch
                       language={language}
