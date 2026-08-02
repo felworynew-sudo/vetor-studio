@@ -363,6 +363,8 @@ function App() {
   const [sectionCopy, setSectionCopy] = useState(() => loadEditableData('portfolio-section-copy', initialSectionCopy));
   const [palette, setPalette] = useState(() => normalizePalette(loadEditableData(paletteStorageKey, activePalette)));
   const [blogPosts, setBlogPosts] = useState(() => cleanLegacyBlogSamples(loadEditableData('portfolio-blog-json', [])));
+  const [blogLoaded, setBlogLoaded] = useState(false);
+  const blogFetchStartedRef = useRef(false);
   const [galleryItems, setGalleryItems] = useState(() =>
     normalizeGalleryCollection(loadEditableData('portfolio-gallery-json', initialGalleryItems)),
   );
@@ -391,10 +393,18 @@ function App() {
     saveEditableData('portfolio-tags-json', tagsConfig);
   }, [tagsConfig]);
 
+  // blog.json is large (~1.6 MB), so it is fetched lazily \u2014 only when the blog
+  // is actually needed (section opened, a /blog/:id deep link, or an open post).
+  // This keeps it off the critical path for every other page.
+  const needBlog = activeSection === 'blog' || Boolean(routeState.blogId) || Boolean(activeBlogPost);
   useEffect(() => {
+    if (!needBlog || blogFetchStartedRef.current) {
+      return undefined;
+    }
+    blogFetchStartedRef.current = true;
     let cancelled = false;
 
-    fetch(withBase('/data/blog.json'), { cache: 'no-cache' })
+    fetch(withBase('/data/blog.json'))
       .then((response) => (response.ok ? response.text() : Promise.reject(new Error(`HTTP ${response.status}`))))
       .then((text) => {
         if (cancelled) {
@@ -405,17 +415,25 @@ function App() {
         const initialBlogPosts = Array.isArray(parsed) ? parsed : [];
         const savedPosts = loadEditableData('portfolio-blog-json', initialBlogPosts);
         const posts = mergeBlogPostsWithSource(initialBlogPosts, savedPosts);
-        saveEditableData('portfolio-blog-json', posts);
+        // Only owners (studio mode) persist edits; visitors shouldn't cache the
+        // whole blog into localStorage (risks the storage quota).
+        if (studioEnabled) {
+          saveEditableData('portfolio-blog-json', posts);
+        }
         setBlogPosts(posts);
+        setBlogLoaded(true);
       })
       .catch(() => {
         // keep empty list when json is unavailable
+        if (!cancelled) {
+          setBlogLoaded(true);
+        }
       });
 
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [needBlog, studioEnabled]);
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -493,7 +511,9 @@ function App() {
 
     const hasMissingLinkedEntity = Boolean(
       (routeState.workId && !nextWork)
-      || (routeState.blogId && !nextBlog)
+      // A blog deep-link isn't "missing" until blog.json has actually loaded —
+      // otherwise lazy loading would 404 the post before it arrives.
+      || (routeState.blogId && !nextBlog && blogLoaded)
       || (routeState.galleryId && !nextGallery),
     );
 
@@ -526,7 +546,7 @@ function App() {
     }, 0);
 
     return () => window.clearTimeout(timerId);
-  }, [allWorks, blogPosts, galleryItems, routeState, visibleSections]);
+  }, [allWorks, blogPosts, blogLoaded, galleryItems, routeState, visibleSections]);
 
   useEffect(() => {
     if (typeof window === 'undefined' || routeSyncRef.current || isRouteNotFound) {
