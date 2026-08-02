@@ -150,6 +150,14 @@ function HeaderShell({
           <div className="header-contact-desktop">
             <ContactMenu language={language} contacts={contacts} />
           </div>
+          <a
+            className="cta-button primary header-cta-button"
+            href={contacts.telegramUrl || 'https://t.me/felwory'}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {language === 'ru' ? 'Обсудить проект' : 'Start a project'}
+          </a>
           {visibleSections?.price && (
             <a
               className="utility-button header-price-mobile"

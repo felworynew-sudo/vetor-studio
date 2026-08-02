@@ -308,6 +308,18 @@ select {
   display: inline-flex;
 }
 
+/* Prominent "Обсудить проект" CTA — sized down to fit the header bar.
+   Double class beats the base .cta-button source-order for these props. */
+.header-cta-button.cta-button {
+  min-height: 40px;
+  padding: 0 16px;
+  font-size: 13px;
+  border-radius: 12px;
+  box-shadow: 0 8px 22px var(--accent-28);
+  white-space: nowrap;
+  text-decoration: none;
+}
+
 .header-price-mobile {
   display: none;
   align-items: center;
@@ -3214,8 +3226,12 @@ select {
     display: inline-flex !important;
   }
 
-  /* На мобилке: убираем «Контакты», показываем «Цены» */
+  /* На мобилке: убираем «Контакты» и CTA, показываем «Цены» */
   .header-inner.is-client .header-contact-desktop {
+    display: none !important;
+  }
+
+  .header-inner.is-client .header-cta-button {
     display: none !important;
   }
 
