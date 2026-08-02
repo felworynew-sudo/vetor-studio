@@ -6398,18 +6398,16 @@ select {
 }
 .case-carousel-slide {
   flex: 0 0 auto;
-  width: clamp(220px, 42vw, 320px);
+  height: clamp(240px, 44vw, 380px);
   scroll-snap-align: start;
   border-radius: var(--radius-card);
   overflow: hidden;
   border: 1px solid var(--stroke);
+  background: #0b0c11;
 }
-.case-carousel-slide.portrait { aspect-ratio: 3 / 4; }
-.case-carousel-slide.square { aspect-ratio: 1 / 1; }
-.case-carousel-slide.wide { aspect-ratio: 16 / 9; width: clamp(280px, 60vw, 480px); }
 .case-carousel-slide img,
 .case-carousel-slide video {
-  width: 100%; height: 100%; object-fit: cover; display: block;
+  height: 100%; width: auto; max-width: none; object-fit: contain; display: block;
 }
 @media (max-width: 640px) {
   .case-hero-media { aspect-ratio: 4 / 3; }
