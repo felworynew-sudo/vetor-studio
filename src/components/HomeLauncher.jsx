@@ -17,7 +17,7 @@ const launcherText = {
   },
 };
 
-function HomeLauncher({ language, copy: copyOverride, cards = [], onSelect, getSectionHref, studioEnabled = false, onEditHeading, onCreateCard, onEditCard, onDeleteCard }) {
+function HomeLauncher({ language, copy: copyOverride, cards = [], onSelect, getSectionHref, contactUrl, studioEnabled = false, onEditHeading, onCreateCard, onEditCard, onDeleteCard }) {
   const base = launcherText[language] ?? launcherText.ru;
   const copy = {
     eyebrow: copyOverride?.eyebrow || base.eyebrow,
@@ -42,6 +42,38 @@ function HomeLauncher({ language, copy: copyOverride, cards = [], onSelect, getS
         <p className="eyebrow">{copy.eyebrow}</p>
         <h1>{copy.title}</h1>
         <p className="home-launcher-lead">{copy.lead}</p>
+
+        <div className="home-launcher-cta-row">
+          <a
+            className="cta-button primary"
+            href={contactUrl || 'https://t.me/felwory'}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {language === 'ru' ? 'Обсудить проект' : 'Start a project'}
+          </a>
+          {getSectionHref ? (
+            <a
+              className="cta-button secondary"
+              href={getSectionHref('price')}
+              onClick={(event) => {
+                if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button === 1) {
+                  return;
+                }
+                event.preventDefault();
+                onSelect?.('price');
+              }}
+            >
+              {language === 'ru' ? 'Смотреть цены' : 'See pricing'}
+            </a>
+          ) : null}
+        </div>
+        <p className="home-launcher-trust">
+          {language === 'ru'
+            ? 'Работаем удалённо · без созвонов · отвечаем в Telegram'
+            : 'Remote · no calls · we reply on Telegram'}
+        </p>
+
         {studioEnabled && onCreateCard ? (
           <div className="design-actions-row">
             <button type="button" className="cta-button secondary" onClick={onCreateCard}>

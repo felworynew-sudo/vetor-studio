@@ -5639,6 +5639,18 @@ select {
   font-size: 17px;
   line-height: 1.55;
 }
+.home-launcher-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 22px 0 0;
+}
+.home-launcher-trust {
+  margin: 14px 0 0;
+  color: var(--text-soft);
+  font-size: 14px;
+  font-weight: 600;
+}
 .home-launcher-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

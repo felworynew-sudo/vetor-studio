@@ -1562,6 +1562,7 @@ function App() {
             cards={homeCards}
             onSelect={handleSectionChange}
             getSectionHref={buildSectionHref}
+            contactUrl={siteConfig.contacts?.telegramUrl}
             studioEnabled={studioEnabled}
             onEditHeading={() => openPageCopyEditor('home', 'Главная')}
             onCreateCard={() => openHomeCardEditor(null)}
