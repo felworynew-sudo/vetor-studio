@@ -144,7 +144,9 @@ async function main() {
 
   if (sections.gallery) {
     addRoute('/design', null, 'weekly', '0.8');
-    const designCategories = new Set(['logos', 'business-cards', 'brand-identity', 'youtube', 'stickers']);
+    // Only index category pages that actually contain works — an empty
+    // "/design/category/logos" ("Работы не найдены") is worse than no page.
+    const designCategories = new Set();
     for (const item of gallery) {
       if (item?.designCategory) {
         designCategories.add(String(item.designCategory).trim().toLowerCase());

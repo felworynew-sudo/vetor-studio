@@ -660,25 +660,13 @@ function App() {
         : 'Posts, process notes, and breakdowns on thumbnails, design, and media packaging.';
     } else if (activeSection === 'gallery') {
       const categorySeo = language === 'ru' ? {
-        logos: {
-          title: `Заказать логотип — разработка логотипа на заказ${suffix}`,
-          description: 'Разработка логотипа на заказ: знаки для брендов, каналов и проектов. Закажите логотип в студии дизайна Vetor.',
+        restoration: {
+          title: `Реставрация старых фото на заказ${suffix}`,
+          description: 'Реставрация старых и повреждённых фотографий: восстановление, ЧБ и колоризация. Закажите реставрацию фото в студии Vetor.',
         },
-        'brand-identity': {
-          title: `Фирменный стиль на заказ — разработка айдентики${suffix}`,
-          description: 'Разработка фирменного стиля и айдентики на заказ: логотип, цвета, шрифты и носители. Студия Vetor.',
-        },
-        youtube: {
-          title: `Оформление YouTube-канала на заказ${suffix}`,
-          description: 'Оформление YouTube-канала: шапка, аватар, превью и единый визуальный стиль. Закажите в студии Vetor.',
-        },
-        stickers: {
-          title: `Стикеры на заказ — стикерпаки для Telegram${suffix}`,
-          description: 'Стикеры и стикерпаки на заказ для Telegram и соцсетей: маскоты и фирменные наборы. Студия Vetor.',
-        },
-        'business-cards': {
-          title: `Дизайн визиток на заказ${suffix}`,
-          description: 'Дизайн визиток на заказ: аккуратные макеты под печать. Закажите визитку в студии Vetor.',
+        'large-projects': {
+          title: `Крупные проекты и брендинг под ключ${suffix}`,
+          description: 'Крупные проекты студии Vetor: фирменный стиль, брендинг и комплексное оформление под ключ.',
         },
       } : {};
       const catSeo = categorySeo[activeDesignCategory];
