@@ -10,6 +10,7 @@ import PromoBanner from './components/PromoBanner';
 import PriceModal from './components/PriceModal';
 import BlogPage from './components/BlogPage';
 import BlogModal from './components/BlogModal';
+import CaseModal from './components/CaseModal';
 import GalleryPage from './components/GalleryPage';
 import GalleryModal from './components/GalleryModal';
 import PluginsPage from './components/PluginsPage';
@@ -1787,8 +1788,8 @@ function App() {
       )}
       <GalleryModal item={activeGalleryItem} language={language} onClose={handleCloseGalleryItem} />
 
-      <BlogModal
-        post={activeCaseItem}
+      <CaseModal
+        item={activeCaseItem}
         language={language}
         studioEnabled={studioEnabled}
         onEdit={activeCaseItem ? () => handleEditDesignItem(activeCaseItem) : undefined}
