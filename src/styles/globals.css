@@ -2797,7 +2797,9 @@ select {
   }
 
   .hero-block h1 {
-    display: none;
+    font-size: 26px;
+    line-height: 1.1;
+    margin-bottom: 10px;
   }
 
   .eyebrow {

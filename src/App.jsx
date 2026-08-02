@@ -688,11 +688,11 @@ function App() {
         : 'YouTube thumbnails and music covers on order — clickable previews by Vetor Studio.';
     } else if (activeSection === 'fonts') {
       title = language === 'ru'
-        ? `Разработка шрифта на заказ — авторские шрифты${suffix}`
-        : `Custom font development${suffix}`;
+        ? `Авторские шрифты Vetor — скачать кириллические шрифты${suffix}`
+        : `Vetor typefaces — download Cyrillic fonts${suffix}`;
       description = language === 'ru'
-        ? 'Разработка шрифта на заказ: акцидентные и текстовые гарнитуры для брендинга и обложек. Закажите разработать фирменный шрифт в студии Vetor.'
-        : 'Custom font development: display and text typefaces for branding and covers by Vetor Studio.';
+        ? 'Авторские шрифты Vetor с поддержкой кириллицы — для заголовков, обложек и брендинга. Скачать в Telegram-боте. Нужен свой шрифт — разработаем на заказ.'
+        : 'Vetor original Cyrillic typefaces for headlines, covers, and branding. Download via the Telegram bot. Need a custom font — we develop on order.';
     } else if (activeSection === 'plugins' && activePlugin === 'resto') {
       title = language === 'ru'
         ? `Resto — реставрация старых фото и макеты для памятников${suffix}`
@@ -1515,7 +1515,7 @@ function App() {
 
   const copy = {
     eyebrow: siteConfig.heroEyebrow?.[language] ?? getLocalizedText(language, 'latestLabel'),
-    title: siteConfig.siteName[language],
+    title: siteConfig.heroTitle?.[language] ?? siteConfig.siteName[language],
     tagline: siteConfig.siteTagline[language],
     selectedTags: getLocalizedText(language, 'selectedTags'),
     worksCount: getLocalizedText(language, 'worksCount'),
