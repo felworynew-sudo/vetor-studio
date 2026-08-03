@@ -325,6 +325,17 @@ select {
   text-decoration: none;
 }
 
+/* The studio (dev/owner) header carries extra tools and never collapses to the
+   mobile menu, so on tablet widths it used to cram the nav into a horizontal
+   scroll. Hide the visitor-facing CTA + contacts there (not needed while
+   editing) so the priority items keep their space and nothing gets cut. */
+@media (max-width: 940px) {
+  .header-inner.is-studio .header-cta-button,
+  .header-inner.is-studio .header-contact-desktop {
+    display: none !important;
+  }
+}
+
 .header-price-mobile {
   display: none;
   align-items: center;
