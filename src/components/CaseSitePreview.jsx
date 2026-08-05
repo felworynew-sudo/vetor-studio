@@ -1,0 +1,101 @@
+import { useEffect, useState } from 'react';
+import { withBase } from '../utils/format';
+
+const DEVICES = [
+  { key: 'mobile', width: 390, ru: 'Моб', en: 'Mobile' },
+  { key: 'tablet', width: 834, ru: 'Планшет', en: 'Tablet' },
+  { key: 'desktop', width: 0, ru: 'ПК', en: 'Desktop' },
+];
+
+function DeviceBar({ device, onDevice, language, fullscreen, onToggleFullscreen }) {
+  return (
+    <div className="siteprev-bar">
+      <span className="siteprev-dots" aria-hidden="true"><i /><i /><i /></span>
+      <div className="siteprev-devices" role="tablist" aria-label={language === 'ru' ? 'Устройство' : 'Device'}>
+        {DEVICES.map((d) => (
+          <button
+            key={d.key}
+            type="button"
+            role="tab"
+            aria-selected={device === d.key}
+            className={device === d.key ? 'siteprev-device is-active' : 'siteprev-device'}
+            onClick={() => onDevice(d.key)}
+          >
+            {language === 'ru' ? d.ru : d.en}
+          </button>
+        ))}
+      </div>
+      <button
+        type="button"
+        className="siteprev-fs-btn"
+        onClick={onToggleFullscreen}
+        aria-label={fullscreen ? (language === 'ru' ? 'Свернуть' : 'Collapse') : (language === 'ru' ? 'На весь экран' : 'Fullscreen')}
+      >
+        {fullscreen ? (
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" /></svg>
+        ) : (
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" /></svg>
+        )}
+      </button>
+    </div>
+  );
+}
+
+function CaseSitePreview({ block, language }) {
+  const [device, setDevice] = useState('desktop');
+  const [fullscreen, setFullscreen] = useState(false);
+
+  const src = block.src;
+  const note = language === 'ru' ? (block.ruNote || block.note || '') : (block.enNote || block.ruNote || block.note || '');
+  const caption = language === 'ru' ? (block.ruCaption || '') : (block.enCaption || '');
+
+  useEffect(() => {
+    if (!fullscreen) {
+      return undefined;
+    }
+    function onKey(event) {
+      if (event.key === 'Escape') {
+        setFullscreen(false);
+      }
+    }
+    document.addEventListener('keydown', onKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [fullscreen]);
+
+  const dev = DEVICES.find((d) => d.key === device) || DEVICES[2];
+  const screenStyle = dev.width ? { width: `${dev.width}px`, maxWidth: '100%' } : { width: '100%' };
+
+  return (
+    <figure className="case-siteprev">
+      {fullscreen ? <div className="siteprev-fs-backdrop" onClick={() => setFullscreen(false)} /> : null}
+      <div className={fullscreen ? 'siteprev-window is-fs' : 'siteprev-window'}>
+        <DeviceBar
+          device={device}
+          onDevice={setDevice}
+          language={language}
+          fullscreen={fullscreen}
+          onToggleFullscreen={() => setFullscreen((current) => !current)}
+        />
+        <div className={`siteprev-stage device-${device}`}>
+          <div className="siteprev-screen" style={screenStyle}>
+            <iframe
+              className="siteprev-frame"
+              src={withBase(src)}
+              title={language === 'ru' ? 'Превью сайта LifeCopy' : 'LifeCopy site preview'}
+              loading="lazy"
+            />
+          </div>
+        </div>
+      </div>
+      {note ? <p className="siteprev-note">{note}</p> : null}
+      {caption ? <figcaption>{caption}</figcaption> : null}
+    </figure>
+  );
+}
+
+export default CaseSitePreview;

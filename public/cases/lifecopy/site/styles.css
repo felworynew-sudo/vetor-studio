@@ -1,0 +1,523 @@
+/* ============ FONT & TOKENS ============ */
+@font-face{
+  font-family:"LifeCopy";
+  src:url("assets/fonts/lifecopy.ttf") format("truetype");
+  font-display:swap;
+}
+
+:root{
+  --navy-950:#060814;
+  --navy-900:#0a0e1f;
+  --navy-850:#0e1428;
+  --navy-800:#141b33;
+  --card:#1a2340;
+  --card-2:#212c4f;
+  --blue:#3f56d6;
+  --blue-2:#475fa8;
+  --violet:#5b4c87;
+  --lilac:#5c64ab;
+  --brand-grad:linear-gradient(135deg,#4f63c9 0%,#3f4fb0 55%,#5b4c87 100%);
+  --white:#fffdf8;
+  --muted:#a6b0cf;
+  --muted-2:#7f8cb4;
+  --radius:22px;
+  --radius-sm:16px;
+  --maxw:1280px;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Montserrat",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  background:var(--navy-950);
+  color:var(--white);
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+.container{width:100%;max-width:var(--maxw);margin:0 auto;padding:0 24px}
+
+/* soft radial glows in the background */
+body::before{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(760px 520px at 82% 8%,rgba(79,99,201,.28),transparent 60%),
+    radial-gradient(680px 620px at 8% 60%,rgba(91,76,135,.20),transparent 60%),
+    radial-gradient(900px 700px at 90% 95%,rgba(63,79,176,.18),transparent 60%);
+}
+
+/* ============ BUTTONS ============ */
+.btn{
+  --b:var(--brand-grad);
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  font-family:inherit;font-weight:700;font-size:15px;color:var(--white);
+  border:none;border-radius:999px;padding:14px 26px;cursor:pointer;
+  background:var(--b);transition:transform .2s var(--ease),box-shadow .25s var(--ease),filter .2s;
+  box-shadow:0 10px 30px rgba(63,79,176,.35);
+}
+.btn:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(63,79,176,.5)}
+.btn:active{transform:translateY(0)}
+.btn--lg{padding:17px 36px;font-size:16px}
+.btn--light{background:var(--white);color:#20264a;box-shadow:0 12px 30px rgba(0,0,0,.25)}
+.btn--light:hover{box-shadow:0 18px 44px rgba(0,0,0,.35)}
+.btn--ghost{
+  background:transparent;border:1.5px solid rgba(255,255,255,.28);
+  box-shadow:none;font-weight:600;
+}
+.btn--ghost:hover{background:rgba(255,255,255,.06);box-shadow:none}
+.btn__ico{width:18px;height:18px;filter:brightness(0) invert(1)}
+.arrow-circle{
+  display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;
+  background:var(--white);color:#20264a;font-weight:800;margin-left:6px;transition:transform .2s
+}
+.btn--ghost:hover .arrow-circle{transform:translateX(3px)}
+
+/* ============ HEADER ============ */
+.header{
+  position:sticky;top:0;z-index:50;
+  backdrop-filter:blur(10px);
+  background:rgba(6,8,20,.55);
+  border-bottom:1px solid rgba(255,255,255,.06);
+  transition:background .3s;
+}
+.header.scrolled{background:rgba(6,8,20,.9)}
+.header__inner{display:flex;align-items:center;gap:24px;height:88px}
+.header__logo img{height:50px;transition:transform .25s var(--ease)}
+.header__logo:hover img{transform:scale(1.04)}
+.nav{display:flex;gap:34px;margin-left:auto}
+.nav__link{color:var(--muted);font-size:15px;font-weight:500;position:relative;transition:color .2s}
+.nav__link::after{
+  content:"";position:absolute;left:0;bottom:-6px;width:0;height:2px;border-radius:2px;
+  background:var(--brand-grad);transition:width .25s var(--ease)
+}
+.nav__link:hover{color:var(--white)}
+.nav__link:hover::after{width:100%}
+.header__cta{margin-left:0}
+
+.burger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px}
+.burger span{width:26px;height:2.5px;background:var(--white);border-radius:2px;transition:.3s}
+.burger.active span:nth-child(1){transform:translateY(7.5px) rotate(45deg)}
+.burger.active span:nth-child(2){opacity:0}
+.burger.active span:nth-child(3){transform:translateY(-7.5px) rotate(-45deg)}
+
+/* ============ HERO ============ */
+.hero{
+  position:relative;overflow:hidden;padding:0;
+  background-color:var(--navy-950);
+  background-image:
+    linear-gradient(90deg,rgba(6,8,20,.97) 0%,rgba(6,8,20,.86) 25%,rgba(6,8,20,.5) 45%,rgba(6,8,20,.14) 66%,rgba(6,8,20,0) 100%),
+    linear-gradient(to bottom,rgba(6,8,20,0) 66%,var(--navy-950) 100%),
+    url("assets/img/banner-hero.png");
+  background-repeat:no-repeat;
+  background-size:cover,cover,cover;
+  background-position:center,center,center right;
+}
+.hero__inner{display:flex;align-items:center;min-height:min(86vh,820px);padding:64px 24px}
+.hero__content{max-width:560px}
+.hero__logo{display:none} /* показывается только на мобильных — вместо заголовка */
+.hero__visual{display:none} /* баннер-фон заменяет капсулу на десктопе */
+.hero__title{
+  font-weight:800;font-size:clamp(40px,5.6vw,74px);line-height:.98;letter-spacing:-.02em;
+}
+.hero__subtitle{color:var(--muted);font-size:clamp(16px,1.5vw,20px);margin:26px 0 32px;line-height:1.4}
+.hero__badges{list-style:none;display:flex;gap:14px;margin-top:40px;flex-wrap:wrap}
+.badge{
+  display:flex;align-items:center;gap:12px;flex:1;min-width:150px;
+  background:rgba(26,35,64,.6);border:1px solid rgba(255,255,255,.07);
+  border-radius:var(--radius-sm);padding:14px 16px;font-size:12.5px;color:var(--muted);line-height:1.25;font-weight:500;
+}
+.badge__ico{
+  flex:0 0 auto;width:38px;height:38px;border-radius:11px;display:grid;place-items:center;
+  background:var(--brand-grad);
+}
+.badge__ico img{width:20px;height:20px}
+.hero__visual{position:relative}
+.hero__img{
+  width:100%;border-radius:26px;
+  filter:drop-shadow(0 40px 80px rgba(0,0,0,.6));
+}
+
+/* ============ SECTIONS ============ */
+/* отступ для якорных переходов — иначе липкая шапка накрывает заголовок секции */
+.section{padding:70px 0;scroll-margin-top:96px}
+.section__title{
+  font-weight:800;font-size:clamp(28px,3.4vw,44px);letter-spacing:-.01em;margin-bottom:38px;
+}
+.section__head{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:38px;flex-wrap:wrap}
+.section__title--inline{margin-bottom:0}
+.cards-3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+
+/* ---- value cards ---- */
+#about .section__title{margin-bottom:12px}
+#about .cards-3{padding-top:26px}
+.value-card{
+  position:relative;overflow:visible;border-radius:var(--radius);min-height:300px;
+  background:linear-gradient(160deg,var(--card) 0%,var(--card-2) 100%);
+  border:1px solid rgba(255,255,255,.06);display:flex;
+  transition:transform .3s var(--ease),box-shadow .3s;
+}
+.value-card:hover{transform:translateY(-6px);box-shadow:0 30px 60px rgba(0,0,0,.4)}
+.value-card:hover .value-card__img{transform:translateY(-4px)}
+.value-card__body{padding:28px 26px;max-width:56%;position:relative;z-index:2}
+.value-card__ico{
+  display:grid;place-items:center;width:52px;height:52px;border-radius:14px;
+  background:var(--brand-grad);margin-bottom:18px;
+}
+.value-card__ico img{width:26px;height:26px}
+.value-card h3{font-size:22px;font-weight:700;line-height:1.1;margin-bottom:12px}
+.value-card p{color:var(--muted);font-size:14px}
+.value-card__img{
+  position:absolute;right:-6px;bottom:0;height:116%;width:auto;max-width:none;
+  object-fit:contain;object-position:bottom right;z-index:1;
+  filter:drop-shadow(0 24px 28px rgba(0,0,0,.45));
+  transition:transform 1.35s cubic-bezier(.16,.62,.23,1);pointer-events:none;
+}
+
+/* ---- step cards ---- */
+/* flex row so we can drop chevron connectors between the cards */
+#process .section__title{margin-bottom:12px}
+#process .cards-3{display:flex;align-items:flex-end;gap:14px;padding-top:26px}
+.step-card{
+  flex:1;min-width:0;
+  position:relative;overflow:visible;border-radius:var(--radius);min-height:302px;
+  background:linear-gradient(162deg,#2b3e8c 0%,#1a2960 100%);
+  border:1px solid rgba(255,255,255,.1);padding:28px;display:flex;flex-direction:column;
+  transition:transform .3s var(--ease),box-shadow .3s;
+}
+.step-card:hover{transform:translateY(-6px);box-shadow:0 30px 60px rgba(20,30,80,.5)}
+.step-card:hover .step-card__img{transform:translateY(-4px)}
+.step-card__num{
+  font-family:"LifeCopy","Montserrat",sans-serif;
+  font-size:58px;font-weight:800;line-height:1;
+  background:linear-gradient(180deg,#aab6ff,#7186e6);-webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.step-card__text{margin-top:16px;max-width:51%;position:relative;z-index:2}
+.step-card h3{font-size:21px;font-weight:700;margin-bottom:10px}
+/* на десктопе держим заголовки шагов в одну строку — так описания стартуют на одной линии */
+@media(min-width:981px){.step-card h3{white-space:nowrap}}
+.step-card p{color:rgba(255,255,255,.72);font-size:14px}
+.step-card__img{
+  position:absolute;right:-16px;bottom:0;height:124%;width:auto;max-width:none;object-fit:contain;
+  object-position:bottom right;filter:drop-shadow(0 26px 26px rgba(0,0,0,.45));z-index:1;
+  transition:transform 1.35s cubic-bezier(.16,.62,.23,1);pointer-events:none;
+}
+/* card 01 — the capsule stays INSIDE the card (no top overflow), so the row hugs the heading */
+.step-card:first-child .step-card__img{height:99%;right:-12px;bottom:6px;object-position:bottom center}
+/* chevron connectors between cards */
+.step-arrow{
+  flex:0 0 20px;align-self:center;display:flex;justify-content:center;align-items:center;
+  color:rgba(255,255,255,.4);font-size:32px;font-weight:300;line-height:1;
+}
+
+/* ---- catalog ---- */
+#gallery .section__head{margin-bottom:14px}
+/* зазор подобран так, чтобы фигуры чуть перекрывали заголовок, но не задевали кнопку */
+.catalog{display:grid;grid-template-columns:repeat(5,1fr);gap:34px 30px;padding-top:42px}
+.cat-card{
+  position:relative;overflow:visible;border-radius:var(--radius-sm);
+  background:linear-gradient(165deg,#2f4396 0%,#1d2b66 100%);
+  border:1px solid rgba(255,255,255,.1);display:flex;flex-direction:column;justify-content:flex-end;
+  transition:transform .3s var(--ease),box-shadow .3s;
+}
+.cat-card:hover{transform:translateY(-6px);box-shadow:0 26px 50px rgba(29,43,102,.55)}
+.cat-card__photo{position:relative;height:200px;display:flex;align-items:flex-end;justify-content:center}
+.cat-card__photo img{
+  height:272px;width:100%;max-width:100%;object-fit:contain;object-position:bottom center;
+  filter:drop-shadow(0 22px 22px rgba(0,0,0,.4));transition:transform 1.35s cubic-bezier(.16,.62,.23,1);
+}
+.cat-card:hover .cat-card__photo img{transform:translateY(-4px)}
+.cat-card__foot{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px 16px}
+.cat-card__foot h3{font-size:16px;font-weight:700}
+/* резервируем 2 строки, чтобы названия во всех карточках стояли на одной линии */
+.cat-card__foot p{font-size:11.5px;color:rgba(255,255,255,.68);margin-top:2px;min-height:2.6em}
+.cat-card__ico{flex:0 0 auto;width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22)}
+.cat-card__ico img{width:19px;height:19px;opacity:.95;filter:brightness(0) invert(1)}
+.cat-card--extra{display:none}
+.catalog.expanded .cat-card--extra{display:flex}
+
+/* ---- pricing ---- */
+.pricing{
+  display:grid;grid-template-columns:1fr 1fr auto;gap:34px;align-items:center;
+  background:var(--brand-grad);border-radius:34px;padding:44px 46px;
+  box-shadow:0 40px 90px rgba(63,79,176,.35);
+  /* наклон-отклик на клик: см. script.js */
+  transform-style:preserve-3d;will-change:transform;
+  transition:transform .16s cubic-bezier(.33,.9,.4,1),box-shadow .3s;
+}
+/* возврат «с инерцией» — лёгкий перелёт через центр и покачивание */
+.pricing.is-releasing{
+  transition:transform .85s cubic-bezier(.22,1.5,.36,1);
+}
+@media(prefers-reduced-motion:reduce){
+  .pricing,.pricing.is-releasing{transition:none;transform:none!important}
+}
+.pricing__title{font-size:clamp(28px,3vw,40px);font-weight:800;margin-bottom:20px}
+.pricing__label{font-size:14px;opacity:.85;font-weight:600}
+.pricing__price{font-size:clamp(36px,4.4vw,58px);font-weight:800;line-height:1;margin:6px 0 16px}
+.pricing__price span{font-size:.42em;font-weight:600;opacity:.85;vertical-align:middle;margin-right:6px}
+.pricing__note{font-size:14px;opacity:.9;max-width:280px}
+.pricing__list{list-style:none;display:flex;flex-direction:column;gap:13px}
+.pricing__list li{position:relative;padding-left:32px;font-size:15px;font-weight:500}
+.pricing__list li::before{
+  content:"";position:absolute;left:0;top:50%;transform:translateY(-50%);
+  width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.18);
+  border:1px solid rgba(255,255,255,.4);
+}
+.pricing__list li::after{
+  content:"";position:absolute;left:7.5px;top:calc(50% - 4px);width:5px;height:9px;
+  border:solid var(--white);border-width:0 2px 2px 0;transform:rotate(45deg);
+}
+.pricing__cta{
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
+  border-radius:24px;padding:28px 26px;text-align:center;min-width:230px;backdrop-filter:blur(4px);
+}
+.pricing__cta-ico{width:44px;height:44px;margin:0 auto 14px;filter:brightness(0) invert(1)}
+.pricing__cta-title{font-size:20px;font-weight:700;line-height:1.15;margin-bottom:20px}
+
+/* ============ FOOTER ============ */
+.footer{position:relative;padding:80px 0 34px;overflow:hidden;border-top:1px solid rgba(255,255,255,.06)}
+.footer__inner{position:relative;min-height:220px;display:flex;justify-content:center;align-items:center}
+.footer__center{text-align:center;position:relative;z-index:2}
+.footer__logo{
+  height:64px;margin:0 auto 22px;
+  animation:logo-float 7s ease-in-out infinite;
+}
+.footer__slogan{color:var(--muted);font-size:clamp(16px,1.8vw,22px);margin-bottom:28px;line-height:1.4}
+.footer__deco{
+  position:absolute;bottom:-20px;width:min(240px,26vw);opacity:.9;pointer-events:none;
+  filter:drop-shadow(0 20px 40px rgba(0,0,0,.5));
+  transform-style:preserve-3d;will-change:transform;
+}
+/* лёгкое «парение» в 3D — у каждого элемента свой ритм, чтобы не двигались синхронно */
+.footer__deco--left{left:0;animation:float-heart 9s ease-in-out infinite}
+.footer__deco--right{right:0;animation:float-letter 11s ease-in-out infinite}
+
+@keyframes float-heart{
+  0%,100%{transform:perspective(700px) translateY(0) rotateX(0deg) rotateY(0deg) rotateZ(0deg)}
+  25%    {transform:perspective(700px) translateY(-10px) rotateX(5deg) rotateY(-8deg) rotateZ(-2deg)}
+  50%    {transform:perspective(700px) translateY(-4px)  rotateX(-3deg) rotateY(4deg)  rotateZ(2deg)}
+  75%    {transform:perspective(700px) translateY(-13px) rotateX(4deg)  rotateY(9deg)  rotateZ(1deg)}
+}
+@keyframes float-letter{
+  0%,100%{transform:perspective(700px) translateY(0) rotateX(0deg) rotateY(0deg) rotateZ(0deg)}
+  30%    {transform:perspective(700px) translateY(-12px) rotateX(-4deg) rotateY(8deg) rotateZ(2deg)}
+  55%    {transform:perspective(700px) translateY(-5px)  rotateX(5deg)  rotateY(-5deg) rotateZ(-2deg)}
+  80%    {transform:perspective(700px) translateY(-14px) rotateX(-2deg) rotateY(-9deg) rotateZ(1deg)}
+}
+@keyframes logo-float{
+  0%,100%{transform:perspective(700px) translateY(0) rotateY(0deg) rotateZ(0deg)}
+  33%    {transform:perspective(700px) translateY(-5px) rotateY(4deg)  rotateZ(-.6deg)}
+  66%    {transform:perspective(700px) translateY(-2px) rotateY(-4deg) rotateZ(.6deg)}
+}
+/* уважаем системную настройку «уменьшить движение» */
+@media(prefers-reduced-motion:reduce){
+  .footer__logo,.footer__deco--left,.footer__deco--right{animation:none}
+}
+.footer__bottom{
+  display:flex;justify-content:center;gap:28px;flex-wrap:wrap;margin-top:40px;
+  color:var(--muted-2);font-size:13px;
+}
+.footer__bottom a:hover{color:var(--white)}
+
+/* ============ MODAL ============ */
+.modal{position:fixed;inset:0;z-index:100;display:none}
+.modal.open{display:block}
+.modal__overlay{position:absolute;inset:0;background:rgba(4,6,15,.72);backdrop-filter:blur(6px);animation:fade .25s}
+.modal__dialog{
+  position:relative;z-index:2;max-width:460px;margin:6vh auto 0;
+  background:linear-gradient(165deg,var(--navy-800),var(--navy-850));
+  border:1px solid rgba(255,255,255,.1);border-radius:26px;padding:38px 34px;
+  box-shadow:0 40px 100px rgba(0,0,0,.6);animation:pop .3s var(--ease);
+}
+@keyframes fade{from{opacity:0}}
+@keyframes pop{from{opacity:0;transform:translateY(16px) scale(.97)}}
+.modal__close{
+  position:absolute;top:16px;right:18px;background:rgba(255,255,255,.08);border:none;color:var(--white);
+  width:34px;height:34px;border-radius:50%;font-size:22px;line-height:1;cursor:pointer;transition:.2s
+}
+.modal__close:hover{background:rgba(255,255,255,.18)}
+.modal__title{font-size:24px;font-weight:800;margin-bottom:8px}
+.modal__sub{color:var(--muted);font-size:14px;margin-bottom:24px}
+.form{display:flex;flex-direction:column;gap:16px}
+.field{display:flex;flex-direction:column;gap:7px}
+.field>span{font-size:13px;font-weight:600;color:var(--muted)}
+.field input,.field select{
+  font-family:inherit;font-size:15px;color:var(--white);
+  background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.12);
+  border-radius:12px;padding:13px 15px;transition:border-color .2s,background .2s;
+}
+.field input::placeholder{color:var(--muted-2)}
+.field input:focus,.field select:focus{outline:none;border-color:var(--lilac);background:rgba(255,255,255,.08)}
+.field select option{background:var(--navy-800)}
+.field.invalid input{border-color:#e05a6b}
+.field__err{color:#e8899a;font-size:12px;min-height:0;display:none}
+.field.invalid .field__err{display:block}
+.form__submit{margin-top:6px}
+.form__policy{font-size:11px;color:var(--muted-2);text-align:center}
+.form__success{text-align:center;padding:20px 0}
+.form__success .ok{
+  width:74px;height:74px;border-radius:50%;background:var(--brand-grad);margin:0 auto 20px;
+  display:grid;place-items:center;font-size:38px;animation:pop .4s var(--ease)
+}
+.form__success h3{font-size:24px;font-weight:800;margin-bottom:10px}
+.form__success p{color:var(--muted);font-size:15px}
+
+/* ============ 3D-ПОКАЧИВАНИЕ КАРТОЧЕК ============ */
+/* перспектива у контейнеров — без неё наклон выглядел бы плоским */
+/* perspective теперь задаётся внутри самого transform (см. @keyframes card-sway),
+   поэтому на контейнерах она не нужна — иначе накладывалась бы дважды */
+
+.value-card,.step-card,.cat-card{
+  transform-style:preserve-3d;
+  animation:card-sway 7s linear infinite;
+  /* scale/translate — отдельные свойства, поэтому не конфликтуют с rotate из анимации */
+  /* плавное «выплывание»: ease-in-out — мягкий старт и мягкая остановка, без рывка в начале */
+  transition:scale 1.1s cubic-bezier(.42,0,.35,1),translate 1.1s cubic-bezier(.42,0,.35,1),
+             box-shadow 1.1s cubic-bezier(.42,0,.35,1);
+  will-change:transform,scale,translate;  /* держим слой на композиторе — без подёргиваний */
+}
+/* у каждой карточки свой ритм, чтобы ряд не «дышал» синхронно */
+.value-card:nth-child(2),.cat-card:nth-child(2){animation-duration:8.2s;animation-delay:-2s}
+.value-card:nth-child(3),.cat-card:nth-child(3){animation-duration:7.6s;animation-delay:-4s}
+.cat-card:nth-child(4){animation-duration:8.6s;animation-delay:-1.2s}
+.cat-card:nth-child(5){animation-duration:7.9s;animation-delay:-5s}
+.step-card:nth-child(3){animation-duration:8.3s;animation-delay:-2.6s}
+.step-card:nth-child(5){animation-duration:7.7s;animation-delay:-4.4s}
+
+/* Плавная синусоида + linear: скорость нигде не падает до нуля,
+   поэтому нет «пауз» между движениями, как было при ease-in-out на 3 кадрах. */
+@keyframes card-sway{
+  0%,100% {transform:perspective(760px) rotateX(0.82deg) rotateY(0.00deg) translateY(-0.32px)}
+  12%     {transform:perspective(760px) rotateX(0.31deg) rotateY(1.34deg) translateY(-0.05px)}
+  25%     {transform:perspective(760px) rotateX(-0.37deg) rotateY(1.90deg) translateY(-0.92px)}
+  38%     {transform:perspective(760px) rotateX(-0.84deg) rotateY(1.34deg) translateY(-2.43px)}
+  50%     {transform:perspective(760px) rotateX(-0.82deg) rotateY(0.00deg) translateY(-3.68px)}
+  62%     {transform:perspective(760px) rotateX(-0.31deg) rotateY(-1.34deg) translateY(-3.95px)}
+  75%     {transform:perspective(760px) rotateX(0.37deg) rotateY(-1.90deg) translateY(-3.08px)}
+  88%     {transform:perspective(760px) rotateX(0.84deg) rotateY(-1.34deg) translateY(-1.57px)}
+}
+
+/* наведённая карточка плавно «выплывает» ближе.
+   Качание НЕ останавливаем: резкая остановка вращения читается как рывок,
+   даже если сам подъём анимирован плавно. Движение остаётся непрерывным. */
+.value-card:hover,.step-card:hover,.cat-card:hover{
+  scale:1.017;
+  translate:0 -5px;
+  z-index:3;
+}
+.value-card:hover{box-shadow:0 36px 70px rgba(0,0,0,.5)}
+.step-card:hover{box-shadow:0 36px 70px rgba(20,30,80,.55)}
+.cat-card:hover{box-shadow:0 32px 60px rgba(29,43,102,.6)}
+
+@media(prefers-reduced-motion:reduce){
+  .value-card,.step-card,.cat-card{animation:none}
+  .value-card:hover,.step-card:hover,.cat-card:hover{scale:1;translate:0}
+}
+
+/* ============ REVEAL ANIMATION ============ */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.reveal.visible{opacity:1;transform:none}
+
+/* ============ RESPONSIVE ============ */
+@media(max-width:980px){
+  .cards-3{grid-template-columns:1fr}
+  #process .cards-3{flex-direction:column;align-items:stretch}
+  .step-arrow{display:none}
+  .value-card{min-height:280px}
+  .value-card__body{max-width:60%}
+  .catalog{grid-template-columns:repeat(3,1fr)}
+  .pricing{grid-template-columns:1fr 1fr;gap:28px}
+  .pricing__cta{grid-column:1/-1}
+  .step-card__text{max-width:62%}
+  .step-card:first-child .step-card__img{height:120%;bottom:0}
+}
+@media(max-width:760px){
+  .nav,.header__cta{display:none}
+  .burger{display:flex}
+  .nav.open{
+    display:flex;position:absolute;top:80px;left:0;right:0;flex-direction:column;gap:0;
+    background:var(--navy-850);border-bottom:1px solid rgba(255,255,255,.08);padding:8px 0;margin:0;
+  }
+  .header__inner{height:80px}
+  .header__logo img{height:42px}
+  .burger{margin-left:auto}   /* гамбургер — в правую часть шапки */
+  .nav.open .nav__link{padding:15px 24px}
+  .nav.open .nav__link::after{display:none}
+  /* мобильный герой по макету: баннер-блок сверху, поверх — логотип, кнопка, подпись.
+     Никакого затемнения сверху — голова фигуры остаётся чистой. */
+  .hero{
+    background-image:
+      linear-gradient(96deg,rgba(6,8,20,.93) 0%,rgba(6,8,20,.78) 30%,
+                             rgba(6,8,20,.28) 52%,rgba(6,8,20,0) 70%),
+      linear-gradient(to bottom,rgba(6,8,20,0) 58%,var(--navy-950) 100%),
+      url("assets/img/banner-mobile.png");
+    background-size:auto,100% 89.3vw,132% auto;
+    background-position:left top,left top,66% top;
+    background-repeat:no-repeat,no-repeat,no-repeat;
+    background-color:var(--navy-950);
+  }
+  .hero__inner{
+    flex-direction:column;align-items:stretch;
+    min-height:0;gap:0;padding:24px 24px 30px;
+  }
+  /* высота контента = высота баннер-блока, чтобы плашки начинались уже под картинкой */
+  .hero__content{
+    max-width:none;width:100%;display:flex;flex-direction:column;
+    min-height:calc(89.3vw - 44px);
+  }
+  .hero__visual{display:none}
+  /* логотип вместо заголовка; сам h1 оставляем в DOM для SEO, но скрываем визуально */
+  .hero__logo{display:block;width:min(53%,210px);height:auto;margin-bottom:18px}
+  .hero__title{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .hero__subtitle{
+    order:3;max-width:11.5em;margin:18px 0 0;font-size:14.5px;line-height:1.35;
+  }
+  .hero .btn--lg{order:2;align-self:flex-start;padding:15px 30px}
+  /* плашки прижаты к низу экрана, уже на затемнённой части картинки */
+  /* nowrap обязателен: column+wrap при ограниченной высоте героя уводил плашки во вторую колонку */
+  .hero__badges{order:4;margin-top:26px;padding-top:0;gap:8px;flex-direction:column;flex-wrap:nowrap}
+  .badge{
+    min-width:0;width:100%;padding:11px 14px;font-size:13px;
+    background:rgba(14,20,40,.72);backdrop-filter:blur(6px);
+  }
+  .badge__ico{width:34px;height:34px;border-radius:10px}
+  .badge__ico img{width:18px;height:18px}
+  /* ---- карточки на мобилке: фигуру задаём ШИРИНОЙ, иначе она наезжает на текст ---- */
+  #about .cards-3,#process .cards-3{gap:16px}
+  .value-card{min-height:210px}
+  .value-card__body{max-width:58%;padding:22px 20px}
+  .value-card h3{font-size:19px}
+  .value-card__img{width:46%;height:auto;right:0;bottom:0}
+
+  .step-card{min-height:196px;padding:22px 20px}
+  .step-card__num{font-size:46px}
+  .step-card h3{font-size:19px}
+  .step-card__text{max-width:58%;margin-top:12px}
+  .step-card__img{width:44%;height:auto;right:2px;bottom:0}
+  .step-card:first-child .step-card__img{width:50%;right:-2px;bottom:4px}
+
+  .catalog{grid-template-columns:repeat(2,1fr);gap:26px 16px;padding-top:34px}
+  .cat-card__photo{height:158px}
+  .cat-card__photo img{height:216px}
+  .cat-card__foot{padding:13px 13px}
+  .cat-card__foot h3{font-size:14px}
+  .cat-card__foot p{font-size:10.5px}
+  .cat-card__ico{width:32px;height:32px;border-radius:9px}
+  .cat-card__ico img{width:16px;height:16px}
+
+  .pricing{grid-template-columns:1fr;padding:32px 26px;text-align:center}
+  .pricing__note,.pricing__price{margin-left:auto;margin-right:auto}
+  .pricing__list{max-width:260px;margin:0 auto}
+  .pricing__list li{text-align:left}
+  .footer__deco{display:none}
+  .section{padding:52px 0}
+}
+@media(max-width:420px){
+  .badge{min-width:0}
+  .value-card__body,.step-card__text{max-width:60%}
+  .cat-card__photo{height:146px}
+  .cat-card__photo img{height:200px}
+}

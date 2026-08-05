@@ -218,6 +218,16 @@ function GalleryItemEditorModal({ item, language, onSave, onClose }) {
     }));
   }
 
+  function updateCardField(field, value) {
+    setForm((current) => ({
+      ...current,
+      card: {
+        ...(current.card || {}),
+        [field]: value,
+      },
+    }));
+  }
+
   function handleSubmit(event) {
     event.preventDefault();
     const normalizedCategory = normalizeDesignCategory(form.designCategory);
@@ -319,6 +329,25 @@ function GalleryItemEditorModal({ item, language, onSave, onClose }) {
               <label className="studio-field">
                 <span>{language === 'ru' ? 'Реставрация — ЧБ' : 'Restored — B/W'}</span>
                 <input value={form.slider?.afterBw || ''} onChange={(event) => updateSliderField('afterBw', event.target.value)} placeholder="/restoration/bw.png" />
+              </label>
+            </div>
+          </section>
+
+          <section className="gallery-editor-section">
+            <h3>{language === 'ru' ? 'Визитка «переворот» (необязательно)' : 'Flip business card (optional)'}</h3>
+            <p className="gallery-editor-note">
+              {language === 'ru'
+                ? 'Для визиток. Заполните «Лицо» — работа покажется как переворачивающаяся карточка. Пути к картинкам в /public.'
+                : 'For business cards. Fill "Front" to render this work as a flip card. Image paths in /public.'}
+            </p>
+            <div className="gallery-editor-grid two">
+              <label className="studio-field">
+                <span>{language === 'ru' ? 'Лицо (front)' : 'Front'}</span>
+                <input value={form.card?.front || ''} onChange={(event) => updateCardField('front', event.target.value)} placeholder="/cards/card-front.webp" />
+              </label>
+              <label className="studio-field">
+                <span>{language === 'ru' ? 'Оборот (back)' : 'Back'}</span>
+                <input value={form.card?.back || ''} onChange={(event) => updateCardField('back', event.target.value)} placeholder="/cards/card-back.webp" />
               </label>
             </div>
           </section>

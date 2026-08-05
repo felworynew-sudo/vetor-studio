@@ -612,6 +612,638 @@
     "createdAt": "2026-08-01"
   },
   {
+    "id": "case-lifecopy",
+    "ruTitle": "LifeCopy — бренд, сайт и софт для студии 3D-печати людей",
+    "enTitle": "",
+    "ruDescription": "Студия печатает фотореалистичные 3D-фигурки людей по фотограмметрии. Собрал для неё фирменный стиль, сайт, упаковку и собственный софт для сборки моделей — и вместе с коллегой добавил маркетинговые механики, которые вывели проект из минуса в плюс.",
+    "enDescription": "",
+    "designCategory": "large-projects",
+    "featured": true,
+    "ratio": "wide",
+    "cover": "/cases/lifecopy/img/banner-hero.webp",
+    "images": [],
+    "blocks": [
+      {
+        "id": "lc-b1",
+        "type": "text",
+        "ruText": "С чего всё началось",
+        "enText": "",
+        "size": "hero",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b2",
+        "type": "text",
+        "ruText": "LifeCopy занимается фотореалистичной 3D-печатью людей. Человека снимают в специальной фотобудке — одновременно делается множество кадров со всех возможных ракурсов, а затем по фотограмметрии собирается объёмная модель для печати. На выходе — миниатюрная копия человека.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b3",
+        "type": "carousel",
+        "ruCaption": "Примеры готовых фигурок: от одиночных портретов до пар, семей и выпускников.",
+        "enCaption": "",
+        "images": [
+          {
+            "src": "/cases/lifecopy/img/family.webp",
+            "ruAlt": "Семья",
+            "ratio": "portrait"
+          },
+          {
+            "src": "/cases/lifecopy/img/couple.webp",
+            "ruAlt": "Пара",
+            "ratio": "portrait"
+          },
+          {
+            "src": "/cases/lifecopy/img/graduate.webp",
+            "ruAlt": "Выпускница",
+            "ratio": "portrait"
+          },
+          {
+            "src": "/cases/lifecopy/img/graduates.webp",
+            "ruAlt": "Выпускники",
+            "ratio": "portrait"
+          },
+          {
+            "src": "/cases/lifecopy/img/basketball.webp",
+            "ruAlt": "Баскетболист",
+            "ratio": "portrait"
+          },
+          {
+            "src": "/cases/lifecopy/img/dance.webp",
+            "ruAlt": "Танец",
+            "ratio": "portrait"
+          },
+          {
+            "src": "/cases/lifecopy/img/man-suit.webp",
+            "ruAlt": "Мужчина в пиджаке",
+            "ratio": "portrait"
+          },
+          {
+            "src": "/cases/lifecopy/img/girl-bust.webp",
+            "ruAlt": "Портрет по пояс",
+            "ratio": "portrait"
+          }
+        ]
+      },
+      {
+        "id": "lc-b4",
+        "type": "text",
+        "ruText": "Когда студия обратилась ко мне, у неё было несколько болей:",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b5",
+        "type": "text",
+        "ruText": "— Фрилансеры делали 3D-модель человека долго и недостаточно детализированно, да ещё и дорого. Клиенту приходилось подолгу ждать, а из-за подрядчиков росла себестоимость и конечный чек. Держать дизайнера в штате компания при этом не хотела.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b6",
+        "type": "text",
+        "ruText": "— Не было нормального сайта.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b7",
+        "type": "text",
+        "ruText": "— Не было узнаваемого дизайна: ни логотипа, ни визиток, ни стиля.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b8",
+        "type": "text",
+        "ruText": "— Экономика не сходилась: студия работала скорее в минус, чем в плюс.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b9",
+        "type": "text",
+        "ruText": "В процессе, помимо всего перечисленного, мы разработали упаковку для фигурок, а вместе с моим коллегой — ещё и несколько стратегий и акций для роста среднего чека и продаж в целом. В маркетинге я разбираюсь не глубоко, поэтому этой темы коснусь лишь по касательной.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b10",
+        "type": "text",
+        "ruText": "Блок 1. Дизайн",
+        "enText": "",
+        "size": "hero",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b11",
+        "type": "text",
+        "ruText": "Сайт",
+        "enText": "",
+        "size": "body",
+        "bold": true,
+        "italic": false,
+        "accent": true,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b12",
+        "type": "text",
+        "ruText": "Собрал для студии сайт-лендинг: понятная структура, акцент на процессе съёмки и на самих фигурках, прозрачная стоимость и запись за пару кликов. Ниже — интерактивное превью: переключайте вид между мобильным, планшетом и ПК, листайте страницу и при желании откройте её на весь экран.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b13",
+        "type": "site-preview",
+        "src": "/cases/lifecopy/site/index.html",
+        "ruNote": "Это превью для портфолио. Фактическая доступность боевого сайта и его наполнение могут отличаться от этого макета.",
+        "enNote": "",
+        "ruCaption": ""
+      },
+      {
+        "id": "lc-b14",
+        "type": "text",
+        "ruText": "Логотип",
+        "enText": "",
+        "size": "body",
+        "bold": true,
+        "italic": false,
+        "accent": true,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b15",
+        "type": "text",
+        "ruText": "Сделал логотип блочного вида — плотный, узнаваемый, хорошо читается даже в мелком размере. Ниже знак крупным планом (он живой — слегка покачивается в 3D), горизонтальная версия, набор фавиконок под разные площадки и фирменная палитра.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b16",
+        "type": "logo",
+        "heroSrc": "/cases/lifecopy/logo-block.svg",
+        "horizontalSrc": "/cases/lifecopy/logo-horizontal.svg",
+        "faviconsSrc": "/cases/lifecopy/favicons.svg",
+        "paletteSrc": "/cases/lifecopy/colors.svg",
+        "ruCaption": ""
+      },
+      {
+        "id": "lc-b17",
+        "type": "text",
+        "ruText": "Визитки",
+        "enText": "",
+        "size": "body",
+        "bold": true,
+        "italic": false,
+        "accent": true,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b18",
+        "type": "text",
+        "ruText": "Три варианта визиток в едином стиле — под разные задачи и получателей. Каждая двусторонняя.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b19",
+        "type": "cards-flip",
+        "ruHint": "Наведите на визитку, чтобы перевернуть её и увидеть оборот. На телефоне — нажмите на визитку.",
+        "enHint": "",
+        "ruCaption": "",
+        "cards": [
+          {
+            "front": "/cases/lifecopy/img/card1-front.webp",
+            "back": "/cases/lifecopy/img/card1-back.webp",
+            "ruAlt": "Визитка 1"
+          },
+          {
+            "front": "/cases/lifecopy/img/card2-front.webp",
+            "back": "/cases/lifecopy/img/card2-back.webp",
+            "ruAlt": "Визитка 2"
+          },
+          {
+            "front": "/cases/lifecopy/img/card3-front.webp",
+            "back": "/cases/lifecopy/img/card3-back.webp",
+            "ruAlt": "Визитка 3"
+          }
+        ]
+      },
+      {
+        "id": "lc-b20",
+        "type": "text",
+        "ruText": "Упаковка и айдентика",
+        "enText": "",
+        "size": "body",
+        "bold": true,
+        "italic": false,
+        "accent": true,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b21",
+        "type": "text",
+        "ruText": "Разработал упаковку для фигурок: базовая коробка и премиальная колба-капсула, в которой фигурка защищена от механических повреждений и выглядит как коллекционный объект. Плюс единый визуальный язык — 3D-элементы бренда, иконки и паттерны.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b22",
+        "type": "carousel",
+        "ruCaption": "Упаковка и фирменные 3D-элементы.",
+        "enCaption": "",
+        "images": [
+          {
+            "src": "/cases/lifecopy/img/pack-flask.webp",
+            "ruAlt": "Колба-капсула",
+            "ratio": "portrait"
+          },
+          {
+            "src": "/cases/lifecopy/img/capsule.webp",
+            "ruAlt": "Капсула",
+            "ratio": "portrait"
+          },
+          {
+            "src": "/cases/lifecopy/img/pack-box.webp",
+            "ruAlt": "Коробка",
+            "ratio": "portrait"
+          },
+          {
+            "src": "/cases/lifecopy/img/letter-l-3d.webp",
+            "ruAlt": "3D-буква L",
+            "ratio": "square"
+          },
+          {
+            "src": "/cases/lifecopy/img/heart-3d.webp",
+            "ruAlt": "3D-сердце",
+            "ratio": "square"
+          },
+          {
+            "src": "/cases/lifecopy/img/white-model.webp",
+            "ruAlt": "Белая модель",
+            "ratio": "portrait"
+          }
+        ]
+      },
+      {
+        "id": "lc-b23",
+        "type": "text",
+        "ruText": "Шрифт LifeCopy",
+        "enText": "",
+        "size": "body",
+        "bold": true,
+        "italic": false,
+        "accent": true,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b24",
+        "type": "text",
+        "ruText": "Для бренда сделал отдельный акцидентный шрифт LifeCopy — пока только кириллица. Он же лежит в открытом доступе: его можно бесплатно скачать в нашем каталоге шрифтов.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b25",
+        "type": "image",
+        "src": "/fonts/lifecopy.jpg",
+        "ratio": "wide",
+        "ruCaption": "Шрифт LifeCopy — акцидентная кириллическая гарнитура.",
+        "enCaption": "",
+        "ruAlt": "Шрифт LifeCopy",
+        "enAlt": ""
+      },
+      {
+        "id": "lc-b26",
+        "type": "text",
+        "ruText": "Открыть шрифт в каталоге →",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "/fonts",
+        "linkStyle": "button"
+      },
+      {
+        "id": "lc-b27",
+        "type": "text",
+        "ruText": "Блок 2. IT-составляющая",
+        "enText": "",
+        "size": "hero",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b28",
+        "type": "text",
+        "ruText": "Софт для сборки 3D-моделей",
+        "enText": "",
+        "size": "body",
+        "bold": true,
+        "italic": false,
+        "accent": true,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b29",
+        "type": "text",
+        "ruText": "Главная боль студии — долгая и дорогая ручная сборка моделей у фрилансеров. Мы разработали специализированный софт, который берёт на себя 90–100% работы и сам собирает 3D-модель под печать.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b30",
+        "type": "text",
+        "ruText": "На ноутбуке Thunderobot, на котором мы тестировали, полный цикл занимает около 30 минут. На мощном ПК — буквально 5–10 минут на одну модель. Скорость упирается только в железо, а не в человека.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b31",
+        "type": "text",
+        "ruText": "Трекер заказов",
+        "enText": "",
+        "size": "body",
+        "bold": true,
+        "italic": false,
+        "accent": true,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b32",
+        "type": "text",
+        "ruText": "Параллельно мы начали делать трекер заказов. Но тут случился забавный поворот: благодаря автоматической сборке моделей срок изготовления сократился до одного дня — и трекер попросту потерял смысл своего существования. Его разработку остановили ровно на середине за ненадобностью.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": true,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b33",
+        "type": "text",
+        "ruText": "Блок 3. Маркетинг",
+        "enText": "",
+        "size": "hero",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b34",
+        "type": "text",
+        "ruText": "Помимо продукта, вместе с коллегой мы собрали несколько механик, которые бьют в средний чек и в продажи с разных сторон.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b35",
+        "type": "text",
+        "ruText": "Гарантийные периоды",
+        "enText": "",
+        "size": "body",
+        "bold": true,
+        "italic": false,
+        "accent": true,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b36",
+        "type": "text",
+        "ruText": "Ввели платные гарантийные периоды — по логике карты «Привилегия» у Sokolov: за дополнительную плату клиент получает срок, в течение которого можно бесплатно переделать фигурку при поломке или заказать чистку. Это и повышает чек, и удерживает клиента в сервисе.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b37",
+        "type": "text",
+        "ruText": "Типы упаковки",
+        "enText": "",
+        "size": "body",
+        "bold": true,
+        "italic": false,
+        "accent": true,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b38",
+        "type": "text",
+        "ruText": "Сделали упаковку апселлом: можно забрать фигурку просто в коробке, а можно доплатить за премиальную колбу, в которой фигурка защищена и смотрится как коллекционный предмет. Понятная доплата, которую охотно берут.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b39",
+        "type": "text",
+        "ruText": "Бюджетные исполнения",
+        "enText": "",
+        "size": "body",
+        "bold": true,
+        "italic": false,
+        "accent": true,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b40",
+        "type": "text",
+        "ruText": "Добавили бюджетные версии, чтобы охватить и менее платёжеспособную аудиторию. Так воронка расширилась вниз, не размывая премиальный сегмент.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b41",
+        "type": "text",
+        "ruText": "Готовые фигурки с витрины",
+        "enText": "",
+        "size": "body",
+        "bold": true,
+        "italic": false,
+        "accent": true,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b42",
+        "type": "text",
+        "ruText": "Ввели продажу готовых фигурок прямо с витрины — очевидная идея, которая почему-то раньше не была реализована. Это импульсные покупки и дополнительная выручка без затрат на съёмку.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b43",
+        "type": "text",
+        "ruText": "В сумме получилось несколько независимых точек роста: апселлы (гарантия и упаковка), расширение аудитории (бюджетные версии) и импульсные продажи (витрина).",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b44",
+        "type": "text",
+        "ruText": "Маркетинговую часть мы прорабатывали вместе с моим коллегой — я отвечал за продукт и дизайн, поэтому описываю её обзорно.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": true,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b45",
+        "type": "text",
+        "ruText": "Итог",
+        "enText": "",
+        "size": "hero",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "lc-b46",
+        "type": "text",
+        "ruText": "Проект получился комплексным: от фирменного стиля, сайта и упаковки до собственного софта и маркетинговых механик. Студия получила узнаваемый бренд, работающий сайт, автоматизацию, которая срезала сроки и себестоимость, и несколько рычагов роста выручки — и вышла из минуса в плюс.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      }
+    ],
+    "createdAt": "2026-08-05"
+  },
+  {
     "id": "gallery-restoration-001",
     "ruTitle": "Реставрация портрета",
     "enTitle": "Portrait restoration",
@@ -627,5 +1259,172 @@
       "afterBw": "/restoration/bw.png"
     },
     "createdAt": "2026-07-28"
+  },
+  {
+    "id": "gallery-restoration-002",
+    "ruTitle": "Восстановление старого портрета",
+    "enTitle": "",
+    "ruDescription": "Убраны царапины, заломы и выцветание, восстановлены детали. Переключите ЧБ/цвет.",
+    "enDescription": "",
+    "designCategory": "restoration",
+    "featured": false,
+    "ratio": "square",
+    "images": [],
+    "slider": {
+      "before": "/restoration/r1-before.webp",
+      "afterColor": "/restoration/r1-color.webp",
+      "afterBw": "/restoration/r1-bw.webp"
+    },
+    "createdAt": "2026-08-04"
+  },
+  {
+    "id": "gallery-restoration-003",
+    "ruTitle": "Реставрация повреждённого снимка",
+    "enTitle": "",
+    "ruDescription": "Восстановлены повреждённые участки и черты лица. Доступны версии в ЧБ и в цвете.",
+    "enDescription": "",
+    "designCategory": "restoration",
+    "featured": false,
+    "ratio": "square",
+    "images": [],
+    "slider": {
+      "before": "/restoration/r2-before.webp",
+      "afterColor": "/restoration/r2-color.webp",
+      "afterBw": "/restoration/r2-bw.webp"
+    },
+    "createdAt": "2026-08-04"
+  },
+  {
+    "id": "gallery-restoration-004",
+    "ruTitle": "Реставрация и колоризация фото",
+    "enTitle": "",
+    "ruDescription": "Реставрация и колоризация: снимок очищен от дефектов и аккуратно раскрашен. Переключите ЧБ/цвет.",
+    "enDescription": "",
+    "designCategory": "restoration",
+    "featured": false,
+    "ratio": "square",
+    "images": [],
+    "slider": {
+      "before": "/restoration/r3-before.webp",
+      "afterColor": "/restoration/r3-color.webp",
+      "afterBw": "/restoration/r3-bw.webp"
+    },
+    "createdAt": "2026-08-04"
+  },
+  {
+    "id": "gallery-restoration-005",
+    "ruTitle": "Восстановление семейного фото",
+    "enTitle": "",
+    "ruDescription": "Возвращены утраченные детали и тон кожи, убраны повреждения. Переключите ЧБ/цвет.",
+    "enDescription": "",
+    "designCategory": "restoration",
+    "featured": false,
+    "ratio": "square",
+    "images": [],
+    "slider": {
+      "before": "/restoration/r4-before.webp",
+      "afterColor": "/restoration/r4-color.webp",
+      "afterBw": "/restoration/r4-bw.webp"
+    },
+    "createdAt": "2026-08-04"
+  },
+  {
+    "id": "gallery-restoration-006",
+    "ruTitle": "Реставрация выцветшего снимка",
+    "enTitle": "",
+    "ruDescription": "Восстановлен выцветший снимок, выровнены контраст и тон. Доступны версии в ЧБ и в цвете.",
+    "enDescription": "",
+    "designCategory": "restoration",
+    "featured": false,
+    "ratio": "square",
+    "images": [],
+    "slider": {
+      "before": "/restoration/r5-before.webp",
+      "afterColor": "/restoration/r5-color.webp",
+      "afterBw": "/restoration/r5-bw.webp"
+    },
+    "createdAt": "2026-08-04"
+  },
+  {
+    "id": "gallery-restoration-007",
+    "ruTitle": "Восстановление архивной фотографии",
+    "enTitle": "",
+    "ruDescription": "Архивное фото очищено от царапин и пятен, восстановлены детали. Переключите ЧБ/цвет.",
+    "enDescription": "",
+    "designCategory": "restoration",
+    "featured": false,
+    "ratio": "square",
+    "images": [],
+    "slider": {
+      "before": "/restoration/r6-before.webp",
+      "afterColor": "/restoration/r6-color.webp",
+      "afterBw": "/restoration/r6-bw.webp"
+    },
+    "createdAt": "2026-08-04"
+  },
+  {
+    "id": "gallery-restoration-008",
+    "ruTitle": "Реставрация старого кадра",
+    "enTitle": "",
+    "ruDescription": "Реставрация старого кадра с восстановлением резкости и деталей. Переключите ЧБ/цвет.",
+    "enDescription": "",
+    "designCategory": "restoration",
+    "featured": false,
+    "ratio": "square",
+    "images": [],
+    "slider": {
+      "before": "/restoration/r7-before.webp",
+      "afterColor": "/restoration/r7-color.webp",
+      "afterBw": "/restoration/r7-bw.webp"
+    },
+    "createdAt": "2026-08-04"
+  },
+  {
+    "id": "card-lifecopy-1",
+    "ruTitle": "Визитка LifeCopy — менеджер",
+    "enTitle": "",
+    "ruDescription": "Двусторонняя визитка студии 3D-печати. Наведите или нажмите, чтобы перевернуть.",
+    "enDescription": "",
+    "designCategory": "business-cards",
+    "featured": false,
+    "ratio": "landscape",
+    "images": [],
+    "card": {
+      "front": "/cards/lifecopy-1-front.webp",
+      "back": "/cards/lifecopy-1-back.webp"
+    },
+    "createdAt": "2026-08-05"
+  },
+  {
+    "id": "card-lifecopy-2",
+    "ruTitle": "Визитка LifeCopy — «семья»",
+    "enTitle": "",
+    "ruDescription": "Промо-визитка с фигуркой семьи. Наведите или нажмите, чтобы перевернуть.",
+    "enDescription": "",
+    "designCategory": "business-cards",
+    "featured": false,
+    "ratio": "landscape",
+    "images": [],
+    "card": {
+      "front": "/cards/lifecopy-2-front.webp",
+      "back": "/cards/lifecopy-2-back.webp"
+    },
+    "createdAt": "2026-08-05"
+  },
+  {
+    "id": "card-lifecopy-3",
+    "ruTitle": "Визитка LifeCopy — «момент»",
+    "enTitle": "",
+    "ruDescription": "Промо-визитка «Ваш момент в объёме». Наведите или нажмите, чтобы перевернуть.",
+    "enDescription": "",
+    "designCategory": "business-cards",
+    "featured": false,
+    "ratio": "landscape",
+    "images": [],
+    "card": {
+      "front": "/cards/lifecopy-3-front.webp",
+      "back": "/cards/lifecopy-3-back.webp"
+    },
+    "createdAt": "2026-08-05"
   }
 ]

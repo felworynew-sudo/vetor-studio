@@ -6235,6 +6235,37 @@ select {
   line-height: 1.5;
 }
 
+/* Design gallery: flip business-card tile */
+.design-flipcard-card {
+  position: relative;
+  padding: 14px;
+  border-radius: var(--radius-card);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.flipcard.design-flipcard {
+  flex: none;
+  width: 100%;
+  max-width: none;
+}
+.design-flipcard-hint {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-soft);
+}
+.gallery-viewer-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 28px;
+  min-height: 320px;
+}
+.gallery-viewer-card .flipcard.design-flipcard { max-width: 520px; }
+.gallery-card-hint { margin: 0; font-size: 13px; color: var(--text-soft); }
+
 /* Design gallery: large-project CASE card */
 .design-case-card {
   position: relative;
@@ -6470,4 +6501,198 @@ select {
   .case-hero-media { aspect-ratio: 4 / 3; }
   .case-p { font-size: 16px; }
   .case-h2 { margin-top: 32px; }
+}
+
+/* ---- Case: interactive site preview ---------------------------------- */
+.case-siteprev { margin: 28px 0; }
+.siteprev-window {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius-card);
+  background: #0b0c11;
+  overflow: hidden;
+}
+.siteprev-window.is-fs {
+  position: fixed;
+  inset: 12px;
+  z-index: 210;
+  border-radius: 16px;
+  box-shadow: 0 40px 120px rgba(0, 0, 0, 0.6);
+}
+.siteprev-fs-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 205;
+  background: rgba(4, 4, 10, 0.72);
+  backdrop-filter: blur(4px);
+}
+.siteprev-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid var(--stroke);
+}
+.siteprev-dots { display: inline-flex; gap: 6px; flex: 0 0 auto; }
+.siteprev-dots i { width: 10px; height: 10px; border-radius: 999px; background: rgba(255, 255, 255, 0.16); }
+.siteprev-devices {
+  display: inline-flex;
+  gap: 3px;
+  margin: 0 auto;
+  padding: 3px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 999px;
+}
+.siteprev-device {
+  padding: 5px 13px;
+  border: 0;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-soft);
+  background: transparent;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.siteprev-device.is-active { background: var(--accent); color: #10121a; }
+.siteprev-fs-btn {
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 9px;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+}
+.siteprev-fs-btn svg { width: 18px; height: 18px; }
+.siteprev-stage {
+  height: clamp(380px, 56vh, 560px);
+  display: flex;
+  justify-content: center;
+  overflow: auto;
+  background: #04050a;
+}
+.siteprev-window.is-fs .siteprev-stage { height: auto; flex: 1; }
+.siteprev-stage.device-mobile,
+.siteprev-stage.device-tablet { padding: 16px; }
+.siteprev-screen { height: 100%; flex: 0 0 auto; }
+.device-mobile .siteprev-screen,
+.device-tablet .siteprev-screen {
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--stroke);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+}
+.siteprev-frame { width: 100%; height: 100%; border: 0; display: block; background: #ffffff; }
+.siteprev-note { margin: 12px 2px 0; font-size: 13px; line-height: 1.5; color: var(--text-soft); font-style: italic; }
+
+/* ---- Case: flip business cards --------------------------------------- */
+.case-cards { margin: 28px 0; }
+.case-cards-row { display: flex; flex-wrap: wrap; gap: 16px; }
+.flipcard {
+  flex: 1 1 260px;
+  max-width: 360px;
+  aspect-ratio: 1000 / 556;
+  perspective: 1200px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.flipcard-inner {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 520ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.flipcard:hover .flipcard-inner,
+.flipcard.is-flipped .flipcard-inner { transform: rotateY(180deg); }
+.flipcard-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--stroke);
+  background: #0b0c11;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.flipcard-face img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.flipcard-back { transform: rotateY(180deg); }
+.case-cards-hint { margin: 14px 2px 0; font-size: 13px; color: var(--text-soft); }
+
+/* ---- Case: logo showcase --------------------------------------------- */
+.case-logo { margin: 28px 0; text-align: center; }
+.case-logo-stage {
+  display: flex;
+  justify-content: center;
+  padding: clamp(28px, 6vw, 56px);
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius-card);
+  background:
+    radial-gradient(circle at 50% 38%, var(--accent-12), transparent 62%),
+    #0b0c11;
+}
+.case-logo-hero {
+  width: min(340px, 72%);
+  height: auto;
+  filter: drop-shadow(0 22px 44px rgba(0, 0, 0, 0.45));
+  animation: case-logo-wobble 6s ease-in-out infinite;
+  will-change: transform;
+}
+@keyframes case-logo-wobble {
+  0%, 100% { transform: perspective(760px) rotateY(-11deg) rotateX(5deg); }
+  50% { transform: perspective(760px) rotateY(11deg) rotateX(-3deg); }
+}
+.case-logo-oldnew {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 18px;
+}
+.case-logo-variant {
+  padding: 22px;
+  border: 1px solid var(--stroke);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+}
+.case-logo-variant.is-old { opacity: 0.7; }
+.case-logo-variant img { width: 100%; height: auto; max-height: 130px; object-fit: contain; }
+.case-logo-tag {
+  display: inline-block;
+  margin-bottom: 12px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+}
+.case-logo-tag.is-accent { color: var(--accent); }
+.case-logo-sub { margin-top: 20px; }
+.case-logo-sub-label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+}
+.case-logo-sub img { max-width: 100%; height: auto; }
+
+@media (prefers-reduced-motion: reduce) {
+  .case-logo-hero { animation: none; transform: perspective(760px) rotateY(0deg); }
+  .flipcard-inner { transition: none; }
+}
+@media (max-width: 560px) {
+  .flipcard { max-width: none; flex-basis: 100%; }
+  .case-logo-oldnew { grid-template-columns: 1fr; }
 }

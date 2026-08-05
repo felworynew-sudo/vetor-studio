@@ -239,6 +239,9 @@ function normalizeGalleryItem(item, index) {
   const slider = item?.slider && typeof item.slider === 'object'
     ? item.slider
     : {};
+  const card = item?.card && typeof item.card === 'object'
+    ? item.card
+    : {};
 
   return {
     ...item,
@@ -249,6 +252,10 @@ function normalizeGalleryItem(item, index) {
       before: slider.before || '',
       afterColor: slider.afterColor || '',
       afterBw: slider.afterBw || '',
+    },
+    card: {
+      front: card.front || '',
+      back: card.back || '',
     },
     youtubeChannel: {
       name: youtubeChannel.name || '',

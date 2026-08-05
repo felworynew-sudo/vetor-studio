@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ЛАЙФ КОПИ — 3D-копия человека в миниатюре</title>
+<meta name="description" content="Сканируем момент и печатаем вашу фигуру. Премиум 3D-печать людей в миниатюре: фотограмметрия, высокая точность, ручная покраска. От 9 900 ₽.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/icons/favicon.svg">
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header class="header" id="header">
+  <div class="container header__inner">
+    <a href="#top" class="header__logo" aria-label="ЛАЙФ КОПИ">
+      <img src="assets/icons/logo-block.svg" alt="ЛАЙФ КОПИ">
+    </a>
+    <nav class="nav" id="nav">
+      <a href="#about" class="nav__link">О нас</a>
+      <a href="#pricing" class="nav__link">Стоимость</a>
+      <a href="#process" class="nav__link">Процесс</a>
+      <a href="#gallery" class="nav__link">Галерея</a>
+    </nav>
+    <button class="btn btn--primary header__cta" data-open-modal>Запись</button>
+    <button class="burger" id="burger" aria-label="Меню" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="container hero__inner">
+      <div class="hero__content reveal">
+        <!-- логотип-локап: показывается вместо заголовка на мобильных -->
+        <img src="assets/icons/logo-block.svg" alt="ЛАЙФ КОПИ" class="hero__logo">
+        <h1 class="hero__title">3D-копия<br>человека<br>в&nbsp;миниатюре</h1>
+        <p class="hero__subtitle">Сканируем момент<br>и печатаем вашу фигуру</p>
+        <button class="btn btn--primary btn--lg" data-open-modal>
+          <img src="assets/icons/calendar.svg" alt="" class="btn__ico">Записаться
+        </button>
+        <ul class="hero__badges">
+          <li class="badge">
+            <span class="badge__ico"><img src="assets/icons/camera.svg" alt=""></span>
+            <span>Фотограмметрия и мультикамерная съёмка</span>
+          </li>
+          <li class="badge">
+            <span class="badge__ico"><img src="assets/icons/target.svg" alt=""></span>
+            <span>Высокая точность деталей</span>
+          </li>
+          <li class="badge">
+            <span class="badge__ico"><img src="assets/icons/star.svg" alt=""></span>
+            <span>Премиум 3D-печать и покраска</span>
+          </li>
+        </ul>
+      </div>
+      <div class="hero__visual reveal">
+        <img src="assets/img/capsule.png" alt="Фотобудка ЛАЙФ КОПИ со сканируемым человеком" class="hero__img">
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WHY / ABOUT ============ -->
+  <section class="section" id="about">
+    <div class="container">
+      <h2 class="section__title reveal">Почему это ценно</h2>
+      <div class="cards-3">
+        <article class="value-card reveal">
+          <div class="value-card__body">
+            <span class="value-card__ico"><img src="assets/icons/heart.svg" alt=""></span>
+            <h3>Эмоции<br>на долгие годы</h3>
+            <p>Остановите важный момент и сохраните его навсегда.</p>
+          </div>
+          <img src="assets/img/couple.png" alt="Фигурка пары" class="value-card__img">
+        </article>
+        <article class="value-card reveal">
+          <div class="value-card__body">
+            <span class="value-card__ico"><img src="assets/icons/target.svg" alt=""></span>
+            <h3>Похоже<br>на вас</h3>
+            <p>Точная 3D-модель передаёт черты, детали и позу.</p>
+          </div>
+          <img src="assets/img/girl-bust.png" alt="Фигурка девушки" class="value-card__img">
+        </article>
+        <article class="value-card reveal">
+          <div class="value-card__body">
+            <span class="value-card__ico"><img src="assets/icons/gift.svg" alt=""></span>
+            <h3>Идеальный<br>подарок</h3>
+            <p>Необычно, персонально и вызывает настоящие эмоции.</p>
+          </div>
+          <img src="assets/img/family.png" alt="Фигурка семьи" class="value-card__img">
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROCESS ============ -->
+  <section class="section" id="process">
+    <div class="container">
+      <h2 class="section__title reveal">Как проходит процесс</h2>
+      <div class="cards-3">
+        <article class="step-card reveal">
+          <span class="step-card__num">01</span>
+          <div class="step-card__text">
+            <h3>Сканирование</h3>
+            <p>Мультикамерная съёмка за 1–2 минуты в нашей фотобудке.</p>
+          </div>
+          <img src="assets/img/capsule.png" alt="Сканирование" class="step-card__img">
+        </article>
+        <div class="step-arrow" aria-hidden="true">›</div>
+        <article class="step-card reveal">
+          <span class="step-card__num">02</span>
+          <div class="step-card__text">
+            <h3>3D-модель</h3>
+            <p>Мы создаём точную цифровую модель и согласовываем с вами.</p>
+          </div>
+          <img src="assets/img/white-model.png" alt="3D-модель" class="step-card__img">
+        </article>
+        <div class="step-arrow" aria-hidden="true">›</div>
+        <article class="step-card reveal">
+          <span class="step-card__num">03</span>
+          <div class="step-card__text">
+            <h3>Печать фигуры</h3>
+            <p>Печатаем, аккуратно обрабатываем, красим и собираем вручную.</p>
+          </div>
+          <img src="assets/img/man-hoodie.png" alt="Печать фигуры" class="step-card__img">
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ GALLERY / CATALOG ============ -->
+  <section class="section" id="gallery">
+    <div class="container">
+      <div class="section__head reveal">
+        <h2 class="section__title section__title--inline">Каталог фигур</h2>
+        <button class="btn btn--ghost" id="toggleGallery">
+          Смотреть все работы <span class="arrow-circle">→</span>
+        </button>
+      </div>
+      <div class="catalog" id="catalog">
+        <article class="cat-card reveal">
+          <div class="cat-card__photo"><img src="assets/img/couple.png" alt="Пара"></div>
+          <div class="cat-card__foot">
+            <div><h3>Пара</h3><p>Любовь в миниатюре</p></div>
+            <span class="cat-card__ico"><img src="assets/icons/heart.svg" alt=""></span>
+          </div>
+        </article>
+        <article class="cat-card reveal">
+          <div class="cat-card__photo"><img src="assets/img/graduate.png" alt="Выпускной"></div>
+          <div class="cat-card__foot">
+            <div><h3>Выпускной</h3><p>Память о важном дне</p></div>
+            <span class="cat-card__ico"><img src="assets/icons/study.svg" alt=""></span>
+          </div>
+        </article>
+        <article class="cat-card reveal">
+          <div class="cat-card__photo"><img src="assets/img/basketball.png" alt="Спорт"></div>
+          <div class="cat-card__foot">
+            <div><h3>Спорт</h3><p>Ваша победа в 3D</p></div>
+            <span class="cat-card__ico"><img src="assets/icons/trophy.svg" alt=""></span>
+          </div>
+        </article>
+        <article class="cat-card reveal">
+          <div class="cat-card__photo"><img src="assets/img/dance.png" alt="Танец"></div>
+          <div class="cat-card__foot">
+            <div><h3>Танец</h3><p>Движение в моменте</p></div>
+            <span class="cat-card__ico"><img src="assets/icons/note.svg" alt=""></span>
+          </div>
+        </article>
+        <article class="cat-card reveal">
+          <div class="cat-card__photo"><img src="assets/img/man-suit.png" alt="Для себя"></div>
+          <div class="cat-card__foot">
+            <div><h3>Для себя</h3><p>Ваш образ в деталях</p></div>
+            <span class="cat-card__ico"><img src="assets/icons/person.svg" alt=""></span>
+          </div>
+        </article>
+        <!-- extra items revealed by toggle -->
+        <article class="cat-card cat-card--extra reveal">
+          <div class="cat-card__photo"><img src="assets/img/graduates.png" alt="Выпускники"></div>
+          <div class="cat-card__foot">
+            <div><h3>Выпускники</h3><p>Момент на двоих</p></div>
+            <span class="cat-card__ico"><img src="assets/icons/study.svg" alt=""></span>
+          </div>
+        </article>
+        <article class="cat-card cat-card--extra reveal">
+          <div class="cat-card__photo"><img src="assets/img/family.png" alt="Семья"></div>
+          <div class="cat-card__foot">
+            <div><h3>Семья</h3><p>Все вместе навсегда</p></div>
+            <span class="cat-card__ico"><img src="assets/icons/heart.svg" alt=""></span>
+          </div>
+        </article>
+        <article class="cat-card cat-card--extra reveal">
+          <div class="cat-card__photo"><img src="assets/img/man-hoodie.png" alt="Casual"></div>
+          <div class="cat-card__foot">
+            <div><h3>Casual</h3><p>Вы, как в жизни</p></div>
+            <span class="cat-card__ico"><img src="assets/icons/person.svg" alt=""></span>
+          </div>
+        </article>
+        <article class="cat-card cat-card--extra reveal">
+          <div class="cat-card__photo"><img src="assets/img/girl-bust.png" alt="Портрет"></div>
+          <div class="cat-card__foot">
+            <div><h3>Портрет</h3><p>Бюст с характером</p></div>
+            <span class="cat-card__ico"><img src="assets/icons/star.svg" alt=""></span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PRICING ============ -->
+  <section class="section" id="pricing">
+    <div class="container">
+      <div class="pricing reveal">
+        <div class="pricing__left">
+          <h2 class="pricing__title">Стоимость</h2>
+          <p class="pricing__label">Полный набор</p>
+          <p class="pricing__price"><span>от</span> 9 900 ₽</p>
+          <p class="pricing__note">Сканирование, 3D-модель, печать, покраска, подставка.</p>
+        </div>
+        <ul class="pricing__list">
+          <li>Сканирование в студии</li>
+          <li>3D-модель и согласование</li>
+          <li>Премиум 3D-печать</li>
+          <li>Ручная покраска</li>
+          <li>Фирменная подставка</li>
+          <li>Подарочная упаковка</li>
+        </ul>
+        <div class="pricing__cta">
+          <img src="assets/icons/calendar.svg" alt="" class="pricing__cta-ico">
+          <p class="pricing__cta-title">Запишитесь<br>на сканирование</p>
+          <button class="btn btn--light btn--lg" data-open-modal>Записаться</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="container footer__inner">
+    <img src="assets/img/heart-3d.png" alt="" class="footer__deco footer__deco--left" aria-hidden="true">
+    <img src="assets/img/letter-l-3d.png" alt="" class="footer__deco footer__deco--right" aria-hidden="true">
+    <div class="footer__center reveal">
+      <img src="assets/icons/logo-horizontal.svg" alt="ЛАЙФ КОПИ" class="footer__logo">
+      <p class="footer__slogan">Мы сканируем момент,<br>вы сохраняете жизнь в 3D.</p>
+      <button class="btn btn--primary btn--lg" data-open-modal>
+        <img src="assets/icons/calendar.svg" alt="" class="btn__ico">Записаться
+      </button>
+    </div>
+  </div>
+  <div class="container footer__bottom">
+    <span>© 2026 ЛАЙФ КОПИ</span>
+    <a href="tel:+70000000000">+7 000 000-00-00</a>
+    <a href="mailto:hello@lifecopy.ru">hello@lifecopy.ru</a>
+  </div>
+</footer>
+
+<!-- ============ BOOKING MODAL ============ -->
+<div class="modal" id="modal" aria-hidden="true">
+  <div class="modal__overlay" data-close-modal></div>
+  <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="modal__close" data-close-modal aria-label="Закрыть">×</button>
+    <div class="modal__body" id="modalBody">
+      <h3 id="modalTitle" class="modal__title">Запись на сканирование</h3>
+      <p class="modal__sub">Оставьте контакты — мы свяжемся, чтобы подобрать удобное время.</p>
+      <form class="form" id="bookingForm" novalidate>
+        <label class="field">
+          <span>Имя</span>
+          <input type="text" name="name" required minlength="2" placeholder="Как вас зовут">
+          <em class="field__err"></em>
+        </label>
+        <label class="field">
+          <span>Телефон</span>
+          <input type="tel" name="phone" required placeholder="+7 (___) ___-__-__">
+          <em class="field__err"></em>
+        </label>
+        <label class="field">
+          <span>Удобная дата</span>
+          <input type="date" name="date">
+        </label>
+        <label class="field">
+          <span>Тип фигуры</span>
+          <select name="kind">
+            <option value="Один человек">Один человек</option>
+            <option value="Пара">Пара</option>
+            <option value="Семья">Семья</option>
+            <option value="Другое">Другое</option>
+          </select>
+        </label>
+        <button type="submit" class="btn btn--primary btn--lg form__submit">Отправить заявку</button>
+        <p class="form__policy">Нажимая кнопку, вы соглашаетесь на обработку персональных данных.</p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

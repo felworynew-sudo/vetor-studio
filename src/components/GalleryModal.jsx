@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import ImageWithFallback from './ImageWithFallback';
 import BeforeAfterSlider from './BeforeAfterSlider';
+import FlipCard from './FlipCard';
 import { withBase } from '../utils/format';
 import { getOptimizedImageSrc } from '../utils/responsiveImages';
 import { useModalAccessibility } from '../hooks/useModalAccessibility';
@@ -81,6 +82,8 @@ function GalleryModal({ item, language, onClose }) {
   const hasCarousel = images.length > 1;
   // Restoration-style items store a before/after slider instead of an image array.
   const hasSlider = Boolean(item.slider?.before);
+  // Business-card items store a front/back flip card.
+  const hasCard = Boolean(item.card?.front);
 
   function goToPrevious() {
     const nextIndex = Math.max(0, activeIndex - 1);
@@ -136,7 +139,18 @@ function GalleryModal({ item, language, onClose }) {
           </button>
         </div>
 
-        {hasSlider ? (
+        {hasCard ? (
+          <div className="gallery-viewer gallery-viewer-card">
+            <FlipCard
+              front={item.card.front}
+              back={item.card.back}
+              alt={title}
+              label={language === 'ru' ? 'Перевернуть визитку' : 'Flip card'}
+              className="design-flipcard"
+            />
+            <p className="gallery-card-hint">{language === 'ru' ? 'Наведите или нажмите — визитка перевернётся.' : 'Hover or tap to flip.'}</p>
+          </div>
+        ) : hasSlider ? (
           <div className="gallery-viewer gallery-viewer-slider">
             <BeforeAfterSlider
               language={language}

@@ -1,6 +1,9 @@
 import { useRef } from 'react';
 import ImageWithFallback from './ImageWithFallback';
 import DevEditButton from './DevEditButton';
+import CaseSitePreview from './CaseSitePreview';
+import CaseCardFlip from './CaseCardFlip';
+import CaseLogoShowcase from './CaseLogoShowcase';
 import { withBase } from '../utils/format';
 import { getOptimizedImageSrc } from '../utils/responsiveImages';
 import { useModalAccessibility } from '../hooks/useModalAccessibility';
@@ -64,6 +67,18 @@ function CaseBlock({ block, language, title }) {
         {caption ? <figcaption>{caption}</figcaption> : null}
       </figure>
     );
+  }
+
+  if (block.type === 'site-preview') {
+    return <CaseSitePreview block={block} language={language} />;
+  }
+
+  if (block.type === 'cards-flip') {
+    return <CaseCardFlip block={block} language={language} title={title} />;
+  }
+
+  if (block.type === 'logo') {
+    return <CaseLogoShowcase block={block} language={language} />;
   }
 
   if (block.type === 'carousel') {
