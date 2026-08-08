@@ -242,6 +242,9 @@ function normalizeGalleryItem(item, index) {
   const card = item?.card && typeof item.card === 'object'
     ? item.card
     : {};
+  const site = item?.site && typeof item.site === 'object'
+    ? item.site
+    : {};
 
   return {
     ...item,
@@ -256,6 +259,11 @@ function normalizeGalleryItem(item, index) {
     card: {
       front: card.front || '',
       back: card.back || '',
+    },
+    site: {
+      src: site.src || '',
+      ruNote: site.ruNote || '',
+      enNote: site.enNote || '',
     },
     youtubeChannel: {
       name: youtubeChannel.name || '',

@@ -4,6 +4,7 @@ import DevEditButton from './DevEditButton';
 import CaseSitePreview from './CaseSitePreview';
 import CaseCardFlip from './CaseCardFlip';
 import CaseLogoShowcase from './CaseLogoShowcase';
+import BeforeAfterSlider from './BeforeAfterSlider';
 import { withBase } from '../utils/format';
 import { getOptimizedImageSrc } from '../utils/responsiveImages';
 import { useModalAccessibility } from '../hooks/useModalAccessibility';
@@ -79,6 +80,33 @@ function CaseBlock({ block, language, title }) {
 
   if (block.type === 'logo') {
     return <CaseLogoShowcase block={block} language={language} />;
+  }
+
+  if (block.type === 'slider') {
+    const caption = localized(block, language, 'caption');
+    return (
+      <figure className="case-figure">
+        <BeforeAfterSlider language={language} before={block.before} afterColor={block.afterColor} afterBw={block.afterBw} />
+        {caption ? <figcaption>{caption}</figcaption> : null}
+      </figure>
+    );
+  }
+
+  if (block.type === 'slider') {
+    const caption = localized(block, language, 'caption');
+    return (
+      <figure className="case-slider">
+        <BeforeAfterSlider
+          language={language}
+          before={block.before}
+          afterColor={block.afterColor}
+          afterBw={block.afterBw}
+          beforeLabel={language === 'ru' ? (block.ruBeforeLabel || 'До') : (block.enBeforeLabel || 'Before')}
+          afterLabel={language === 'ru' ? (block.ruAfterLabel || 'После') : (block.enAfterLabel || 'After')}
+        />
+        {caption ? <figcaption>{caption}</figcaption> : null}
+      </figure>
+    );
   }
 
   if (block.type === 'carousel') {

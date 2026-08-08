@@ -2132,7 +2132,34 @@ select {
 }
 
 .design-grid {
-  align-items: stretch;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: auto;
+  grid-auto-flow: dense;
+  align-items: start;
+  gap: 16px;
+}
+/* Cases lead, full-width; other works are compact tiles — 3 per row. */
+.design-grid > .design-case-card { grid-column: 1 / -1; }
+/* Plain image tiles need a defined aspect in the auto-height grid. */
+.design-grid > .gallery-tile {
+  grid-column: span 1;
+  grid-row: auto;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+.design-grid > .gallery-tile.square { aspect-ratio: 1; }
+.design-grid > .gallery-tile.portrait { aspect-ratio: 3 / 4; }
+.design-grid > .gallery-tile.landscape { aspect-ratio: 16 / 10; }
+.design-grid > .gallery-tile.wide { aspect-ratio: 16 / 9; }
+.design-grid > .gallery-tile .gallery-tile-hitbox,
+.design-grid > .gallery-tile .gallery-tile-hitbox img { height: 100%; }
+@media (max-width: 1000px) {
+  .design-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  .design-grid { grid-template-columns: 1fr; }
 }
 
 .gallery-tile.wide {
@@ -6214,14 +6241,11 @@ select {
 /* Design gallery: before/after slider work card */
 .design-slider-card {
   position: relative;
-  grid-column: 1 / -1;
-  max-width: 620px;
-  margin: 0 auto;
-  padding: 18px;
+  padding: 16px;
   border-radius: var(--radius-card);
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 .design-slider-body h2 {
   margin: 0;
@@ -6265,6 +6289,20 @@ select {
 }
 .gallery-viewer-card .flipcard.design-flipcard { max-width: 520px; }
 .gallery-card-hint { margin: 0; font-size: 13px; color: var(--text-soft); }
+
+/* Design gallery: interactive website preview publication (full-width) */
+.design-site-card {
+  grid-column: 1 / -1;
+  position: relative;
+  padding: 16px;
+  border-radius: var(--radius-card);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.design-site-head h2 { margin: 0; font-size: 22px; letter-spacing: -0.02em; }
+.design-site-head p { margin: 6px 0 0; color: var(--text-muted); font-size: 15px; line-height: 1.5; }
+.design-site-card .case-siteprev { margin: 0; }
 
 /* Design gallery: large-project CASE card */
 .design-case-card {
@@ -6571,6 +6609,16 @@ select {
   cursor: pointer;
 }
 .siteprev-fs-btn svg { width: 18px; height: 18px; }
+.siteprev-fs-btn.is-close {
+  width: auto;
+  padding: 0 14px;
+  gap: 7px;
+  background: var(--accent);
+  color: #10121a;
+  font-size: 13px;
+  font-weight: 800;
+}
+.siteprev-fs-btn.is-close svg { width: 14px; height: 14px; }
 .siteprev-stage {
   height: clamp(380px, 56vh, 560px);
   display: flex;
@@ -6591,6 +6639,15 @@ select {
 }
 .siteprev-frame { width: 100%; height: 100%; border: 0; display: block; background: #ffffff; }
 .siteprev-note { margin: 12px 2px 0; font-size: 13px; line-height: 1.5; color: var(--text-soft); font-style: italic; }
+
+/* ---- Case: before/after slider --------------------------------------- */
+.case-slider { margin: 28px 0; }
+.case-slider figcaption {
+  margin-top: 10px;
+  font-size: 14px;
+  color: var(--text-soft);
+  text-align: center;
+}
 
 /* ---- Case: flip business cards --------------------------------------- */
 .case-cards { margin: 28px 0; }

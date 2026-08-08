@@ -1,0 +1,425 @@
+<!-- ============================================================
+     WowMyEyes — шапка сайта. Вставляется в Tilda как блок T123 «HTML-код».
+     Самодостаточно: разметка + стили + скрипт, без внешних зависимостей.
+     Всё имя́ованное с префиксом wme- / #wme-header, чтобы не задеть Tilda.
+     ============================================================ -->
+
+<div class="wme-header" id="wme-header">
+  <div class="wme-inner">
+
+    <a class="wme-logo" href="https://art-eyes.ru/" aria-label="WowMyEyes — на главную">
+      <svg class="wme-svg" viewBox="0 0 146.6 110.86" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="WowMyEyes">
+        <defs>
+          <!--
+            Радужка в логотипе — не заливка, а дырка в составном пути (сквозь неё
+            виден фон), поэтому двигаем её маской:
+              белое  = миндалина (видна)
+              чёрное = радужка   (дырка) — едет
+              белое  = зрачок              — едет вместе с радужкой
+            Что выезжает за миндалину, срезается краем века.
+          -->
+          <mask id="wme-eyeMask" maskUnits="userSpaceOnUse" x="0" y="0" width="146.6" height="110.86">
+            <path fill="#fff" d="M99.68,53.41c-15.94,16.03-42.09,13.54-56.3-8.33-.49-.75,0-2.16.3-2.92,10.58-25.73,49.87-25.06,62.79.78,1.6,2.66-6.79,10.47-6.79,10.47h0Z"/>
+            <g class="wme-eyeball">
+              <path fill="#000" d="M83.93,54.84c4.54-4.33,5.68-12.7,3.81-17.81-3.85-10.52-20.19-11.13-25.31-2.15-4.07,8.96-2.13,20.55,9.74,22.83,4.57.88,9.05-.12,11.76-2.87h0Z"/>
+              <path fill="#fff" d="M80.95,48c-1.44,2.69-4.89,5.05-7.79,4.17-2.86-.87-5.22-3.09-5.46-6.75-.97-5.07,1.91-12.76,7.96-11.82,6.03.9,7.5,10.13,5.29,14.4Z"/>
+            </g>
+          </mask>
+        </defs>
+
+        <!-- W правая -->
+        <path d="M146.46,39.76c-1.97,4.76-8.77,19.34-10.56,23.4-.27.61-.89.99-1.56.97-2.03-.07-5.83-.82-5.99-1.51-1.22-4.51-.91-9.42-1.58-14.06-.07-.82.04-3.54-.96-1.49-1.91,4.19-3.91,8.39-5.81,12.58-.36.88-1.09,1.61-2.1,1.43-1.93-.44-5.14-.14-5.09-2.82-1-8.8-1.66-17.58-2.61-26.37-.14-1.95,2.03-1.58,3.37-1.36,3.52.12,2.89,2.44,3.16,5.16.3,3.95.51,8.05.77,11.97.09.44-.16,3.56.61,2.03,2.07-5.24,4.4-10.39,6.53-15.61.74-2.55,3.75-1.53,5.52-.97,2.63.83,1.98,16.27,2.68,19.31,0,1.24.33,1.49.87.21,2.29-5.27,4.6-10.53,6.93-15.77.77-2,4.03-.17,5.07.69h0c.78.44,1.11,1.39.77,2.22h0Z"/>
+        <!-- W левая -->
+        <path d="M20.21,45.09c-.36-.16-.32.58-.32.86.1,4.92.1,9.82.17,14.74.09,1.76-.51,2.32-2.22,2.66-1.95.36-3.72,1.71-4.88-.69-4.32-7.39-8.36-15.09-12.59-22.52-.25-.4-.48-.96-.31-1.38.56-1.11,2.07-1.2,3.12-1.74.94-.44,2.09-.85,2.72.29.72,1.19,1.31,2.59,1.96,3.83,1.86,3.77,3.82,7.53,5.51,11.39.11.26.46.92.69.73.2-.29.12-.71.12-1.07-.34-5.52.04-11.12-.05-16.64.02-1.25,1.28-1.57,2.28-1.8.92-.24,2.01-.62,2.95-.79,1.81-.45,2.34,1.82,3.08,3,1.85,3.5,3.53,7.11,5.4,10.58.32.35,1.8,4.44,2,2.54-.25-5.34.03-10.89-.1-16.27,0-.56-.02-1.23.3-1.67.96-1.09,2.51-.4,3.82-.59.76-.04,1.56-.18,2.3-.06,1.59.33.91,2.4.99,3.56-.13,8.02-.41,16.08-.78,24.07-.06.8-.63,1.33-1.36,1.56-1.34.44-2.73.76-4.09,1.16-.77.22-1.71.46-2.28-.3-.53-.71-.97-1.81-1.41-2.66-2-3.98-4.37-7.82-6.34-11.8-.15-.31-.41-.8-.64-.96l-.03-.02h0Z"/>
+
+        <!-- надпись «my eyes» -->
+        <g>
+          <path d="M38.83,81.4l-.96,2.16-2.8,6.34-.1.23c-.43.97-.84,2-1.24,2.96-.32.63-.62,1.9-1.46,1.84-.44-.09-.83-.41-1.24-.59-.74-.46-2.64-.72-2.41-1.93.75-2.15,2.03-4.12,2.96-6.2.14-.31.35-.64.45-.96.05-.16.04-.26-.02-.28-.11-.02-.24.07-.35.15-.61.51-1.16,1.13-1.78,1.7-1.3,1.27-2.67,2.59-4,3.64-.31.26-.68.43-1.07.38-.9-.19-1.63-.7-2.49-1.06-.52-.23-1.03-.6-1.06-1.24-.03-2.51.47-5.24.72-7.79.03-.29.3-1.78-.25-1.11-1.01,2.28-2.24,4.48-3.38,6.72-.14.26-.33.56-.58.69-.37.21-.76-.02-1.08-.21-.55-.36-1.21-.68-1.81-1.03-.76-.41-1.39-1.03-.91-1.86,2.25-3.83,4.58-7.63,6.74-11.52,1.81-3.55,1.47-3.7,4.52-1.86,2.56,1.27,1.69,2.17,1.48,4.64-.22,3.06-.61,6.28-.86,9.32-.01.3,0,.4.16.27,1.16-.97,8.35-7,9.5-7.97.1-.09.19-.12.33-.09h.03c.74.29,1.6.71,2.37,1.06,2.08.99,1.77,1.26.59,3.61h0Z"/>
+          <path d="M93.43,85.33c.94-.16,1.88.34,2.83.39.44.07.99.13,1.28.5.21.27.21.71.19,1.07-.35,6.96-2.46,14.26-3.36,21.33-.17,2.79-1.23,2.36-3.67,1.97-.64-.08-1.39-.03-1.97-.31-1.73-1,.42-4.48.79-5.94.25-.77.4-1.51.58-2.3.05-.29.09-.4-.03-.57-.87-1-8.19-9.3-9.2-10.47-.15-.18-.2-.31-.23-.61-.1-1.27,1.05-2.24,2.07-2.83.84-.52,1.89-.36,2.61.37,1.89,1.9,3.77,4.22,5.37,6.39,1.03,1.34.9-.89,1.07-1.5.35-1.99.71-4.03.99-6.02.09-.5.14-1.19.63-1.42l.05-.02h0Z"/>
+          <path d="M53.58,85.49c.94.2,1.63,1,2.5,1.39.39.23.88.49,1.01.93.1.33-.06.73-.21,1.06-2.87,6.35-7.5,12.37-10.92,18.63-1.19,2.53-2.01,1.75-4.14.49-.57-.31-1.28-.53-1.72-1.01-1.24-1.56,2.03-4.02,2.9-5.24.52-.63.93-1.26,1.38-1.93.15-.26.23-.34.18-.54-.44-1.25-4.22-11.65-4.74-13.11-.07-.22-.07-.36,0-.65.37-1.22,1.8-1.71,2.96-1.87.98-.17,1.89.35,2.3,1.3,1.06,2.46,1.97,5.31,2.66,7.9.46,1.63,1.16-.5,1.55-1.01,1.05-1.72,2.14-3.49,3.13-5.24.27-.43.56-1.05,1.11-1.09h.06Z"/>
+          <path d="M67.96,100.06c.66,2.3,3.96,2.02,5.96,1.16.89-.27,1.86-1.39,2.79-.77,1,.97,2.06,3.08.93,3.96-1.24.82-2.86,1-4.23,1.33-2.02.37-4.15.41-6.04-.44-4.79-2.05-5.23-10.35-1.33-13.49,3.52-2.91,9.31-1.74,11.66,2.06.76,1.19,1.14,2.63.97,4.13-.06.48-.11,1.11-.69,1.13-1.63.11-8.02.52-9.65.63-.19.01-.39.06-.37.28v.03h0ZM73.5,95.59c.07-.14-.01-.36-.09-.51-.99-1.93-4.33-1.47-5.5.34-.16.24-.5.76-.02.82,1.67-.21,3.45-.37,5.12-.44.17-.01.39-.04.48-.17l.02-.04h0Z"/>
+          <path d="M106.92,92.9c1.13,2.11,4.29,1.13,6.07-.13.81-.46,1.52-1.75,2.56-1.34,1.19.74,2.66,2.57,1.75,3.67-1.04,1.07-2.58,1.58-3.86,2.2-1.89.79-3.97,1.28-6,.85-5.12-.99-7.31-9-4.17-12.89,2.82-3.59,8.73-3.68,11.83-.47,1,1,1.67,2.33,1.83,3.82.04.48.13,1.11-.43,1.24-1.57.46-7.73,2.22-9.3,2.67-.19.06-.36.14-.31.35v.03h0s0,0,0,0ZM111.38,87.36c.04-.15-.09-.35-.2-.48-1.38-1.67-4.54-.51-5.3,1.5-.1.27-.32.85.15.81,1.59-.56,3.3-1.09,4.9-1.52.16-.04.37-.12.43-.26v-.04h.01Z"/>
+          <path d="M122.42,79.17c1.06.64,2.47-.16,3.64.02,6.99.95,3.13,12.45-2.99,11.72-1.4-.19-1.69-1.61-2.01-2.84-.67-2.06.82-2.07,2.43-2.69.82-.27,1.81-1.21,1.49-2.03-.41-.96-2.23-.62-3.15-.72-3.09-.08-4.85-2.52-4-5.32.82-1.7,2.6-2.99,4.25-3.8.8-.33,1.5-.49,2.16-.2.87.4,1.33,1.99.96,2.95-.36.84-1.88.97-2.55,1.68-.35.36-.57.83-.25,1.19l.03.03h0Z"/>
+        </g>
+
+        <!-- ресницы -->
+        <g class="wme-lashes">
+          <g>
+            <path d="M56.76,76.47c.86.01,1.57-.67,2.01-1.28,1.36-1.94,2.65-3.94,4.05-5.86.83-1.1,2.14-2.44,1.2-3.77-.7-1.06-2.95-1.63-4.15-.91-.7.43-1.01,1.25-1.3,1.94-.57,1.53-1.15,2.86-1.78,4.32-.45,1.13-1.19,2.37-1.56,3.6-.33.91.28,1.92,1.47,1.96h.06,0Z"/>
+            <path d="M74.18,83.05c2.23.3,2.02-3.1,2.16-4.83.2-2.58.53-5.18.76-7.77.17-1.32,0-2.97-1.31-3.35-1.4-.47-3.27.14-3.55,1.99-.1.52-.07,1.07-.03,1.61.27,3.16.3,6.42.56,9.59.07,1.06.39,2.47,1.36,2.75l.06.02h0Z"/>
+            <path d="M41.04,67.84c1.29.36,2.04-.44,2.95-1.07,1.64-1.17,4.4-3.13,5.96-4.23.69-.53,1.53-.87,1.57-1.66.13-1.02-1.21-2.33-2.69-2.26-.83.05-1.47.53-2,.97-1.67,1.42-3.09,3.14-4.7,4.52-.77.78-2.03,1.51-2.19,2.47-.04.47.39,1.06,1.03,1.25l.06.02h0Z"/>
+            <path d="M106.24,69.67c-1.3.29-1.98-.66-2.83-1.41-1.53-1.41-4.1-3.79-5.55-5.13-.63-.64-1.44-1.09-1.43-1.96-.05-1.13,1.37-2.46,2.82-2.25.81.13,1.41.7,1.89,1.23,1.54,1.7,2.81,3.7,4.29,5.34.7.92,1.89,1.83,1.97,2.89,0,.52-.46,1.13-1.11,1.29h-.06s0,.01,0,.01Z"/>
+            <path d="M93.13,76.43c.61-.05,1.08-.61,1.13-1.22.09-.71-.45-1.3-.71-1.96-.86-1.97-1.75-3.91-2.6-5.88-.58-1.52-1.24-3.67-3.46-2.92-3.33,1.2-1.42,3.24.04,5.36,1.03,1.58,2.04,3.22,3.11,4.78.53.89,1.19,1.96,2.43,1.84h.06s0,0,0,0Z"/>
+          </g>
+          <g>
+            <path d="M52.05,7.95c.9-.06,1.67.79,2.16,1.54,1.51,2.41,2.96,4.88,4.51,7.26.91,1.36,2.35,3.01,1.44,4.73-.67,1.37-3,2.19-4.28,1.32-.75-.52-1.12-1.54-1.46-2.4-.67-1.91-1.34-3.57-2.07-5.39-.52-1.41-1.35-2.96-1.8-4.5-.39-1.14.2-2.44,1.44-2.55h.07,0s0-.01,0-.01Z"/>
+            <path d="M72.24.02c2.44-.36,2.23,3.67,2.4,5.74.24,3.06.61,6.15.88,9.22.19,1.57,0,3.52-1.41,3.97-1.54.56-3.58-.17-3.9-2.36-.11-.62-.08-1.27-.04-1.91.28-3.74.29-7.61.55-11.38.07-1.26.41-2.93,1.47-3.26l.06-.02h0Z"/>
+            <path d="M40.4,19.38c1.13-.26,1.73.53,2.47,1.15,1.34,1.17,3.6,3.13,4.88,4.23.56.53,1.26.89,1.26,1.62.06.94-1.16,2.07-2.43,1.92-.71-.1-1.23-.57-1.66-1-1.35-1.4-2.48-3.07-3.79-4.42-.62-.76-1.66-1.5-1.74-2.39,0-.44.39-.95.95-1.09h.05s0-.02,0-.02Z"/>
+            <path d="M93.9,4.87c-.92,0-1.66.93-2.12,1.76-1.41,2.64-2.75,5.36-4.2,7.98-.86,1.5-2.23,3.33-1.21,5.12.76,1.43,3.17,2.16,4.44,1.17.74-.6,1.06-1.7,1.35-2.64.58-2.07,1.17-3.87,1.81-5.86.46-1.53,1.22-3.22,1.59-4.89.33-1.24-.34-2.59-1.6-2.63h-.07,0,0Z"/>
+            <path d="M107.18,17.23c-1.26-.25-1.9.64-2.7,1.36-1.45,1.34-3.89,3.6-5.26,4.87-.6.6-1.37,1.03-1.34,1.84-.03,1.05,1.35,2.27,2.74,2.06.78-.13,1.34-.67,1.8-1.17,1.45-1.6,2.65-3.49,4.05-5.04.66-.87,1.79-1.73,1.86-2.72,0-.49-.46-1.04-1.09-1.18h-.06s0-.01,0-.01Z"/>
+          </g>
+        </g>
+
+        <!-- глаз: одна миндалина под маской, радужка со зрачком ездит внутри -->
+        <g class="wme-eye">
+          <path mask="url(#wme-eyeMask)" d="M99.68,53.41c-15.94,16.03-42.09,13.54-56.3-8.33-.49-.75,0-2.16.3-2.92,10.58-25.73,49.87-25.06,62.79.78,1.6,2.66-6.79,10.47-6.79,10.47h0Z"/>
+        </g>
+      </svg>
+    </a>
+
+    <button class="wme-burger" type="button" aria-expanded="false" aria-controls="wme-nav" aria-label="Меню">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="wme-nav" id="wme-nav">
+      <a class="wme-link" href="https://art-eyes.ru/event">Для мероприятий</a>
+      <a class="wme-link" href="https://art-eyes.ru/#katalog">Каталог</a>
+      <a class="wme-link" href="https://art-eyes.ru/onas">О нас</a>
+      <a class="wme-link" href="https://art-eyes.ru/instr">Сделать дома</a>
+      <a class="wme-phone" href="tel:+79181595678">+7&nbsp;918-159-56-78</a>
+      <a class="wme-cta" href="https://t.me/WowMyEyes_supbot" target="_blank" rel="noopener noreferrer">
+        <svg class="wme-tg" viewBox="0 0 24 24" aria-hidden="true"><path d="M21.9 4.3 18.9 19c-.2 1-.8 1.3-1.7.8l-4.6-3.4-2.2 2.1c-.2.2-.5.5-.9.5l.3-4.7 8.5-7.7c.4-.3-.1-.5-.6-.2L7.2 13.1l-4.5-1.4c-1-.3-1-1 .2-1.5l17.6-6.8c.8-.3 1.5.2 1.4 1.4z"/></svg>
+        Спросить у бота
+      </a>
+    </nav>
+
+  </div>
+</div>
+
+<style>
+/* ---------- скоуп: всё живёт внутри #wme-header ----------
+   !important на цветах/шрифтах стоит намеренно: тема Tilda задаёт свои
+   правила для a/button, и без этого ссылки перекрашиваются в цвет темы. */
+#wme-header, #wme-header *, #wme-header *::before, #wme-header *::after{
+  box-sizing: border-box;
+  line-height: 1.2;
+}
+#wme-header{
+  --wme-bg:   #000;
+  --wme-ink:  #f2ece1;
+  --wme-dim:  rgba(242,236,225,.62);
+  --wme-line: rgba(242,236,225,.14);
+
+  position: relative;
+  z-index: 100;
+  width: 100%;
+  background: var(--wme-bg) !important;
+  color: var(--wme-ink) !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Arial, sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+}
+#wme-header .wme-inner{
+  max-width: 1260px;
+  margin: 0 auto;
+  padding: 14px 28px;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+/* ---------- логотип ---------- */
+#wme-header .wme-logo{
+  flex: 0 0 auto;
+  display: block;
+  line-height: 0 !important;
+  text-decoration: none !important;
+  border: 0 !important;
+}
+#wme-header .wme-svg{
+  display: block;
+  height: 52px;
+  width: auto;
+  fill: var(--wme-ink) !important;
+  overflow: visible;
+  vertical-align: middle;
+}
+/* общая точка отсчёта — центр миндалины по замеренному bbox */
+#wme-header .wme-eye,
+#wme-header .wme-lashes{
+  transform-box: view-box;
+  transform-origin: 75px 43.5px;
+}
+/* радужка + зрачок, JS правит --tx/--ty (в юнитах viewBox) */
+#wme-header .wme-eyeball{
+  --tx: 0; --ty: 0;
+  transform: translate(calc(var(--tx) * 1px), calc(var(--ty) * 1px));
+  will-change: transform;
+}
+/* моргание: веко и ресницы одним кадром */
+#wme-header .wme-svg.is-blinking .wme-eye{ animation: wme-blink .26s cubic-bezier(.4,0,.2,1); }
+@keyframes wme-blink{
+  0%,100%{ transform: scaleY(1); }
+  45%,55%{ transform: scaleY(.05); }
+}
+#wme-header .wme-svg.is-blinking .wme-lashes{ animation: wme-lash .26s cubic-bezier(.4,0,.2,1); }
+@keyframes wme-lash{
+  0%,100%{ transform: scale(1); }
+  45%,55%{ transform: scale(.72) scaleY(.82); }
+}
+
+/* ---------- навигация ---------- */
+#wme-header .wme-nav{
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 26px;
+}
+#wme-header .wme-nav a{
+  text-decoration: none !important;
+  border: 0 !important;
+  white-space: nowrap;
+  font-family: inherit !important;
+}
+#wme-header .wme-link{
+  color: var(--wme-ink) !important;
+  background: none !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  letter-spacing: .01em;
+  padding: 6px 0;
+  position: relative;
+  transition: color .18s ease;
+}
+/* подчёркивание растёт от центра */
+#wme-header .wme-link::after{
+  content: "";
+  position: absolute;
+  left: 50%; right: 50%; bottom: 0;
+  height: 2px;
+  background: currentColor;
+  transition: left .22s ease, right .22s ease;
+}
+#wme-header .wme-link:hover::after,
+#wme-header .wme-link:focus-visible::after{ left: 0; right: 0; }
+
+#wme-header .wme-phone{
+  color: var(--wme-ink) !important;
+  background: none !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  letter-spacing: .01em;
+  margin-left: 4px;
+  transition: opacity .18s ease;
+}
+#wme-header .wme-phone:hover{ opacity: .7; }
+
+#wme-header .wme-cta{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 20px;
+  border-radius: 999px !important;
+  background: var(--wme-ink) !important;
+  color: var(--wme-bg) !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+#wme-header .wme-cta:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(242,236,225,.22);
+}
+#wme-header .wme-cta:active{ transform: translateY(0); }
+#wme-header .wme-tg{
+  width: 17px; height: 17px;
+  fill: currentColor;
+  flex: 0 0 auto;
+}
+
+#wme-header a:focus-visible,
+#wme-header button:focus-visible{
+  outline: 2px solid var(--wme-ink);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ---------- бургер ---------- */
+#wme-header .wme-burger{
+  display: none;
+  order: 3;
+  margin-left: auto;
+  width: 44px; height: 44px;
+  padding: 11px 10px;
+  background: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  cursor: pointer;
+  flex-direction: column;
+  justify-content: space-between;
+}
+#wme-header .wme-burger span{
+  display: block;
+  height: 2px;
+  width: 100%;
+  background: var(--wme-ink) !important;
+  border-radius: 2px;
+  transition: transform .25s ease, opacity .2s ease;
+}
+#wme-header .wme-burger[aria-expanded="true"] span:nth-child(1){ transform: translateY(9px) rotate(45deg); }
+#wme-header .wme-burger[aria-expanded="true"] span:nth-child(2){ opacity: 0; }
+#wme-header .wme-burger[aria-expanded="true"] span:nth-child(3){ transform: translateY(-9px) rotate(-45deg); }
+
+/* ---------- мобильная раскладка ---------- */
+@media (max-width: 960px){
+  #wme-header .wme-inner{ padding: 12px 18px; gap: 14px; flex-wrap: wrap; }
+  #wme-header .wme-svg{ height: 40px; }
+  #wme-header .wme-burger{ display: flex; }
+
+  #wme-header .wme-nav{
+    order: 4;
+    flex: 1 0 100%;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 0;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height .3s ease;
+  }
+  #wme-header .wme-nav.is-open{ max-height: 460px; }
+
+  #wme-header .wme-link,
+  #wme-header .wme-phone{
+    padding: 15px 2px;
+    border-top: 1px solid var(--wme-line) !important;
+    font-size: 17px !important;
+    margin: 0;
+  }
+  #wme-header .wme-link::after{ display: none; }
+  #wme-header .wme-cta{
+    margin: 16px 0 8px;
+    justify-content: center;
+    padding: 14px 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce){
+  #wme-header .wme-svg.is-blinking .wme-eye,
+  #wme-header .wme-svg.is-blinking .wme-lashes{ animation: none; }
+  #wme-header .wme-nav{ transition: none; }
+}
+
+/* ---------------------------------------------------------------
+   ЕСЛИ ЧЁРНАЯ ПОЛОСА НЕ ДОХОДИТ ДО КРАЁВ ЭКРАНА
+   Значит блок Tilda сидит в контейнере с полями. Сначала попробуй в
+   настройках блока поставить ширину контейнера 100%. Если не помогло —
+   раскомментируй правило ниже, оно вырывает шапку из контейнера.
+   Осторожно: на Windows появляется полоса горизонтальной прокрутки
+   шириной со скроллбар, поэтому это запасной вариант, а не основной.
+
+#wme-header{
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+}
+   --------------------------------------------------------------- */
+</style>
+
+<script>
+(function () {
+  var root = document.getElementById('wme-header');
+  if (!root || root.dataset.wmeReady) return;   // защита от повторной инициализации
+  root.dataset.wmeReady = '1';
+
+  /* ---------- глаз следит за курсором ---------- */
+  var svg     = root.querySelector('.wme-svg');
+  var eyeball = root.querySelector('.wme-eyeball');
+
+  var IRIS  = { x: 74.5, y: 45.5 };  // центр радужки в покое, координаты viewBox
+  var MAX_X = 9.5;   // ход по горизонтали (миндалина широкая — запаса больше)
+  var MAX_Y = 3.2;   // ход по вертикали
+  var REACH = 320;   // px: дистанция курсора, на которой ход максимальный
+  var EASE  = 0.18;
+
+  var targetX = 0, targetY = 0, curX = 0, curY = 0;
+  var center = { x: 0, y: 0 };
+  var pointer = null;
+
+  function measure() {
+    var ctm = svg.getScreenCTM();
+    if (!ctm) return;
+    center.x = ctm.a * IRIS.x + ctm.c * IRIS.y + ctm.e;
+    center.y = ctm.b * IRIS.x + ctm.d * IRIS.y + ctm.f;
+  }
+
+  function aim() {
+    if (!pointer) { targetX = targetY = 0; return; }
+    var dx = pointer.x - center.x, dy = pointer.y - center.y;
+    var dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist < 0.5) { targetX = targetY = 0; return; }
+    var k = Math.min(1, dist / REACH);
+    targetX = (dx / dist) * MAX_X * k;
+    targetY = (dy / dist) * MAX_Y * k;
+  }
+
+  // на тач-устройствах курсора нет — глаз медленно осматривается сам
+  var idle = !window.matchMedia('(pointer: fine)').matches;
+  var t0 = null;
+
+  function frame(ts) {
+    if (idle) {
+      if (t0 === null) t0 = ts;
+      var t = (ts - t0) / 1000;
+      targetX = Math.sin(t * 0.55) * MAX_X * 0.75;
+      targetY = Math.sin(t * 0.37) * MAX_Y * 0.75;
+    }
+    curX += (targetX - curX) * EASE;
+    curY += (targetY - curY) * EASE;
+    eyeball.style.setProperty('--tx', curX.toFixed(3));
+    eyeball.style.setProperty('--ty', curY.toFixed(3));
+    requestAnimationFrame(frame);
+  }
+
+  window.addEventListener('pointermove', function (e) {
+    if (e.pointerType === 'touch') return;
+    idle = false;
+    pointer = { x: e.clientX, y: e.clientY };
+    measure();
+    aim();
+  }, { passive: true });
+
+  document.addEventListener('pointerleave', function () { pointer = null; aim(); });
+  window.addEventListener('blur',   function () { pointer = null; aim(); });
+  window.addEventListener('resize', function () { measure(); aim(); });
+  window.addEventListener('scroll', function () { measure(); aim(); }, { passive: true });
+
+  measure();
+  requestAnimationFrame(frame);
+
+  /* ---------- моргание ---------- */
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    var blink = function () {
+      svg.classList.add('is-blinking');
+      setTimeout(function () { svg.classList.remove('is-blinking'); }, 300);
+      setTimeout(blink, 2600 + Math.random() * 4200);
+    };
+    setTimeout(blink, 1800);
+  }
+
+  /* ---------- мобильное меню ---------- */
+  var burger = root.querySelector('.wme-burger');
+  var nav    = root.querySelector('.wme-nav');
+
+  burger.addEventListener('click', function () {
+    var open = burger.getAttribute('aria-expanded') === 'true';
+    burger.setAttribute('aria-expanded', String(!open));
+    nav.classList.toggle('is-open', !open);
+  });
+
+  // клик по пункту закрывает меню
+  nav.addEventListener('click', function (e) {
+    if (!e.target.closest('a')) return;
+    burger.setAttribute('aria-expanded', 'false');
+    nav.classList.remove('is-open');
+  });
+
+  // возврат на десктоп — сбрасываем состояние, чтобы max-height не залип
+  window.addEventListener('resize', function () {
+    if (window.innerWidth > 960) {
+      burger.setAttribute('aria-expanded', 'false');
+      nav.classList.remove('is-open');
+    }
+  });
+})();
+</script>

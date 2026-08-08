@@ -228,6 +228,16 @@ function GalleryItemEditorModal({ item, language, onSave, onClose }) {
     }));
   }
 
+  function updateSiteField(field, value) {
+    setForm((current) => ({
+      ...current,
+      site: {
+        ...(current.site || {}),
+        [field]: value,
+      },
+    }));
+  }
+
   function handleSubmit(event) {
     event.preventDefault();
     const normalizedCategory = normalizeDesignCategory(form.designCategory);
@@ -348,6 +358,25 @@ function GalleryItemEditorModal({ item, language, onSave, onClose }) {
               <label className="studio-field">
                 <span>{language === 'ru' ? 'Оборот (back)' : 'Back'}</span>
                 <input value={form.card?.back || ''} onChange={(event) => updateCardField('back', event.target.value)} placeholder="/cards/card-back.webp" />
+              </label>
+            </div>
+          </section>
+
+          <section className="gallery-editor-section">
+            <h3>{language === 'ru' ? 'Сайт-превью (необязательно)' : 'Website preview (optional)'}</h3>
+            <p className="gallery-editor-note">
+              {language === 'ru'
+                ? 'Для сайтов. Укажите путь к index.html в /public — работа покажется как интерактивное окно с переключателем устройств.'
+                : 'For websites. Point to an index.html in /public to render this work as an interactive device-switcher preview.'}
+            </p>
+            <div className="gallery-editor-grid two">
+              <label className="studio-field">
+                <span>{language === 'ru' ? 'Путь к сайту (index.html)' : 'Site path (index.html)'}</span>
+                <input value={form.site?.src || ''} onChange={(event) => updateSiteField('src', event.target.value)} placeholder="/sites/kislota/index.html" />
+              </label>
+              <label className="studio-field">
+                <span>{language === 'ru' ? 'Примечание под превью' : 'Note under preview'}</span>
+                <input value={form.site?.ruNote || ''} onChange={(event) => updateSiteField('ruNote', event.target.value)} placeholder="Превью для портфолио…" />
               </label>
             </div>
           </section>

@@ -136,29 +136,19 @@
       },
       {
         "id": "wme-b8",
-        "type": "carousel",
-        "images": [
+        "type": "cards-flip",
+        "ruCaption": "Визитки в едином стиле.",
+        "enCaption": "",
+        "ruHint": "Наведите на визитку — она перевернётся. На телефоне нажмите.",
+        "enHint": "",
+        "cards": [
           {
-            "src": "/cases/wowmyeyes/cards-preview.jpg",
-            "ratio": "wide",
-            "ruAlt": "",
-            "enAlt": ""
-          },
-          {
-            "src": "/cases/wowmyeyes/card-front.jpg",
-            "ratio": "wide",
-            "ruAlt": "",
-            "enAlt": ""
-          },
-          {
-            "src": "/cases/wowmyeyes/card-back.jpg",
-            "ratio": "wide",
-            "ruAlt": "",
+            "front": "/cases/wowmyeyes/card-front.jpg",
+            "back": "/cases/wowmyeyes/card-back.jpg",
+            "ruAlt": "Визитка WOW My eyes",
             "enAlt": ""
           }
-        ],
-        "ruCaption": "Визитки и фирменные носители в едином стиле.",
-        "enCaption": ""
+        ]
       },
       {
         "id": "wme-b9",
@@ -217,6 +207,38 @@
         "ratio": "wide",
         "ruCaption": "Фирменный стикерпак WOW My eyes с маскотом Брунгильдой.",
         "enCaption": ""
+      },
+      {
+        "id": "wow-livelogo-1",
+        "type": "text",
+        "ruText": "Живой логотип",
+        "enText": "",
+        "size": "body",
+        "bold": true,
+        "italic": false,
+        "accent": true,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "wow-livelogo-2",
+        "type": "text",
+        "ruText": "Логотип WOW my eyes — не просто картинка: глаз в нём следит за курсором и моргает. Один небольшой скрипт оживляет знак на любой странице, сохраняя его размеры и цвет. Наведи на шапку ниже и подвигай мышкой.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "wow-livelogo-3",
+        "type": "site-preview",
+        "src": "/cases/wowmyeyes/header/index.html",
+        "ruNote": "Живая шапка: глаз следит за курсором и моргает. Это превью для портфолио — на боевом сайте наполнение может отличаться.",
+        "enNote": "",
+        "ruCaption": ""
       },
       {
         "id": "wme-b12",
@@ -325,6 +347,38 @@
         "accent": false,
         "linkUrl": "",
         "linkStyle": "text"
+      },
+      {
+        "id": "wow-partner-1",
+        "type": "text",
+        "ruText": "Партнёрская страница",
+        "enText": "",
+        "size": "body",
+        "bold": true,
+        "italic": false,
+        "accent": true,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "wow-partner-2",
+        "type": "text",
+        "ruText": "Отдельная страница-КП для фотостудий, типографий и фотоцентров — предложение встроить макросъёмку радужки в чужой фотобизнес, с калькулятором стоимости на 1–6 точек. Тот же живой логотип работает и здесь.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "wow-partner-3",
+        "type": "site-preview",
+        "src": "/cases/wowmyeyes/partner/index.html",
+        "ruNote": "Партнёрское предложение с калькулятором. Превью для портфолио; живая версия — partner.103-31-76-29.sslip.io.",
+        "enNote": "",
+        "ruCaption": ""
       },
       {
         "id": "wme-b21",
@@ -609,7 +663,382 @@
         "linkStyle": "button"
       }
     ],
-    "createdAt": "2026-08-01"
+    "createdAt": "2026-08-01",
+    "slider": {
+      "before": "",
+      "afterColor": "",
+      "afterBw": ""
+    },
+    "card": {
+      "front": "",
+      "back": ""
+    },
+    "site": {
+      "src": "",
+      "ruNote": "",
+      "enNote": ""
+    },
+    "youtubeChannel": {
+      "name": "",
+      "handle": "",
+      "metaRu": "",
+      "metaEn": "",
+      "ctaUrl": "",
+      "ctaRu": "",
+      "ctaEn": "",
+      "cover": "",
+      "avatar": ""
+    },
+    "stickers": {
+      "primaryRu": "",
+      "primaryEn": "",
+      "primaryUrl": "",
+      "secondaryRu": "",
+      "secondaryEn": "",
+      "secondaryUrl": ""
+    }
+  },
+  {
+    "id": "case-kislota",
+    "ruTitle": "Кислота — фирменный стиль тату- и пирсинг-студии",
+    "enTitle": "",
+    "ruDescription": "Тату- и пирсинг-студия из Краснодара. Некоммерческий эксперимент: оттолкнулся от вайба исходного логотипа и собрал цельную дизайн-систему — знак, маскот, сайт, визитки, айдентику и обновлённую локацию.",
+    "enDescription": "",
+    "designCategory": "large-projects",
+    "featured": true,
+    "ratio": "wide",
+    "cover": "/design/kislota/logo-presentation.webp",
+    "images": [],
+    "blocks": [
+      {
+        "id": "kc-b1",
+        "type": "text",
+        "ruText": "С чего всё началось",
+        "enText": "",
+        "size": "hero",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "kc-b2",
+        "type": "text",
+        "ruText": "«Кислота» — тату- и пирсинг-студия из Краснодара. Этот проект я сделал бесплатно, без коммерции. Причина простая: мне зашёл вайб исходного логотипа — кислотный, дерзкий, с единорогом.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "kc-b3",
+        "type": "text",
+        "ruText": "Я увидел, что у бренда есть характер, но фирменный стиль почти не развит — а потенциал у него был отличный. Захотелось в порядке эксперимента и интереса собрать из этого цельную дизайн-систему: оттолкнуться от того, что уже нравилось, и аккуратно вырастить вокруг узнаваемую айдентику.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "kc-b4",
+        "type": "text",
+        "ruText": "Логотип",
+        "enText": "",
+        "size": "body",
+        "bold": true,
+        "italic": false,
+        "accent": true,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "kc-b5",
+        "type": "text",
+        "ruText": "Сохранил суть исходного знака — кислотные потёки и единорога — и довёл до аккуратной, узнаваемой подачи.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "kc-b6",
+        "type": "image",
+        "src": "/design/kislota/logo-presentation.webp",
+        "ratio": "wide",
+        "ruCaption": "Логотип «Кислота» и его подача.",
+        "enCaption": "",
+        "ruAlt": "Логотип «Кислота» и его подача.",
+        "enAlt": ""
+      },
+      {
+        "id": "kc-b7",
+        "type": "text",
+        "ruText": "Маскот",
+        "enText": "",
+        "size": "body",
+        "bold": true,
+        "italic": false,
+        "accent": true,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "kc-b8",
+        "type": "text",
+        "ruText": "Фирменный персонаж — розовый единорог в кислотных брызгах. Дерзкий и запоминающийся, отлично держит настроение бренда.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "kc-b9",
+        "type": "image",
+        "src": "/design/kislota/unicorn.webp",
+        "ratio": "wide",
+        "ruCaption": "Маскот студии — единорог.",
+        "enCaption": "",
+        "ruAlt": "Маскот студии — единорог.",
+        "enAlt": ""
+      },
+      {
+        "id": "kc-b10",
+        "type": "text",
+        "ruText": "Сайт",
+        "enText": "",
+        "size": "body",
+        "bold": true,
+        "italic": false,
+        "accent": true,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "kc-b11",
+        "type": "text",
+        "ruText": "Собрал для студии сайт-лендинг: услуги, работы, отзывы, прайс и запись. Ниже — интерактивное превью: переключайте вид между мобильным, планшетом и ПК и открывайте на весь экран.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "kc-b12",
+        "type": "site-preview",
+        "src": "/sites/kislota/index.html",
+        "ruNote": "Это превью для портфолио. Актуальная версия и наполнение боевого сайта могут отличаться от макета.",
+        "enNote": "",
+        "ruCaption": ""
+      },
+      {
+        "id": "kc-b13",
+        "type": "text",
+        "ruText": "Визитки",
+        "enText": "",
+        "size": "body",
+        "bold": true,
+        "italic": false,
+        "accent": true,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "kc-b14",
+        "type": "text",
+        "ruText": "Несколько вариантов визиток в едином стиле — двусторонние.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "kc-b15",
+        "type": "cards-flip",
+        "ruHint": "Наведите на визитку, чтобы перевернуть её. На телефоне — нажмите.",
+        "enHint": "",
+        "ruCaption": "",
+        "cards": [
+          {
+            "front": "/cards/kislota-1-front.webp",
+            "back": "/cards/kislota-1-back.webp",
+            "ruAlt": "Визитка Кислота 1"
+          },
+          {
+            "front": "/cards/kislota-3-front.webp",
+            "back": "/cards/kislota-3-back.webp",
+            "ruAlt": "Визитка Кислота 2"
+          }
+        ]
+      },
+      {
+        "id": "kc-b16",
+        "type": "text",
+        "ruText": "Локация",
+        "enText": "",
+        "size": "body",
+        "bold": true,
+        "italic": false,
+        "accent": true,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "kc-b17",
+        "type": "text",
+        "ruText": "Помимо цифры, привели в порядок и физическое пространство студии. Потяните ползунок — видно, как было и как стало.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "kc-b18",
+        "type": "slider",
+        "before": "/design/kislota/loc-before.webp",
+        "afterColor": "/design/kislota/loc-after.webp",
+        "beforeLabel": "До",
+        "afterLabel": "После",
+        "ruCaption": "Локация студии: до и после.",
+        "enCaption": ""
+      },
+      {
+        "id": "kc-b19",
+        "type": "text",
+        "ruText": "Айдентика и носители",
+        "enText": "",
+        "size": "body",
+        "bold": true,
+        "italic": false,
+        "accent": true,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "kc-b20",
+        "type": "text",
+        "ruText": "Единый визуальный язык: инфографика, часы работы, фавиконки и оформление — всё в одном кислотном характере.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "kc-b21",
+        "type": "image",
+        "src": "/design/kislota/mini.webp",
+        "ratio": "wide",
+        "ruCaption": "Фрагмент дизайн-системы «Кислота».",
+        "enCaption": "",
+        "ruAlt": "Фрагмент дизайн-системы «Кислота».",
+        "enAlt": ""
+      },
+      {
+        "id": "kc-b22",
+        "type": "carousel",
+        "ruCaption": "Носители и оформление.",
+        "enCaption": "",
+        "images": [
+          {
+            "src": "/design/kislota/infographic.webp",
+            "ruAlt": "Инфографика",
+            "ratio": "portrait"
+          },
+          {
+            "src": "/design/kislota/hours.webp",
+            "ruAlt": "Часы работы",
+            "ratio": "wide"
+          },
+          {
+            "src": "/design/kislota/before-after.webp",
+            "ruAlt": "До/после",
+            "ratio": "wide"
+          }
+        ]
+      },
+      {
+        "id": "kc-b23",
+        "type": "text",
+        "ruText": "Итог",
+        "enText": "",
+        "size": "hero",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      },
+      {
+        "id": "kc-b24",
+        "type": "text",
+        "ruText": "Получилась цельная дизайн-система на основе того, что уже было хорошего: узнаваемый логотип и маскот, сайт, визитки, айдентика и обновлённая локация. Небольшой некоммерческий эксперимент, который показал, как из сильного характера бренда вырастить полноценный фирменный стиль.",
+        "enText": "",
+        "size": "body",
+        "bold": false,
+        "italic": false,
+        "accent": false,
+        "linkUrl": "",
+        "linkStyle": "text"
+      }
+    ],
+    "createdAt": "2026-08-05",
+    "slider": {
+      "before": "",
+      "afterColor": "",
+      "afterBw": ""
+    },
+    "card": {
+      "front": "",
+      "back": ""
+    },
+    "site": {
+      "src": "",
+      "ruNote": "",
+      "enNote": ""
+    },
+    "youtubeChannel": {
+      "name": "",
+      "handle": "",
+      "metaRu": "",
+      "metaEn": "",
+      "ctaUrl": "",
+      "ctaRu": "",
+      "ctaEn": "",
+      "cover": "",
+      "avatar": ""
+    },
+    "stickers": {
+      "primaryRu": "",
+      "primaryEn": "",
+      "primaryUrl": "",
+      "secondaryRu": "",
+      "secondaryEn": "",
+      "secondaryUrl": ""
+    }
   },
   {
     "id": "case-lifecopy",
@@ -1241,7 +1670,40 @@
         "linkStyle": "text"
       }
     ],
-    "createdAt": "2026-08-05"
+    "createdAt": "2026-08-05",
+    "slider": {
+      "before": "",
+      "afterColor": "",
+      "afterBw": ""
+    },
+    "card": {
+      "front": "",
+      "back": ""
+    },
+    "site": {
+      "src": "",
+      "ruNote": "",
+      "enNote": ""
+    },
+    "youtubeChannel": {
+      "name": "",
+      "handle": "",
+      "metaRu": "",
+      "metaEn": "",
+      "ctaUrl": "",
+      "ctaRu": "",
+      "ctaEn": "",
+      "cover": "",
+      "avatar": ""
+    },
+    "stickers": {
+      "primaryRu": "",
+      "primaryEn": "",
+      "primaryUrl": "",
+      "secondaryRu": "",
+      "secondaryEn": "",
+      "secondaryUrl": ""
+    }
   },
   {
     "id": "gallery-restoration-001",
@@ -1258,7 +1720,35 @@
       "afterColor": "/restoration/color.png",
       "afterBw": "/restoration/bw.png"
     },
-    "createdAt": "2026-07-28"
+    "createdAt": "2026-07-28",
+    "card": {
+      "front": "",
+      "back": ""
+    },
+    "site": {
+      "src": "",
+      "ruNote": "",
+      "enNote": ""
+    },
+    "youtubeChannel": {
+      "name": "",
+      "handle": "",
+      "metaRu": "",
+      "metaEn": "",
+      "ctaUrl": "",
+      "ctaRu": "",
+      "ctaEn": "",
+      "cover": "",
+      "avatar": ""
+    },
+    "stickers": {
+      "primaryRu": "",
+      "primaryEn": "",
+      "primaryUrl": "",
+      "secondaryRu": "",
+      "secondaryEn": "",
+      "secondaryUrl": ""
+    }
   },
   {
     "id": "gallery-restoration-002",
@@ -1275,7 +1765,35 @@
       "afterColor": "/restoration/r1-color.webp",
       "afterBw": "/restoration/r1-bw.webp"
     },
-    "createdAt": "2026-08-04"
+    "createdAt": "2026-08-04",
+    "card": {
+      "front": "",
+      "back": ""
+    },
+    "site": {
+      "src": "",
+      "ruNote": "",
+      "enNote": ""
+    },
+    "youtubeChannel": {
+      "name": "",
+      "handle": "",
+      "metaRu": "",
+      "metaEn": "",
+      "ctaUrl": "",
+      "ctaRu": "",
+      "ctaEn": "",
+      "cover": "",
+      "avatar": ""
+    },
+    "stickers": {
+      "primaryRu": "",
+      "primaryEn": "",
+      "primaryUrl": "",
+      "secondaryRu": "",
+      "secondaryEn": "",
+      "secondaryUrl": ""
+    }
   },
   {
     "id": "gallery-restoration-003",
@@ -1292,7 +1810,35 @@
       "afterColor": "/restoration/r2-color.webp",
       "afterBw": "/restoration/r2-bw.webp"
     },
-    "createdAt": "2026-08-04"
+    "createdAt": "2026-08-04",
+    "card": {
+      "front": "",
+      "back": ""
+    },
+    "site": {
+      "src": "",
+      "ruNote": "",
+      "enNote": ""
+    },
+    "youtubeChannel": {
+      "name": "",
+      "handle": "",
+      "metaRu": "",
+      "metaEn": "",
+      "ctaUrl": "",
+      "ctaRu": "",
+      "ctaEn": "",
+      "cover": "",
+      "avatar": ""
+    },
+    "stickers": {
+      "primaryRu": "",
+      "primaryEn": "",
+      "primaryUrl": "",
+      "secondaryRu": "",
+      "secondaryEn": "",
+      "secondaryUrl": ""
+    }
   },
   {
     "id": "gallery-restoration-004",
@@ -1309,7 +1855,35 @@
       "afterColor": "/restoration/r3-color.webp",
       "afterBw": "/restoration/r3-bw.webp"
     },
-    "createdAt": "2026-08-04"
+    "createdAt": "2026-08-04",
+    "card": {
+      "front": "",
+      "back": ""
+    },
+    "site": {
+      "src": "",
+      "ruNote": "",
+      "enNote": ""
+    },
+    "youtubeChannel": {
+      "name": "",
+      "handle": "",
+      "metaRu": "",
+      "metaEn": "",
+      "ctaUrl": "",
+      "ctaRu": "",
+      "ctaEn": "",
+      "cover": "",
+      "avatar": ""
+    },
+    "stickers": {
+      "primaryRu": "",
+      "primaryEn": "",
+      "primaryUrl": "",
+      "secondaryRu": "",
+      "secondaryEn": "",
+      "secondaryUrl": ""
+    }
   },
   {
     "id": "gallery-restoration-005",
@@ -1326,7 +1900,35 @@
       "afterColor": "/restoration/r4-color.webp",
       "afterBw": "/restoration/r4-bw.webp"
     },
-    "createdAt": "2026-08-04"
+    "createdAt": "2026-08-04",
+    "card": {
+      "front": "",
+      "back": ""
+    },
+    "site": {
+      "src": "",
+      "ruNote": "",
+      "enNote": ""
+    },
+    "youtubeChannel": {
+      "name": "",
+      "handle": "",
+      "metaRu": "",
+      "metaEn": "",
+      "ctaUrl": "",
+      "ctaRu": "",
+      "ctaEn": "",
+      "cover": "",
+      "avatar": ""
+    },
+    "stickers": {
+      "primaryRu": "",
+      "primaryEn": "",
+      "primaryUrl": "",
+      "secondaryRu": "",
+      "secondaryEn": "",
+      "secondaryUrl": ""
+    }
   },
   {
     "id": "gallery-restoration-006",
@@ -1343,7 +1945,35 @@
       "afterColor": "/restoration/r5-color.webp",
       "afterBw": "/restoration/r5-bw.webp"
     },
-    "createdAt": "2026-08-04"
+    "createdAt": "2026-08-04",
+    "card": {
+      "front": "",
+      "back": ""
+    },
+    "site": {
+      "src": "",
+      "ruNote": "",
+      "enNote": ""
+    },
+    "youtubeChannel": {
+      "name": "",
+      "handle": "",
+      "metaRu": "",
+      "metaEn": "",
+      "ctaUrl": "",
+      "ctaRu": "",
+      "ctaEn": "",
+      "cover": "",
+      "avatar": ""
+    },
+    "stickers": {
+      "primaryRu": "",
+      "primaryEn": "",
+      "primaryUrl": "",
+      "secondaryRu": "",
+      "secondaryEn": "",
+      "secondaryUrl": ""
+    }
   },
   {
     "id": "gallery-restoration-007",
@@ -1360,7 +1990,35 @@
       "afterColor": "/restoration/r6-color.webp",
       "afterBw": "/restoration/r6-bw.webp"
     },
-    "createdAt": "2026-08-04"
+    "createdAt": "2026-08-04",
+    "card": {
+      "front": "",
+      "back": ""
+    },
+    "site": {
+      "src": "",
+      "ruNote": "",
+      "enNote": ""
+    },
+    "youtubeChannel": {
+      "name": "",
+      "handle": "",
+      "metaRu": "",
+      "metaEn": "",
+      "ctaUrl": "",
+      "ctaRu": "",
+      "ctaEn": "",
+      "cover": "",
+      "avatar": ""
+    },
+    "stickers": {
+      "primaryRu": "",
+      "primaryEn": "",
+      "primaryUrl": "",
+      "secondaryRu": "",
+      "secondaryEn": "",
+      "secondaryUrl": ""
+    }
   },
   {
     "id": "gallery-restoration-008",
@@ -1377,7 +2035,35 @@
       "afterColor": "/restoration/r7-color.webp",
       "afterBw": "/restoration/r7-bw.webp"
     },
-    "createdAt": "2026-08-04"
+    "createdAt": "2026-08-04",
+    "card": {
+      "front": "",
+      "back": ""
+    },
+    "site": {
+      "src": "",
+      "ruNote": "",
+      "enNote": ""
+    },
+    "youtubeChannel": {
+      "name": "",
+      "handle": "",
+      "metaRu": "",
+      "metaEn": "",
+      "ctaUrl": "",
+      "ctaRu": "",
+      "ctaEn": "",
+      "cover": "",
+      "avatar": ""
+    },
+    "stickers": {
+      "primaryRu": "",
+      "primaryEn": "",
+      "primaryUrl": "",
+      "secondaryRu": "",
+      "secondaryEn": "",
+      "secondaryUrl": ""
+    }
   },
   {
     "id": "card-lifecopy-1",
@@ -1393,7 +2079,36 @@
       "front": "/cards/lifecopy-1-front.webp",
       "back": "/cards/lifecopy-1-back.webp"
     },
-    "createdAt": "2026-08-05"
+    "createdAt": "2026-08-05",
+    "slider": {
+      "before": "",
+      "afterColor": "",
+      "afterBw": ""
+    },
+    "site": {
+      "src": "",
+      "ruNote": "",
+      "enNote": ""
+    },
+    "youtubeChannel": {
+      "name": "",
+      "handle": "",
+      "metaRu": "",
+      "metaEn": "",
+      "ctaUrl": "",
+      "ctaRu": "",
+      "ctaEn": "",
+      "cover": "",
+      "avatar": ""
+    },
+    "stickers": {
+      "primaryRu": "",
+      "primaryEn": "",
+      "primaryUrl": "",
+      "secondaryRu": "",
+      "secondaryEn": "",
+      "secondaryUrl": ""
+    }
   },
   {
     "id": "card-lifecopy-2",
@@ -1409,7 +2124,36 @@
       "front": "/cards/lifecopy-2-front.webp",
       "back": "/cards/lifecopy-2-back.webp"
     },
-    "createdAt": "2026-08-05"
+    "createdAt": "2026-08-05",
+    "slider": {
+      "before": "",
+      "afterColor": "",
+      "afterBw": ""
+    },
+    "site": {
+      "src": "",
+      "ruNote": "",
+      "enNote": ""
+    },
+    "youtubeChannel": {
+      "name": "",
+      "handle": "",
+      "metaRu": "",
+      "metaEn": "",
+      "ctaUrl": "",
+      "ctaRu": "",
+      "ctaEn": "",
+      "cover": "",
+      "avatar": ""
+    },
+    "stickers": {
+      "primaryRu": "",
+      "primaryEn": "",
+      "primaryUrl": "",
+      "secondaryRu": "",
+      "secondaryEn": "",
+      "secondaryUrl": ""
+    }
   },
   {
     "id": "card-lifecopy-3",
@@ -1425,6 +2169,413 @@
       "front": "/cards/lifecopy-3-front.webp",
       "back": "/cards/lifecopy-3-back.webp"
     },
-    "createdAt": "2026-08-05"
+    "createdAt": "2026-08-05",
+    "slider": {
+      "before": "",
+      "afterColor": "",
+      "afterBw": ""
+    },
+    "site": {
+      "src": "",
+      "ruNote": "",
+      "enNote": ""
+    },
+    "youtubeChannel": {
+      "name": "",
+      "handle": "",
+      "metaRu": "",
+      "metaEn": "",
+      "ctaUrl": "",
+      "ctaRu": "",
+      "ctaEn": "",
+      "cover": "",
+      "avatar": ""
+    },
+    "stickers": {
+      "primaryRu": "",
+      "primaryEn": "",
+      "primaryUrl": "",
+      "secondaryRu": "",
+      "secondaryEn": "",
+      "secondaryUrl": ""
+    }
+  },
+  {
+    "id": "card-kislota-1",
+    "ruTitle": "Визитка «Кислота» — вариант 1",
+    "enTitle": "",
+    "ruDescription": "Тату- и пирсинг-студия, Краснодар. Наведите или нажмите, чтобы перевернуть.",
+    "enDescription": "",
+    "designCategory": "business-cards",
+    "featured": false,
+    "ratio": "landscape",
+    "images": [],
+    "card": {
+      "front": "/cards/kislota-1-front.webp",
+      "back": "/cards/kislota-1-back.webp"
+    },
+    "createdAt": "2026-08-05",
+    "slider": {
+      "before": "",
+      "afterColor": "",
+      "afterBw": ""
+    },
+    "site": {
+      "src": "",
+      "ruNote": "",
+      "enNote": ""
+    },
+    "youtubeChannel": {
+      "name": "",
+      "handle": "",
+      "metaRu": "",
+      "metaEn": "",
+      "ctaUrl": "",
+      "ctaRu": "",
+      "ctaEn": "",
+      "cover": "",
+      "avatar": ""
+    },
+    "stickers": {
+      "primaryRu": "",
+      "primaryEn": "",
+      "primaryUrl": "",
+      "secondaryRu": "",
+      "secondaryEn": "",
+      "secondaryUrl": ""
+    }
+  },
+  {
+    "id": "card-kislota-3",
+    "ruTitle": "Визитка «Кислота» — вариант 2",
+    "enTitle": "",
+    "ruDescription": "Тату- и пирсинг-студия, Краснодар. Наведите или нажмите, чтобы перевернуть.",
+    "enDescription": "",
+    "designCategory": "business-cards",
+    "featured": false,
+    "ratio": "landscape",
+    "images": [],
+    "card": {
+      "front": "/cards/kislota-3-front.webp",
+      "back": "/cards/kislota-3-back.webp"
+    },
+    "createdAt": "2026-08-05",
+    "slider": {
+      "before": "",
+      "afterColor": "",
+      "afterBw": ""
+    },
+    "site": {
+      "src": "",
+      "ruNote": "",
+      "enNote": ""
+    },
+    "youtubeChannel": {
+      "name": "",
+      "handle": "",
+      "metaRu": "",
+      "metaEn": "",
+      "ctaUrl": "",
+      "ctaRu": "",
+      "ctaEn": "",
+      "cover": "",
+      "avatar": ""
+    },
+    "stickers": {
+      "primaryRu": "",
+      "primaryEn": "",
+      "primaryUrl": "",
+      "secondaryRu": "",
+      "secondaryEn": "",
+      "secondaryUrl": ""
+    }
+  },
+  {
+    "id": "kislota-logo",
+    "ruTitle": "Логотип «Кислота»",
+    "enTitle": "",
+    "ruDescription": "Тату- и пирсинг-студия, Краснодар. Дизайн-система на основе исходного логотипа.",
+    "enDescription": "",
+    "designCategory": "logos",
+    "featured": false,
+    "ratio": "landscape",
+    "images": [
+      {
+        "src": "/design/kislota/logo-presentation.webp",
+        "ruAlt": "Логотип Кислота",
+        "enAlt": ""
+      }
+    ],
+    "createdAt": "2026-08-05",
+    "slider": {
+      "before": "",
+      "afterColor": "",
+      "afterBw": ""
+    },
+    "card": {
+      "front": "",
+      "back": ""
+    },
+    "site": {
+      "src": "",
+      "ruNote": "",
+      "enNote": ""
+    },
+    "youtubeChannel": {
+      "name": "",
+      "handle": "",
+      "metaRu": "",
+      "metaEn": "",
+      "ctaUrl": "",
+      "ctaRu": "",
+      "ctaEn": "",
+      "cover": "",
+      "avatar": ""
+    },
+    "stickers": {
+      "primaryRu": "",
+      "primaryEn": "",
+      "primaryUrl": "",
+      "secondaryRu": "",
+      "secondaryEn": "",
+      "secondaryUrl": ""
+    }
+  },
+  {
+    "id": "kislota-mascot",
+    "ruTitle": "Маскот «Кислота» — единорог",
+    "enTitle": "",
+    "ruDescription": "Фирменный персонаж студии.",
+    "enDescription": "",
+    "designCategory": "brand-identity",
+    "featured": false,
+    "ratio": "landscape",
+    "images": [
+      {
+        "src": "/design/kislota/unicorn.webp",
+        "ruAlt": "Единорог Кислота",
+        "enAlt": ""
+      }
+    ],
+    "createdAt": "2026-08-05",
+    "slider": {
+      "before": "",
+      "afterColor": "",
+      "afterBw": ""
+    },
+    "card": {
+      "front": "",
+      "back": ""
+    },
+    "site": {
+      "src": "",
+      "ruNote": "",
+      "enNote": ""
+    },
+    "youtubeChannel": {
+      "name": "",
+      "handle": "",
+      "metaRu": "",
+      "metaEn": "",
+      "ctaUrl": "",
+      "ctaRu": "",
+      "ctaEn": "",
+      "cover": "",
+      "avatar": ""
+    },
+    "stickers": {
+      "primaryRu": "",
+      "primaryEn": "",
+      "primaryUrl": "",
+      "secondaryRu": "",
+      "secondaryEn": "",
+      "secondaryUrl": ""
+    }
+  },
+  {
+    "id": "kislota-infographic",
+    "ruTitle": "Инфографика «Кислота»",
+    "enTitle": "",
+    "ruDescription": "Айдентика и оформление.",
+    "enDescription": "",
+    "designCategory": "brand-identity",
+    "featured": false,
+    "ratio": "portrait",
+    "images": [
+      {
+        "src": "/design/kislota/infographic.webp",
+        "ruAlt": "Инфографика Кислота",
+        "enAlt": ""
+      }
+    ],
+    "createdAt": "2026-08-05",
+    "slider": {
+      "before": "",
+      "afterColor": "",
+      "afterBw": ""
+    },
+    "card": {
+      "front": "",
+      "back": ""
+    },
+    "site": {
+      "src": "",
+      "ruNote": "",
+      "enNote": ""
+    },
+    "youtubeChannel": {
+      "name": "",
+      "handle": "",
+      "metaRu": "",
+      "metaEn": "",
+      "ctaUrl": "",
+      "ctaRu": "",
+      "ctaEn": "",
+      "cover": "",
+      "avatar": ""
+    },
+    "stickers": {
+      "primaryRu": "",
+      "primaryEn": "",
+      "primaryUrl": "",
+      "secondaryRu": "",
+      "secondaryEn": "",
+      "secondaryUrl": ""
+    }
+  },
+  {
+    "id": "site-kislota",
+    "ruTitle": "Сайт «Кислота»",
+    "enTitle": "",
+    "ruDescription": "Сайт тату- и пирсинг-студии, Краснодар. Переключайте вид: моб / планшет / ПК.",
+    "enDescription": "",
+    "designCategory": "websites",
+    "featured": false,
+    "ratio": "wide",
+    "images": [],
+    "site": {
+      "src": "/sites/kislota/index.html",
+      "ruNote": "Превью для портфолио. Актуальная версия и наполнение боевого сайта могут отличаться.",
+      "enNote": ""
+    },
+    "createdAt": "2026-08-05",
+    "slider": {
+      "before": "",
+      "afterColor": "",
+      "afterBw": ""
+    },
+    "card": {
+      "front": "",
+      "back": ""
+    },
+    "youtubeChannel": {
+      "name": "",
+      "handle": "",
+      "metaRu": "",
+      "metaEn": "",
+      "ctaUrl": "",
+      "ctaRu": "",
+      "ctaEn": "",
+      "cover": "",
+      "avatar": ""
+    },
+    "stickers": {
+      "primaryRu": "",
+      "primaryEn": "",
+      "primaryUrl": "",
+      "secondaryRu": "",
+      "secondaryEn": "",
+      "secondaryUrl": ""
+    }
+  },
+  {
+    "id": "site-lifecopy",
+    "ruTitle": "Сайт LifeCopy",
+    "enTitle": "",
+    "ruDescription": "Лендинг студии 3D-печати людей. Переключайте вид: моб / планшет / ПК.",
+    "enDescription": "",
+    "designCategory": "websites",
+    "featured": false,
+    "ratio": "wide",
+    "images": [],
+    "site": {
+      "src": "/cases/lifecopy/site/index.html",
+      "ruNote": "Превью для портфолио. Актуальная версия и наполнение боевого сайта могут отличаться.",
+      "enNote": ""
+    },
+    "createdAt": "2026-08-05",
+    "slider": {
+      "before": "",
+      "afterColor": "",
+      "afterBw": ""
+    },
+    "card": {
+      "front": "",
+      "back": ""
+    },
+    "youtubeChannel": {
+      "name": "",
+      "handle": "",
+      "metaRu": "",
+      "metaEn": "",
+      "ctaUrl": "",
+      "ctaRu": "",
+      "ctaEn": "",
+      "cover": "",
+      "avatar": ""
+    },
+    "stickers": {
+      "primaryRu": "",
+      "primaryEn": "",
+      "primaryUrl": "",
+      "secondaryRu": "",
+      "secondaryEn": "",
+      "secondaryUrl": ""
+    }
+  },
+  {
+    "id": "card-wow",
+    "ruTitle": "Визитка WOW My eyes",
+    "enTitle": "",
+    "ruDescription": "Студия украшений из радужки глаза. Наведите или нажмите, чтобы перевернуть.",
+    "enDescription": "",
+    "designCategory": "business-cards",
+    "featured": false,
+    "ratio": "landscape",
+    "images": [],
+    "card": {
+      "front": "/cases/wowmyeyes/card-front.jpg",
+      "back": "/cases/wowmyeyes/card-back.jpg"
+    },
+    "createdAt": "2026-08-05",
+    "slider": {
+      "before": "",
+      "afterColor": "",
+      "afterBw": ""
+    },
+    "site": {
+      "src": "",
+      "ruNote": "",
+      "enNote": ""
+    },
+    "youtubeChannel": {
+      "name": "",
+      "handle": "",
+      "metaRu": "",
+      "metaEn": "",
+      "ctaUrl": "",
+      "ctaRu": "",
+      "ctaEn": "",
+      "cover": "",
+      "avatar": ""
+    },
+    "stickers": {
+      "primaryRu": "",
+      "primaryEn": "",
+      "primaryUrl": "",
+      "secondaryRu": "",
+      "secondaryEn": "",
+      "secondaryUrl": ""
+    }
   }
 ]

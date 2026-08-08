@@ -27,12 +27,15 @@ function DeviceBar({ device, onDevice, language, fullscreen, onToggleFullscreen 
       </div>
       <button
         type="button"
-        className="siteprev-fs-btn"
+        className={fullscreen ? 'siteprev-fs-btn is-close' : 'siteprev-fs-btn'}
         onClick={onToggleFullscreen}
-        aria-label={fullscreen ? (language === 'ru' ? 'Свернуть' : 'Collapse') : (language === 'ru' ? 'На весь экран' : 'Fullscreen')}
+        aria-label={fullscreen ? (language === 'ru' ? 'Закрыть' : 'Close') : (language === 'ru' ? 'На весь экран' : 'Fullscreen')}
       >
         {fullscreen ? (
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          <>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.4 5 12 10.6 17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4L12 13.4 6.4 19 5 17.6 10.6 12 5 6.4 6.4 5Z" fill="currentColor" /></svg>
+            <span>{language === 'ru' ? 'Закрыть' : 'Close'}</span>
+          </>
         ) : (
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" /></svg>
         )}

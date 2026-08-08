@@ -6,8 +6,9 @@ const text = {
   en: { before: 'Original', color: 'Color', bw: 'B/W', after: 'Restored' },
 };
 
-function BeforeAfterSlider({ language = 'ru', before, afterColor, afterBw }) {
-  const t = text[language] ?? text.ru;
+function BeforeAfterSlider({ language = 'ru', before, afterColor, afterBw, beforeLabel, afterLabel }) {
+  const base = text[language] ?? text.ru;
+  const t = { ...base, before: beforeLabel || base.before, after: afterLabel || base.after };
   const containerRef = useRef(null);
   const draggingRef = useRef(false);
   const [position, setPosition] = useState(50);

@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>WOW MY EYES — интеграция в ваш фотобизнес</title>
+<meta name="description" content="Коммерческое предложение WOW MY EYES: интеграция макросъёмки радужки глаза в фотостудии, типографии и фотоцентры.">
+<meta name="theme-color" content="#050B2B">
+<link rel="icon" href="assets/logo.svg">
+<link rel="stylesheet" href="assets/fonts.css">
+<link rel="stylesheet" href="styles.css">
+<script>if (/(?:^|[?&])print=1/.test(location.search)) document.documentElement.classList.add('printing');</script>
+</head>
+<body>
+
+<div class="progress" aria-hidden="true"><i></i></div>
+
+<nav class="dots" aria-label="Разделы">
+  <a href="#hero"    data-label="Начало"><span></span></a>
+  <a href="#why"     data-label="Почему вам"><span></span></a>
+  <a href="#case"    data-label="Кейс"><span></span></a>
+  <a href="#tariffs" data-label="Тарифы"><span></span></a>
+  <a href="#money"   data-label="Инвестиции"><span></span></a>
+  <a href="#net"     data-label="Сеть точек"><span></span></a>
+  <a href="#next"    data-label="Дальше"><span></span></a>
+</nav>
+
+<!-- ══════════ ТИТУЛ ══════════ -->
+<section class="hero" id="hero">
+  <div class="hero__glow" aria-hidden="true"></div>
+
+  <div class="iris-stage" id="irisStage" aria-hidden="true">
+    <canvas class="iris-particles" id="irisCanvas"></canvas>
+    <div class="iris-wrap" id="irisWrap">
+      <div class="iris-halo"></div>
+      <canvas class="iris-gl" id="irisGL"></canvas>
+      <img class="iris-img" id="irisFallback" alt="" hidden>
+      <div class="iris-rings"><i></i><i></i><i></i></div>
+    </div>
+  </div>
+
+  <header class="hero__inner">
+    <img class="logo logo--hero" src="assets/logo.svg" alt="WOW MY EYES">
+    <p class="hero__kicker">Коммерческое предложение · конфиденциально</p>
+
+    <h1 class="hero__title reveal-words">Интеграция макросъёмки радужки в ваш фотобизнес</h1>
+
+    <p class="hero__lead">Для фотостудий, типографий и фотоцентров. Не новый бизнес с нуля —
+      отдельный формат съёмки со своей юнит-экономикой поверх вашего действующего потока клиентов.</p>
+
+    <div class="hero__contacts">
+      <a href="tel:+79181595678">+7 918 159-56-78</a>
+      <a href="https://art-eyes.ru" target="_blank" rel="noopener">art-eyes.ru</a>
+    </div>
+
+    <a class="hero__scroll" href="#summary"><span></span>листайте вниз</a>
+  </header>
+</section>
+
+<!-- ══════════ РЕЗЮМЕ ══════════ -->
+<section class="about" id="summary">
+  <div class="section-glow" aria-hidden="true"></div>
+  <div class="wrap">
+    <h2 class="h-big reveal">Резюме для партнёра</h2>
+    <p class="h-sub reveal">Готовая, проверенная на практике система для дополнительного заработка
+      на клиентах, которые у вас уже есть.</p>
+
+    <div class="kpi">
+      <div class="kpi__cell reveal">
+        <b><span class="count" data-to="2500">0</span>&nbsp;₽</b>
+        <span>средний чек</span>
+      </div>
+      <div class="kpi__cell reveal">
+        <b><span class="count" data-to="140000">0</span>&nbsp;₽+</b>
+        <span>чистыми в месяц — кейс партнёра</span>
+      </div>
+      <div class="kpi__cell reveal">
+        <b><span class="count" data-to="12">0</span>+&nbsp;мес</b>
+        <span>партнёр работает стабильно</span>
+      </div>
+      <div class="kpi__cell reveal">
+        <b>75–<span class="count" data-to="82">0</span>%</b>
+        <span>маржа по продукту</span>
+      </div>
+    </div>
+
+    <p class="note reveal">Расчёт консервативный, не лучший сценарий: 3–5 дополнительных клиентов
+      на радужку в день при среднем чеке 2 500 ₽ — это и даёт итоговую цифру чистыми в месяц выше.</p>
+  </div>
+</section>
+
+<!-- ══════════ ЧТО ВИДИТ ГОСТЬ ══════════ -->
+<section class="guest" id="guest">
+  <div class="wrap guest__grid">
+    <div class="reveal">
+      <h2 class="h-big">Что видит ваш гость</h2>
+      <p class="lead">Радужка глаза формируется в первые месяцы жизни и остаётся неизменной всю жизнь —
+        это не рекламная метафора, а факт: такого узора нет и не будет больше ни у кого на планете.</p>
+      <p class="lead">Мы называем это <b>биометрическим паспортом души</b> — абсолютная индивидуальность
+        каждого гостя, за 30 секунд превращённая в личный портрет, которого до этой минуты
+        не видел даже он сам.</p>
+      <p class="accent-big">Это и есть момент, который продаёт сам себя у вас на точке —
+        не скрипт продавца, а реакция гостя, увидевшего собственный узор впервые в жизни.</p>
+    </div>
+    <figure class="gallery reveal" id="gallery" data-parallax="0.05"
+            aria-roledescription="карусель" aria-label="Гости и их радужки">
+      <div class="gallery__frame">
+        <img src="assets/gallery/1.webp" alt="Мама с дочкой держат рамку с двумя радужками" class="on">
+        <img src="assets/gallery/2.webp" alt="Пара с рамкой, на стене — стена из отпечатанных радужек" loading="lazy">
+        <img src="assets/gallery/3.webp" alt="Девушка с акриловой рамкой и своей радужкой" loading="lazy">
+        <img src="assets/gallery/4.webp" alt="Девушка держит отпечаток своей радужки у лица" loading="lazy">
+        <img src="assets/gallery/5.webp" alt="Кольцо с радужкой на руке" loading="lazy">
+        <button class="gallery__nav gallery__nav--prev" type="button" aria-label="Предыдущее фото"></button>
+        <button class="gallery__nav gallery__nav--next" type="button" aria-label="Следующее фото"></button>
+      </div>
+      <div class="gallery__dots" role="tablist" aria-label="Фотографии"></div>
+      <figcaption>30 секунд на съёмку — портрет, которого больше нет ни у кого</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ══════════ ПОЧЕМУ ВАМ ══════════ -->
+<section class="why" id="why">
+  <div class="section-glow section-glow--right" aria-hidden="true"></div>
+  <canvas class="constellation" id="constellation" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <h2 class="h-big reveal">Почему это подходит именно вам</h2>
+    <p class="h-sub reveal">У вас уже есть половина того, что нужно для запуска. Мы добавляем вторую.</p>
+
+    <div class="split">
+      <div class="split__col reveal">
+        <h3 class="split__head split__head--dim">У вас уже есть</h3>
+        <ul class="ticks ticks--plain">
+          <li>Клиенты с фотопотребностью</li>
+          <li>Помещение и оборудование</li>
+          <li>Навык работы с фото и клиентом</li>
+          <li>Кассу и CRM</li>
+        </ul>
+      </div>
+      <div class="split__plus" aria-hidden="true">+</div>
+      <div class="split__col split__col--gold reveal">
+        <h3 class="split__head">Мы добавляем</h3>
+        <ul class="ticks">
+          <li>Продукт с маржой <b>75–82%</b></li>
+          <li>Компактную фотозону под ключ</li>
+          <li>Обучение под наш формат</li>
+          <li>Скрипты и материалы под вашу студию</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ КЕЙС ══════════ -->
+<section class="case" id="case">
+  <div class="wrap">
+    <h2 class="h-big reveal">Доказательство, а не гипотеза</h2>
+    <div class="case__grid">
+      <article class="card reveal" data-tilt>
+        <div class="card__sheen" aria-hidden="true"></div>
+        <p>Типография в ТРЦ добавила одну зону радужки — без переезда, без новых клиентов,
+          без смены модели бизнеса.</p>
+        <p class="case__num"><b>от 140 000 ₽</b><span>чистыми в месяц, стабильно больше года</span></p>
+      </article>
+      <blockquote class="quote reveal">
+        Они не искали новых клиентов. Они начали больше зарабатывать на тех, кто уже пришёл
+      </blockquote>
+    </div>
+    <p class="note reveal">Сама технология и плагин обработки проверены на собственных действующих
+      точках Wow My Eyes в Краснодаре — это не единичный эксперимент, а работающий продукт.</p>
+  </div>
+</section>
+
+<!-- ══════════ ТАРИФЫ ══════════ -->
+<section class="tariffs" id="tariffs">
+  <div class="section-glow" aria-hidden="true"></div>
+  <div class="wrap">
+    <h2 class="h-big reveal">Что вы получаете — по тарифам</h2>
+
+    <div class="tbl-scroll reveal">
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th class="tbl__what">Что входит</th>
+            <th>Старт</th>
+            <th class="tbl__hi">Партнёр</th>
+            <th>Под ключ</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>Обучение: съёмка, ретушь, продажи, бижутерия (текст + видео)</th>
+            <td data-l="Старт"><i class="yes"></i></td>
+            <td data-l="Партнёр" class="tbl__hi"><i class="yes"></i></td>
+            <td data-l="Под ключ"><i class="yes"></i></td>
+          </tr>
+          <tr>
+            <th>Живые созвоны по обучению</th>
+            <td data-l="Старт"><i class="no"></i></td>
+            <td data-l="Партнёр" class="tbl__hi"><i class="yes"></i> 3 сессии по 1 часу</td>
+            <td data-l="Под ключ"><i class="yes"></i> очно, лично</td>
+          </tr>
+          <tr>
+            <th>Материалы и макеты — под вашу студию, в первые 2–3 недели после старта</th>
+            <td data-l="Старт"><span class="dim">докупаете сами</span></td>
+            <td data-l="Партнёр" class="tbl__hi"><i class="yes"></i> Первичный (необходимый) закуп</td>
+            <td data-l="Под ключ"><i class="yes"></i> Полный закуп + согласование с товарными категориями</td>
+          </tr>
+          <tr>
+            <th>Рекомендации по оборудованию (список, цены, поставщики)</th>
+            <td data-l="Старт"><i class="yes"></i></td>
+            <td data-l="Партнёр" class="tbl__hi"><i class="yes"></i> Рекомендации</td>
+            <td data-l="Под ключ"><i class="yes"></i> Личная помощь и рекомендации в первичном закупе</td>
+          </tr>
+          <tr>
+            <th>Фотозона: бокс, штатив, свет</th>
+            <td data-l="Старт"><span class="dim">рекомендации</span></td>
+            <td data-l="Партнёр" class="tbl__hi"><i class="yes"></i> Доставка уже готового оборудования для съёмки<sup>*</sup></td>
+            <td data-l="Под ключ"><i class="yes"></i> + монтаж и индивидуальная настройка оборудования</td>
+          </tr>
+          <tr>
+            <th>Первый закуп бижутерии и материалов</th>
+            <td data-l="Старт"><i class="no"></i></td>
+            <td data-l="Партнёр" class="tbl__hi"><i class="yes"></i> Бижутерия (выставочный формат) + небольшой запас для реализации</td>
+            <td data-l="Под ключ"><i class="yes"></i> Выкладка / выставочная бижутерия / первичный закуп бижутерии для реализации</td>
+          </tr>
+          <tr>
+            <th>Пакет документов: скрипты и каталог</th>
+            <td data-l="Старт"><i class="yes"></i></td>
+            <td data-l="Партнёр" class="tbl__hi"><i class="yes"></i></td>
+            <td data-l="Под ключ"><i class="yes"></i></td>
+          </tr>
+          <tr>
+            <th>Доступ к плагину обработки фото</th>
+            <td data-l="Старт"><i class="yes"></i></td>
+            <td data-l="Партнёр" class="tbl__hi"><i class="yes"></i></td>
+            <td data-l="Под ключ"><i class="yes"></i></td>
+          </tr>
+          <tr>
+            <th>Личный выезд и запуск вместе</th>
+            <td data-l="Старт"><i class="no"></i></td>
+            <td data-l="Партнёр" class="tbl__hi"><i class="yes"></i> Онлайн-поддержка</td>
+            <td data-l="Под ключ"><i class="yes"></i> 4–5 дней: личный выезд / обучение персонала (скрипты, продажи, макросъёмка, ретушь) / запуск вместе до первых клиентов</td>
+          </tr>
+          <tr>
+            <th>Сопровождение после запуска</th>
+            <td data-l="Старт">30 дней чат</td>
+            <td data-l="Партнёр" class="tbl__hi">60 дней чат + созвоны</td>
+            <td data-l="Под ключ">90 дней чат + созвоны + приоритет</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ul class="ticks ticks--tight reveal notes">
+      <li><sup>*</sup> Оборудование приезжает готовым к съёмке — собирать и настраивать ничего не нужно.</li>
+      <li><b>Макрообъектив (40 000–65 000 ₽)</b> — специальная оптика для съёмки радужки в масштабе 1:1,
+        отдельная покупка на всех трёх тарифах. Это единственная обязательная самостоятельная покупка.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ══════════ ИНВЕСТИЦИИ ══════════ -->
+<section class="money" id="money">
+  <div class="wrap">
+    <h2 class="h-big reveal">Инвестиции и честная окупаемость</h2>
+
+    <div class="price__grid">
+      <article class="price reveal">
+        <h3>Старт</h3>
+        <b class="price__main">89 000 ₽</b>
+        <dl>
+          <dt>Полный вход с макрообъективом</dt><dd>129 000 – 154 000 ₽</dd>
+          <dt>Окупаемость</dt><dd>~1 – 2,5 мес</dd>
+        </dl>
+      </article>
+      <article class="price price--hi reveal">
+        <span class="price__flag">чаще всего выбирают</span>
+        <h3>Партнёр</h3>
+        <b class="price__main">149 900 ₽</b>
+        <dl>
+          <dt>Полный вход с макрообъективом</dt><dd>189 900 – 214 900 ₽</dd>
+          <dt>Окупаемость</dt><dd>1,2 – 3,4 мес</dd>
+        </dl>
+      </article>
+      <article class="price reveal">
+        <h3>Под ключ</h3>
+        <b class="price__main">550 000 ₽</b>
+        <dl>
+          <dt>Полный вход с макрообъективом</dt><dd>590 000 – 615 000 ₽</dd>
+          <dt>Окупаемость</dt><dd>3,6 – 9,6 мес</dd>
+        </dl>
+      </article>
+    </div>
+
+    <p class="note reveal">Окупаемость посчитана от полного входа (пакет + объектив), не только от цены
+      пакета — это честнее и не создаёт разочарования после старта. «Под ключ» дороже не за скорость
+      возврата денег, а за снятое личное присутствие и минимальный риск ошибки на запуске.</p>
+
+    <div class="warn reveal">
+      <h3>Цена для первых 5 партнёров</h3>
+      <p>Тарифы выше — специальная цена запуска. Начиная с шестого партнёра стоимость пакетов
+        вырастает на <b>45%</b>.</p>
+      <div class="warn__rows">
+        <div><span>Старт</span><b>89 000 ₽</b><i>→ 129 050 ₽</i></div>
+        <div><span>Партнёр</span><b>149 900 ₽</b><i>→ 217 355 ₽</i></div>
+        <div><span>Под ключ</span><b>550 000 ₽</b><i>→ 797 500 ₽</i></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ ПРАКТИКА ══════════ -->
+<section class="road" id="road">
+  <div class="wrap">
+    <h2 class="h-big reveal">Как это выглядит на практике</h2>
+    <ol class="road__list">
+      <li class="reveal"><b>Неделя 1</b><span>Подписание, доступ к материалам и плагину</span></li>
+      <li class="reveal"><b>Неделя 1–2</b><span>Закупка объектива и расходников по нашему списку поставщиков</span></li>
+      <li class="reveal"><b>Неделя 2–3</b><span>Обучение: съёмка, ретушь, продажи — формат по тарифу</span></li>
+      <li class="reveal"><b>Неделя 3–4</b><span>Установка зоны, запуск, первые клиенты</span></li>
+      <li class="reveal"><b>Далее</b><span>Сопровождение согласно тарифу</span></li>
+    </ol>
+  </div>
+</section>
+
+<!-- ══════════ КАЛЬКУЛЯТОР СЕТИ ══════════ -->
+<section class="net" id="net">
+  <div class="section-glow section-glow--right" aria-hidden="true"></div>
+  <div class="wrap">
+    <h2 class="h-big reveal">Несколько точек</h2>
+    <p class="h-sub reveal">Если у вас сеть — цена считается не умножением. Посчитайте свой вариант.</p>
+
+    <div class="calc reveal">
+      <div class="calc__controls">
+        <div class="calc__field">
+          <label class="calc__label">Тариф</label>
+          <div class="seg" id="calcTariff" role="group" aria-label="Тариф">
+            <button type="button" data-t="start">Старт</button>
+            <button type="button" data-t="partner" class="on">Партнёр</button>
+            <button type="button" data-t="turnkey">Под ключ</button>
+          </div>
+        </div>
+
+        <div class="calc__field">
+          <label class="calc__label" for="calcPoints">Точек <b id="calcPointsVal">1</b></label>
+          <input id="calcPoints" class="calc__range" type="range" min="1" max="6" step="1" value="1">
+          <div class="calc__scale" aria-hidden="true">
+            <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="calc__out">
+        <div class="calc__total">
+          <span class="calc__cap">Стоимость пакета</span>
+          <b id="calcTotal">149 000 ₽</b>
+          <em id="calcPer">за одну фотозону — 149 000 ₽</em>
+        </div>
+        <div class="calc__side">
+          <p id="calcSave" class="calc__save" hidden></p>
+          <p class="calc__lens">Плюс макрообъективы: <b id="calcLens">40 000 – 65 000 ₽</b><br>
+            <span>по одному на каждую фотозону, покупаются отдельно</span></p>
+        </div>
+      </div>
+
+      <p class="calc__note" id="calcNote" hidden></p>
+    </div>
+
+    <p class="note reveal">Цены за пакет целиком, не за каждую зону. Расчёт предварительный:
+      под конкретную сеть считаем отдельно — точки различаются по площади, потоку и монтажу.</p>
+  </div>
+</section>
+
+<!-- ══════════ FAQ ══════════ -->
+<section class="faq" id="faq">
+  <div class="wrap">
+    <h2 class="h-big reveal">Частые вопросы</h2>
+    <div class="faq__grid">
+      <article class="card reveal" data-tilt>
+        <div class="card__sheen" aria-hidden="true"></div>
+        <h3 class="card__title">А что если у меня не пойдёт?</h3>
+        <p>Честно: полной гарантии не даст никто. Но вы не строите бизнес с нуля — вы добавляете
+          продукт в уже существующий поток клиентов. Риск ниже, чем при открытии нового направления с нуля.</p>
+      </article>
+      <article class="card reveal" data-tilt>
+        <div class="card__sheen" aria-hidden="true"></div>
+        <h3 class="card__title">Сколько времени это займёт у моих сотрудников?</h3>
+        <p>Обучение — часы, не недели. Съёмка радужки проще портретной: чёткий алгоритм,
+          а не творческая импровизация. Формат работает поверх вашего потока, не вместо него —
+          пара минут на клиента не меняет операционку студии.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ СЛЕДУЮЩИЙ ШАГ ══════════ -->
+<section class="contacts" id="next">
+  <div class="contacts__photo" data-parallax="0.08" aria-hidden="true"></div>
+  <div class="contacts__veil" aria-hidden="true"></div>
+
+  <div class="wrap contacts__wrap">
+    <div class="contacts__card reveal">
+      <h2 class="h-big h-big--sm">Следующий шаг</h2>
+      <p class="contacts__lead">Это не решение, которое нужно принять сейчас по телефону.
+        Дайте нам данные о вашей студии и потоке клиентов — рассчитаем конкретные цифры под вас
+        и предложим подходящий тариф.</p>
+      <ul class="contacts__list">
+        <li><a href="tel:+79181595678"><i class="ic">☎</i>+7 918 159-56-78</a></li>
+        <li><a href="https://t.me/WowMyEyes" target="_blank" rel="noopener"><i class="ic">◆</i>WhatsApp / Telegram</a></li>
+        <li><a href="https://art-eyes.ru" target="_blank" rel="noopener"><i class="ic">◉</i>art-eyes.ru</a></li>
+      </ul>
+      <img class="logo logo--card" src="assets/logo.svg" alt="WOW MY EYES">
+    </div>
+  </div>
+
+  <footer class="foot">WOW MY EYES · art-eyes.ru · коммерческое предложение · конфиденциально</footer>
+</section>
+
+<script src="assets/iris-data.js" defer></script>
+<script src="assets/logo-eye.js" defer></script>
+<script src="app.js" defer></script>
+</body>
+</html>
