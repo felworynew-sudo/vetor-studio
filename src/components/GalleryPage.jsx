@@ -351,7 +351,7 @@ function GalleryPage({
             }
 
             return (
-              <article key={item.id} className={`gallery-tile ${item.ratio || 'square'}`} onClick={() => onOpenItem(item)}>
+              <article key={item.id} className="design-media-card surface-panel" onClick={() => onOpenItem(item)}>
                 {studioEnabled ? (
                   <div className="gallery-tile-actions" onClick={(event) => event.stopPropagation()}>
                     <button type="button" className="gallery-tile-action" onClick={() => onEditItem(item)} aria-label="Edit design item" title="Edit design item">
@@ -366,19 +366,20 @@ function GalleryPage({
                     </button>
                   </div>
                 ) : null}
-                <button type="button" className="gallery-tile-hitbox" aria-label={item[titleKey]}>
+                <button type="button" className={`design-work-media ${item.ratio || 'landscape'}`} aria-label={item[titleKey]}>
                   <ImageWithFallback
                     src={withBase(imageSrc)}
                     fallback={withBase('/gallery/gallery-placeholder.svg')}
                     alt={firstImage?.[language === 'ru' ? 'ruAlt' : 'enAlt'] || item[titleKey]}
                     {...responsiveImageProps}
                   />
-                  <div className="gallery-tile-overlay">
-                    <span>{item.images?.length || 1} {copy.count}</span>
-                    <h2>{item[titleKey]}</h2>
-                    <p>{item[descriptionKey]}</p>
-                  </div>
                 </button>
+                {(item[titleKey] || item[descriptionKey]) ? (
+                  <div className="design-work-body">
+                    {item[titleKey] ? <h2>{item[titleKey]}</h2> : null}
+                    {item[descriptionKey] ? <p>{item[descriptionKey]}</p> : null}
+                  </div>
+                ) : null}
               </article>
             );
           })}

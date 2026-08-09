@@ -177,6 +177,9 @@ async function main() {
     addRoute('/fonts', null, 'monthly', '0.7');
   }
 
+  addRoute('/about', null, 'monthly', '0.7');
+  addRoute('/privacy', null, 'yearly', '0.3');
+
   const urlset = routes
     .map(
       (route) => `  <url>

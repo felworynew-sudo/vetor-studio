@@ -17,6 +17,8 @@ import PluginsPage from './components/PluginsPage';
 import PluginsCatalogPage from './components/PluginsCatalogPage';
 import HomeLauncher from './components/HomeLauncher';
 import FontsPage from './components/FontsPage';
+import AboutPage from './components/AboutPage';
+import PrivacyPage from './components/PrivacyPage';
 import PriceCategoriesPage from './components/PriceCategoriesPage';
 import PriceCategoryModal from './components/PriceCategoryModal';
 import NotFoundPage from './components/NotFoundPage';
@@ -50,9 +52,11 @@ const DEFAULT_SECTIONS_VISIBILITY = {
   fonts: true,
   price: true,
   plugins: true,
+  about: true,
+  privacy: true,
 };
 
-const KNOWN_SECTIONS = ['home', 'previews', 'blog', 'gallery', 'fonts', 'price', 'plugins'];
+const KNOWN_SECTIONS = ['home', 'previews', 'blog', 'gallery', 'fonts', 'price', 'plugins', 'about', 'privacy'];
 
 const FONTS_PROMO_COPY = {
   ru: {
@@ -708,6 +712,18 @@ function App() {
       description = language === 'ru'
         ? 'Авторские шрифты Vetor с поддержкой кириллицы — для заголовков, обложек и брендинга. Скачать в Telegram-боте. Нужен свой шрифт — разработаем на заказ.'
         : 'Vetor original Cyrillic typefaces for headlines, covers, and branding. Download via the Telegram bot. Need a custom font — we develop on order.';
+    } else if (activeSection === 'about') {
+      title = language === 'ru'
+        ? `О студии — дизайнер Кирилл Шелудько, Краснодар${suffix}`
+        : `About — designer Kirill Sheludko${suffix}`;
+      description = language === 'ru'
+        ? 'Кирилл Шелудько — основатель студии Vetor и универсальный дизайнер из Краснодара: превью, логотипы, фирменный стиль, сайты, а также плагины, CRM и автоматизация для бизнеса.'
+        : 'Kirill Sheludko — founder of Vetor and a versatile designer from Krasnodar: thumbnails, logos, brand identity, websites, plus plugins, CRM and automation for business.';
+    } else if (activeSection === 'privacy') {
+      title = language === 'ru' ? `Политика конфиденциальности${suffix}` : `Privacy Policy${suffix}`;
+      description = language === 'ru'
+        ? 'Как студия Vetor обрабатывает персональные данные по ФЗ-152: какие данные, зачем, хранение и ваши права.'
+        : 'How Vetor Studio processes personal data: what is collected, why, storage, and your rights.';
     } else if (activeSection === 'plugins' && activePlugin === 'resto') {
       title = language === 'ru'
         ? `Resto — реставрация старых фото и макеты для памятников${suffix}`
@@ -868,6 +884,26 @@ function App() {
       });
     } else {
       const el = document.querySelector('script[type="application/ld+json"][data-seo-id="article"]');
+      if (el) el.remove();
+    }
+
+    if (activeSection === 'about') {
+      upsertJsonLd('person', {
+        '@context': 'https://schema.org',
+        '@type': 'Person',
+        name: 'Кирилл Шелудько',
+        jobTitle: language === 'ru' ? 'Дизайнер, основатель студии Vetor' : 'Designer, founder of Vetor studio',
+        url: `${canonicalDomain}/about`,
+        image: `${canonicalDomain}/owner/z2.jpg`,
+        worksFor: { '@type': 'Organization', name: 'Vetor Studio', url: canonicalDomain },
+        address: { '@type': 'PostalAddress', addressLocality: language === 'ru' ? 'Краснодар' : 'Krasnodar', addressCountry: 'RU' },
+        knowsAbout: language === 'ru'
+          ? ['Дизайн превью для YouTube', 'Логотипы и фирменный стиль', 'Разработка сайтов', 'Плагины и CRM', 'Автоматизация']
+          : ['YouTube thumbnail design', 'Logos and brand identity', 'Web development', 'Plugins and CRM', 'Automation'],
+        sameAs: ['https://profi.ru/profile/SheludkoKN/', siteConfig.contacts?.telegramUrl].filter(Boolean),
+      });
+    } else {
+      const el = document.querySelector('script[type="application/ld+json"][data-seo-id="person"]');
       if (el) el.remove();
     }
 
@@ -1707,6 +1743,14 @@ function App() {
               href="/price"
             />
           </>
+        )}
+
+        {!isRouteNotFound && activeSection === 'about' && (
+          <AboutPage language={language} siteConfig={siteConfig} contactUrl={siteConfig.contacts?.telegramUrl} />
+        )}
+
+        {!isRouteNotFound && activeSection === 'privacy' && (
+          <PrivacyPage language={language} />
         )}
 
         {!isRouteNotFound && activeSection === 'previews' && (

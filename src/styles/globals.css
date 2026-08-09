@@ -2144,26 +2144,13 @@ select {
 .design-grid > .design-site-card { grid-column: span 3; }
 .design-grid > .design-slider-card,
 .design-grid > .design-flipcard-card,
-.design-grid > .gallery-tile { grid-column: span 2; }
-/* Plain image tiles need a defined aspect in the auto-height grid. */
-.design-grid > .gallery-tile {
-  grid-row: auto;
-  aspect-ratio: 4 / 3;
-  border-radius: var(--radius-card);
-  overflow: hidden;
-}
-.design-grid > .gallery-tile.square { aspect-ratio: 1; }
-.design-grid > .gallery-tile.portrait { aspect-ratio: 3 / 4; }
-.design-grid > .gallery-tile.landscape { aspect-ratio: 16 / 10; }
-.design-grid > .gallery-tile.wide { aspect-ratio: 16 / 9; }
-.design-grid > .gallery-tile .gallery-tile-hitbox,
-.design-grid > .gallery-tile .gallery-tile-hitbox img { height: 100%; }
+.design-grid > .design-media-card { grid-column: span 2; }
 @media (max-width: 1000px) {
   .design-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .design-grid > .design-site-card { grid-column: 1 / -1; }
   .design-grid > .design-slider-card,
   .design-grid > .design-flipcard-card,
-  .design-grid > .gallery-tile { grid-column: span 1; }
+  .design-grid > .design-media-card { grid-column: span 1; }
 }
 @media (max-width: 640px) {
   .design-grid { grid-template-columns: 1fr; }
@@ -5313,6 +5300,37 @@ select {
   opacity: 0.9;
 }
 .footer-profi:hover .footer-profi-logo { opacity: 1; }
+.site-footer-legal { display: inline-flex; gap: 16px; flex-wrap: wrap; }
+.site-footer-legal-link { color: var(--text-soft); text-decoration: none; font-size: 13px; transition: color 0.18s; }
+.site-footer-legal-link:hover { color: var(--accent); }
+
+/* About page */
+.about-body {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: clamp(24px, 4vw, 48px);
+  padding: clamp(24px, 4vw, 44px);
+  border-radius: var(--radius-card);
+  margin-top: 20px;
+  align-items: start;
+}
+.about-portrait { border-radius: var(--radius-card); overflow: hidden; aspect-ratio: 3 / 4; }
+.about-portrait img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.about-text h2 { margin: 0; font-size: clamp(24px, 3vw, 32px); letter-spacing: -0.02em; }
+.about-role { margin: 6px 0 18px; color: var(--accent); font-weight: 700; }
+.about-text p { margin: 0 0 14px; color: var(--text-muted); font-size: 16px; line-height: 1.6; }
+.about-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 22px; }
+@media (max-width: 700px) {
+  .about-body { grid-template-columns: 1fr; }
+  .about-portrait { max-width: 220px; }
+}
+
+/* Privacy page */
+.privacy-body { padding: clamp(24px, 4vw, 44px); border-radius: var(--radius-card); margin-top: 20px; max-width: 820px; }
+.privacy-block { margin-bottom: 22px; }
+.privacy-block h2 { margin: 0 0 8px; font-size: 18px; letter-spacing: -0.01em; }
+.privacy-block p { margin: 0; color: var(--text-muted); line-height: 1.6; }
+.privacy-contact { margin-top: 24px; color: var(--text-soft); font-size: 14px; }
 
 .site-footer-copy {
   white-space: nowrap;
@@ -6280,34 +6298,51 @@ select {
 }
 
 /* Design gallery: before/after slider work card */
-.design-slider-card {
-  position: relative;
-  padding: 16px;
-  border-radius: var(--radius-card);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.design-slider-body h2 {
-  margin: 0;
-  font-size: 22px;
-  letter-spacing: -0.02em;
-}
-.design-slider-body p {
-  margin: 6px 0 0;
-  color: var(--text-muted);
-  font-size: 15px;
-  line-height: 1.5;
-}
-
-/* Design gallery: flip business-card tile */
+/* Unified design tile shell: media on top + body below, consistent sizing. */
+.design-media-card,
+.design-slider-card,
 .design-flipcard-card {
   position: relative;
-  padding: 14px;
+  padding: 12px;
   border-radius: var(--radius-card);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
+}
+.design-media-card { cursor: pointer; }
+.design-work-media {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: #0b0c11;
+  border-radius: 12px;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  cursor: pointer;
+}
+.design-work-media.square { aspect-ratio: 1; }
+.design-work-media.portrait { aspect-ratio: 3 / 4; }
+.design-work-media.landscape { aspect-ratio: 16 / 10; }
+.design-work-media.wide { aspect-ratio: 16 / 9; }
+.design-work-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.design-work-body h2,
+.design-slider-body h2 {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+.design-work-body p,
+.design-slider-body p {
+  margin: 5px 0 0;
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 .flipcard.design-flipcard {
   flex: none;

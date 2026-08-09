@@ -102,6 +102,14 @@ export function parseRoute(locationLike) {
     return { ...base, section: 'fonts' };
   }
 
+  if (pathname === '/about') {
+    return { ...base, section: 'about' };
+  }
+
+  if (pathname === '/privacy') {
+    return { ...base, section: 'privacy' };
+  }
+
   if (pathname === '/blog') {
     return { ...base, section: 'blog' };
   }
@@ -160,6 +168,14 @@ export function buildSectionPath(section) {
 
   if (section === 'fonts') {
     return '/fonts';
+  }
+
+  if (section === 'about') {
+    return '/about';
+  }
+
+  if (section === 'privacy') {
+    return '/privacy';
   }
 
   if (section === 'blog') {
