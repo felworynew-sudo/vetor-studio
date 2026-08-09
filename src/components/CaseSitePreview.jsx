@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { withBase } from '../utils/format';
 
 const DEVICES = [
@@ -73,28 +74,39 @@ function CaseSitePreview({ block, language }) {
   const dev = DEVICES.find((d) => d.key === device) || DEVICES[2];
   const screenStyle = dev.width ? { width: `${dev.width}px`, maxWidth: '100%' } : { width: '100%' };
 
-  return (
-    <figure className="case-siteprev">
-      {fullscreen ? <div className="siteprev-fs-backdrop" onClick={() => setFullscreen(false)} /> : null}
-      <div className={fullscreen ? 'siteprev-window is-fs' : 'siteprev-window'}>
-        <DeviceBar
-          device={device}
-          onDevice={setDevice}
-          language={language}
-          fullscreen={fullscreen}
-          onToggleFullscreen={() => setFullscreen((current) => !current)}
-        />
-        <div className={`siteprev-stage device-${device}`}>
-          <div className="siteprev-screen" style={screenStyle}>
-            <iframe
-              className="siteprev-frame"
-              src={withBase(src)}
-              title={language === 'ru' ? 'Превью сайта LifeCopy' : 'LifeCopy site preview'}
-              loading="lazy"
-            />
-          </div>
+  const windowNode = (
+    <div className={fullscreen ? 'siteprev-window is-fs' : 'siteprev-window'}>
+      <DeviceBar
+        device={device}
+        onDevice={setDevice}
+        language={language}
+        fullscreen={fullscreen}
+        onToggleFullscreen={() => setFullscreen((current) => !current)}
+      />
+      <div className={`siteprev-stage device-${device}`}>
+        <div className="siteprev-screen" style={screenStyle}>
+          <iframe
+            className="siteprev-frame"
+            src={withBase(src)}
+            title={language === 'ru' ? 'Превью сайта' : 'Site preview'}
+            loading="lazy"
+          />
         </div>
       </div>
+    </div>
+  );
+
+  return (
+    <figure className="case-siteprev">
+      {fullscreen
+        ? createPortal(
+            <div className="siteprev-fs-root">
+              <div className="siteprev-fs-backdrop" onClick={() => setFullscreen(false)} />
+              {windowNode}
+            </div>,
+            document.body,
+          )
+        : windowNode}
       {note ? <p className="siteprev-note">{note}</p> : null}
       {caption ? <figcaption>{caption}</figcaption> : null}
     </figure>

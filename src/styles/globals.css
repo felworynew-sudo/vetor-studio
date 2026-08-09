@@ -6558,6 +6558,11 @@ select {
   border-radius: 16px;
   box-shadow: 0 40px 120px rgba(0, 0, 0, 0.6);
 }
+.siteprev-fs-root {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+}
 .siteprev-fs-backdrop {
   position: fixed;
   inset: 0;
