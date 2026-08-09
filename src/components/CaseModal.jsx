@@ -5,7 +5,7 @@ import CaseSitePreview from './CaseSitePreview';
 import CaseCardFlip from './CaseCardFlip';
 import CaseLogoShowcase from './CaseLogoShowcase';
 import BeforeAfterSlider from './BeforeAfterSlider';
-import { withBase } from '../utils/format';
+import { withBase, formatDate } from '../utils/format';
 import { getOptimizedImageSrc } from '../utils/responsiveImages';
 import { useModalAccessibility } from '../hooks/useModalAccessibility';
 
@@ -175,6 +175,10 @@ function CaseModal({ item, language, studioEnabled = false, onEdit, onClose }) {
             <div className="case-hero-copy">
               <h1>{title}</h1>
               {lead ? <p className="case-lead">{lead}</p> : null}
+              <p className="case-byline">
+                {language === 'ru' ? 'Дизайнер' : 'Designer'}: Кирилл Шелудько
+                {item.createdAt ? ` · ${formatDate(item.createdAt, language)}` : ''}
+              </p>
             </div>
           </header>
 

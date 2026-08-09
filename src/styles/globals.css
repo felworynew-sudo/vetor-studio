@@ -2133,17 +2133,20 @@ select {
 
 .design-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   grid-auto-rows: auto;
   grid-auto-flow: dense;
   align-items: start;
   gap: 16px;
 }
-/* Cases lead, full-width; other works are compact tiles — 3 per row. */
+/* Cases full-width; site previews half-width (2/row); other works — 3/row. */
 .design-grid > .design-case-card { grid-column: 1 / -1; }
+.design-grid > .design-site-card { grid-column: span 3; }
+.design-grid > .design-slider-card,
+.design-grid > .design-flipcard-card,
+.design-grid > .gallery-tile { grid-column: span 2; }
 /* Plain image tiles need a defined aspect in the auto-height grid. */
 .design-grid > .gallery-tile {
-  grid-column: span 1;
   grid-row: auto;
   aspect-ratio: 4 / 3;
   border-radius: var(--radius-card);
@@ -2157,6 +2160,10 @@ select {
 .design-grid > .gallery-tile .gallery-tile-hitbox img { height: 100%; }
 @media (max-width: 1000px) {
   .design-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .design-grid > .design-site-card { grid-column: 1 / -1; }
+  .design-grid > .design-slider-card,
+  .design-grid > .design-flipcard-card,
+  .design-grid > .gallery-tile { grid-column: span 1; }
 }
 @media (max-width: 640px) {
   .design-grid { grid-template-columns: 1fr; }
@@ -5299,6 +5306,13 @@ select {
 .site-footer-link:hover {
   color: var(--accent, #ff5c63);
 }
+.footer-profi-logo {
+  height: 14px;
+  width: auto;
+  display: block;
+  opacity: 0.9;
+}
+.footer-profi:hover .footer-profi-logo { opacity: 1; }
 
 .site-footer-copy {
   white-space: nowrap;
@@ -6495,6 +6509,12 @@ select {
   font-size: clamp(16px, 2.2vw, 20px);
   line-height: 1.55;
   color: var(--text-muted);
+}
+.case-byline {
+  margin: 14px 0 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-soft);
 }
 .case-body {
   padding: 8px clamp(20px, 5vw, 64px) clamp(32px, 6vw, 64px);

@@ -803,17 +803,73 @@ function App() {
       '@context': 'https://schema.org',
       '@type': 'ProfessionalService',
       name: 'Vetor Studio',
+      alternateName: 'Студия дизайна Vetor',
       url: canonicalDomain,
-      areaServed: 'RU, Worldwide',
-      serviceType: [
-        'YouTube thumbnail design',
-        'Music cover design',
-        'Channel branding',
-      ],
-      sameAs: [siteConfig.contacts?.telegramUrl].filter(Boolean),
+      image: `${canonicalDomain}/og/default.png`,
+      areaServed: ['RU', 'Worldwide'],
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: language === 'ru' ? 'Краснодар' : 'Krasnodar',
+        addressCountry: 'RU',
+      },
+      serviceType: language === 'ru'
+        ? ['Дизайн превью для YouTube', 'Обложки треков', 'Логотипы и фирменный стиль', 'Разработка шрифта', 'Реставрация фото']
+        : ['YouTube thumbnail design', 'Music cover design', 'Logo & brand identity', 'Custom fonts', 'Photo restoration'],
+      sameAs: [
+        'https://profi.ru/profile/SheludkoKN/',
+        siteConfig.contacts?.telegramUrl,
+        'https://ru.pinterest.com/VetorDesignStudio/',
+      ].filter(Boolean),
       email: siteConfig.contacts?.email || undefined,
       telephone: siteConfig.contacts?.phoneRaw || siteConfig.contacts?.phone || undefined,
+      taxID: '233505486022',
     });
+
+    // Breadcrumbs for the current section / open item.
+    const sectionCrumb = {
+      previews: [language === 'ru' ? 'Превью' : 'Previews', '/previews'],
+      gallery: [language === 'ru' ? 'Дизайн' : 'Design', '/design'],
+      blog: [language === 'ru' ? 'Блог' : 'Blog', '/blog'],
+      price: [language === 'ru' ? 'Цены' : 'Pricing', '/price'],
+      fonts: [language === 'ru' ? 'Шрифты' : 'Fonts', '/fonts'],
+      plugins: [language === 'ru' ? 'Плагины' : 'Plugins', '/plugins'],
+    }[activeSection];
+    const crumbList = [{ '@type': 'ListItem', position: 1, name: language === 'ru' ? 'Главная' : 'Home', item: canonicalDomain }];
+    if (sectionCrumb) {
+      crumbList.push({ '@type': 'ListItem', position: 2, name: sectionCrumb[0], item: `${canonicalDomain}${sectionCrumb[1]}` });
+    }
+    const openEntity = activeCaseItem || activeGalleryItem || activeBlogPost || activeItem;
+    if (sectionCrumb && openEntity) {
+      crumbList.push({ '@type': 'ListItem', position: 3, name: title.replace(suffix, '').trim(), item: canonicalUrl });
+    }
+    if (crumbList.length > 1) {
+      upsertJsonLd('breadcrumb', { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: crumbList });
+    } else {
+      const el = document.querySelector('script[type="application/ld+json"][data-seo-id="breadcrumb"]');
+      if (el) el.remove();
+    }
+
+    // Article schema (author + dates) for open blog posts and cases — E-E-A-T + freshness.
+    const article = activeBlogPost || activeCaseItem;
+    if (article) {
+      const cover = article.cover || article.images?.[0]?.src;
+      upsertJsonLd('article', {
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        headline: title.replace(suffix, '').trim(),
+        description: (article[language === 'ru' ? 'ruDescription' : 'enDescription'] || localizedTagline),
+        image: cover ? `${canonicalDomain}${cover.startsWith('/') ? '' : '/'}${cover}` : undefined,
+        datePublished: article.createdAt || undefined,
+        dateModified: article.updatedAt || article.createdAt || undefined,
+        author: { '@type': 'Person', name: 'Кирилл Шелудько', url: 'https://profi.ru/profile/SheludkoKN/' },
+        publisher: { '@type': 'Organization', name: 'Vetor Studio', url: canonicalDomain },
+        mainEntityOfPage: canonicalUrl,
+        inLanguage: language === 'ru' ? 'ru-RU' : 'en-US',
+      });
+    } else {
+      const el = document.querySelector('script[type="application/ld+json"][data-seo-id="article"]');
+      if (el) el.remove();
+    }
 
     if (activeSection === 'plugins' && activePlugin === 'resto') {
       const restoBot = 'https://t.me/VetorPluginBOT';

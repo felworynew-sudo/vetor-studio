@@ -55,6 +55,15 @@ function Footer({ language }) {
             </svg>
             Pinterest
           </a>
+          <a
+            href="https://profi.ru/profile/SheludkoKN/"
+            className="site-footer-link footer-profi"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={language === 'ru' ? 'Профиль на Профи.ру' : 'Profi.ru profile'}
+          >
+            <img src="/profi-logo.svg" alt="Profi.ru" className="footer-profi-logo" width="63" height="12" />
+          </a>
         </nav>
         <span className="site-footer-copy">ИНН 233505486022 · {copy.rights}</span>
       </div>
