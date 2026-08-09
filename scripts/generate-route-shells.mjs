@@ -204,7 +204,7 @@ async function main() {
       service: 'Авторские шрифты и разработка шрифта на заказ',
     },
     '/blog': {
-      title: 'Блог — Vetor Studio',
+      title: 'Блог о дизайне, превью и брендинге — Vetor Studio',
       description: 'Статьи студии дизайна Vetor о превью, кликабельности, обложках и брендинге.',
       image: '/og/blog.png',
     },
@@ -216,7 +216,7 @@ async function main() {
       service: 'Графический дизайн на заказ',
     },
     '/price': {
-      title: 'Прайс — Vetor Studio',
+      title: 'Цены на превью, логотипы, обложки и оформление — Vetor Studio',
       description: 'Цены на превью YouTube, логотипы, баннеры и оформление канала. Прайс без созвонов.',
       image: '/og/price.png',
     },

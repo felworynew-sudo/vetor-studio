@@ -56,7 +56,7 @@ function Footer({ language }) {
             Pinterest
           </a>
         </nav>
-        <span className="site-footer-copy">{copy.rights}</span>
+        <span className="site-footer-copy">ИНН 233505486022 · {copy.rights}</span>
       </div>
     </footer>
   );

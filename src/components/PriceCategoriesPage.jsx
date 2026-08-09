@@ -67,6 +67,19 @@ function PriceCategoriesPage({
   };
   const titleKey = language === 'ru' ? 'ruTitle' : 'enTitle';
   const subtitleKey = language === 'ru' ? 'ruSubtitle' : 'enSubtitle';
+  const faq = language === 'ru'
+    ? [
+        ['Какие сроки на работу?', 'Одиночное превью — обычно 1–2 дня. Логотип, фирменный стиль или сайт — от нескольких дней до пары недель. Точный срок называем после короткого брифа.'],
+        ['Сколько правок входит в стоимость?', 'В базовые форматы входят 1–2 раунда правок, в крупные проекты — больше. Всё фиксируем на старте, чтобы не было сюрпризов.'],
+        ['В каком виде передаёте файлы?', 'Готовые макеты отдаём в нужных форматах: PNG/JPG, PDF, при необходимости — исходники. Передаём через облако или Telegram.'],
+        ['Как начать работу?', 'Напишите в Telegram или WhatsApp и опишите задачу. Согласуем формат, сроки и стоимость — и стартуем, без обязательных созвонов.'],
+      ]
+    : [
+        ['What are the timelines?', 'A single thumbnail usually takes 1–2 days. A logo, brand identity, or website — from a few days to a couple of weeks. We confirm the exact timing after a short brief.'],
+        ['How many revisions are included?', 'Basic formats include 1–2 revision rounds; larger projects include more. We fix this upfront so there are no surprises.'],
+        ['How do you deliver the files?', 'Final artwork is delivered in the needed formats: PNG/JPG, PDF, and source files on request — via cloud or Telegram.'],
+        ['How do we start?', 'Message us on Telegram or WhatsApp and describe the task. We agree on scope, timing, and price — and start, with no mandatory calls.'],
+      ];
 
   return (
     <section className="section-page price-cats-page">
@@ -166,6 +179,18 @@ function PriceCategoriesPage({
           );
         })}
       </div>
+
+      <section className="price-faq surface-panel" aria-label={language === 'ru' ? 'Частые вопросы' : 'FAQ'}>
+        <h2>{language === 'ru' ? 'Частые вопросы' : 'Frequently asked questions'}</h2>
+        <div className="price-faq-list">
+          {faq.map(([q, a]) => (
+            <details key={q} className="price-faq-item">
+              <summary>{q}</summary>
+              <p>{a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
     </section>
   );
 }

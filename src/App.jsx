@@ -669,7 +669,7 @@ function App() {
       title = `${caseTitle}${suffix}`;
       description = caseDescription || localizedTagline;
     } else if (activeSection === 'blog') {
-      title = language === 'ru' ? `Блог${suffix}` : `Blog${suffix}`;
+      title = language === 'ru' ? `Блог о дизайне, превью и брендинге${suffix}` : `Design, thumbnails & branding blog${suffix}`;
       description = language === 'ru'
         ? 'Публикации, процессы и разборы по превью, дизайну и упаковке медиа-проектов.'
         : 'Posts, process notes, and breakdowns on thumbnails, design, and media packaging.';
@@ -721,7 +721,7 @@ function App() {
         ? 'Плагины Vetor для графических редакторов: инструменты, которые ускоряют рутину. Сейчас доступен Resto — реставрация фото и макеты для памятников.'
         : 'Vetor plugins for graphics editors — tools that speed up routine work. Resto is available now: photo restoration and monument layouts.';
     } else if (activeSection === 'price' || isPriceOpen) {
-      title = language === 'ru' ? `Прайс${suffix}` : `Pricing${suffix}`;
+      title = language === 'ru' ? `Цены на превью, логотипы, обложки и оформление${suffix}` : `Pricing: thumbnails, logos, covers & branding${suffix}`;
       description = language === 'ru'
         ? 'Прайс без созвонов: прозрачные цены на превью, обложки, баннеры и оформление канала.'
         : 'Pricing without calls: transparent rates for thumbnails, covers, banners, and channel design.';
@@ -740,7 +740,9 @@ function App() {
         ? `Подборка работ по тегам: ${tagsHuman}. Превью, обложки и визуальный дизайн для медиа-проектов от ${brandBoost}.`
         : `Portfolio filtered by tags: ${tagsHuman}. Thumbnails, covers, and visual design by ${brandBoost}.`;
     } else {
-      title = localizedSiteName;
+      title = language === 'ru'
+        ? 'Студия дизайна Vetor — превью YouTube, обложки, логотипы и фирменный стиль'
+        : 'Vetor Design Studio — YouTube thumbnails, covers, logos & brand identity';
       description = language === 'ru'
         ? `Студия дизайна Vetor: превью YouTube, обложки треков, логотипы, фирменный стиль, стикеры и оформление каналов. ${remoteNote}`
         : `Vetor design studio: YouTube thumbnails, music covers, logos, brand identity, stickers, and channel packaging. ${remoteNote}`;
@@ -864,6 +866,34 @@ function App() {
         const el = document.querySelector(`script[type="application/ld+json"][data-seo-id="${id}"]`);
         if (el) el.remove();
       }
+    }
+
+    if (activeSection === 'price' || isPriceOpen) {
+      upsertJsonLd('price-faq', {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: (language === 'ru'
+          ? [
+              ['Какие сроки на работу?', 'Одиночное превью — обычно 1–2 дня. Логотип, фирменный стиль или сайт — от нескольких дней до пары недель. Точный срок называем после короткого брифа.'],
+              ['Сколько правок входит в стоимость?', 'В базовые форматы входят 1–2 раунда правок, в крупные проекты — больше. Всё фиксируем на старте, чтобы не было сюрпризов.'],
+              ['В каком виде передаёте файлы?', 'Готовые макеты отдаём в нужных форматах: PNG/JPG, PDF, при необходимости — исходники. Передаём через облако или Telegram.'],
+              ['Как начать работу?', 'Напишите в Telegram или WhatsApp и опишите задачу. Согласуем формат, сроки и стоимость — и стартуем, без обязательных созвонов.'],
+            ]
+          : [
+              ['What are the timelines?', 'A single thumbnail usually takes 1–2 days; a logo, brand identity, or website — from a few days to a couple of weeks. We confirm exact timing after a short brief.'],
+              ['How many revisions are included?', 'Basic formats include 1–2 revision rounds; larger projects include more. We fix this upfront.'],
+              ['How do you deliver the files?', 'Final artwork is delivered in the needed formats: PNG/JPG, PDF, and source files on request — via cloud or Telegram.'],
+              ['How do we start?', 'Message us on Telegram or WhatsApp and describe the task. We agree on scope, timing, and price — and start, with no mandatory calls.'],
+            ]
+        ).map(([q, a]) => ({
+          '@type': 'Question',
+          name: q,
+          acceptedAnswer: { '@type': 'Answer', text: a },
+        })),
+      });
+    } else {
+      const el = document.querySelector('script[type="application/ld+json"][data-seo-id="price-faq"]');
+      if (el) el.remove();
     }
   }, [
     activeBlogPost,
