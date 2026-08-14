@@ -2174,12 +2174,14 @@ select {
 .design-grid > .design-site-card { grid-column: span 3; }
 .design-grid > .design-slider-card,
 .design-grid > .design-flipcard-card,
+.design-grid > .design-logo-card,
 .design-grid > .design-media-card { grid-column: span 2; }
 @media (max-width: 1000px) {
   .design-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .design-grid > .design-site-card { grid-column: 1 / -1; }
   .design-grid > .design-slider-card,
   .design-grid > .design-flipcard-card,
+  .design-grid > .design-logo-card,
   .design-grid > .design-media-card { grid-column: span 1; }
 }
 @media (max-width: 640px) {
@@ -6331,7 +6333,8 @@ select {
 /* Unified design tile shell: media on top + body below, consistent sizing. */
 .design-media-card,
 .design-slider-card,
-.design-flipcard-card {
+.design-flipcard-card,
+.design-logo-card {
   position: relative;
   padding: 12px;
   border-radius: var(--radius-card);
@@ -6383,6 +6386,80 @@ select {
   margin: 0;
   font-size: 12px;
   color: var(--text-soft);
+}
+
+/* Design gallery: SVG logo viewer (color / B&W / vector switcher) */
+.logo-svg-viewer {
+  position: relative;
+  width: 100%;
+}
+.logo-svg-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* proportions like the raster examples — logo sits with breathing room,
+     never stretched edge to edge */
+  padding: 12% 14%;
+  transition: background 0.25s ease;
+}
+.logo-svg-holder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+.logo-svg-holder svg {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+}
+/* Auto black-on-white fallback when no adapted B&W SVG is supplied */
+.logo-svg-holder.is-auto-black svg {
+  filter: brightness(0) saturate(100%);
+}
+.logo-svg-status {
+  font-size: 13px;
+  color: var(--text-soft);
+}
+.logo-svg-modes {
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  transform: translateX(-50%);
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: var(--radius-pill);
+  background: rgba(13, 13, 17, 0.72);
+  border: 1px solid var(--stroke-strong);
+  backdrop-filter: blur(6px);
+  z-index: 2;
+}
+.logo-svg-mode {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text-muted);
+  background: transparent;
+  transition: color 0.18s ease, background 0.18s ease;
+}
+.logo-svg-mode:hover { color: var(--text); }
+.logo-svg-mode.is-active {
+  color: #fff;
+  background: var(--accent);
 }
 .gallery-viewer-card {
   display: flex;

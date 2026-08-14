@@ -249,6 +249,9 @@ function normalizeGalleryItem(item, index) {
   const site = item?.site && typeof item.site === 'object'
     ? item.site
     : {};
+  const logoSvg = item?.logoSvg && typeof item.logoSvg === 'object'
+    ? item.logoSvg
+    : {};
 
   return {
     ...item,
@@ -268,6 +271,11 @@ function normalizeGalleryItem(item, index) {
       src: site.src || '',
       ruNote: site.ruNote || '',
       enNote: site.enNote || '',
+    },
+    logoSvg: {
+      color: logoSvg.color || '',
+      bw: logoSvg.bw || '',
+      colorBg: logoSvg.colorBg || '',
     },
     youtubeChannel: {
       name: youtubeChannel.name || '',

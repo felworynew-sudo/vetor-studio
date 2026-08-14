@@ -2390,6 +2390,11 @@
       "secondaryRu": "",
       "secondaryEn": "",
       "secondaryUrl": ""
+    },
+    "logoSvg": {
+      "color": "/design/logofolio/svg/vetor.svg",
+      "bw": "",
+      "colorBg": "#0d0d11"
     }
   },
   {
@@ -2445,7 +2450,7 @@
   },
   {
     "id": "logo-wow-my-ice",
-    "ruTitle": "Wow My Ice",
+    "ruTitle": "Wow My Eyes",
     "enTitle": "",
     "ruDescription": "Логотип бренда.",
     "enDescription": "",
@@ -2455,7 +2460,7 @@
     "images": [
       {
         "src": "/design/logofolio/wow-my-ice.webp",
-        "ruAlt": "Логотип Wow My Ice",
+        "ruAlt": "Логотип Wow My Eyes",
         "enAlt": ""
       }
     ],

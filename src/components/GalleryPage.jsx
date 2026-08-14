@@ -3,6 +3,7 @@ import DevEditButton from './DevEditButton';
 import BeforeAfterSlider from './BeforeAfterSlider';
 import FlipCard from './FlipCard';
 import CaseSitePreview from './CaseSitePreview';
+import LogoSvgTile from './LogoSvgTile';
 import defaultSectionCopy from '../data/sectionCopy';
 import { withBase } from '../utils/format';
 import { getResponsiveImageProps } from '../utils/responsiveImages';
@@ -193,6 +194,30 @@ function GalleryPage({
                     block={{ src: item.site.src, ruNote: getLocalizedValue(item.site, language, 'ruNote', 'enNote') }}
                     language={language}
                   />
+                </article>
+              );
+            }
+
+            if (item.logoSvg?.color) {
+              return (
+                <article key={item.id} className="design-logo-card surface-panel">
+                  {studioEnabled ? (
+                    <div className="gallery-tile-actions" onClick={(event) => event.stopPropagation()}>
+                      <button type="button" className="gallery-tile-action" onClick={() => onEditItem(item)} aria-label="Edit design item" title="Edit design item">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.73 3.69a2.25 2.25 0 0 1 3.18 3.18l-9.84 9.84-4.2.86.86-4.2 9.84-9.84Z" fill="currentColor" /></svg>
+                      </button>
+                      <button type="button" className="gallery-tile-action danger" onClick={() => onDeleteItem(item)} aria-label="Delete design item" title="Delete design item">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6l1 2h4v2H4V5h4l1-2Zm-2 6h10l-.7 11H7.7L7 9Z" fill="currentColor" /></svg>
+                      </button>
+                    </div>
+                  ) : null}
+                  <LogoSvgTile item={item} language={language} />
+                  {(item[titleKey] || item[descriptionKey]) ? (
+                    <div className="design-work-body">
+                      {item[titleKey] ? <h2>{item[titleKey]}</h2> : null}
+                      {item[descriptionKey] ? <p>{item[descriptionKey]}</p> : null}
+                    </div>
+                  ) : null}
                 </article>
               );
             }
