@@ -59,6 +59,36 @@
 
 html {
   scroll-behavior: smooth;
+  /* Firefox: thin dark scrollbar in the site palette */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.16) transparent;
+}
+
+/* Themed scrollbars — WebKit/Chromium (Chrome, Edge, Safari). Replaces the
+   bright OS default that clashes with the dark UI. Applies to the page and
+   any scrollable pane that doesn't already opt out with scrollbar-width:none. */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--accent-45);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 body {

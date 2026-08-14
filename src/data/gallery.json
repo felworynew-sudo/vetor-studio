@@ -2298,15 +2298,423 @@
     "enDescription": "",
     "designCategory": "logos",
     "featured": false,
-    "ratio": "landscape",
+    "ratio": "wide",
     "images": [
       {
-        "src": "/design/kislota/logo-presentation.webp",
+        "src": "/design/logofolio/kislota.webp",
         "ruAlt": "Логотип Кислота",
         "enAlt": ""
       }
     ],
     "createdAt": "2026-08-05",
+    "slider": {
+      "before": "",
+      "afterColor": "",
+      "afterBw": ""
+    },
+    "card": {
+      "front": "",
+      "back": ""
+    },
+    "site": {
+      "src": "",
+      "ruNote": "",
+      "enNote": ""
+    },
+    "youtubeChannel": {
+      "name": "",
+      "handle": "",
+      "metaRu": "",
+      "metaEn": "",
+      "ctaUrl": "",
+      "ctaRu": "",
+      "ctaEn": "",
+      "cover": "",
+      "avatar": ""
+    },
+    "stickers": {
+      "primaryRu": "",
+      "primaryEn": "",
+      "primaryUrl": "",
+      "secondaryRu": "",
+      "secondaryEn": "",
+      "secondaryUrl": ""
+    }
+  },
+  {
+    "id": "logo-vetor",
+    "ruTitle": "Vetor",
+    "enTitle": "",
+    "ruDescription": "Логотип собственной студии.",
+    "enDescription": "",
+    "designCategory": "logos",
+    "featured": false,
+    "ratio": "wide",
+    "images": [
+      {
+        "src": "/design/logofolio/vetor.webp",
+        "ruAlt": "Логотип Vetor",
+        "enAlt": ""
+      }
+    ],
+    "createdAt": "2026-08-14",
+    "slider": {
+      "before": "",
+      "afterColor": "",
+      "afterBw": ""
+    },
+    "card": {
+      "front": "",
+      "back": ""
+    },
+    "site": {
+      "src": "",
+      "ruNote": "",
+      "enNote": ""
+    },
+    "youtubeChannel": {
+      "name": "",
+      "handle": "",
+      "metaRu": "",
+      "metaEn": "",
+      "ctaUrl": "",
+      "ctaRu": "",
+      "ctaEn": "",
+      "cover": "",
+      "avatar": ""
+    },
+    "stickers": {
+      "primaryRu": "",
+      "primaryEn": "",
+      "primaryUrl": "",
+      "secondaryRu": "",
+      "secondaryEn": "",
+      "secondaryUrl": ""
+    }
+  },
+  {
+    "id": "logo-lifecopy",
+    "ruTitle": "LifeCopy",
+    "enTitle": "",
+    "ruDescription": "Айдентика бренда — полный кейс в разделе «Дизайн».",
+    "enDescription": "",
+    "designCategory": "logos",
+    "featured": false,
+    "ratio": "wide",
+    "images": [
+      {
+        "src": "/design/logofolio/lifecopy.webp",
+        "ruAlt": "Логотип LifeCopy",
+        "enAlt": ""
+      }
+    ],
+    "createdAt": "2026-08-14",
+    "slider": {
+      "before": "",
+      "afterColor": "",
+      "afterBw": ""
+    },
+    "card": {
+      "front": "",
+      "back": ""
+    },
+    "site": {
+      "src": "",
+      "ruNote": "",
+      "enNote": ""
+    },
+    "youtubeChannel": {
+      "name": "",
+      "handle": "",
+      "metaRu": "",
+      "metaEn": "",
+      "ctaUrl": "",
+      "ctaRu": "",
+      "ctaEn": "",
+      "cover": "",
+      "avatar": ""
+    },
+    "stickers": {
+      "primaryRu": "",
+      "primaryEn": "",
+      "primaryUrl": "",
+      "secondaryRu": "",
+      "secondaryEn": "",
+      "secondaryUrl": ""
+    }
+  },
+  {
+    "id": "logo-wow-my-ice",
+    "ruTitle": "Wow My Ice",
+    "enTitle": "",
+    "ruDescription": "Логотип бренда.",
+    "enDescription": "",
+    "designCategory": "logos",
+    "featured": false,
+    "ratio": "wide",
+    "images": [
+      {
+        "src": "/design/logofolio/wow-my-ice.webp",
+        "ruAlt": "Логотип Wow My Ice",
+        "enAlt": ""
+      }
+    ],
+    "createdAt": "2026-08-14",
+    "slider": {
+      "before": "",
+      "afterColor": "",
+      "afterBw": ""
+    },
+    "card": {
+      "front": "",
+      "back": ""
+    },
+    "site": {
+      "src": "",
+      "ruNote": "",
+      "enNote": ""
+    },
+    "youtubeChannel": {
+      "name": "",
+      "handle": "",
+      "metaRu": "",
+      "metaEn": "",
+      "ctaUrl": "",
+      "ctaRu": "",
+      "ctaEn": "",
+      "cover": "",
+      "avatar": ""
+    },
+    "stickers": {
+      "primaryRu": "",
+      "primaryEn": "",
+      "primaryUrl": "",
+      "secondaryRu": "",
+      "secondaryEn": "",
+      "secondaryUrl": ""
+    }
+  },
+  {
+    "id": "logo-kon",
+    "ruTitle": "Конь",
+    "enTitle": "",
+    "ruDescription": "Авторский логотип-знак.",
+    "enDescription": "",
+    "designCategory": "logos",
+    "featured": false,
+    "ratio": "wide",
+    "images": [
+      {
+        "src": "/design/logofolio/kon.webp",
+        "ruAlt": "Логотип Конь",
+        "enAlt": ""
+      }
+    ],
+    "createdAt": "2026-08-14",
+    "slider": {
+      "before": "",
+      "afterColor": "",
+      "afterBw": ""
+    },
+    "card": {
+      "front": "",
+      "back": ""
+    },
+    "site": {
+      "src": "",
+      "ruNote": "",
+      "enNote": ""
+    },
+    "youtubeChannel": {
+      "name": "",
+      "handle": "",
+      "metaRu": "",
+      "metaEn": "",
+      "ctaUrl": "",
+      "ctaRu": "",
+      "ctaEn": "",
+      "cover": "",
+      "avatar": ""
+    },
+    "stickers": {
+      "primaryRu": "",
+      "primaryEn": "",
+      "primaryUrl": "",
+      "secondaryRu": "",
+      "secondaryEn": "",
+      "secondaryUrl": ""
+    }
+  },
+  {
+    "id": "logo-morf",
+    "ruTitle": "Морф",
+    "enTitle": "",
+    "ruDescription": "Авторский логотип-знак.",
+    "enDescription": "",
+    "designCategory": "logos",
+    "featured": false,
+    "ratio": "wide",
+    "images": [
+      {
+        "src": "/design/logofolio/morf.webp",
+        "ruAlt": "Логотип Морф",
+        "enAlt": ""
+      }
+    ],
+    "createdAt": "2026-08-14",
+    "slider": {
+      "before": "",
+      "afterColor": "",
+      "afterBw": ""
+    },
+    "card": {
+      "front": "",
+      "back": ""
+    },
+    "site": {
+      "src": "",
+      "ruNote": "",
+      "enNote": ""
+    },
+    "youtubeChannel": {
+      "name": "",
+      "handle": "",
+      "metaRu": "",
+      "metaEn": "",
+      "ctaUrl": "",
+      "ctaRu": "",
+      "ctaEn": "",
+      "cover": "",
+      "avatar": ""
+    },
+    "stickers": {
+      "primaryRu": "",
+      "primaryEn": "",
+      "primaryUrl": "",
+      "secondaryRu": "",
+      "secondaryEn": "",
+      "secondaryUrl": ""
+    }
+  },
+  {
+    "id": "logo-mantis",
+    "ruTitle": "Мантис",
+    "enTitle": "",
+    "ruDescription": "Авторский логотип-знак.",
+    "enDescription": "",
+    "designCategory": "logos",
+    "featured": false,
+    "ratio": "wide",
+    "images": [
+      {
+        "src": "/design/logofolio/mantis.webp",
+        "ruAlt": "Логотип Мантис",
+        "enAlt": ""
+      }
+    ],
+    "createdAt": "2026-08-14",
+    "slider": {
+      "before": "",
+      "afterColor": "",
+      "afterBw": ""
+    },
+    "card": {
+      "front": "",
+      "back": ""
+    },
+    "site": {
+      "src": "",
+      "ruNote": "",
+      "enNote": ""
+    },
+    "youtubeChannel": {
+      "name": "",
+      "handle": "",
+      "metaRu": "",
+      "metaEn": "",
+      "ctaUrl": "",
+      "ctaRu": "",
+      "ctaEn": "",
+      "cover": "",
+      "avatar": ""
+    },
+    "stickers": {
+      "primaryRu": "",
+      "primaryEn": "",
+      "primaryUrl": "",
+      "secondaryRu": "",
+      "secondaryEn": "",
+      "secondaryUrl": ""
+    }
+  },
+  {
+    "id": "logo-bermud",
+    "ruTitle": "Бермуд",
+    "enTitle": "",
+    "ruDescription": "Авторский логотип-знак.",
+    "enDescription": "",
+    "designCategory": "logos",
+    "featured": false,
+    "ratio": "wide",
+    "images": [
+      {
+        "src": "/design/logofolio/bermud.webp",
+        "ruAlt": "Логотип Бермуд",
+        "enAlt": ""
+      }
+    ],
+    "createdAt": "2026-08-14",
+    "slider": {
+      "before": "",
+      "afterColor": "",
+      "afterBw": ""
+    },
+    "card": {
+      "front": "",
+      "back": ""
+    },
+    "site": {
+      "src": "",
+      "ruNote": "",
+      "enNote": ""
+    },
+    "youtubeChannel": {
+      "name": "",
+      "handle": "",
+      "metaRu": "",
+      "metaEn": "",
+      "ctaUrl": "",
+      "ctaRu": "",
+      "ctaEn": "",
+      "cover": "",
+      "avatar": ""
+    },
+    "stickers": {
+      "primaryRu": "",
+      "primaryEn": "",
+      "primaryUrl": "",
+      "secondaryRu": "",
+      "secondaryEn": "",
+      "secondaryUrl": ""
+    }
+  },
+  {
+    "id": "logo-zhuzhu",
+    "ruTitle": "Жужу",
+    "enTitle": "",
+    "ruDescription": "Авторский логотип-знак.",
+    "enDescription": "",
+    "designCategory": "logos",
+    "featured": false,
+    "ratio": "wide",
+    "images": [
+      {
+        "src": "/design/logofolio/zhuzhu.webp",
+        "ruAlt": "Логотип Жужу",
+        "enAlt": ""
+      }
+    ],
+    "createdAt": "2026-08-14",
     "slider": {
       "before": "",
       "afterColor": "",
