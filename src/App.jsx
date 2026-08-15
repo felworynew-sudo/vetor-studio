@@ -406,7 +406,11 @@ function App() {
   const [isRouteNotFound, setIsRouteNotFound] = useState(Boolean(routeState.isNotFound));
 
   const studioEnabled = useMemo(() => isStudioModeEnabled(), []);
-  const canPublish = useMemo(() => isLocalPublishAvailable(), []);
+  // Publish (deploy) works everywhere the studio is on: locally via the Vite
+  // endpoints, on the live site via the VPS publish service. "Save local"
+  // (write source files without deploying) only makes sense on the dev server.
+  const canPublish = studioEnabled;
+  const canSaveLocal = useMemo(() => isLocalPublishAvailable(), []);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => setIsLoading(false), LOADING_DELAY);
@@ -1908,7 +1912,7 @@ function App() {
 
       <Footer language={language} />
 
-      {studioEnabled && canPublish && (
+      {studioEnabled && canSaveLocal && (
         <button
           type="button"
           className={`save-local-fab ${saveLocalStatus}`}
