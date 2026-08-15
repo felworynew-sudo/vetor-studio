@@ -238,6 +238,16 @@ function GalleryItemEditorModal({ item, language, onSave, onClose }) {
     }));
   }
 
+  function updateLogoSvgField(field, value) {
+    setForm((current) => ({
+      ...current,
+      logoSvg: {
+        ...(current.logoSvg || {}),
+        [field]: value,
+      },
+    }));
+  }
+
   function handleSubmit(event) {
     event.preventDefault();
     const normalizedCategory = normalizeDesignCategory(form.designCategory);
@@ -377,6 +387,29 @@ function GalleryItemEditorModal({ item, language, onSave, onClose }) {
               <label className="studio-field">
                 <span>{language === 'ru' ? 'Примечание под превью' : 'Note under preview'}</span>
                 <input value={form.site?.ruNote || ''} onChange={(event) => updateSiteField('ruNote', event.target.value)} placeholder="Превью для портфолио…" />
+              </label>
+            </div>
+          </section>
+
+          <section className="gallery-editor-section">
+            <h3>{language === 'ru' ? 'Логотип SVG — 3 режима (необязательно)' : 'SVG logo — 3 modes (optional)'}</h3>
+            <p className="gallery-editor-note">
+              {language === 'ru'
+                ? 'Для логотипов из SVG. Укажите путь к цветному SVG — плитка покажет переключатель «в цвете / ч/б / вектор». Файлы кладутся в /public (напр. /design/logofolio/svg/).'
+                : 'For SVG logos. Point to a color SVG to render the color / B&W / vector switcher tile. Files live in /public (e.g. /design/logofolio/svg/).'}
+            </p>
+            <div className="gallery-editor-grid two">
+              <label className="studio-field">
+                <span>{language === 'ru' ? 'Цветной SVG' : 'Color SVG'}</span>
+                <input value={form.logoSvg?.color || ''} onChange={(event) => updateLogoSvgField('color', event.target.value)} placeholder="/design/logofolio/svg/name.svg" />
+              </label>
+              <label className="studio-field">
+                <span>{language === 'ru' ? 'Ч/б SVG (пусто → авто-чёрный)' : 'B/W SVG (empty → auto-black)'}</span>
+                <input value={form.logoSvg?.bw || ''} onChange={(event) => updateLogoSvgField('bw', event.target.value)} placeholder="/design/logofolio/svg/name-bw.svg" />
+              </label>
+              <label className="studio-field">
+                <span>{language === 'ru' ? 'Фон режима «в цвете» (hex; пусто → белый)' : 'Color-mode background (hex; empty → white)'}</span>
+                <input value={form.logoSvg?.colorBg || ''} onChange={(event) => updateLogoSvgField('colorBg', event.target.value)} placeholder="#0d0d11" />
               </label>
             </div>
           </section>
