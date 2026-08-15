@@ -42,6 +42,7 @@ import { getLocalizedText } from './utils/i18n';
 import { applyPalette, normalizePalette } from './utils/palette';
 import { withBase } from './utils/format';
 import { buildUrl, parseRoute } from './utils/routing';
+import { resolvePublishTarget, setStudioPublishToken, isLocalStudioHost } from './utils/remotePublish';
 
 const LOADING_DELAY = 280;
 const DEFAULT_SECTIONS_VISIBILITY = {
@@ -1515,8 +1516,36 @@ function App() {
     setEditingCaseItem(null);
   }
 
+  // Full editable dataset sent to the save/publish endpoint. The receiver
+  // (Vite plugin locally, VPS backend on the live site) writes each key to its
+  // data file. Keep this in sync with persistEditableData in vite.config.js.
+  function buildStudioPayload() {
+    return {
+      siteConfig,
+      tagsConfig,
+      videoItems: stripStudioFields(videoItems),
+      musicItems: stripStudioFields(musicItems),
+      blogPosts,
+      galleryItems,
+      pricing,
+      sectionCopy,
+      palette,
+      homeCards,
+      fonts,
+      priceCategories,
+      pageCopy,
+    };
+  }
+
   async function handleSaveLocal() {
     if (saveLocalStatus === 'saving') {
+      return;
+    }
+
+    // "Save local" writes source files without deploying — only meaningful on
+    // the dev server. On the live site there is no local disk; use Publish.
+    if (!isLocalStudioHost()) {
+      window.alert('«Сохранить локально» доступно только в дев-режиме. На живом сайте используй «Опубликовать».');
       return;
     }
 
@@ -1526,21 +1555,7 @@ function App() {
       const response = await fetch('/__save-local', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          siteConfig,
-          tagsConfig,
-          videoItems: stripStudioFields(videoItems),
-          musicItems: stripStudioFields(musicItems),
-          blogPosts,
-          galleryItems,
-          pricing,
-          sectionCopy,
-          palette,
-          homeCards,
-          fonts,
-          priceCategories,
-          pageCopy,
-        }),
+        body: JSON.stringify(buildStudioPayload()),
       });
       const result = await response.json();
 
@@ -1562,26 +1577,27 @@ function App() {
       return;
     }
 
+    const target = resolvePublishTarget('publish');
+    if (target.missingToken) {
+      // User dismissed the password prompt — nothing to do.
+      return;
+    }
+
     setPublishStatus('publishing');
 
     try {
-      const response = await fetch('/__publish-cloudflare', {
+      const response = await fetch(target.url, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          siteConfig,
-          tagsConfig,
-          videoItems: stripStudioFields(videoItems),
-          musicItems: stripStudioFields(musicItems),
-          blogPosts,
-          galleryItems,
-          pricing,
-          sectionCopy,
-          palette,
-        }),
+        headers: target.headers,
+        body: JSON.stringify(buildStudioPayload()),
       });
+
+      if (response.status === 401 || response.status === 403) {
+        // Wrong publish key — forget it so the next attempt re-prompts.
+        setStudioPublishToken('');
+        throw new Error('Неверный ключ публикации. Попробуй ещё раз.');
+      }
+
       const result = await response.json();
 
       if (!response.ok || !result.ok) {
@@ -1589,7 +1605,7 @@ function App() {
       }
 
       setPublishStatus('success');
-      window.alert(`Опубликовано: ${result.url}`);
+      window.alert(`Опубликовано: ${result.url || 'https://vetor-studio.ru/'}\n\nСайт обновится через ~2 минуты.`);
       window.setTimeout(() => setPublishStatus('idle'), 5000);
     } catch (error) {
       setPublishStatus('error');
