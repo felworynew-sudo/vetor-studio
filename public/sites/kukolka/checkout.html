@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Оформление заказа — Куколка</title>
+<link rel="icon" href="assets/img/favicon.svg">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<script src="assets/js/icons.js"></script>
+
+<div data-layout="header"></div>
+
+<div class="container" id="checkout-wrap">
+  <nav class="crumbs"><a href="index.html">Главная</a> / <a href="cart.html">Корзина</a> / <span>Оформление</span></nav>
+
+  <h1 class="h-section" style="margin-bottom:26px">Оформление заказа</h1>
+
+  <div class="steps">
+    <span class="step is-active"><b>1</b> Корзина</span>
+    <span class="step__line"></span>
+    <span class="step is-active"><b>2</b> Данные и доставка</span>
+    <span class="step__line"></span>
+    <span class="step"><b>3</b> Готово</span>
+  </div>
+
+  <form class="cart-layout" id="checkout-form">
+    <div>
+      <!-- ---------- Контакты ---------- -->
+      <div class="form-card">
+        <h3>Как с тобой связаться</h3>
+        <div class="form-grid">
+          <div class="field">
+            <label for="co-name">Имя *</label>
+            <input id="co-name" required placeholder="Как к тебе обращаться">
+          </div>
+          <div class="field">
+            <label for="co-phone">Телефон *</label>
+            <input id="co-phone" required type="tel" placeholder="+7 900 000-00-00">
+          </div>
+          <div class="field field--full">
+            <label for="co-mail">E-mail</label>
+            <input id="co-mail" type="email" placeholder="Для чека и трек-номера">
+          </div>
+        </div>
+        <p class="form-note">Курьер звонит с обычного номера и не называет магазин.</p>
+      </div>
+
+      <!-- ---------- Доставка ---------- -->
+      <div class="form-card">
+        <h3>Доставка</h3>
+
+        <label class="radio-card">
+          <input type="radio" name="delivery" checked>
+          <span class="radio-card__dot"></span>
+          <span class="radio-card__body">
+            <b>Курьер до двери</b>
+            <span>Завтра, интервал на выбор</span>
+          </span>
+          <span class="radio-card__price">390 ₽</span>
+        </label>
+
+        <label class="radio-card">
+          <input type="radio" name="delivery">
+          <span class="radio-card__dot"></span>
+          <span class="radio-card__body">
+            <b>Пункт выдачи или постамат</b>
+            <span>2–5 дней, более 15 000 точек</span>
+          </span>
+          <span class="radio-card__price">250 ₽</span>
+        </label>
+
+        <label class="radio-card">
+          <input type="radio" name="delivery">
+          <span class="radio-card__dot"></span>
+          <span class="radio-card__body">
+            <b>Почта России</b>
+            <span>5–14 дней, в любой населённый пункт</span>
+          </span>
+          <span class="radio-card__price">300 ₽</span>
+        </label>
+
+        <div class="form-grid" style="margin-top:18px">
+          <div class="field">
+            <label for="co-city">Город *</label>
+            <input id="co-city" required placeholder="Москва">
+          </div>
+          <div class="field">
+            <label for="co-street">Адрес *</label>
+            <input id="co-street" required placeholder="Улица, дом, квартира">
+          </div>
+          <div class="field field--full">
+            <label for="co-note">Комментарий</label>
+            <textarea id="co-note" placeholder="Например: не звонить в дверь, напишите в мессенджер"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- ---------- Оплата ---------- -->
+      <div class="form-card">
+        <h3>Оплата</h3>
+
+        <label class="radio-card">
+          <input type="radio" name="pay" checked>
+          <span class="radio-card__dot"></span>
+          <span class="radio-card__body">
+            <b>Картой онлайн</b>
+            <span>В выписке банка — «Интернет-магазин»</span>
+          </span>
+        </label>
+
+        <label class="radio-card">
+          <input type="radio" name="pay">
+          <span class="radio-card__dot"></span>
+          <span class="radio-card__body">
+            <b>При получении</b>
+            <span>Наличными или картой курьеру</span>
+          </span>
+        </label>
+
+        <label class="check" style="margin-top:14px">
+          <input type="checkbox" checked>
+          <span class="check__box"><svg><use href="#i-check"></use></svg></span>
+          <span class="small">Нейтральная упаковка без опознавательных знаков</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- ---------- Итог ---------- -->
+    <aside class="summary">
+      <h3>Заказ</h3>
+      <div id="co-list"></div>
+      <div class="summary__row" style="border-top:1px solid rgba(255,255,255,.15);margin-top:10px;padding-top:16px">
+        <span id="co-count">0 товаров</span>
+      </div>
+      <div class="summary__total"><span>К оплате</span><b id="co-total">0 ₽</b></div>
+
+      <button class="btn btn--red btn--block" type="submit" style="margin-top:22px">
+        Подтвердить заказ <svg><use href="#i-check"></use></svg>
+      </button>
+      <p class="form-note" style="color:rgba(255,255,255,.45);text-align:center">
+        Нажимая кнопку, ты соглашаешься с условиями и подтверждаешь, что тебе есть 18 лет
+      </p>
+    </aside>
+  </form>
+</div>
+
+<div data-layout="footer"></div>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/layout.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

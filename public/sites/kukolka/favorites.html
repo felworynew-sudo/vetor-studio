@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Избранное — Куколка</title>
+<link rel="icon" href="assets/img/favicon.svg">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<script src="assets/js/icons.js"></script>
+
+<div data-layout="header"></div>
+
+<div class="container" style="padding-bottom:80px">
+  <nav class="crumbs"><a href="index.html">Главная</a> / <span>Избранное</span></nav>
+
+  <div class="section-head" style="margin-bottom:26px">
+    <div>
+      <h1 class="h-section">Избранное<svg class="heart-dot"><use href="#i-heart-fill"></use></svg></h1>
+      <p class="muted small" id="favs-count" style="margin:8px 0 0"></p>
+    </div>
+    <a class="link-more" href="catalog.html">В каталог <svg><use href="#i-arrow-right"></use></svg></a>
+  </div>
+
+  <div class="grid-products" id="favs-grid"></div>
+</div>
+
+<div data-layout="footer"></div>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/layout.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Товар — Куколка</title>
+<link rel="icon" href="assets/img/favicon.svg">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<script src="assets/js/icons.js"></script>
+
+<div data-layout="header"></div>
+
+<div class="container" id="product">
+  <nav class="crumbs">
+    <a href="index.html">Главная</a> /
+    <a href="catalog.html">Каталог</a> /
+    <a href="catalog.html" id="crumb-cat"></a> /
+    <span id="crumb-name"></span>
+  </nav>
+
+  <div class="product">
+    <!-- ---------- Галерея ---------- -->
+    <div class="gallery">
+      <div class="gallery__main" id="p-main"></div>
+      <!-- Лента миниатюр появится, когда у товаров будет по несколько кадров -->
+    </div>
+
+    <!-- ---------- Покупка ---------- -->
+    <div>
+      <span class="product__cat" id="p-cat"></span>
+      <h1 id="p-name"></h1>
+
+      <div class="product__meta">
+        <div class="rating" id="p-rating"></div>
+        <span class="stock" id="p-stock"></span>
+      </div>
+
+      <div class="product__price" id="p-price"></div>
+      <div class="product__save" id="p-save"></div>
+
+      <p class="product__desc" id="p-desc"></p>
+
+      <div class="options" id="p-colors"></div>
+
+      <div class="product__buy">
+        <div class="qty">
+          <button id="qty-minus" aria-label="Меньше"><svg><use href="#i-minus"></use></svg></button>
+          <input id="p-qty" value="1" inputmode="numeric">
+          <button id="qty-plus" aria-label="Больше"><svg><use href="#i-plus"></use></svg></button>
+        </div>
+        <button class="btn btn--red" id="p-buy" style="flex:1;min-width:200px">
+          В корзину <svg><use href="#i-cart"></use></svg>
+        </button>
+        <button class="card__fav" id="p-fav" style="position:static;width:52px;height:52px" aria-label="В избранное">
+          <svg><use href="#i-heart"></use></svg>
+        </button>
+      </div>
+
+      <div class="usps">
+        <div class="usp">
+          <svg><use href="#i-box"></use></svg>
+          <div><b>Анонимная упаковка</b><span>Плотная коробка без надписей и логотипов</span></div>
+        </div>
+        <div class="usp">
+          <svg><use href="#i-truck"></use></svg>
+          <div><b>Доставка 1–3 дня</b><span>Бесплатно при заказе от 5000 ₽</span></div>
+        </div>
+        <div class="usp">
+          <svg><use href="#i-refresh"></use></svg>
+          <div><b>Обмен 14 дней</b><span>Если товар не подошёл и упаковка цела</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ---------- Табы ---------- -->
+  <div class="tabs">
+    <div class="tabs__nav">
+      <button class="tabs__btn is-active" data-tab="desc">Описание</button>
+      <button class="tabs__btn" data-tab="specs">Характеристики</button>
+      <button class="tabs__btn" data-tab="reviews">Отзывы</button>
+      <button class="tabs__btn" data-tab="delivery">Доставка и оплата</button>
+    </div>
+
+    <div class="tabs__panel is-active" id="tab-desc"></div>
+
+    <div class="tabs__panel" id="tab-specs">
+      <table class="specs"><tbody id="p-specs"></tbody></table>
+    </div>
+
+    <div class="tabs__panel" id="tab-reviews">
+      <div id="p-reviews"></div>
+      <button class="btn btn--dark" onclick="toast('Форма отзыва — следующий шаг прототипа')">Написать отзыв</button>
+    </div>
+
+    <div class="tabs__panel" id="tab-delivery">
+      <p><b>Курьер по Москве и Санкт-Петербургу</b> — 390 ₽, на следующий день. Курьер не знает, что внутри:
+      коробка нейтральная, в накладной указано «товары для дома».</p>
+      <p><b>Пункты выдачи и постаматы</b> — от 250 ₽, 2–5 дней. Можно оплатить при получении.</p>
+      <p><b>Почта России</b> — от 300 ₽, 5–14 дней, доставка в любой населённый пункт.</p>
+      <p>При заказе от 5000 ₽ доставка бесплатная в любом варианте.</p>
+    </div>
+  </div>
+
+  <!-- ---------- Похожие ---------- -->
+  <section class="section">
+    <div class="section-head">
+      <h2 class="h-section">Похожие товары<svg class="heart-dot"><use href="#i-heart-fill"></use></svg></h2>
+    </div>
+    <div class="grid-products" id="similar"></div>
+  </section>
+</div>
+
+<div data-layout="footer"></div>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/layout.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

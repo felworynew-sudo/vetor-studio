@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Корзина — Куколка</title>
+<link rel="icon" href="assets/img/favicon.svg">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<script src="assets/js/icons.js"></script>
+
+<div data-layout="header"></div>
+
+<div class="container">
+  <nav class="crumbs"><a href="index.html">Главная</a> / <span>Корзина</span></nav>
+
+  <div class="section-head" style="margin-bottom:26px">
+    <h1 class="h-section">Корзина<svg class="heart-dot"><use href="#i-heart-fill"></use></svg></h1>
+    <a class="link-more" href="catalog.html"><svg><use href="#i-arrow-left"></use></svg> Продолжить покупки</a>
+  </div>
+
+  <div id="cart-wrap">
+    <div class="cart-layout">
+      <div id="cart-list"></div>
+
+      <aside class="summary">
+        <h3>Ваш заказ</h3>
+
+        <div class="summary__row"><span>Товары</span><b id="sum-items">0</b></div>
+        <div class="summary__row"><span>Сумма</span><b id="sum-goods">0 ₽</b></div>
+        <div class="summary__row"><span>Доставка</span><b id="sum-delivery">—</b></div>
+        <div class="summary__row"><span>Скидка</span><b id="sum-discount">—</b></div>
+
+        <div class="promo-code">
+          <input id="promo-input" placeholder="Промокод">
+          <button class="btn btn--red btn--sm" id="promo-apply">ОК</button>
+        </div>
+        <p class="promo-msg" id="promo-msg"></p>
+
+        <div class="summary__total"><span>К оплате</span><b id="sum-total">0 ₽</b></div>
+
+        <a class="btn btn--red btn--block" href="checkout.html" style="margin-top:22px">
+          Оформить заказ <svg><use href="#i-arrow-right"></use></svg>
+        </a>
+
+        <p class="form-note" style="color:rgba(255,255,255,.45);text-align:center">
+          Доставка бесплатно от 5000 ₽. Попробуй промокод <b style="color:var(--red-soft)">КУКОЛКА</b>
+        </p>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<div data-layout="footer"></div>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/layout.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

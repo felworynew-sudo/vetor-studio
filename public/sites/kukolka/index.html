@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Куколка — твой мир удовольствия</title>
+<meta name="description" content="Куколка — магазин товаров для взрослых. Анонимная упаковка, проверенные бренды, доставка по всей России.">
+<link rel="icon" href="assets/img/favicon.svg">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<script src="assets/js/icons.js"></script>
+
+<div data-layout="header"></div>
+
+<!-- ================= Герой ================= -->
+<section class="hero">
+  <div class="container hero__grid">
+    <div class="hero__body">
+      <span class="hero__eyebrow"><svg><use href="#i-sparkle"></use></svg> Более 4000 товаров в наличии</span>
+      <h1 class="hero__title">
+        <img src="assets/img/brand/logo-tagline-light.svg" alt="Твой мир удовольствия">
+      </h1>
+      <p class="hero__text">Открой желания, исследуй возможности и почувствуй себя.
+      Без стыда, лишних вопросов и намёков на упаковке.</p>
+      <div class="hero__cta">
+        <a class="btn btn--red" href="catalog.html">В каталог <svg><use href="#i-heart-fill"></use></svg></a>
+        <a class="btn btn--ghost" href="catalog.html?sale=1">Смотреть акции</a>
+      </div>
+    </div>
+
+    <div class="hero__art">
+      <span class="hero__sparkle hero__sparkle--1"><svg><use href="#i-sparkle"></use></svg></span>
+      <span class="hero__sparkle hero__sparkle--2"><svg><use href="#i-sparkle"></use></svg></span>
+      <span class="hero__sparkle hero__sparkle--3"><svg><use href="#i-sparkle"></use></svg></span>
+      <img src="assets/img/brand/poster-1.svg" alt="Маскот бренда Куколка">
+      <div class="hero__badge">
+        <i><svg><use href="#i-box"></use></svg></i>
+        <div><b>100%</b><span>анонимная упаковка</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<svg class="wave wave--ink wave--on-cream" viewBox="0 0 1440 60" preserveAspectRatio="none" fill="currentColor">
+  <path d="M0 60V22c240-30 480 22 720 22s480-52 720-22v38z"/>
+</svg>
+
+<!-- ================= Преимущества ================= -->
+<section class="features">
+  <div class="container">
+    <div class="features__grid reveal">
+      <div class="feature">
+        <div class="feature__ico"><svg><use href="#i-lock"></use></svg></div>
+        <h3>Анонимно</h3>
+        <p>Нейтральная коробка без логотипов. В чеке — «товары для дома»</p>
+      </div>
+      <div class="feature">
+        <div class="feature__ico"><svg><use href="#i-shield"></use></svg></div>
+        <h3>Качество</h3>
+        <p>Только сертифицированные материалы и проверенные бренды</p>
+      </div>
+      <div class="feature">
+        <div class="feature__ico"><svg><use href="#i-truck"></use></svg></div>
+        <h3>Быстрая доставка</h3>
+        <p>По Москве — за день, по России — от двух дней</p>
+      </div>
+      <div class="feature">
+        <div class="feature__ico"><svg><use href="#i-percent"></use></svg></div>
+        <h3>Скидки и акции</h3>
+        <p>Горячие предложения каждую неделю и бонусы за отзывы</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<svg class="wave wave--ink wave--on-white" viewBox="0 0 1440 60" preserveAspectRatio="none" fill="currentColor" style="transform:scaleY(-1)">
+  <path d="M0 60V22c240-30 480 22 720 22s480-52 720-22v38z"/>
+</svg>
+
+<!-- ================= Категории ================= -->
+<section class="section section--tight">
+  <div class="container">
+    <div class="section-head">
+      <h2 class="h-section">Категории<svg class="heart-dot"><use href="#i-heart-fill"></use></svg></h2>
+      <a class="link-more" href="catalog.html">Смотреть все <svg><use href="#i-arrow-right"></use></svg></a>
+    </div>
+    <div class="cats reveal" id="cats"></div>
+  </div>
+</section>
+
+<!-- ================= Хиты ================= -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <h2 class="h-section">Хиты продаж<svg class="heart-dot"><use href="#i-heart-fill"></use></svg></h2>
+      <a class="link-more" href="catalog.html">Смотреть все <svg><use href="#i-arrow-right"></use></svg></a>
+    </div>
+    <div class="grid-products reveal" id="hits"></div>
+  </div>
+</section>
+
+<!-- ================= Акция ================= -->
+<section class="section section--tight">
+  <div class="container">
+    <div class="promo reveal">
+      <div class="promo__body">
+        <h2 class="h-section">Горячие скидки</h2>
+        <p>Провокационные предложения только для тебя — до конца дня.</p>
+        <div class="timer" id="timer"></div>
+        <a class="btn btn--dark" href="catalog.html?sale=1">Смотреть акции <svg><use href="#i-heart-fill"></use></svg></a>
+      </div>
+      <div class="promo__stamp"><div><span>до</span><b>−50%</b></div></div>
+      <div class="promo__art"><img src="assets/img/brand/mascot-lockup.svg" alt=""></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= Новинки ================= -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <h2 class="h-section">Новинки<svg class="heart-dot"><use href="#i-heart-fill"></use></svg></h2>
+      <a class="link-more" href="catalog.html?new=1">Смотреть все <svg><use href="#i-arrow-right"></use></svg></a>
+    </div>
+    <div class="grid-products reveal" id="news"></div>
+  </div>
+</section>
+
+<!-- ================= О бренде ================= -->
+<section class="section section--tight">
+  <div class="container">
+    <div class="about reveal">
+      <div class="about__art"><img src="assets/img/brand/mascot-crawl.png" alt=""></div>
+      <div class="about__body">
+        <h2 class="h-section">Куколка — это про тебя<svg class="heart-dot"><use href="#i-heart-fill"></use></svg></h2>
+        <p>Мы верим, что удовольствие — это нормально. Магазин создан, чтобы помочь раскрыть свои желания
+        и получать максимум от каждого момента: без осуждения, с честными описаниями и понятными характеристиками.</p>
+        <div class="about__stats">
+          <div><b>10 000+</b><span>довольных клиентов</span></div>
+          <div><b>500+</b><span>товаров в наличии</span></div>
+          <div><b>24/7</b><span>поддержка в Telegram</span></div>
+        </div>
+        <a class="btn btn--red" href="about.html">Узнать больше <svg><use href="#i-arrow-right"></use></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= Отзывы ================= -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <h2 class="h-section">Что говорят<svg class="heart-dot"><use href="#i-heart-fill"></use></svg></h2>
+      <span class="muted small">Средняя оценка магазина — 4.8 из 5</span>
+    </div>
+    <div class="reviews reveal" id="reviews"></div>
+  </div>
+</section>
+
+<!-- ================= Подписка ================= -->
+<section class="section section--tight">
+  <div class="container">
+    <div class="newsletter reveal">
+      <div>
+        <h2 class="h-section">Будь в курсе<svg class="heart-dot"><use href="#i-heart-fill"></use></svg></h2>
+        <p>Подпишись и получай секретные скидки, подборки и новинки раньше всех.</p>
+      </div>
+      <div>
+        <form class="subscribe" onsubmit="event.preventDefault(); toast('Готово! Проверь почту'); this.reset();">
+          <input type="email" placeholder="Твой e-mail" required>
+          <button class="btn btn--red" type="submit">Подписаться <svg><use href="#i-send"></use></svg></button>
+        </form>
+        <p class="form-note">Нажимая кнопку, ты соглашаешься с политикой конфиденциальности. Отписаться можно в один клик.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div data-layout="footer"></div>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/layout.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

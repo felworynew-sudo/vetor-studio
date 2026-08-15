@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Каталог — Куколка</title>
+<link rel="icon" href="assets/img/favicon.svg">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<script src="assets/js/icons.js"></script>
+
+<div data-layout="header"></div>
+
+<div class="container">
+  <nav class="crumbs">
+    <a href="index.html">Главная</a> / <span>Каталог</span>
+  </nav>
+
+  <div class="section-head" style="margin-bottom:22px">
+    <div>
+      <h1 class="h-section">Каталог<svg class="heart-dot"><use href="#i-heart-fill"></use></svg></h1>
+      <p class="muted small" style="margin:8px 0 0">Всё, что нужно для смелых экспериментов и спокойных вечеров.</p>
+    </div>
+  </div>
+
+  <div class="catalog">
+
+    <!-- ---------- Фильтры ---------- -->
+    <aside class="filters">
+      <div class="filters__group">
+        <h4>Поиск</h4>
+        <input class="range-input" id="f-q" type="search" placeholder="Название или бренд"
+               style="width:100%;height:44px;padding:0 16px;border-radius:12px;border:2px solid var(--grey-2);background:#fff;outline:none">
+      </div>
+
+      <div class="filters__group">
+        <h4>Категории</h4>
+        <div id="f-cats"></div>
+      </div>
+
+      <div class="filters__group">
+        <h4>Цена, ₽</h4>
+        <div class="range">
+          <input id="f-min" type="number" placeholder="от 690" min="0">
+          <span class="muted">—</span>
+          <input id="f-max" type="number" placeholder="до 6990" min="0">
+        </div>
+      </div>
+
+      <div class="filters__group">
+        <h4>Бренд</h4>
+        <div id="f-brands"></div>
+      </div>
+
+      <div class="filters__group">
+        <h4>Ещё</h4>
+        <label class="check">
+          <input type="checkbox" id="f-stock">
+          <span class="check__box"><svg><use href="#i-check"></use></svg></span>
+          <span>Только в наличии</span>
+        </label>
+        <label class="check">
+          <input type="checkbox" id="f-sale">
+          <span class="check__box"><svg><use href="#i-check"></use></svg></span>
+          <span>Со скидкой</span>
+        </label>
+        <label class="check">
+          <input type="checkbox" id="f-new">
+          <span class="check__box"><svg><use href="#i-check"></use></svg></span>
+          <span>Только новинки</span>
+        </label>
+      </div>
+
+      <div class="filters__group">
+        <button class="btn btn--dark btn--sm btn--block" id="f-reset">Сбросить всё</button>
+      </div>
+    </aside>
+
+    <!-- ---------- Сетка ---------- -->
+    <div>
+      <div class="catalog__bar">
+        <span class="catalog__count" id="catalog-count"></span>
+        <button class="btn btn--dark btn--sm filters-toggle" id="filters-toggle">
+          <svg><use href="#i-filter"></use></svg> Фильтры
+        </button>
+        <select class="select" id="f-sort">
+          <option value="pop">Сначала популярные</option>
+          <option value="new">Сначала новинки</option>
+          <option value="cheap">Сначала дешёвые</option>
+          <option value="pricey">Сначала дорогие</option>
+          <option value="rate">По рейтингу</option>
+        </select>
+      </div>
+
+      <div class="chips" id="chips"></div>
+      <div class="grid-products" id="catalog-grid"></div>
+
+      <div class="pager">
+        <button class="btn btn--ghost" onclick="toast('Это прототип — здесь подгрузятся следующие товары')">Показать ещё</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div data-layout="footer"></div>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/layout.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

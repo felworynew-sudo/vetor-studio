@@ -2927,6 +2927,51 @@
     }
   },
   {
+    "id": "site-kukolka",
+    "ruTitle": "Сайт «Куколка»",
+    "enTitle": "",
+    "ruDescription": "Интернет-магазин игрушек для взрослых — многостраничный сайт: каталог, карточки, корзина, оформление.",
+    "enDescription": "",
+    "designCategory": "websites",
+    "featured": false,
+    "ratio": "wide",
+    "images": [],
+    "site": {
+      "src": "/sites/kukolka/index.html",
+      "ruNote": "Полноценный интерактивный сайт — переключайте устройства и листайте страницы.",
+      "enNote": ""
+    },
+    "createdAt": "2026-08-14",
+    "slider": {
+      "before": "",
+      "afterColor": "",
+      "afterBw": ""
+    },
+    "card": {
+      "front": "",
+      "back": ""
+    },
+    "youtubeChannel": {
+      "name": "",
+      "handle": "",
+      "metaRu": "",
+      "metaEn": "",
+      "ctaUrl": "",
+      "ctaRu": "",
+      "ctaEn": "",
+      "cover": "",
+      "avatar": ""
+    },
+    "stickers": {
+      "primaryRu": "",
+      "primaryEn": "",
+      "primaryUrl": "",
+      "secondaryRu": "",
+      "secondaryEn": "",
+      "secondaryUrl": ""
+    }
+  },
+  {
     "id": "site-lifecopy",
     "ruTitle": "Сайт LifeCopy",
     "enTitle": "",

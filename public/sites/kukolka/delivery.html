@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Доставка и оплата — Куколка</title>
+<link rel="icon" href="assets/img/favicon.svg">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<script src="assets/js/icons.js"></script>
+
+<div data-layout="header"></div>
+
+<div class="container" style="padding-bottom:60px">
+  <nav class="crumbs"><a href="index.html">Главная</a> / <span>Доставка и оплата</span></nav>
+
+  <div class="section-head" style="margin-bottom:26px">
+    <div>
+      <h1 class="h-section">Доставка и оплата<svg class="heart-dot"><use href="#i-heart-fill"></use></svg></h1>
+      <p class="muted small" style="margin:8px 0 0">Коротко: анонимно, быстро и без сюрпризов в чеке.</p>
+    </div>
+  </div>
+
+  <div class="features__grid" style="margin-bottom:44px">
+    <div class="feature" style="background:var(--grey-1);border-radius:var(--radius-l);padding:26px">
+      <div class="feature__ico"><svg><use href="#i-truck"></use></svg></div>
+      <h3>Курьер</h3>
+      <p style="color:var(--grey-4)">Москва и Петербург — 390 ₽, завтра. Другие города — от 450 ₽.</p>
+    </div>
+    <div class="feature" style="background:var(--grey-1);border-radius:var(--radius-l);padding:26px">
+      <div class="feature__ico"><svg><use href="#i-pin"></use></svg></div>
+      <h3>Пункты выдачи</h3>
+      <p style="color:var(--grey-4)">От 250 ₽, 2–5 дней. Более 15 000 точек по стране.</p>
+    </div>
+    <div class="feature" style="background:var(--grey-1);border-radius:var(--radius-l);padding:26px">
+      <div class="feature__ico"><svg><use href="#i-box"></use></svg></div>
+      <h3>Почта России</h3>
+      <p style="color:var(--grey-4)">От 300 ₽, 5–14 дней, в любой населённый пункт.</p>
+    </div>
+    <div class="feature" style="background:var(--grey-1);border-radius:var(--radius-l);padding:26px">
+      <div class="feature__ico"><svg><use href="#i-card"></use></svg></div>
+      <h3>Оплата</h3>
+      <p style="color:var(--grey-4)">Картой онлайн, СБП или при получении. В выписке — нейтральное название.</p>
+    </div>
+  </div>
+
+  <div class="tabs" id="faq">
+    <div class="tabs__nav">
+      <button class="tabs__btn is-active" data-tab="d1">Как выглядит упаковка</button>
+      <button class="tabs__btn" data-tab="d2">Возврат и обмен</button>
+      <button class="tabs__btn" data-tab="d3">Частые вопросы</button>
+    </div>
+
+    <div class="tabs__panel is-active" id="tab-d1">
+      <p>Заказ приходит в плотной картонной коробке без логотипов, надписей и прозрачных вставок.
+      Внутри — второй слой упаковки, так что даже вскрытая коробка ничего не выдаёт.</p>
+      <p>В накладной указано «товары для дома», в банковской выписке — нейтральное название юрлица.
+      Курьер не знает содержимое посылки и звонит с обычного мобильного номера.</p>
+    </div>
+
+    <div class="tabs__panel" id="tab-d2">
+      <p>Товары для взрослых относятся к категории личной гигиены, поэтому вернуть можно только
+      изделие в неповреждённой заводской упаковке — в течение 14 дней с момента получения.</p>
+      <p>Если товар пришёл с браком, мы меняем его за свой счёт: пришли фото на почту или в Telegram,
+      решение принимаем в течение суток.</p>
+    </div>
+
+    <div class="tabs__panel" id="tab-d3">
+      <p><b>Можно ли забрать самому?</b> Да, самовывоз из пункта выдачи бесплатный при заказе от 3000 ₽.</p>
+      <p><b>Что, если меня не будет дома?</b> Курьер перенесёт доставку на удобный день — один перенос бесплатный.</p>
+      <p><b>Есть ли подарочная упаковка?</b> Да, отдельная коробка с лентой — 290 ₽, добавляется в корзине.</p>
+      <p><b>Как получить скидку на первый заказ?</b> Промокод <b>КУКОЛКА</b> даёт −10% на любую позицию каталога.</p>
+    </div>
+  </div>
+</div>
+
+<div data-layout="footer"></div>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/layout.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+  // Табы на этой странице работают тем же обработчиком, что и на карточке товара
+  document.querySelector('.tabs__nav')?.addEventListener('click', e => {
+    const b = e.target.closest('.tabs__btn');
+    if (!b) return;
+    document.querySelectorAll('.tabs__btn').forEach(x => x.classList.remove('is-active'));
+    document.querySelectorAll('.tabs__panel').forEach(x => x.classList.remove('is-active'));
+    b.classList.add('is-active');
+    document.getElementById('tab-' + b.dataset.tab).classList.add('is-active');
+  });
+</script>
+</body>
+</html>
