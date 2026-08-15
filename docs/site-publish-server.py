@@ -121,7 +121,18 @@ def commit_files(files, message):
 
 
 class Handler(BaseHTTPRequestHandler):
-    protocol_version = "HTTP/1.1"
+    # HTTP/1.0: no keep-alive → each request its own connection, so a short-read
+    # on an error path can't desync the next request's framing.
+    protocol_version = "HTTP/1.0"
+
+    def _read_body(self):
+        try:
+            length = int(self.headers.get("Content-Length", "0"))
+        except ValueError:
+            length = 0
+        if length <= 0:
+            return length, b""
+        return length, self.rfile.read(min(length, MAX_BODY + 1))
 
     def _cors(self):
         self.send_header("Access-Control-Allow-Origin", ORIGIN)
@@ -153,6 +164,10 @@ class Handler(BaseHTTPRequestHandler):
             self._json(404, {"ok": False, "message": "not found"})
 
     def do_POST(self):
+        # Always read the body first so an early return can't leave bytes on the
+        # socket and desync framing.
+        length, raw = self._read_body()
+
         if self.path.rstrip("/") not in ("/site/publish", "/publish"):
             self._json(404, {"ok": False, "message": "not found"})
             return
@@ -163,15 +178,10 @@ class Handler(BaseHTTPRequestHandler):
             self._json(401, {"ok": False, "message": "bad key"})
             return
 
-        try:
-            length = int(self.headers.get("Content-Length", "0"))
-        except ValueError:
-            length = 0
         if length <= 0 or length > MAX_BODY:
             self._json(400, {"ok": False, "message": "bad body size"})
             return
 
-        raw = self.rfile.read(length)
         try:
             payload = json.loads(raw.decode("utf-8"))
         except (ValueError, UnicodeDecodeError):
