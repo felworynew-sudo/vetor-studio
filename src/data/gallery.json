@@ -696,6 +696,11 @@
       "secondaryRu": "",
       "secondaryEn": "",
       "secondaryUrl": ""
+    },
+    "logoSvg": {
+      "color": "",
+      "bw": "",
+      "colorBg": ""
     }
   },
   {
@@ -1038,6 +1043,11 @@
       "secondaryRu": "",
       "secondaryEn": "",
       "secondaryUrl": ""
+    },
+    "logoSvg": {
+      "color": "",
+      "bw": "",
+      "colorBg": ""
     }
   },
   {
@@ -1703,6 +1713,11 @@
       "secondaryRu": "",
       "secondaryEn": "",
       "secondaryUrl": ""
+    },
+    "logoSvg": {
+      "color": "",
+      "bw": "",
+      "colorBg": ""
     }
   },
   {
@@ -1748,6 +1763,11 @@
       "secondaryRu": "",
       "secondaryEn": "",
       "secondaryUrl": ""
+    },
+    "logoSvg": {
+      "color": "",
+      "bw": "",
+      "colorBg": ""
     }
   },
   {
@@ -1793,6 +1813,11 @@
       "secondaryRu": "",
       "secondaryEn": "",
       "secondaryUrl": ""
+    },
+    "logoSvg": {
+      "color": "",
+      "bw": "",
+      "colorBg": ""
     }
   },
   {
@@ -1838,6 +1863,11 @@
       "secondaryRu": "",
       "secondaryEn": "",
       "secondaryUrl": ""
+    },
+    "logoSvg": {
+      "color": "",
+      "bw": "",
+      "colorBg": ""
     }
   },
   {
@@ -1883,6 +1913,11 @@
       "secondaryRu": "",
       "secondaryEn": "",
       "secondaryUrl": ""
+    },
+    "logoSvg": {
+      "color": "",
+      "bw": "",
+      "colorBg": ""
     }
   },
   {
@@ -1928,6 +1963,11 @@
       "secondaryRu": "",
       "secondaryEn": "",
       "secondaryUrl": ""
+    },
+    "logoSvg": {
+      "color": "",
+      "bw": "",
+      "colorBg": ""
     }
   },
   {
@@ -1973,6 +2013,11 @@
       "secondaryRu": "",
       "secondaryEn": "",
       "secondaryUrl": ""
+    },
+    "logoSvg": {
+      "color": "",
+      "bw": "",
+      "colorBg": ""
     }
   },
   {
@@ -2018,6 +2063,11 @@
       "secondaryRu": "",
       "secondaryEn": "",
       "secondaryUrl": ""
+    },
+    "logoSvg": {
+      "color": "",
+      "bw": "",
+      "colorBg": ""
     }
   },
   {
@@ -2063,6 +2113,11 @@
       "secondaryRu": "",
       "secondaryEn": "",
       "secondaryUrl": ""
+    },
+    "logoSvg": {
+      "color": "",
+      "bw": "",
+      "colorBg": ""
     }
   },
   {
@@ -2108,6 +2163,11 @@
       "secondaryRu": "",
       "secondaryEn": "",
       "secondaryUrl": ""
+    },
+    "logoSvg": {
+      "color": "",
+      "bw": "",
+      "colorBg": ""
     }
   },
   {
@@ -2153,6 +2213,11 @@
       "secondaryRu": "",
       "secondaryEn": "",
       "secondaryUrl": ""
+    },
+    "logoSvg": {
+      "color": "",
+      "bw": "",
+      "colorBg": ""
     }
   },
   {
@@ -2198,6 +2263,11 @@
       "secondaryRu": "",
       "secondaryEn": "",
       "secondaryUrl": ""
+    },
+    "logoSvg": {
+      "color": "",
+      "bw": "",
+      "colorBg": ""
     }
   },
   {
@@ -2243,6 +2313,11 @@
       "secondaryRu": "",
       "secondaryEn": "",
       "secondaryUrl": ""
+    },
+    "logoSvg": {
+      "color": "",
+      "bw": "",
+      "colorBg": ""
     }
   },
   {
@@ -2288,6 +2363,11 @@
       "secondaryRu": "",
       "secondaryEn": "",
       "secondaryUrl": ""
+    },
+    "logoSvg": {
+      "color": "",
+      "bw": "",
+      "colorBg": ""
     }
   },
   {
@@ -2507,6 +2587,11 @@
       "secondaryRu": "",
       "secondaryEn": "",
       "secondaryUrl": ""
+    },
+    "logoSvg": {
+      "color": "",
+      "bw": "",
+      "colorBg": ""
     }
   },
   {
@@ -2558,6 +2643,11 @@
       "secondaryRu": "",
       "secondaryEn": "",
       "secondaryUrl": ""
+    },
+    "logoSvg": {
+      "color": "",
+      "bw": "",
+      "colorBg": ""
     }
   },
   {
@@ -2609,6 +2699,11 @@
       "secondaryRu": "",
       "secondaryEn": "",
       "secondaryUrl": ""
+    },
+    "logoSvg": {
+      "color": "",
+      "bw": "",
+      "colorBg": ""
     }
   },
   {
@@ -2780,57 +2875,6 @@
     }
   },
   {
-    "id": "kislota-mascot",
-    "ruTitle": "Маскот «Кислота» — единорог",
-    "enTitle": "",
-    "ruDescription": "Фирменный персонаж студии.",
-    "enDescription": "",
-    "designCategory": "brand-identity",
-    "featured": false,
-    "ratio": "landscape",
-    "images": [
-      {
-        "src": "/design/kislota/unicorn.webp",
-        "ruAlt": "Единорог Кислота",
-        "enAlt": ""
-      }
-    ],
-    "createdAt": "2026-08-05",
-    "slider": {
-      "before": "",
-      "afterColor": "",
-      "afterBw": ""
-    },
-    "card": {
-      "front": "",
-      "back": ""
-    },
-    "site": {
-      "src": "",
-      "ruNote": "",
-      "enNote": ""
-    },
-    "youtubeChannel": {
-      "name": "",
-      "handle": "",
-      "metaRu": "",
-      "metaEn": "",
-      "ctaUrl": "",
-      "ctaRu": "",
-      "ctaEn": "",
-      "cover": "",
-      "avatar": ""
-    },
-    "stickers": {
-      "primaryRu": "",
-      "primaryEn": "",
-      "primaryUrl": "",
-      "secondaryRu": "",
-      "secondaryEn": "",
-      "secondaryUrl": ""
-    }
-  },
-  {
     "id": "kislota-infographic",
     "ruTitle": "Инфографика «Кислота»",
     "enTitle": "",
@@ -2879,6 +2923,11 @@
       "secondaryRu": "",
       "secondaryEn": "",
       "secondaryUrl": ""
+    },
+    "logoSvg": {
+      "color": "",
+      "bw": "",
+      "colorBg": ""
     }
   },
   {
@@ -2924,6 +2973,11 @@
       "secondaryRu": "",
       "secondaryEn": "",
       "secondaryUrl": ""
+    },
+    "logoSvg": {
+      "color": "",
+      "bw": "",
+      "colorBg": ""
     }
   },
   {
@@ -2969,6 +3023,11 @@
       "secondaryRu": "",
       "secondaryEn": "",
       "secondaryUrl": ""
+    },
+    "logoSvg": {
+      "color": "",
+      "bw": "",
+      "colorBg": ""
     }
   },
   {
@@ -3014,6 +3073,11 @@
       "secondaryRu": "",
       "secondaryEn": "",
       "secondaryUrl": ""
+    },
+    "logoSvg": {
+      "color": "",
+      "bw": "",
+      "colorBg": ""
     }
   },
   {
@@ -3059,6 +3123,11 @@
       "secondaryRu": "",
       "secondaryEn": "",
       "secondaryUrl": ""
+    },
+    "logoSvg": {
+      "color": "",
+      "bw": "",
+      "colorBg": ""
     }
   }
 ]
