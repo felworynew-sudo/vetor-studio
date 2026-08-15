@@ -197,12 +197,35 @@ function buildVectorSvg(svgEl, accent) {
     + '</svg>';
 }
 
+// Illustrator exports carry a <style> block with generic class names
+// (.cls-1, .st0, …). Inlining several such SVGs into one document makes those
+// global rules collide — one logo's colors leak onto another. Prefix every
+// class (in both the <style> selectors and the element class attributes) with
+// a per-instance id so each inlined SVG is self-contained.
+let SVG_UID = 0;
+function scopeSvgStyles(svg) {
+  const prefix = `lsvg${SVG_UID += 1}-`;
+  svg.querySelectorAll('[class]').forEach((el) => {
+    const scoped = (el.getAttribute('class') || '')
+      .split(/\s+/)
+      .filter(Boolean)
+      .map((c) => prefix + c)
+      .join(' ');
+    if (scoped) el.setAttribute('class', scoped);
+  });
+  svg.querySelectorAll('style').forEach((st) => {
+    st.textContent = (st.textContent || '').replace(/\.(-?[A-Za-z_][\w-]*)/g, `.${prefix}$1`);
+  });
+  return prefix;
+}
+
 function inlineSvgMarkup(text) {
   const doc = new DOMParser().parseFromString(text, 'image/svg+xml');
   const svg = doc.querySelector('svg');
   if (!svg) return { svg: null, markup: '' };
   svg.removeAttribute('width');
   svg.removeAttribute('height');
+  scopeSvgStyles(svg);
   return { svg, markup: svg.outerHTML };
 }
 
@@ -247,7 +270,11 @@ function LogoSvgTile({ item, language }) {
   }, [cfg.color, cfg.bw]);
 
   const colorBg = cfg.colorBg || '#ffffff';
-  const stageBg = mode === 'color' ? colorBg : '#ffffff';
+  // Vector view goes on a dark stage — the accent outline/nodes have far more
+  // contrast on black than the theme's yellow-green would on white.
+  let stageBg = '#ffffff';
+  if (mode === 'color') stageBg = colorBg;
+  else if (mode === 'vector') stageBg = '#0b0c11';
 
   let body = null;
   if (status === 'loading') {

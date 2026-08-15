@@ -6390,7 +6390,9 @@ select {
 
 /* Design gallery: SVG logo viewer (color / B&W / vector switcher) */
 .logo-svg-viewer {
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   width: 100%;
 }
 .logo-svg-stage {
@@ -6429,19 +6431,15 @@ select {
   font-size: 13px;
   color: var(--text-soft);
 }
+/* Toggle sits below the logo in normal flow — never overlaps or blurs it */
 .logo-svg-modes {
-  position: absolute;
-  left: 50%;
-  bottom: 10px;
-  transform: translateX(-50%);
+  align-self: center;
   display: inline-flex;
   gap: 2px;
   padding: 3px;
   border-radius: var(--radius-pill);
-  background: rgba(13, 13, 17, 0.72);
-  border: 1px solid var(--stroke-strong);
-  backdrop-filter: blur(6px);
-  z-index: 2;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--stroke);
 }
 .logo-svg-mode {
   appearance: none;

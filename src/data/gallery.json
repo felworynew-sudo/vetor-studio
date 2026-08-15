@@ -2339,13 +2339,18 @@
       "secondaryRu": "",
       "secondaryEn": "",
       "secondaryUrl": ""
+    },
+    "logoSvg": {
+      "color": "/design/logofolio/svg/kislota.svg",
+      "bw": "/design/logofolio/svg/kislota-bw.svg",
+      "colorBg": ""
     }
   },
   {
     "id": "logo-vetor",
     "ruTitle": "Vetor",
     "enTitle": "",
-    "ruDescription": "Логотип собственной студии.",
+    "ruDescription": "Логотип этой самой студии.",
     "enDescription": "",
     "designCategory": "logos",
     "featured": false,
@@ -2446,13 +2451,18 @@
       "secondaryRu": "",
       "secondaryEn": "",
       "secondaryUrl": ""
+    },
+    "logoSvg": {
+      "color": "/design/logofolio/svg/lifecopy.svg",
+      "bw": "",
+      "colorBg": ""
     }
   },
   {
     "id": "logo-wow-my-ice",
     "ruTitle": "Wow My Eyes",
     "enTitle": "",
-    "ruDescription": "Логотип бренда.",
+    "ruDescription": "Логотип компании по макросъёмке радужки глаза.",
     "enDescription": "",
     "designCategory": "logos",
     "featured": false,
@@ -2461,57 +2471,6 @@
       {
         "src": "/design/logofolio/wow-my-ice.webp",
         "ruAlt": "Логотип Wow My Eyes",
-        "enAlt": ""
-      }
-    ],
-    "createdAt": "2026-08-14",
-    "slider": {
-      "before": "",
-      "afterColor": "",
-      "afterBw": ""
-    },
-    "card": {
-      "front": "",
-      "back": ""
-    },
-    "site": {
-      "src": "",
-      "ruNote": "",
-      "enNote": ""
-    },
-    "youtubeChannel": {
-      "name": "",
-      "handle": "",
-      "metaRu": "",
-      "metaEn": "",
-      "ctaUrl": "",
-      "ctaRu": "",
-      "ctaEn": "",
-      "cover": "",
-      "avatar": ""
-    },
-    "stickers": {
-      "primaryRu": "",
-      "primaryEn": "",
-      "primaryUrl": "",
-      "secondaryRu": "",
-      "secondaryEn": "",
-      "secondaryUrl": ""
-    }
-  },
-  {
-    "id": "logo-kon",
-    "ruTitle": "Конь",
-    "enTitle": "",
-    "ruDescription": "Авторский логотип-знак.",
-    "enDescription": "",
-    "designCategory": "logos",
-    "featured": false,
-    "ratio": "wide",
-    "images": [
-      {
-        "src": "/design/logofolio/kon.webp",
-        "ruAlt": "Логотип Конь",
         "enAlt": ""
       }
     ],
@@ -2603,7 +2562,7 @@
   },
   {
     "id": "logo-mantis",
-    "ruTitle": "Мантис",
+    "ruTitle": "MANTIS BLADE",
     "enTitle": "",
     "ruDescription": "Авторский логотип-знак.",
     "enDescription": "",
@@ -2654,7 +2613,7 @@
   },
   {
     "id": "logo-bermud",
-    "ruTitle": "Бермуд",
+    "ruTitle": "BERMUD",
     "enTitle": "",
     "ruDescription": "Авторский логотип-знак.",
     "enDescription": "",
@@ -2701,13 +2660,74 @@
       "secondaryRu": "",
       "secondaryEn": "",
       "secondaryUrl": ""
+    },
+    "logoSvg": {
+      "color": "/design/logofolio/svg/bermud.svg",
+      "bw": "/design/logofolio/svg/bermud-bw.svg",
+      "colorBg": ""
+    }
+  },
+  {
+    "id": "logo-kukolka",
+    "ruTitle": "Куколка",
+    "enTitle": "",
+    "ruDescription": "Логотип не детского интернет-магазина игрушек :)",
+    "enDescription": "",
+    "designCategory": "logos",
+    "featured": false,
+    "ratio": "wide",
+    "images": [
+      {
+        "src": "/design/logofolio/svg/kukolka.svg",
+        "ruAlt": "Логотип Куколка",
+        "enAlt": ""
+      }
+    ],
+    "createdAt": "2026-08-14",
+    "slider": {
+      "before": "",
+      "afterColor": "",
+      "afterBw": ""
+    },
+    "card": {
+      "front": "",
+      "back": ""
+    },
+    "site": {
+      "src": "",
+      "ruNote": "",
+      "enNote": ""
+    },
+    "youtubeChannel": {
+      "name": "",
+      "handle": "",
+      "metaRu": "",
+      "metaEn": "",
+      "ctaUrl": "",
+      "ctaRu": "",
+      "ctaEn": "",
+      "cover": "",
+      "avatar": ""
+    },
+    "stickers": {
+      "primaryRu": "",
+      "primaryEn": "",
+      "primaryUrl": "",
+      "secondaryRu": "",
+      "secondaryEn": "",
+      "secondaryUrl": ""
+    },
+    "logoSvg": {
+      "color": "/design/logofolio/svg/kukolka.svg",
+      "bw": "/design/logofolio/svg/kukolka-bw.svg",
+      "colorBg": ""
     }
   },
   {
     "id": "logo-zhuzhu",
-    "ruTitle": "Жужу",
+    "ruTitle": "Ju-Ju",
     "enTitle": "",
-    "ruDescription": "Авторский логотип-знак.",
+    "ruDescription": "Логотип-знак мотеля.",
     "enDescription": "",
     "designCategory": "logos",
     "featured": false,
@@ -2752,6 +2772,11 @@
       "secondaryRu": "",
       "secondaryEn": "",
       "secondaryUrl": ""
+    },
+    "logoSvg": {
+      "color": "/design/logofolio/svg/zhuzhu.svg",
+      "bw": "",
+      "colorBg": ""
     }
   },
   {
