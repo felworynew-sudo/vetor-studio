@@ -37,45 +37,33 @@ function getAssetPath(assetUrl) {
 async function inlineHtmlFile(htmlPath) {
   let html = await fs.readFile(htmlPath, 'utf8');
 
-  if (html.includes('data-vetor-inline="app-js"')) {
+  if (html.includes('data-vetor-inline="app-css"')) {
     return false;
   }
 
-  const scriptMatch = html.match(
-    /<script\s+type="module"\s+crossorigin\s+src="([^"]*\/assets\/[^"]+\.js)"><\/script>/,
-  );
+  // Inline the critical CSS only. The entry JS stays an external
+  // <script type="module" src>. Inlining the entry bundle breaks module
+  // identity for code-split dynamic imports: the entry runs once inlined, then
+  // AGAIN when a lazy chunk (e.g. the studio's ContentStudio) imports it from
+  // /assets/index-*.js for shared modules — loading a SECOND copy of React and
+  // crashing hooks with "invalid hook call" (React #321) in studio mode.
+  // Keeping the JS external is also better for caching (one shared bundle
+  // instead of 380 KB duplicated into every route shell).
   const stylesheetMatch = html.match(
     /<link\s+rel="stylesheet"\s+crossorigin\s+href="([^"]*\/assets\/[^"]+\.css)">/,
   );
 
-  if (!scriptMatch && !stylesheetMatch) {
+  if (!stylesheetMatch) {
     return false;
   }
 
-  if (!scriptMatch || !stylesheetMatch) {
-    throw new Error(`Main app assets were not found in ${path.relative(distDir, htmlPath)}`);
-  }
-
-  const [scriptSource, stylesheetSource] = await Promise.all([
-    fs.readFile(getAssetPath(scriptMatch[1]), 'utf8'),
-    fs.readFile(getAssetPath(stylesheetMatch[1]), 'utf8'),
-  ]);
-
-  const assetDirectory = scriptMatch[1].slice(0, scriptMatch[1].lastIndexOf('/') + 1);
-  const safeScript = scriptSource
-    .replaceAll('import("./', `import("${assetDirectory}`)
-    .replaceAll('</script', '<\\/script');
+  const stylesheetSource = await fs.readFile(getAssetPath(stylesheetMatch[1]), 'utf8');
   const safeStylesheet = stylesheetSource.replaceAll('</style', '<\\/style');
 
-  html = html
-    .replace(
-      stylesheetMatch[0],
-      () => `<style data-vetor-inline="app-css">${safeStylesheet}</style>`,
-    )
-    .replace(
-      scriptMatch[0],
-      () => `<script type="module" data-vetor-inline="app-js">${safeScript}</script>`,
-    );
+  html = html.replace(
+    stylesheetMatch[0],
+    () => `<style data-vetor-inline="app-css">${safeStylesheet}</style>`,
+  );
 
   await fs.writeFile(htmlPath, html, 'utf8');
   return true;
