@@ -200,6 +200,23 @@ function writeDefaultExportFile(relativePath, exportName, data) {
   );
 }
 
+// Uploaded studio images arrive as { path: 'public/…', base64 }. Write them to
+// disk (path is restricted to public/ and can't escape it).
+function writeBinaryAsset(asset) {
+  const rel = asset && asset.path;
+  if (
+    typeof rel !== 'string'
+    || !rel.startsWith('public/')
+    || rel.includes('..')
+    || !/^[\w./-]+$/.test(rel)
+  ) {
+    throw new Error(`Небезопасный путь ассета: ${rel}`);
+  }
+  const target = path.join(process.cwd(), rel);
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  writeFileSync(target, Buffer.from(asset.base64 || '', 'base64'));
+}
+
 const baseDefaultPalette = {
   bg: '#0d0d11',
   bgSoft: '#12131a',
@@ -299,6 +316,9 @@ async function persistEditableData(request) {
   if (payload.pageCopy) writeDefaultExportFile('src/data/pageCopy.js', 'pageCopy', payload.pageCopy);
   if (payload.sectionCopy) writeDefaultExportFile('src/data/sectionCopy.js', 'sectionCopy', payload.sectionCopy);
   if (payload.palette) writePaletteFile(payload.palette);
+  if (Array.isArray(payload.assets)) {
+    for (const asset of payload.assets) writeBinaryAsset(asset);
+  }
 }
 
 function localPublishPlugin() {

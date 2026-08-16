@@ -43,6 +43,7 @@ import { applyPalette, normalizePalette } from './utils/palette';
 import { withBase } from './utils/format';
 import { buildUrl, parseRoute } from './utils/routing';
 import { resolvePublishTarget, setStudioPublishToken, isLocalStudioHost } from './utils/remotePublish';
+import { extractGalleryAssets } from './utils/media';
 
 const LOADING_DELAY = 280;
 const DEFAULT_SECTIONS_VISIBILITY = {
@@ -1523,14 +1524,17 @@ function App() {
   // Full editable dataset sent to the save/publish endpoint. The receiver
   // (Vite plugin locally, VPS backend on the live site) writes each key to its
   // data file. Keep this in sync with persistEditableData in vite.config.js.
-  function buildStudioPayload() {
+  // Uploaded gallery images ride in as data: URLs; extract them into real files
+  // (`assets`) so gallery.json keeps lightweight paths.
+  async function buildStudioPayload() {
+    const { items: galleryOut, assets } = await extractGalleryAssets(galleryItems);
     return {
       siteConfig,
       tagsConfig,
       videoItems: stripStudioFields(videoItems),
       musicItems: stripStudioFields(musicItems),
       blogPosts,
-      galleryItems,
+      galleryItems: galleryOut,
       pricing,
       sectionCopy,
       palette,
@@ -1538,6 +1542,7 @@ function App() {
       fonts,
       priceCategories,
       pageCopy,
+      assets,
     };
   }
 
@@ -1559,7 +1564,7 @@ function App() {
       const response = await fetch('/__save-local', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(buildStudioPayload()),
+        body: JSON.stringify(await buildStudioPayload()),
       });
       const result = await response.json();
 
@@ -1593,7 +1598,7 @@ function App() {
       const response = await fetch(target.url, {
         method: 'POST',
         headers: target.headers,
-        body: JSON.stringify(buildStudioPayload()),
+        body: JSON.stringify(await buildStudioPayload()),
       });
 
       if (response.status === 401 || response.status === 403) {

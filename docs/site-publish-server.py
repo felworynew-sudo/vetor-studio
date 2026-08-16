@@ -101,8 +101,19 @@ def gh(method, path, body=None):
         return json.loads(resp.read().decode("utf-8"))
 
 
-def commit_files(files, message):
-    """Create one commit updating `files` (path -> text) on BRANCH."""
+def safe_asset_path(path):
+    # Uploaded files may only land under public/ and can't escape it.
+    return (
+        isinstance(path, str)
+        and path.startswith("public/")
+        and ".." not in path
+        and all(ch.isalnum() or ch in "._/-" for ch in path)
+    )
+
+
+def commit_files(files, assets, message):
+    """One commit updating text `files` (path -> text) plus binary `assets`
+    (list of {path, base64}) on BRANCH."""
     ref = gh("GET", f"/repos/{REPO}/git/ref/heads/{BRANCH}")
     base_commit_sha = ref["object"]["sha"]
     base_commit = gh("GET", f"/repos/{REPO}/git/commits/{base_commit_sha}")
@@ -112,6 +123,14 @@ def commit_files(files, message):
         {"path": path, "mode": "100644", "type": "blob", "content": text}
         for path, text in files.items()
     ]
+    for asset in assets or []:
+        path = asset.get("path")
+        if not safe_asset_path(path):
+            raise ValueError(f"bad asset path: {path}")
+        blob = gh("POST", f"/repos/{REPO}/git/blobs",
+                  {"content": asset.get("base64", ""), "encoding": "base64"})
+        tree.append({"path": path, "mode": "100644", "type": "blob", "sha": blob["sha"]})
+
     new_tree = gh("POST", f"/repos/{REPO}/git/trees",
                   {"base_tree": base_tree_sha, "tree": tree})
     new_commit = gh("POST", f"/repos/{REPO}/git/commits",
@@ -189,12 +208,13 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         files = build_files(payload)
-        if not files:
+        assets = payload.get("assets") or []
+        if not files and not assets:
             self._json(400, {"ok": False, "message": "nothing to publish"})
             return
 
         try:
-            sha = commit_files(files, "Update site content (studio)")
+            sha = commit_files(files, assets, "Update site content (studio)")
         except urllib.error.HTTPError as e:
             detail = e.read().decode("utf-8", "replace")[:400]
             self._json(502, {"ok": False, "message": f"github {e.code}: {detail}"})

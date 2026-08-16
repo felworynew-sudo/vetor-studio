@@ -1,5 +1,34 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { designCategoryList, normalizeDesignCategory } from '../data/designCategories';
+import { readFileAsOptimizedDataUrl } from '../utils/media';
+import { withBase } from '../utils/format';
+
+// Render either an uploaded data: URL or a /public path.
+function previewSrc(src) {
+  if (typeof src !== 'string' || !src) return '';
+  return src.startsWith('data:') ? src : withBase(src);
+}
+
+// Small "upload a file → data URL" button reused across single-image fields.
+function UploadButton({ accept = 'image/*', label, onPicked }) {
+  const ref = useRef(null);
+  return (
+    <>
+      <button type="button" className="studio-upload-btn" onClick={() => ref.current?.click()}>{label}</button>
+      <input
+        ref={ref}
+        type="file"
+        accept={accept}
+        hidden
+        onChange={async (event) => {
+          const file = event.target.files?.[0];
+          if (file) onPicked(await readFileAsOptimizedDataUrl(file));
+          event.target.value = '';
+        }}
+      />
+    </>
+  );
+}
 
 const emptyItem = {
   id: '',
@@ -128,21 +157,6 @@ function cloneItem(item) {
   };
 }
 
-function pathsToImages(value, item) {
-  return value
-    .split('\n')
-    .map((src) => src.trim())
-    .filter(Boolean)
-    .map((src, index) => {
-      const existing = item.images?.[index];
-      return {
-        src,
-        ruAlt: existing?.ruAlt || item.ruTitle || item.enTitle || 'Изображение',
-        enAlt: existing?.enAlt || item.enTitle || item.ruTitle || 'Image',
-      };
-    });
-}
-
 function GalleryItemEditorModal({ item, language, onSave, onClose }) {
   const [form, setForm] = useState(cloneItem(item || emptyItem));
   const copy = copyText[language] ?? copyText.ru;
@@ -174,7 +188,7 @@ function GalleryItemEditorModal({ item, language, onSave, onClose }) {
     };
   }, [item, onClose]);
 
-  const imagePathsValue = useMemo(() => (form.images || []).map((image) => image.src).join('\n'), [form.images]);
+  const [pathDraft, setPathDraft] = useState('');
 
   if (!item) {
     return null;
@@ -204,8 +218,31 @@ function GalleryItemEditorModal({ item, language, onSave, onClose }) {
     }));
   }
 
-  function handleImagePathsChange(value) {
-    setForm((current) => ({ ...current, images: pathsToImages(value, current) }));
+  async function handleImageUpload(fileList) {
+    const files = Array.from(fileList || []);
+    const uploaded = [];
+    for (const file of files) {
+      // eslint-disable-next-line no-await-in-loop
+      const src = await readFileAsOptimizedDataUrl(file);
+      uploaded.push({ src, ruAlt: form.ruTitle || 'Изображение', enAlt: form.enTitle || 'Image' });
+    }
+    if (uploaded.length) {
+      setForm((current) => ({ ...current, images: [...(current.images || []), ...uploaded] }));
+    }
+  }
+
+  function removeImage(index) {
+    setForm((current) => ({ ...current, images: (current.images || []).filter((_, i) => i !== index) }));
+  }
+
+  function addImageByPath() {
+    const src = pathDraft.trim();
+    if (!src) return;
+    setForm((current) => ({
+      ...current,
+      images: [...(current.images || []), { src, ruAlt: current.ruTitle || 'Изображение', enAlt: current.enTitle || 'Image' }],
+    }));
+    setPathDraft('');
   }
 
   function updateSliderField(field, value) {
@@ -320,13 +357,50 @@ function GalleryItemEditorModal({ item, language, onSave, onClose }) {
 
           <section className="gallery-editor-section">
             <h3>{copy.images}</h3>
-            <label className="studio-field">
-              <span>{copy.imageList}</span>
-              <textarea
-                value={imagePathsValue}
-                onChange={(event) => handleImagePathsChange(event.target.value)}
+            {(form.images || []).length ? (
+              <div className="studio-thumb-grid">
+                {(form.images || []).map((image, index) => (
+                  <div className="studio-thumb" key={`${image.src?.slice(0, 24)}-${index}`}>
+                    <img src={previewSrc(image.src)} alt={image.ruAlt || form.ruTitle || ''} />
+                    <button
+                      type="button"
+                      className="studio-thumb-remove"
+                      aria-label={language === 'ru' ? 'Удалить' : 'Remove'}
+                      onClick={() => removeImage(index)}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="gallery-editor-note">
+                {language === 'ru' ? 'Пока нет изображений — загрузи файл.' : 'No images yet — upload a file.'}
+              </p>
+            )}
+            <div className="studio-upload-row">
+              <label className="studio-upload-btn">
+                {language === 'ru' ? '⬆ Загрузить изображения' : '⬆ Upload images'}
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  hidden
+                  onChange={(event) => { handleImageUpload(event.target.files); event.target.value = ''; }}
+                />
+              </label>
+            </div>
+            <div className="studio-path-add">
+              <input
+                value={pathDraft}
+                onChange={(event) => setPathDraft(event.target.value)}
+                onKeyDown={(event) => { if (event.key === 'Enter') { event.preventDefault(); addImageByPath(); } }}
+                placeholder={language === 'ru' ? 'или путь к файлу в /public…' : 'or a /public file path…'}
               />
-            </label>
+              <button type="button" className="cta-button secondary" onClick={addImageByPath}>
+                {language === 'ru' ? 'Добавить путь' : 'Add path'}
+              </button>
+            </div>
             <p className="gallery-editor-note">{copy.altHint}</p>
           </section>
 
@@ -341,14 +415,17 @@ function GalleryItemEditorModal({ item, language, onSave, onClose }) {
               <label className="studio-field">
                 <span>{language === 'ru' ? 'Оригинал (до)' : 'Original (before)'}</span>
                 <input value={form.slider?.before || ''} onChange={(event) => updateSliderField('before', event.target.value)} placeholder="/restoration/original.png" />
+                <UploadButton label={language === 'ru' ? '⬆ Файл' : '⬆ File'} onPicked={(src) => updateSliderField('before', src)} />
               </label>
               <label className="studio-field">
                 <span>{language === 'ru' ? 'Реставрация — цвет' : 'Restored — color'}</span>
                 <input value={form.slider?.afterColor || ''} onChange={(event) => updateSliderField('afterColor', event.target.value)} placeholder="/restoration/color.png" />
+                <UploadButton label={language === 'ru' ? '⬆ Файл' : '⬆ File'} onPicked={(src) => updateSliderField('afterColor', src)} />
               </label>
               <label className="studio-field">
                 <span>{language === 'ru' ? 'Реставрация — ЧБ' : 'Restored — B/W'}</span>
                 <input value={form.slider?.afterBw || ''} onChange={(event) => updateSliderField('afterBw', event.target.value)} placeholder="/restoration/bw.png" />
+                <UploadButton label={language === 'ru' ? '⬆ Файл' : '⬆ File'} onPicked={(src) => updateSliderField('afterBw', src)} />
               </label>
             </div>
           </section>
@@ -364,10 +441,12 @@ function GalleryItemEditorModal({ item, language, onSave, onClose }) {
               <label className="studio-field">
                 <span>{language === 'ru' ? 'Лицо (front)' : 'Front'}</span>
                 <input value={form.card?.front || ''} onChange={(event) => updateCardField('front', event.target.value)} placeholder="/cards/card-front.webp" />
+                <UploadButton label={language === 'ru' ? '⬆ Файл' : '⬆ File'} onPicked={(src) => updateCardField('front', src)} />
               </label>
               <label className="studio-field">
                 <span>{language === 'ru' ? 'Оборот (back)' : 'Back'}</span>
                 <input value={form.card?.back || ''} onChange={(event) => updateCardField('back', event.target.value)} placeholder="/cards/card-back.webp" />
+                <UploadButton label={language === 'ru' ? '⬆ Файл' : '⬆ File'} onPicked={(src) => updateCardField('back', src)} />
               </label>
             </div>
           </section>
@@ -402,10 +481,12 @@ function GalleryItemEditorModal({ item, language, onSave, onClose }) {
               <label className="studio-field">
                 <span>{language === 'ru' ? 'Цветной SVG' : 'Color SVG'}</span>
                 <input value={form.logoSvg?.color || ''} onChange={(event) => updateLogoSvgField('color', event.target.value)} placeholder="/design/logofolio/svg/name.svg" />
+                <UploadButton accept="image/svg+xml,image/*" label={language === 'ru' ? '⬆ Файл' : '⬆ File'} onPicked={(src) => updateLogoSvgField('color', src)} />
               </label>
               <label className="studio-field">
                 <span>{language === 'ru' ? 'Ч/б SVG (пусто → авто-чёрный)' : 'B/W SVG (empty → auto-black)'}</span>
                 <input value={form.logoSvg?.bw || ''} onChange={(event) => updateLogoSvgField('bw', event.target.value)} placeholder="/design/logofolio/svg/name-bw.svg" />
+                <UploadButton accept="image/svg+xml,image/*" label={language === 'ru' ? '⬆ Файл' : '⬆ File'} onPicked={(src) => updateLogoSvgField('bw', src)} />
               </label>
               <label className="studio-field">
                 <span>{language === 'ru' ? 'Фон режима «в цвете» (hex; пусто → белый)' : 'Color-mode background (hex; empty → white)'}</span>
