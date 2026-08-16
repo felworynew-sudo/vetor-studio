@@ -6,7 +6,7 @@ const tabLabels = {
     gallery: 'Дизайн',
     fonts: 'Шрифты',
     price: 'Цены',
-    plugins: 'Плагины',
+    plugins: 'Софт',
   },
   en: {
     home: 'Home',
@@ -15,7 +15,7 @@ const tabLabels = {
     gallery: 'Design',
     fonts: 'Fonts',
     price: 'Pricing',
-    plugins: 'Plugins',
+    plugins: 'Software',
   },
 };
 

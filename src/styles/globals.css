@@ -6066,6 +6066,16 @@ select {
 .price-cat-card:hover .price-cat-go {
   transform: translateX(4px);
 }
+/* GitHub link variant: pill with icon + label instead of a round arrow */
+.plugin-card-github {
+  width: auto;
+  gap: 7px;
+  padding: 0 16px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.plugin-card-github svg { width: 18px; height: 18px; }
 .price-cat-contact {
   background: linear-gradient(140deg, color-mix(in srgb, var(--price-cat-accent) 20%, rgba(23,25,34,0.9)), rgba(17, 19, 26, 0.92));
 }

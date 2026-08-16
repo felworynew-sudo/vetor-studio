@@ -746,10 +746,10 @@ function App() {
         ? 'Resto — плагин для быстрой реставрации старых фотографий и сборки макетов портретов на памятники. Доступ по подписке через Telegram-бот @VetorPluginBOT.'
         : 'Resto — a plugin for fast restoration of old photos and building portrait layouts for monuments. Subscription access via the Telegram bot @VetorPluginBOT.';
     } else if (activeSection === 'plugins') {
-      title = language === 'ru' ? `Плагины Vetor${suffix}` : `Vetor plugins${suffix}`;
+      title = language === 'ru' ? `Софт Vetor${suffix}` : `Vetor software${suffix}`;
       description = language === 'ru'
-        ? 'Плагины Vetor для графических редакторов: инструменты, которые ускоряют рутину. Сейчас доступен Resto — реставрация фото и макеты для памятников.'
-        : 'Vetor plugins for graphics editors — tools that speed up routine work. Resto is available now: photo restoration and monument layouts.';
+        ? 'Софт Vetor: плагины для редакторов и отдельные программы — реставрация фото (Resto), криптография (Krypto), поиск лидов (Org-Finder).'
+        : 'Vetor software: editor plugins and standalone apps — photo restoration (Resto), cryptography (Krypto), lead finding (Org-Finder).';
     } else if (activeSection === 'price' || isPriceOpen) {
       title = language === 'ru' ? `Цены на превью, логотипы, обложки и оформление${suffix}` : `Pricing: thumbnails, logos, covers & branding${suffix}`;
       description = language === 'ru'
@@ -862,7 +862,7 @@ function App() {
       blog: [language === 'ru' ? 'Блог' : 'Blog', '/blog'],
       price: [language === 'ru' ? 'Цены' : 'Pricing', '/price'],
       fonts: [language === 'ru' ? 'Шрифты' : 'Fonts', '/fonts'],
-      plugins: [language === 'ru' ? 'Плагины' : 'Plugins', '/plugins'],
+      plugins: [language === 'ru' ? 'Софт' : 'Software', '/plugins'],
     }[activeSection];
     const crumbList = [{ '@type': 'ListItem', position: 1, name: language === 'ru' ? 'Главная' : 'Home', item: canonicalDomain }];
     if (sectionCrumb) {
@@ -1118,7 +1118,7 @@ function App() {
     { value: 'previews', label: 'Превью' },
     { value: 'gallery', label: 'Дизайн' },
     { value: 'fonts', label: 'Шрифты' },
-    { value: 'plugins', label: 'Плагины' },
+    { value: 'plugins', label: 'Софт' },
     { value: 'blog', label: 'Блог' },
     { value: 'price', label: 'Цены' },
   ];
