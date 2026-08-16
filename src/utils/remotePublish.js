@@ -39,9 +39,23 @@ export function setStudioPublishToken(token) {
 
 export function promptStudioPublishToken() {
   const existing = getStudioPublishToken();
-  const value = (window.prompt('Ключ публикации (студийный пароль):', existing || '') || '').trim();
+  const value = (window.prompt('Ключ студии (публикация):', existing || '') || '').trim();
   setStudioPublishToken(value);
   return value;
+}
+
+// Ask the backend whether a key is valid (used to unlock the studio UI on the
+// live site). On localhost there is no backend — the dev server is trusted.
+export async function verifyStudioKey(token) {
+  if (isLocalStudioHost()) return true;
+  if (!token) return false;
+  try {
+    const url = REMOTE_PUBLISH_ENDPOINT.replace(/\/publish$/, '/verify');
+    const res = await fetch(url, { method: 'POST', headers: { Authorization: `Bearer ${token}` } });
+    return res.ok;
+  } catch {
+    return false;
+  }
 }
 
 // Resolve where a save/publish request should go and with what headers.

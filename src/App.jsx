@@ -42,7 +42,13 @@ import { getLocalizedText } from './utils/i18n';
 import { applyPalette, normalizePalette } from './utils/palette';
 import { withBase } from './utils/format';
 import { buildUrl, parseRoute } from './utils/routing';
-import { resolvePublishTarget, setStudioPublishToken, isLocalStudioHost } from './utils/remotePublish';
+import {
+  resolvePublishTarget,
+  setStudioPublishToken,
+  isLocalStudioHost,
+  promptStudioPublishToken,
+  verifyStudioKey,
+} from './utils/remotePublish';
 import { extractGalleryAssets } from './utils/media';
 
 const LOADING_DELAY = 280;
@@ -98,6 +104,21 @@ function isLocalPublishAvailable() {
   }
 
   return ['localhost', '127.0.0.1'].includes(window.location.hostname);
+}
+
+// On the live site the studio UI stays hidden until the owner enters a valid
+// key (verified against the backend, then flagged for the session). Localhost
+// is trusted and needs no key.
+function isStudioKeyVerified() {
+  try {
+    return sessionStorage.getItem('studio-verified') === '1';
+  } catch {
+    return false;
+  }
+}
+
+function studioInitiallyEnabled() {
+  return isLocalPublishAvailable() || (isStudioModeEnabled() && isStudioKeyVerified());
 }
 
 function decorateItems(items, collection) {
@@ -406,12 +427,36 @@ function App() {
   const [pageCopy, setPageCopy] = useState(() => loadEditableData('portfolio-page-copy', initialPageCopy));
   const [isRouteNotFound, setIsRouteNotFound] = useState(Boolean(routeState.isNotFound));
 
-  const studioEnabled = useMemo(() => isStudioModeEnabled(), []);
+  const [studioEnabled, setStudioEnabled] = useState(() => studioInitiallyEnabled());
   // Publish (deploy) works everywhere the studio is on: locally via the Vite
   // endpoints, on the live site via the VPS publish service. "Save local"
   // (write source files without deploying) only makes sense on the dev server.
   const canPublish = studioEnabled;
   const canSaveLocal = useMemo(() => isLocalPublishAvailable(), []);
+
+  // Unlock the studio on the live site: ?studio=1 prompts for the key, which is
+  // verified against the backend before the editing UI appears. A random
+  // visitor who appends ?studio=1 without the key just sees the normal site.
+  useEffect(() => {
+    if (isLocalPublishAvailable() || !isStudioModeEnabled() || isStudioKeyVerified()) {
+      return undefined;
+    }
+    let cancelled = false;
+    (async () => {
+      const token = promptStudioPublishToken();
+      if (!token || cancelled) return;
+      const ok = await verifyStudioKey(token);
+      if (cancelled) return;
+      if (ok) {
+        try { sessionStorage.setItem('studio-verified', '1'); } catch { /* ignore */ }
+        setStudioEnabled(true);
+      } else {
+        setStudioPublishToken('');
+        window.alert('Неверный ключ — студия не открыта.');
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => setIsLoading(false), LOADING_DELAY);

@@ -186,14 +186,21 @@ class Handler(BaseHTTPRequestHandler):
         # Always read the body first so an early return can't leave bytes on the
         # socket and desync framing.
         length, raw = self._read_body()
+        route = self.path.rstrip("/")
 
-        if self.path.rstrip("/") not in ("/site/publish", "/publish"):
+        auth = self.headers.get("Authorization", "")
+        authorized = bool(STUDIO_TOKEN) and hmac.compare_digest(auth, f"Bearer {STUDIO_TOKEN}")
+
+        # Key check used by the studio to unlock its UI on the live site.
+        if route in ("/site/verify", "/verify"):
+            self._json(200 if authorized else 401, {"ok": authorized})
+            return
+
+        if route not in ("/site/publish", "/publish"):
             self._json(404, {"ok": False, "message": "not found"})
             return
 
-        auth = self.headers.get("Authorization", "")
-        expected = f"Bearer {STUDIO_TOKEN}"
-        if not STUDIO_TOKEN or not hmac.compare_digest(auth, expected):
+        if not authorized:
             self._json(401, {"ok": False, "message": "bad key"})
             return
 
