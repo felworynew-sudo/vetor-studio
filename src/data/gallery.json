@@ -1,5 +1,61 @@
 [
   {
+    "id": "gallery-031",
+    "ruTitle": "Flamingo",
+    "enTitle": "Flamingo",
+    "ruDescription": "",
+    "enDescription": "",
+    "ratio": "square",
+    "designCategory": "logos",
+    "featured": false,
+    "images": [
+      {
+        "src": "/gallery/gallery-placeholder.svg",
+        "ruAlt": "Flamingo",
+        "enAlt": "Flamingo"
+      }
+    ],
+    "createdAt": "2026-08-18",
+    "youtubeChannel": {
+      "name": "",
+      "handle": "",
+      "metaRu": "",
+      "metaEn": "",
+      "ctaUrl": "",
+      "ctaRu": "",
+      "ctaEn": "",
+      "cover": "",
+      "avatar": ""
+    },
+    "stickers": {
+      "primaryRu": "",
+      "primaryEn": "",
+      "primaryUrl": "",
+      "secondaryRu": "",
+      "secondaryEn": "",
+      "secondaryUrl": ""
+    },
+    "slider": {
+      "before": "",
+      "afterColor": "",
+      "afterBw": ""
+    },
+    "logoSvg": {
+      "color": "/gallery/uploads/6259afbcc22ecdf9.svg",
+      "bw": "",
+      "colorBg": ""
+    },
+    "card": {
+      "front": "",
+      "back": ""
+    },
+    "site": {
+      "src": "",
+      "ruNote": "",
+      "enNote": ""
+    }
+  },
+  {
     "id": "case-wowmyeyes",
     "designCategory": "large-projects",
     "featured": true,
