@@ -443,5 +443,20 @@
     ],
     "featured": false,
     "createdAt": "2026-05-23"
+  },
+  {
+    "id": "video-026",
+    "type": "video",
+    "ruTitle": "Игра для необитаемого острова",
+    "enTitle": "Игра для необитаемого острова",
+    "description": "",
+    "channelName": "inmyalyaska",
+    "channelUrl": "https://www.youtube.com/@inmyalxska",
+    "channelAvatar": "/avatars/alxska.jpg",
+    "videoUrl": "",
+    "thumbnail": "/thumbs/ChatGPT-Image-19-авг.-2026-г.-00_50_31.png",
+    "tags": [],
+    "featured": false,
+    "createdAt": "2026-08-18"
   }
 ]
