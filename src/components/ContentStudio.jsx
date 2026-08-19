@@ -5,6 +5,7 @@ import {
   saveProjectHandle,
   supportsPersistentHandles,
 } from '../utils/fileSystemAccess';
+import { readFileAsOptimizedDataUrl } from '../utils/media';
 
 const studioText = {
   ru: {
@@ -300,6 +301,13 @@ async function copyAsset(rootHandle, file, targetDirectory, explicitPath = '') {
 
   if (!file) {
     return trimmedPath;
+  }
+
+  // No connected project folder → embed the file as a data: URL. It becomes a
+  // real file in /public at publish time (see extractAssets). This is what
+  // makes the studio work from any browser/OS without File System Access.
+  if (!rootHandle) {
+    return readFileAsOptimizedDataUrl(file);
   }
 
   const safeName = trimmedPath.startsWith(`/${targetDirectory}/`)
@@ -873,10 +881,6 @@ function ContentStudio({
   }
 
   function validateItemForm() {
-    if (!projectHandle) {
-      return copy.missingFolder;
-    }
-
     if (!itemForm.ruTitle.trim() || !itemForm.enTitle.trim() || !itemForm.createdAt) {
       return copy.requiredField;
     }
@@ -905,10 +909,6 @@ function ContentStudio({
   }
 
   function validateTagForms() {
-    if (!projectHandle) {
-      return copy.missingFolder;
-    }
-
     const cleanedTags = tagForms
       .map((tag) => ({
         slug: tag.slug.trim(),
@@ -937,11 +937,6 @@ function ContentStudio({
   async function handleSaveOwner(event) {
     event.preventDefault();
 
-    if (!projectHandle) {
-      setStatus({ type: 'error', message: copy.missingFolder });
-      return;
-    }
-
     if (!ownerForm.name.trim() || !ownerForm.url.trim()) {
       setStatus({ type: 'error', message: copy.requiredField });
       return;
@@ -965,7 +960,9 @@ function ContentStudio({
         },
       };
 
-      await writeJson(projectHandle, ['src', 'data', 'siteConfig.json'], nextConfig);
+      if (projectHandle) {
+        await writeJson(projectHandle, ['src', 'data', 'siteConfig.json'], nextConfig);
+      }
       onSiteConfigChange(nextConfig);
       setOwnerForm((current) => ({
         ...current,
@@ -983,11 +980,6 @@ function ContentStudio({
 
   async function handleSaveHero(event) {
     event.preventDefault();
-
-    if (!projectHandle) {
-      setStatus({ type: 'error', message: copy.missingFolder });
-      return;
-    }
 
     if (
       !heroForm.eyebrowRu.trim()
@@ -1029,7 +1021,9 @@ function ContentStudio({
         },
       };
 
-      await writeJson(projectHandle, ['src', 'data', 'siteConfig.json'], nextConfig);
+      if (projectHandle) {
+        await writeJson(projectHandle, ['src', 'data', 'siteConfig.json'], nextConfig);
+      }
       onSiteConfigChange(nextConfig);
       setStatus({ type: 'success', message: showcaseCopy.saved });
       setIsDirty(false);
@@ -1061,7 +1055,9 @@ function ContentStudio({
         }))
         .filter((tag) => tag.slug && tag.ru && tag.en);
 
-      await writeJson(projectHandle, ['src', 'data', 'tags.json'], nextTags);
+      if (projectHandle) {
+        await writeJson(projectHandle, ['src', 'data', 'tags.json'], nextTags);
+      }
       onTagsConfigChange(nextTags);
       setItemForm((current) => ({
         ...current,
@@ -1096,7 +1092,6 @@ function ContentStudio({
 
       if (isVideo) {
         collectionPath = ['src', 'data', 'videos.json'];
-        currentData = await readJson(projectHandle, collectionPath);
         updateCollection = onVideoItemsChange;
 
         const thumbnailPath = await copyAsset(projectHandle, itemForm.thumbnailFile, 'thumbs', itemForm.thumbnailPath);
@@ -1123,7 +1118,6 @@ function ContentStudio({
 
       if (isMusic) {
         collectionPath = ['src', 'data', 'music.json'];
-        currentData = await readJson(projectHandle, collectionPath);
         updateCollection = onMusicItemsChange;
 
         const coverPath = await copyAsset(projectHandle, itemForm.coverFile, 'music', itemForm.coverPath);
@@ -1151,7 +1145,6 @@ function ContentStudio({
 
       if (isGallery) {
         collectionPath = ['src', 'data', 'gallery.json'];
-        currentData = await readJson(projectHandle, collectionPath);
         updateCollection = onGalleryItemsChange;
 
         const mainPath = await copyAsset(projectHandle, itemForm.galleryFile, 'gallery', itemForm.galleryPath);
@@ -1182,7 +1175,6 @@ function ContentStudio({
 
       if (isBlog) {
         collectionPath = ['src', 'data', 'blog.json'];
-        currentData = await readJson(projectHandle, collectionPath);
         updateCollection = onBlogItemsChange;
 
         const pdfUrl = await copyAsset(projectHandle, itemForm.pdfFile, 'blog', itemForm.pdfPath);
@@ -1226,14 +1218,30 @@ function ContentStudio({
         };
       }
 
+      // With a connected folder we read the source of truth from disk; without
+      // one we fall back to the current app state (and skip the disk write —
+      // Publish will commit everything).
+      const collectionKey = collectionPath[collectionPath.length - 1];
+      const stateData = ({
+        'videos.json': videoItems,
+        'music.json': musicItems,
+        'gallery.json': galleryItems,
+        'blog.json': blogItems,
+      })[collectionKey] || [];
+      currentData = projectHandle ? await readJson(projectHandle, collectionPath) : stateData;
+
       let nextData;
       if (isEditing) {
-        nextData = currentData.map((item, index) => (index === selectedItem._sourceIndex ? nextItem : item));
+        nextData = currentData.some((item) => item.id === nextItem.id)
+          ? currentData.map((item) => (item.id === nextItem.id ? nextItem : item))
+          : currentData.map((item, index) => (index === selectedItem?._sourceIndex ? nextItem : item));
       } else {
         nextData = [...currentData, nextItem];
       }
 
-      await writeJson(projectHandle, collectionPath, nextData);
+      if (projectHandle) {
+        await writeJson(projectHandle, collectionPath, nextData);
+      }
       updateCollection?.(nextData);
       setStatus({ type: 'success', message: copy.success });
       setIsDirty(false);
@@ -1256,11 +1264,6 @@ function ContentStudio({
       return;
     }
 
-    if (!projectHandle) {
-      setStatus({ type: 'error', message: copy.missingFolder });
-      return;
-    }
-
     if (!window.confirm(copy.deleteConfirm)) {
       return;
     }
@@ -1270,16 +1273,20 @@ function ContentStudio({
 
     try {
       const collectionMap = {
-        video: { path: ['src', 'data', 'videos.json'], update: onVideoItemsChange },
-        music: { path: ['src', 'data', 'music.json'], update: onMusicItemsChange },
-        blog: { path: ['src', 'data', 'blog.json'], update: onBlogItemsChange },
-        gallery: { path: ['src', 'data', 'gallery.json'], update: onGalleryItemsChange },
+        video: { path: ['src', 'data', 'videos.json'], update: onVideoItemsChange, state: videoItems },
+        music: { path: ['src', 'data', 'music.json'], update: onMusicItemsChange, state: musicItems },
+        blog: { path: ['src', 'data', 'blog.json'], update: onBlogItemsChange, state: blogItems },
+        gallery: { path: ['src', 'data', 'gallery.json'], update: onGalleryItemsChange, state: galleryItems },
       };
       const collection = collectionMap[selectedItem.type] || collectionMap.video;
-      const currentData = await readJson(projectHandle, collection.path);
-      const nextData = currentData.filter((_, index) => index !== selectedItem._sourceIndex);
+      const currentData = projectHandle ? await readJson(projectHandle, collection.path) : (collection.state || []);
+      const nextData = selectedItem.id
+        ? currentData.filter((item) => item.id !== selectedItem.id)
+        : currentData.filter((_, index) => index !== selectedItem._sourceIndex);
 
-      await writeJson(projectHandle, collection.path, nextData);
+      if (projectHandle) {
+        await writeJson(projectHandle, collection.path, nextData);
+      }
       collection.update?.(nextData);
 
       onSelectItem(null);
@@ -1313,20 +1320,22 @@ function ContentStudio({
           </button>
         </div>
 
-        {!supportsFileSystemAccess ? (
-          <div className="studio-alert error studio-alert-spaced">{copy.unsupported}</div>
-        ) : (
+        {(
           <>
             <div className="studio-toolbar">
-              <button type="button" className="cta-button secondary" onClick={handleConnectFolder}>
-                {copy.connect}
-              </button>
+              {supportsFileSystemAccess ? (
+                <button type="button" className="cta-button secondary" onClick={handleConnectFolder}>
+                  {copy.connect}
+                </button>
+              ) : null}
               <div className={projectHandle ? 'studio-chip success' : 'studio-chip'}>
                 {projectHandle
                   ? `${copy.connected}: ${projectHandle.name}`
                   : isRestoringHandle
                     ? (language === 'ru' ? 'Пробуем восстановить доступ...' : 'Restoring access...')
-                    : copy.missingFolder}
+                    : (language === 'ru'
+                      ? 'Папка не нужна — правки сохраняются и уходят в публикацию'
+                      : 'No folder needed — changes save and go out with Publish')}
               </div>
               {isEditing && (
                 <button type="button" className="tag-pill" onClick={startCreatingNewItem}>

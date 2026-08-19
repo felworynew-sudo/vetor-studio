@@ -49,7 +49,7 @@ import {
   promptStudioPublishToken,
   verifyStudioKey,
 } from './utils/remotePublish';
-import { extractGalleryAssets } from './utils/media';
+import { extractAssets } from './utils/media';
 
 const LOADING_DELAY = 280;
 const DEFAULT_SECTIONS_VISIBILITY = {
@@ -1572,14 +1572,13 @@ function App() {
   // Uploaded gallery images ride in as data: URLs; extract them into real files
   // (`assets`) so gallery.json keeps lightweight paths.
   async function buildStudioPayload() {
-    const { items: galleryOut, assets } = await extractGalleryAssets(galleryItems);
-    return {
+    const raw = {
       siteConfig,
       tagsConfig,
       videoItems: stripStudioFields(videoItems),
       musicItems: stripStudioFields(musicItems),
       blogPosts,
-      galleryItems: galleryOut,
+      galleryItems,
       pricing,
       sectionCopy,
       palette,
@@ -1587,8 +1586,11 @@ function App() {
       fonts,
       priceCategories,
       pageCopy,
-      assets,
     };
+    // Pull every uploaded data: URL (anywhere in the payload) out into real
+    // files so the committed JSON keeps lightweight paths.
+    const { value, assets } = await extractAssets(raw);
+    return { ...value, assets };
   }
 
   async function handleSaveLocal() {

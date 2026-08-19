@@ -3,7 +3,7 @@
 // The gallery editor lets the owner pick an image; we optimize it to webp and
 // hold it as a data: URL for instant preview. At publish time the data: URL is
 // turned into a real file committed to /public (see dataUrlToAsset +
-// extractGalleryAssets), so gallery.json keeps lightweight PATHS instead of
+// extractAssets), so gallery.json keeps lightweight PATHS instead of
 // bloating with base64 — the site bundle stays lean and images stay cacheable.
 
 function readRawFileAsDataUrl(file) {
@@ -101,60 +101,38 @@ export async function dataUrlToAsset(dataUrl, dir = 'gallery/uploads') {
   return { repoPath, publicSrc, base64, contentType };
 }
 
-// Walk gallery items, pull every embedded data: URL out into a real asset, and
-// replace it with its public path. Returns { items, assets }.
-export async function extractGalleryAssets(items) {
-  if (!Array.isArray(items)) {
-    return { items, assets: [] };
-  }
+// Deep-walk any value and pull every embedded data: URL out into a real asset,
+// replacing it with its public /public path. Non-data strings and non-strings
+// are left untouched. Returns { value, assets }. Applied to the whole studio
+// payload so uploads anywhere (gallery, previews, music, avatar, blog) become
+// real files at publish instead of bloating the bundled JSON.
+export async function extractAssets(root) {
   const assets = [];
   const seen = new Map(); // dataUrl -> publicSrc (dedupe identical uploads)
 
-  const resolve = async (src) => {
-    if (typeof src !== 'string' || !src.startsWith('data:')) return src;
-    if (seen.has(src)) return seen.get(src);
-    const asset = await dataUrlToAsset(src);
-    if (!asset) return src;
-    assets.push({ path: asset.repoPath, base64: asset.base64, contentType: asset.contentType });
-    seen.set(src, asset.publicSrc);
-    return asset.publicSrc;
-  };
+  async function walk(node) {
+    if (typeof node === 'string') {
+      if (!node.startsWith('data:')) return node;
+      if (seen.has(node)) return seen.get(node);
+      const asset = await dataUrlToAsset(node);
+      if (!asset) return node;
+      assets.push({ path: asset.repoPath, base64: asset.base64, contentType: asset.contentType });
+      seen.set(node, asset.publicSrc);
+      return asset.publicSrc;
+    }
+    if (Array.isArray(node)) {
+      const out = [];
+      for (const item of node) out.push(await walk(item)); // sequential: keep `seen` consistent
+      return out;
+    }
+    if (node && typeof node === 'object') {
+      const out = {};
+      for (const [key, value] of Object.entries(node)) out[key] = await walk(value);
+      return out;
+    }
+    return node;
+  }
 
-  const nextItems = await Promise.all(items.map(async (item) => {
-    if (!item || typeof item !== 'object') return item;
-    const next = { ...item };
-
-    if (Array.isArray(item.images)) {
-      next.images = await Promise.all(item.images.map(async (image) => ({
-        ...image,
-        src: await resolve(image?.src),
-      })));
-    }
-    if (item.logoSvg && typeof item.logoSvg === 'object') {
-      next.logoSvg = {
-        ...item.logoSvg,
-        color: await resolve(item.logoSvg.color),
-        bw: await resolve(item.logoSvg.bw),
-      };
-    }
-    if (item.card && typeof item.card === 'object') {
-      next.card = {
-        ...item.card,
-        front: await resolve(item.card.front),
-        back: await resolve(item.card.back),
-      };
-    }
-    if (item.slider && typeof item.slider === 'object') {
-      next.slider = {
-        ...item.slider,
-        before: await resolve(item.slider.before),
-        afterColor: await resolve(item.slider.afterColor),
-        afterBw: await resolve(item.slider.afterBw),
-      };
-    }
-    if (item.cover) next.cover = await resolve(item.cover);
-    return next;
-  }));
-
-  return { items: nextItems, assets };
+  const value = await walk(root);
+  return { value, assets };
 }
