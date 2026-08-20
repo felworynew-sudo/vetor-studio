@@ -112,7 +112,10 @@ function PluginsCatalogPage({
           const subtitle = plugin[subtitleKey] || plugin.ruSubtitle || '';
           const badge = plugin[badgeKey] || plugin.ruBadge || '';
           const isExternal = Boolean(plugin.externalUrl);
-          const linkLabel = plugin[language === 'ru' ? 'ruLinkLabel' : 'enLinkLabel'] || t.github;
+          const defaultLinkLabel = plugin.isDownload
+            ? (language === 'ru' ? 'Скачать' : 'Download')
+            : t.github;
+          const linkLabel = plugin[language === 'ru' ? 'ruLinkLabel' : 'enLinkLabel'] || defaultLinkLabel;
 
           const externalProps = isExternal
             ? { href: plugin.externalUrl, target: '_blank', rel: 'noopener noreferrer' }

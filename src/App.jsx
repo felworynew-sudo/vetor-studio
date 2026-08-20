@@ -1230,6 +1230,9 @@ function App() {
         { key: 'ruBadge', label: 'Плашка (RU)', type: 'text', hint: 'напр. «Плагин для Photoshop»' },
         { key: 'enBadge', label: 'Плашка (EN)', type: 'text' },
         { key: 'externalUrl', label: 'Ссылка (GitHub / скачать)', type: 'text', hint: 'пусто → внутренняя страница /plugins/<slug>' },
+        { key: 'isDownload', label: 'Кнопка «Скачать» (прямая загрузка, иконка загрузки вместо GitHub)', type: 'boolean' },
+        { key: 'ruLinkLabel', label: 'Подпись кнопки (RU)', type: 'text', hint: 'пусто → «Скачать» или «GitHub» автоматически' },
+        { key: 'enLinkLabel', label: 'Подпись кнопки (EN)', type: 'text', hint: 'пусто → «Download» / «GitHub»' },
         { key: 'accentColor', label: 'Акцент', type: 'color' },
       ],
       onSave: (next) => {

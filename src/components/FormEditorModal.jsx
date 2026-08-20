@@ -92,6 +92,14 @@ function Field({ field, value, onChange }) {
       </label>
     );
   }
+  if (field.type === 'boolean') {
+    return (
+      <label className="fe-field" htmlFor={id} style={{ flexDirection: 'row', alignItems: 'center', gap: '0.6rem' }}>
+        <input id={id} type="checkbox" checked={Boolean(value)} onChange={(e) => onChange(e.target.checked)} style={{ width: 'auto' }} />
+        <span>{field.label}{field.hint ? <em className="fe-hint"> — {field.hint}</em> : null}</span>
+      </label>
+    );
+  }
   if (field.type === 'color') {
     return (
       <label className="fe-field fe-field-color" htmlFor={id}>
