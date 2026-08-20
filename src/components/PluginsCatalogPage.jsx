@@ -34,6 +34,18 @@ const PLUGINS = [
     enLinkLabel: 'Download',
   },
   {
+    slug: 'krypto-obsidian',
+    ruTitle: 'Krypto для Obsidian',
+    enTitle: 'Krypto for Obsidian',
+    ruSubtitle: 'Плагин для Obsidian: шифрование и расшифровка заметок прямо в хранилище',
+    enSubtitle: 'Obsidian plugin: encrypt and decrypt notes right inside your vault',
+    ruBadge: 'Плагин для Obsidian',
+    enBadge: 'Obsidian plugin',
+    image: '/plugins/krypto.webp',
+    accentColor: '#a06bff',
+    externalUrl: 'https://github.com/felworynew-sudo/krypto-obsidian',
+  },
+  {
     slug: 'org-finder',
     ruTitle: 'Org-Finder',
     enTitle: 'Org-Finder',
