@@ -1,7 +1,63 @@
 [
   {
+    "id": "gallery-032",
+    "ruTitle": "Знак \"neFox\"",
+    "enTitle": "logo \"neFox\"",
+    "ruDescription": "",
+    "enDescription": "",
+    "ratio": "square",
+    "designCategory": "logos",
+    "featured": false,
+    "images": [
+      {
+        "src": "/gallery/gallery-placeholder.svg",
+        "ruAlt": "Знак \"neFox\"",
+        "enAlt": "logo \"neFox\""
+      }
+    ],
+    "createdAt": "2026-08-20",
+    "youtubeChannel": {
+      "name": "",
+      "handle": "",
+      "metaRu": "",
+      "metaEn": "",
+      "ctaUrl": "",
+      "ctaRu": "",
+      "ctaEn": "",
+      "cover": "",
+      "avatar": ""
+    },
+    "stickers": {
+      "primaryRu": "",
+      "primaryEn": "",
+      "primaryUrl": "",
+      "secondaryRu": "",
+      "secondaryEn": "",
+      "secondaryUrl": ""
+    },
+    "slider": {
+      "before": "",
+      "afterColor": "",
+      "afterBw": ""
+    },
+    "logoSvg": {
+      "color": "/gallery/uploads/5f94e01af13a5eb3.svg",
+      "bw": "",
+      "colorBg": ""
+    },
+    "card": {
+      "front": "",
+      "back": ""
+    },
+    "site": {
+      "src": "",
+      "ruNote": "",
+      "enNote": ""
+    }
+  },
+  {
     "id": "gallery-031",
-    "ruTitle": "Flamingo",
+    "ruTitle": "Логотип \"Flamingo\"",
     "enTitle": "Flamingo",
     "ruDescription": "",
     "enDescription": "",
