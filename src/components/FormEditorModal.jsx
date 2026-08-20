@@ -1,5 +1,7 @@
 import { useRef, useState } from 'react';
 import { useModalAccessibility } from '../hooks/useModalAccessibility';
+import { readFileAsOptimizedDataUrl } from '../utils/media';
+import { withBase } from '../utils/format';
 
 function getPath(obj, path) {
   return path.split('.').reduce((acc, key) => (acc == null ? undefined : acc[key]), obj);
@@ -20,6 +22,56 @@ function setPath(obj, path, value) {
 
 function Field({ field, value, onChange }) {
   const id = `fe-${field.key}`;
+  const [busy, setBusy] = useState(false);
+
+  if (field.type === 'image') {
+    const hasValue = typeof value === 'string' && value.length > 0;
+    const preview = hasValue ? (value.startsWith('data:') ? value : withBase(value)) : '';
+    async function handlePick(event) {
+      const file = event.target.files && event.target.files[0];
+      event.target.value = '';
+      if (!file) return;
+      setBusy(true);
+      try {
+        onChange(await readFileAsOptimizedDataUrl(file));
+      } finally {
+        setBusy(false);
+      }
+    }
+    return (
+      <div className="fe-field">
+        <span>{field.label}{field.hint ? <em className="fe-hint"> — {field.hint}</em> : null}</span>
+        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
+          <span
+            aria-hidden="true"
+            style={{
+              flex: '0 0 auto', width: 64, height: 64, borderRadius: 10, overflow: 'hidden',
+              background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}
+          >
+            {preview ? (
+              <img src={preview} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            ) : null}
+          </span>
+          <div style={{ flex: '1 1 auto', display: 'flex', flexDirection: 'column', gap: '0.4rem', minWidth: 0 }}>
+            <label className="cta-button secondary" style={{ cursor: 'pointer', textAlign: 'center' }}>
+              {busy ? '…' : (field.uploadLabel || '⬆ Загрузить файл')}
+              <input type="file" accept={field.accept || 'image/*'} hidden onChange={handlePick} />
+            </label>
+            <input
+              id={id}
+              type="text"
+              value={hasValue && value.startsWith('data:') ? '' : (value ?? '')}
+              onChange={(e) => onChange(e.target.value)}
+              placeholder={value && value.startsWith('data:') ? 'загруженный файл' : (field.placeholder || '/home/card.jpg')}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (field.type === 'textarea') {
     return (
       <label className="fe-field" htmlFor={id}>

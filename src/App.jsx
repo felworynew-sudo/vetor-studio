@@ -419,6 +419,9 @@ function App() {
     normalizeGalleryCollection(loadEditableData('portfolio-gallery-json', initialGalleryItems)),
   );
   const [homeCards, setHomeCards] = useState(() => loadEditableData('portfolio-home-cards', initialHomeCards));
+  const [softwareCards, setSoftwareCards] = useState(() =>
+    loadEditableData('portfolio-software-cards', initialSiteConfig.softwareCards || []),
+  );
   const [fonts, setFonts] = useState(() => loadEditableData('portfolio-fonts-json', initialFonts));
   const [priceCategories, setPriceCategories] = useState(() => loadEditableData('portfolio-price-categories', initialPriceCategories));
   const [activePriceCategory, setActivePriceCategory] = useState(null);
@@ -1184,7 +1187,7 @@ function App() {
         { key: 'ruTitle', label: 'Заголовок', type: 'text' },
         { key: 'ruSubtitle', label: 'Подзаголовок', type: 'text' },
         { key: 'section', label: 'Куда ведёт', type: 'select', options: homeSectionOptions },
-        { key: 'image', label: 'Картинка', type: 'text', hint: 'путь в /public, напр. /home/card-previews.jpg' },
+        { key: 'image', label: 'Картинка', type: 'image', hint: 'загрузи файл или укажи путь в /public' },
         { key: 'accentColor', label: 'Акцент', type: 'color' },
       ],
       onSave: (next) => {
@@ -1202,6 +1205,48 @@ function App() {
     setHomeCards((current) => {
       const updated = current.filter((c) => c.key !== card.key);
       saveEditableData('portfolio-home-cards', updated);
+      return updated;
+    });
+  }
+
+  // --- Software cards (софт) ---
+  // Stored inside siteConfig at publish time (see buildStudioPayload) so they
+  // ride through the already-supported siteConfig key — no new backend mapping.
+  function openSoftwareCardEditor(card) {
+    const isNew = !card;
+    const value = card || {
+      slug: `soft-${Date.now()}`, ruTitle: '', enTitle: '', ruSubtitle: '', enSubtitle: '',
+      ruBadge: '', enBadge: '', image: '', accentColor: '#9ae923', externalUrl: '',
+    };
+    setFormEditorTarget({
+      title: isNew ? 'Новая карточка софта' : `Софт: ${value.ruTitle || value.slug}`,
+      value,
+      fields: [
+        { key: 'image', label: 'Картинка', type: 'image', hint: 'загрузи файл или укажи путь в /public' },
+        { key: 'ruTitle', label: 'Название (RU)', type: 'text' },
+        { key: 'enTitle', label: 'Название (EN)', type: 'text' },
+        { key: 'ruSubtitle', label: 'Описание (RU)', type: 'textarea' },
+        { key: 'enSubtitle', label: 'Описание (EN)', type: 'textarea' },
+        { key: 'ruBadge', label: 'Плашка (RU)', type: 'text', hint: 'напр. «Плагин для Photoshop»' },
+        { key: 'enBadge', label: 'Плашка (EN)', type: 'text' },
+        { key: 'externalUrl', label: 'Ссылка (GitHub / скачать)', type: 'text', hint: 'пусто → внутренняя страница /plugins/<slug>' },
+        { key: 'accentColor', label: 'Акцент', type: 'color' },
+      ],
+      onSave: (next) => {
+        setSoftwareCards((current) => {
+          const updated = upsertById(current, next, 'slug');
+          saveEditableData('portfolio-software-cards', updated);
+          return updated;
+        });
+      },
+    });
+  }
+
+  function deleteSoftwareCard(card) {
+    if (!window.confirm(`Удалить карточку "${card.ruTitle || card.slug}"?`)) return;
+    setSoftwareCards((current) => {
+      const updated = current.filter((c) => c.slug !== card.slug);
+      saveEditableData('portfolio-software-cards', updated);
       return updated;
     });
   }
@@ -1573,7 +1618,7 @@ function App() {
   // (`assets`) so gallery.json keeps lightweight paths.
   async function buildStudioPayload() {
     const raw = {
-      siteConfig,
+      siteConfig: { ...siteConfig, softwareCards },
       tagsConfig,
       videoItems: stripStudioFields(videoItems),
       musicItems: stripStudioFields(musicItems),
@@ -1958,7 +2003,16 @@ function App() {
         {!isRouteNotFound && activeSection === 'plugins' && (
           activePlugin === 'resto'
             ? <PluginsPage language={language} />
-            : <PluginsCatalogPage language={language} onOpenPlugin={handleOpenPlugin} getPluginHref={buildPluginHref} />
+            : <PluginsCatalogPage
+                language={language}
+                onOpenPlugin={handleOpenPlugin}
+                getPluginHref={buildPluginHref}
+                cards={softwareCards}
+                studioEnabled={studioEnabled}
+                onCreateCard={() => openSoftwareCardEditor(null)}
+                onEditCard={openSoftwareCardEditor}
+                onDeleteCard={deleteSoftwareCard}
+              />
         )}
       </main>
 

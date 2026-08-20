@@ -74,11 +74,21 @@ const catalogText = {
   },
 };
 
-function PluginsCatalogPage({ language, onOpenPlugin, getPluginHref }) {
+function PluginsCatalogPage({
+  language,
+  onOpenPlugin,
+  getPluginHref,
+  cards,
+  studioEnabled = false,
+  onCreateCard,
+  onEditCard,
+  onDeleteCard,
+}) {
   const t = catalogText[language] ?? catalogText.ru;
   const titleKey = language === 'ru' ? 'ruTitle' : 'enTitle';
   const subtitleKey = language === 'ru' ? 'ruSubtitle' : 'enSubtitle';
   const badgeKey = language === 'ru' ? 'ruBadge' : 'enBadge';
+  const list = Array.isArray(cards) && cards.length ? cards : PLUGINS;
 
   return (
     <section className="section-page price-cats-page plugins-catalog-page">
@@ -86,10 +96,17 @@ function PluginsCatalogPage({ language, onOpenPlugin, getPluginHref }) {
         <p className="eyebrow">{t.eyebrow}</p>
         <h1>{t.title}</h1>
         <p>{t.lead}</p>
+        {studioEnabled && onCreateCard ? (
+          <div className="design-actions-row">
+            <button type="button" className="cta-button secondary" onClick={onCreateCard}>
+              {language === 'ru' ? 'Добавить карточку' : 'Add card'}
+            </button>
+          </div>
+        ) : null}
       </div>
 
       <div className="price-cats-grid">
-        {PLUGINS.map((plugin) => {
+        {list.map((plugin) => {
           const style = plugin.accentColor ? { '--price-cat-accent': plugin.accentColor } : undefined;
           const title = plugin[titleKey] || plugin.ruTitle;
           const subtitle = plugin[subtitleKey] || plugin.ruSubtitle || '';
@@ -111,7 +128,18 @@ function PluginsCatalogPage({ language, onOpenPlugin, getPluginHref }) {
               };
 
           return (
-            <a key={plugin.slug} className="price-cat-card" style={style} {...externalProps}>
+            <div key={plugin.slug} className="price-cat-card-wrap" style={{ position: 'relative' }}>
+              {studioEnabled ? (
+                <div className="gallery-tile-actions" style={{ position: 'absolute', top: 8, right: 8, zIndex: 3 }}>
+                  <button type="button" className="gallery-tile-action" onClick={() => onEditCard?.(plugin)} aria-label="Edit" title="Edit">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.73 3.69a2.25 2.25 0 0 1 3.18 3.18l-9.84 9.84-4.2.86.86-4.2 9.84-9.84Z" fill="currentColor" /></svg>
+                  </button>
+                  <button type="button" className="gallery-tile-action danger" onClick={() => onDeleteCard?.(plugin)} aria-label="Delete" title="Delete">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6l1 2h4v2H4V5h4l1-2Zm-2 6h10l-.7 11H7.7L7 9Z" fill="currentColor" /></svg>
+                  </button>
+                </div>
+              ) : null}
+            <a className="price-cat-card" style={style} {...externalProps}>
               <div className="price-cat-media">
                 <ImageWithFallback src={withBase(plugin.image || PLACEHOLDER)} fallback={withBase(PLACEHOLDER)} alt={title} />
               </div>
@@ -141,6 +169,7 @@ function PluginsCatalogPage({ language, onOpenPlugin, getPluginHref }) {
                 )}
               </div>
             </a>
+            </div>
           );
         })}
       </div>
