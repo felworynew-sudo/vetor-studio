@@ -9,6 +9,10 @@ const keepFileNames = new Set([
   'placeholder-cover.svg',
   'gallery-placeholder.svg',
 ]);
+// Subfolders that hold real, referenced studio uploads (data: URLs extracted at
+// publish → content-hashed files). These are NOT source media to slim away —
+// pruning them 404s every logo/image added through the studio. Keep them whole.
+const keepDirNames = new Set(['uploads']);
 
 function isSafeTarget(targetPath) {
   const relative = path.relative(distDir, targetPath);
@@ -39,6 +43,9 @@ async function pruneFolder(folderName) {
       }
 
       if (entry.isDirectory()) {
+        if (keepDirNames.has(entry.name)) {
+          continue;
+        }
         await fs.rm(targetPath, { recursive: true, force: true });
         continue;
       }
