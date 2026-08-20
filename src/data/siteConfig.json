@@ -79,7 +79,7 @@
       "enBadge": "Obsidian plugin",
       "image": "/plugins/krypto.webp",
       "accentColor": "#a06bff",
-      "externalUrl": "https://github.com/felworynew-sudo/krypto-obsidian"
+      "externalUrl": "https://github.com/felworynew-sudo/krypto-obsidian/releases/download/1.0.0/krypto-obsidian-1.0.0.zip"
     },
     {
       "slug": "org-finder",
@@ -91,7 +91,7 @@
       "enBadge": "Lead finder",
       "image": "/plugins/org-finder.webp",
       "accentColor": "#3ec98a",
-      "externalUrl": "https://github.com/felworynew-sudo/org-finder"
+      "externalUrl": "https://github.com/felworynew-sudo/org-finder/releases/download/v1.0/OrgFinder-1.0-windows.zip"
     }
   ]
 }
