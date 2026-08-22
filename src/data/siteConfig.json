@@ -62,7 +62,7 @@
       "enSubtitle": "Cryptography software: encrypt and decrypt files and text",
       "ruBadge": "Криптография",
       "enBadge": "Cryptography",
-      "image": "/gallery/uploads/70ed9d225f1e88b8.jpg",
+      "image": "/plugins/krypto.webp",
       "accentColor": "#8b7cf6",
       "externalUrl": "https://github.com/felworynew-sudo/krypto/releases/download/v1.0/Krypto.exe",
       "isDownload": true,
@@ -77,12 +77,9 @@
       "enSubtitle": "Obsidian plugin: encrypt and decrypt notes right inside your vault",
       "ruBadge": "Плагин для Obsidian",
       "enBadge": "Obsidian plugin",
-      "image": "/gallery/uploads/70ed9d225f1e88b8.jpg",
+      "image": "/plugins/krypto.webp",
       "accentColor": "#a06bff",
-      "externalUrl": "https://github.com/felworynew-sudo/krypto-obsidian/releases/download/1.0.0/krypto-obsidian-1.0.0.zip",
-      "ruLinkLabel": "Скачать",
-      "enLinkLabel": "Download",
-      "isDownload": true
+      "externalUrl": "https://github.com/felworynew-sudo/krypto-obsidian/releases/download/1.0.0/krypto-obsidian-1.0.0.zip"
     },
     {
       "slug": "org-finder",
@@ -94,10 +91,7 @@
       "enBadge": "Lead finder",
       "image": "/plugins/org-finder.webp",
       "accentColor": "#3ec98a",
-      "externalUrl": "https://github.com/felworynew-sudo/org-finder/releases/download/v1.0/OrgFinder-1.0-windows.zip",
-      "enLinkLabel": "Download",
-      "ruLinkLabel": "Скачать",
-      "isDownload": true
+      "externalUrl": "https://github.com/felworynew-sudo/org-finder/releases/download/v1.0/OrgFinder-1.0-windows.zip"
     }
   ]
 }

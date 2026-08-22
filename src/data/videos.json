@@ -450,12 +450,15 @@
     "ruTitle": "Мифы о пиратах, в которые все верят",
     "enTitle": "Pirate Myths Everyone Still Believes",
     "description": "",
-    "channelName": "Vetor",
-    "channelUrl": "https://www.youtube.com",
-    "channelAvatar": "/avatars/vetor.jpg",
+    "channelName": "svetikzla",
+    "channelUrl": "https://www.youtube.com/",
+    "channelAvatar": "/avatars/photo_2025-03-08_10-43-39.jpg",
     "videoUrl": "https://youtube.com",
     "thumbnail": "/thumbs/pirate-myths-thumbnail.png",
-    "tags": ["historical", "cinematic"],
+    "tags": [
+      "historical",
+      "cinematic"
+    ],
     "featured": false,
     "createdAt": "2026-08-22"
   },
@@ -465,12 +468,15 @@
     "ruTitle": "Cyberpunk 2077 — стоит ли играть сейчас",
     "enTitle": "Cyberpunk 2077 — Is It Worth Playing Now",
     "description": "",
-    "channelName": "Vetor",
+    "channelName": "DdDdDash",
     "channelUrl": "https://www.youtube.com",
-    "channelAvatar": "/avatars/vetor.jpg",
+    "channelAvatar": "/avatars/placeholder-channel.svg",
     "videoUrl": "https://youtube.com",
     "thumbnail": "/thumbs/cyberpunk-2077-thumbnail.png",
-    "tags": ["gaming", "cinematic"],
+    "tags": [
+      "gaming",
+      "cinematic"
+    ],
     "featured": false,
     "createdAt": "2026-08-22"
   },
@@ -485,7 +491,9 @@
     "channelAvatar": "/avatars/vetor.jpg",
     "videoUrl": "https://youtube.com",
     "thumbnail": "/thumbs/desert-island-game-thumbnail.jpg",
-    "tags": ["gaming"],
+    "tags": [
+      "gaming"
+    ],
     "featured": false,
     "createdAt": "2026-08-22"
   },
@@ -495,12 +503,14 @@
     "ruTitle": "Игра на всю жизнь",
     "enTitle": "A Game for a Lifetime",
     "description": "",
-    "channelName": "Vetor",
-    "channelUrl": "https://www.youtube.com",
-    "channelAvatar": "/avatars/vetor.jpg",
+    "channelName": "inmyalyaska",
+    "channelUrl": "https://www.youtube.com/@inmyalxska",
+    "channelAvatar": "/avatars/alxska.jpg",
     "videoUrl": "https://youtube.com",
     "thumbnail": "/thumbs/game-for-life-thumbnail.jpg",
-    "tags": ["gaming"],
+    "tags": [
+      "gaming"
+    ],
     "featured": false,
     "createdAt": "2026-08-22"
   },
@@ -515,7 +525,9 @@
     "channelAvatar": "/avatars/vetor.jpg",
     "videoUrl": "https://youtube.com",
     "thumbnail": "/thumbs/knight-reaction-thumbnail.jpg",
-    "tags": ["gaming"],
+    "tags": [
+      "gaming"
+    ],
     "featured": false,
     "createdAt": "2026-08-22"
   },
@@ -525,12 +537,15 @@
     "ruTitle": "Дикий Запад: лучшие вестерны в играх",
     "enTitle": "The Wild West: Best Western Games",
     "description": "",
-    "channelName": "Vetor",
+    "channelName": "DdDdDash",
     "channelUrl": "https://www.youtube.com",
-    "channelAvatar": "/avatars/vetor.jpg",
+    "channelAvatar": "/avatars/placeholder-channel.svg",
     "videoUrl": "https://youtube.com",
     "thumbnail": "/thumbs/wild-west-games-thumbnail.png",
-    "tags": ["gaming", "historical"],
+    "tags": [
+      "gaming",
+      "historical"
+    ],
     "featured": false,
     "createdAt": "2026-08-22"
   },
@@ -540,12 +555,15 @@
     "ruTitle": "Тайна древнего храма",
     "enTitle": "Secret of the Ancient Temple",
     "description": "",
-    "channelName": "Vetor",
-    "channelUrl": "https://www.youtube.com",
-    "channelAvatar": "/avatars/vetor.jpg",
+    "channelName": "svetikzla",
+    "channelUrl": "https://www.youtube.com/",
+    "channelAvatar": "/avatars/photo_2025-03-08_10-43-39.jpg",
     "videoUrl": "https://youtube.com",
     "thumbnail": "/thumbs/ancient-temple-thumbnail.png",
-    "tags": ["historical", "cinematic"],
+    "tags": [
+      "historical",
+      "cinematic"
+    ],
     "featured": false,
     "createdAt": "2026-08-22"
   }
