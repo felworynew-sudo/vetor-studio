@@ -21,6 +21,14 @@ const cards = [
   { file: 'price', title: 'Прайс без созвонов' },
   { file: 'plugins', title: 'Resto — реставрация фото' },
   { file: 'blog', title: 'Блог о дизайне' },
+  // Английские варианты для /en/ (превью ссылок в международных соцсетях).
+  { file: 'default-en', title: 'Thumbnails, covers & branding' },
+  { file: 'previews-en', title: 'YouTube thumbnails' },
+  { file: 'design-en', title: 'Design & branding' },
+  { file: 'fonts-en', title: 'Original fonts' },
+  { file: 'price-en', title: 'Pricing, no calls needed' },
+  { file: 'plugins-en', title: 'Resto — photo restoration' },
+  { file: 'blog-en', title: 'Design blog' },
 ];
 
 function esc(s) {

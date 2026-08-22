@@ -376,10 +376,11 @@ function upsertJsonLd(id, payload) {
 }
 
 function App() {
-  const { language, setLanguage } = useLanguage();
-  const [routeState, setRouteState] = useState(() =>
+  const initialRouteRef = useRef(
     typeof window === 'undefined' ? parseRoute({ pathname: '/', search: '' }) : parseRoute(window.location),
   );
+  const { language, setLanguage } = useLanguage(initialRouteRef.current.language);
+  const [routeState, setRouteState] = useState(initialRouteRef.current);
   const routeSyncRef = useRef(false);
   const [query, setQuery] = useState(routeState.query || '');
   const [selectedTags, setSelectedTags] = useState(routeState.tags || []);
@@ -529,6 +530,14 @@ function App() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
+  // URL — источник истины для языка: /en/* → en, всё остальное → ru. Держим
+  // состояние языка в синхроне с адресом (back/forward, прямой заход, смена).
+  useEffect(() => {
+    if (routeState.language && routeState.language !== language) {
+      setLanguage(routeState.language);
+    }
+  }, [routeState.language, language, setLanguage]);
+
   const sectionVisibility = useMemo(
     () => normalizeSectionsConfig(siteConfig.sections),
     [siteConfig.sections],
@@ -644,6 +653,7 @@ function App() {
       pluginId: activeSection === 'plugins' ? activePlugin : '',
       designCategory: activeDesignCategory,
       isPriceOpen,
+      language,
     });
     const currentUrl = `${window.location.pathname}${window.location.search}`;
 
@@ -663,6 +673,7 @@ function App() {
     query,
     selectedTags,
     activeDesignCategory,
+    language,
   ]);
 
   useEffect(() => {
@@ -850,8 +861,30 @@ function App() {
       // Keep editable value as fallback in studio mode.
     }
 
-    const canonicalUrl = `${canonicalDomain}${window.location.pathname}${window.location.search}`;
+    // Канонический URL — только чистый путь без query: поиск (?q=), фильтры по
+    // тегам (?tags=) и модалка прайса (?price=1) не должны плодить дубли в индексе.
+    const canonicalUrl = `${canonicalDomain}${window.location.pathname}`;
     canonicalLink.setAttribute('href', canonicalUrl);
+
+    // hreflang: русская версия на корне, английская под /en/, x-default → RU.
+    // Держим один и тот же логический путь без языкового префикса.
+    const logicalPath = window.location.pathname.replace(/^\/en(?=\/|$)/i, '') || '/';
+    const ruAlternate = `${canonicalDomain}${logicalPath}`;
+    const enAlternate = `${canonicalDomain}${logicalPath === '/' ? '/en' : `/en${logicalPath}`}`;
+    const alternates = [
+      { hreflang: 'ru', href: ruAlternate },
+      { hreflang: 'en', href: enAlternate },
+      { hreflang: 'x-default', href: ruAlternate },
+    ];
+    document.querySelectorAll('link[rel="alternate"][data-seo-hreflang]').forEach((node) => node.remove());
+    for (const alternate of alternates) {
+      const link = document.createElement('link');
+      link.setAttribute('rel', 'alternate');
+      link.setAttribute('hreflang', alternate.hreflang);
+      link.setAttribute('href', alternate.href);
+      link.setAttribute('data-seo-hreflang', '1');
+      document.head.appendChild(link);
+    }
 
     upsertMetaByProperty('og:title', title);
     upsertMetaByProperty('og:description', description);
@@ -872,7 +905,7 @@ function App() {
       },
       potentialAction: {
         '@type': 'SearchAction',
-        target: `${canonicalDomain}/?q={search_term_string}`,
+        target: `${canonicalDomain}${language === 'en' ? '/en' : ''}/?q={search_term_string}`,
         'query-input': 'required name=search_term_string',
       },
     });
@@ -956,7 +989,7 @@ function App() {
         name: 'Кирилл Шелудько',
         jobTitle: language === 'ru' ? 'Дизайнер, основатель студии Vetor' : 'Designer, founder of Vetor studio',
         url: `${canonicalDomain}/about`,
-        image: `${canonicalDomain}/owner/z2.jpg`,
+        image: `${canonicalDomain}/owner/kirill-sheludko.png`,
         worksFor: { '@type': 'Organization', name: 'Vetor Studio', url: canonicalDomain },
         address: { '@type': 'PostalAddress', addressLocality: language === 'ru' ? 'Краснодар' : 'Krasnodar', addressCountry: 'RU' },
         knowsAbout: language === 'ru'
@@ -1154,7 +1187,7 @@ function App() {
   }
 
   function buildPluginHref(slug) {
-    return buildUrl({ section: 'plugins', pluginId: slug });
+    return buildUrl({ section: 'plugins', pluginId: slug, language });
   }
 
   function handleSavePriceCategories(nextCategories) {
@@ -1718,9 +1751,31 @@ function App() {
     }
   }
 
+  // Смена языка = переход на зеркальный URL (/en/… ↔ /…). Язык дальше
+  // подтянется из адреса эффектом синхронизации, канонические ссылки и
+  // hreflang остаются корректными.
+  function handleLanguageChange(next) {
+    if (next !== 'ru' && next !== 'en') {
+      return;
+    }
+    if (next === language) {
+      return;
+    }
+    if (typeof window === 'undefined') {
+      setLanguage(next);
+      return;
+    }
+    const { pathname, search, hash } = window.location;
+    const stripped = pathname.replace(/^\/en(?=\/|$)/i, '') || '/';
+    const target = next === 'en' ? (stripped === '/' ? '/en' : `/en${stripped}`) : stripped;
+    window.history.pushState({}, '', `${target}${search}${hash}`);
+    setLanguage(next);
+    setRouteState(parseRoute(window.location));
+  }
+
   function buildSectionHref(section) {
     if (section === 'price') {
-      return buildUrl({ section: 'price' });
+      return buildUrl({ section: 'price', language });
     }
 
     return buildUrl({
@@ -1728,6 +1783,7 @@ function App() {
       query,
       tags: selectedTags,
       designCategory: section === 'gallery' ? activeDesignCategory : 'all',
+      language,
     });
   }
 
@@ -1736,6 +1792,7 @@ function App() {
       section: 'gallery',
       query,
       designCategory: categorySlug,
+      language,
     });
   }
 
@@ -1748,6 +1805,7 @@ function App() {
       section: 'previews',
       query,
       tags: nextTags,
+      language,
     });
   }
 
@@ -1756,6 +1814,7 @@ function App() {
       section: 'previews',
       query: '',
       tags: [],
+      language,
     });
   }
 
@@ -1799,7 +1858,7 @@ function App() {
 
       <Header
         language={language}
-        onLanguageChange={setLanguage}
+        onLanguageChange={handleLanguageChange}
         query={query}
         onQueryChange={handleQueryChange}
         siteConfig={siteConfig}
@@ -1868,7 +1927,7 @@ function App() {
               language={language}
               sectionCopy={FONTS_PROMO_COPY}
               onOpen={handleOpenFontPrice}
-              href="/price"
+              href={buildUrl({ section: 'price', language })}
             />
           </>
         )}
@@ -1953,7 +2012,7 @@ function App() {
                   studioEnabled={studioEnabled}
                   onEdit={() => openSectionTextEditor('promo')}
                   onOpen={handleOpenPrice}
-                  href={buildUrl({ section: 'home', isPriceOpen: true })}
+                  href={buildUrl({ section: 'home', isPriceOpen: true, language })}
                 />
                 <CardGrid
                   items={featuredFilteredWorks.length > 0 ? regularFilteredWorks : filteredWorks}

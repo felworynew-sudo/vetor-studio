@@ -1,3 +1,5 @@
+import { withLanguagePrefix } from '../utils/routing';
+
 function Footer({ language }) {
   const year = new Date().getFullYear();
   const copy = language === 'ru'
@@ -68,8 +70,8 @@ function Footer({ language }) {
           </a>
         </nav>
         <div className="site-footer-legal">
-          <a href="/about" className="site-footer-legal-link">{language === 'ru' ? 'О студии' : 'About'}</a>
-          <a href="/privacy" className="site-footer-legal-link">{language === 'ru' ? 'Политика конфиденциальности' : 'Privacy Policy'}</a>
+          <a href={withLanguagePrefix('/about', language)} className="site-footer-legal-link">{language === 'ru' ? 'О студии' : 'About'}</a>
+          <a href={withLanguagePrefix('/privacy', language)} className="site-footer-legal-link">{language === 'ru' ? 'Политика конфиденциальности' : 'Privacy Policy'}</a>
         </div>
         <span className="site-footer-copy">ИНН 233505486022 · {copy.rights}</span>
       </div>

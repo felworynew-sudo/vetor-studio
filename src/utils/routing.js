@@ -55,13 +55,40 @@ function normalizePathname(pathname) {
   return normalized || '/';
 }
 
+export const SUPPORTED_LANGUAGES = ['ru', 'en'];
+export const DEFAULT_LANGUAGE = 'ru';
+
+// Язык кодируется префиксом пути: русская версия живёт на корне (канонична и
+// уже проиндексирована), английская — под /en/. Здесь мы снимаем этот префикс,
+// чтобы дальше маршрут разбирался как обычно, и возвращаем определённый язык.
+function extractLanguage(pathname) {
+  const match = /^\/en(\/|$)/i.exec(pathname);
+  if (match) {
+    return { language: 'en', pathname: normalizePathname(pathname.slice(3) || '/') };
+  }
+  return { language: DEFAULT_LANGUAGE, pathname };
+}
+
+// Навешивает языковой префикс на уже готовый путь (для en). Используется при
+// сборке ссылок, чтобы вся навигация оставалась внутри /en/.
+export function withLanguagePrefix(pathname, language) {
+  if (language !== 'en') {
+    return pathname;
+  }
+  if (pathname === '/' || pathname === '') {
+    return '/en';
+  }
+  return `/en${pathname}`;
+}
+
 function unique(values) {
   return Array.from(new Set(values));
 }
 
 export function parseRoute(locationLike) {
   const rawPathname = normalizePathname(safeDecode(locationLike.pathname || '/'));
-  const pathname = normalizePathname(stripBasePath(rawPathname));
+  const strippedBase = normalizePathname(stripBasePath(rawPathname));
+  const { language, pathname } = extractLanguage(strippedBase);
   const params = new URLSearchParams(locationLike.search || '');
   const query = (params.get('q') || '').trim();
   const queryDesignCategory = (params.get('design') || '').trim();
@@ -74,6 +101,7 @@ export function parseRoute(locationLike) {
 
   const base = {
     pathname,
+    language,
     section: 'home',
     query,
     tags,
@@ -231,6 +259,7 @@ export function buildUrl({
   pluginId = '',
   designCategory = 'all',
   isPriceOpen = false,
+  language = DEFAULT_LANGUAGE,
 }) {
   let pathname = buildSectionPath(section);
 
@@ -271,6 +300,6 @@ export function buildUrl({
   }
 
   const queryString = params.toString();
-  const pathWithBase = withBasePath(pathname);
+  const pathWithBase = withBasePath(withLanguagePrefix(pathname, language));
   return queryString ? `${pathWithBase}?${queryString}` : pathWithBase;
 }

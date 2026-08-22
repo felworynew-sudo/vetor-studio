@@ -7,6 +7,7 @@ import LogoSvgTile from './LogoSvgTile';
 import defaultSectionCopy from '../data/sectionCopy';
 import { withBase } from '../utils/format';
 import { getResponsiveImageProps } from '../utils/responsiveImages';
+import { buildGalleryAlt } from '../utils/imageAlt';
 import { normalizeDesignCategory } from '../data/designCategories';
 
 const galleryPageText = {
@@ -129,7 +130,7 @@ function GalleryPage({
                     <ImageWithFallback
                       src={withBase(coverSrc)}
                       fallback={withBase('/gallery/gallery-placeholder.svg')}
-                      alt={item[titleKey]}
+                      alt={buildGalleryAlt(item, language)}
                     />
                   </div>
                   <div className="design-case-body">
@@ -238,7 +239,7 @@ function GalleryPage({
                   <FlipCard
                     front={item.card.front}
                     back={item.card.back}
-                    alt={item[titleKey]}
+                    alt={buildGalleryAlt(item, language)}
                     label={language === 'ru' ? 'Перевернуть визитку' : 'Flip card'}
                     className="design-flipcard"
                   />
@@ -350,7 +351,7 @@ function GalleryPage({
                       <ImageWithFallback
                         src={withBase(imageSrc)}
                         fallback={withBase('/gallery/gallery-placeholder.svg')}
-                        alt={firstImage?.[language === 'ru' ? 'ruAlt' : 'enAlt'] || item[titleKey]}
+                        alt={firstImage?.[language === 'ru' ? 'ruAlt' : 'enAlt'] || buildGalleryAlt(item, language)}
                         {...responsiveImageProps}
                       />
                     </div>
@@ -395,7 +396,7 @@ function GalleryPage({
                   <ImageWithFallback
                     src={withBase(imageSrc)}
                     fallback={withBase('/gallery/gallery-placeholder.svg')}
-                    alt={firstImage?.[language === 'ru' ? 'ruAlt' : 'enAlt'] || item[titleKey]}
+                    alt={firstImage?.[language === 'ru' ? 'ruAlt' : 'enAlt'] || buildGalleryAlt(item, language)}
                     {...responsiveImageProps}
                   />
                 </button>

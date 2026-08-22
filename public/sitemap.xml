@@ -1,357 +1,1821 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://vetor-studio.ru/</loc>
-    <lastmod>2026-07-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/" />
+    <lastmod>2026-08-22</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://vetor-studio.ru/en</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/previews</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/previews" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/previews" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/previews" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/previews</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/previews" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/previews" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/previews" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://vetor-studio.ru/work/video-001</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-001" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-001" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-001" />
+    <lastmod>2026-04-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/video-001</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-001" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-001" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-001" />
     <lastmod>2026-04-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/work/video-002</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-002" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-002" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-002" />
+    <lastmod>2026-03-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/video-002</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-002" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-002" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-002" />
     <lastmod>2026-03-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/work/video-003</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-003" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-003" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-003" />
+    <lastmod>2026-03-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/video-003</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-003" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-003" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-003" />
     <lastmod>2026-03-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/work/video-004</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-004" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-004" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-004" />
+    <lastmod>2026-03-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/video-004</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-004" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-004" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-004" />
     <lastmod>2026-03-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/work/video-005</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-005" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-005" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-005" />
+    <lastmod>2026-03-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/video-005</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-005" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-005" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-005" />
     <lastmod>2026-03-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/work/video-006</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-006" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-006" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-006" />
+    <lastmod>2025-04-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/video-006</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-006" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-006" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-006" />
     <lastmod>2025-04-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/work/video-007</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-007" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-007" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-007" />
+    <lastmod>2023-03-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/video-007</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-007" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-007" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-007" />
     <lastmod>2023-03-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/work/video-008</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-008" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-008" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-008" />
+    <lastmod>2025-12-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/video-008</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-008" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-008" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-008" />
     <lastmod>2025-12-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/work/video-009</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-009" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-009" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-009" />
+    <lastmod>2026-04-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/video-009</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-009" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-009" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-009" />
     <lastmod>2026-04-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/work/video-010</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-010" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-010" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-010" />
+    <lastmod>2023-04-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/video-010</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-010" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-010" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-010" />
     <lastmod>2023-04-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/work/video-011</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-011" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-011" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-011" />
+    <lastmod>2023-02-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/video-011</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-011" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-011" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-011" />
     <lastmod>2023-02-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/work/video-012</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-012" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-012" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-012" />
+    <lastmod>2020-02-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/video-012</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-012" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-012" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-012" />
     <lastmod>2020-02-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/work/video-013</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-013" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-013" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-013" />
+    <lastmod>2021-07-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/video-013</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-013" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-013" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-013" />
     <lastmod>2021-07-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/work/video-014</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-014" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-014" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-014" />
+    <lastmod>2025-04-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/video-014</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-014" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-014" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-014" />
     <lastmod>2025-04-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/work/video-015</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-015" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-015" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-015" />
+    <lastmod>2020-12-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/video-015</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-015" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-015" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-015" />
     <lastmod>2020-12-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/work/video-016</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-016" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-016" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-016" />
+    <lastmod>2026-04-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/video-016</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-016" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-016" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-016" />
     <lastmod>2026-04-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/work/video-017</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-017" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-017" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-017" />
+    <lastmod>2026-04-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/video-017</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-017" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-017" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-017" />
     <lastmod>2026-04-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/work/video-018</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-018" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-018" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-018" />
+    <lastmod>2026-04-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/video-018</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-018" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-018" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-018" />
     <lastmod>2026-04-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/work/video-019</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-019" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-019" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-019" />
+    <lastmod>2026-04-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/video-019</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-019" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-019" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-019" />
     <lastmod>2026-04-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/work/video-020</loc>
-    <lastmod>2026-07-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-020" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-020" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-020" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/video-020</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-020" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-020" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-020" />
+    <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/work/video-021</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-021" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-021" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-021" />
+    <lastmod>2026-04-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/video-021</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-021" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-021" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-021" />
     <lastmod>2026-04-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/work/video-022</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-022" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-022" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-022" />
+    <lastmod>2026-04-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/video-022</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-022" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-022" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-022" />
     <lastmod>2026-04-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/work/video-023</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-023" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-023" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-023" />
     <lastmod>2026-04-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://vetor-studio.ru/work/video-021</loc>
+    <loc>https://vetor-studio.ru/en/work/video-023</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-023" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-023" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-023" />
+    <lastmod>2026-04-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/work/video-025</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-025" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-025" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-025" />
+    <lastmod>2026-05-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/video-025</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-025" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-025" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-025" />
     <lastmod>2026-05-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/work/video-024</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-024" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-024" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-024" />
     <lastmod>2026-05-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://vetor-studio.ru/en/work/video-024</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-024" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-024" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-024" />
+    <lastmod>2026-05-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/work/video-026</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-026" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-026" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-026" />
+    <lastmod>2026-08-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/video-026</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-026" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-026" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-026" />
+    <lastmod>2026-08-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/work/video-027</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-027" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-027" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-027" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/video-027</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-027" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-027" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-027" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/work/video-028</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-028" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-028" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-028" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/video-028</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-028" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-028" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-028" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/work/video-029</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-029" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-029" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-029" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/video-029</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-029" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-029" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-029" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/work/video-030</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-030" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-030" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-030" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/video-030</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-030" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-030" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-030" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/work/video-031</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-031" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-031" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-031" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/video-031</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-031" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-031" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-031" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/work/video-032</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-032" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-032" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-032" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/video-032</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-032" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-032" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-032" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/work/video-033</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-033" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-033" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-033" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/video-033</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/video-033" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/video-033" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/video-033" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://vetor-studio.ru/work/music-001</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/music-001" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/music-001" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/music-001" />
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/music-001</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/music-001" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/music-001" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/music-001" />
     <lastmod>2026-04-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/work/music-002</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/music-002" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/music-002" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/music-002" />
+    <lastmod>2025-05-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/music-002</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/music-002" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/music-002" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/music-002" />
     <lastmod>2025-05-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/work/music-003</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/music-003" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/music-003" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/music-003" />
+    <lastmod>2024-04-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/music-003</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/music-003" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/music-003" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/music-003" />
     <lastmod>2024-04-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/work/music-004</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/music-004" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/music-004" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/music-004" />
+    <lastmod>2025-12-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/music-004</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/music-004" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/music-004" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/music-004" />
     <lastmod>2025-12-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/work/music-005</loc>
-    <lastmod>2026-07-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/music-005" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/music-005" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/music-005" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/music-005</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/music-005" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/music-005" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/music-005" />
+    <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/work/music-006</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/music-006" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/music-006" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/music-006" />
+    <lastmod>2026-04-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/music-006</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/music-006" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/music-006" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/music-006" />
     <lastmod>2026-04-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/work/music-007</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/music-007" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/music-007" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/music-007" />
+    <lastmod>2025-07-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/music-007</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/music-007" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/music-007" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/music-007" />
     <lastmod>2025-07-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/work/music-008</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/music-008" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/music-008" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/music-008" />
+    <lastmod>2020-04-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/music-008</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/music-008" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/music-008" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/music-008" />
     <lastmod>2020-04-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/work/music-009</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/music-009" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/music-009" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/music-009" />
+    <lastmod>2026-04-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/music-009</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/music-009" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/music-009" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/music-009" />
     <lastmod>2026-04-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/work/music-010</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/music-010" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/music-010" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/music-010" />
+    <lastmod>2026-05-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/work/music-010</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/work/music-010" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/work/music-010" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/work/music-010" />
     <lastmod>2026-05-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/tag/psd</loc>
-    <lastmod>2026-07-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tag/psd" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tag/psd" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tag/psd" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/tag/psd</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tag/psd" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tag/psd" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tag/psd" />
+    <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/tag/gaming</loc>
-    <lastmod>2026-07-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tag/gaming" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tag/gaming" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tag/gaming" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/tag/gaming</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tag/gaming" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tag/gaming" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tag/gaming" />
+    <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/tag/podcast</loc>
-    <lastmod>2026-07-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tag/podcast" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tag/podcast" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tag/podcast" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/tag/podcast</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tag/podcast" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tag/podcast" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tag/podcast" />
+    <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/tag/historical</loc>
-    <lastmod>2026-07-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tag/historical" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tag/historical" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tag/historical" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/tag/historical</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tag/historical" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tag/historical" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tag/historical" />
+    <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/tag/music</loc>
-    <lastmod>2026-07-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tag/music" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tag/music" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tag/music" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/tag/music</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tag/music" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tag/music" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tag/music" />
+    <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/tag/travel</loc>
-    <lastmod>2026-07-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tag/travel" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tag/travel" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tag/travel" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/tag/travel</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tag/travel" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tag/travel" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tag/travel" />
+    <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/tag/education</loc>
-    <lastmod>2026-07-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tag/education" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tag/education" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tag/education" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/tag/education</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tag/education" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tag/education" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tag/education" />
+    <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/tag/redesign</loc>
-    <lastmod>2026-07-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tag/redesign" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tag/redesign" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tag/redesign" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/tag/redesign</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tag/redesign" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tag/redesign" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tag/redesign" />
+    <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/tag/design</loc>
-    <lastmod>2026-07-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tag/design" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tag/design" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tag/design" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/tag/design</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tag/design" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tag/design" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tag/design" />
+    <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/tag/process</loc>
-    <lastmod>2026-07-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tag/process" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tag/process" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tag/process" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/tag/process</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tag/process" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tag/process" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tag/process" />
+    <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/blog</loc>
-    <lastmod>2026-07-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/blog" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/blog" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/blog" />
+    <lastmod>2026-08-22</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://vetor-studio.ru/blog/clickability-and-attention</loc>
-    <lastmod>2026-06-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://vetor-studio.ru/blog/blog-003</loc>
-    <lastmod>2026-05-28</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://vetor-studio.ru/blog/blog-002</loc>
-    <lastmod>2026-05-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://vetor-studio.ru/blog/blog-001</loc>
-    <lastmod>2026-04-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://vetor-studio.ru/en/blog</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/blog" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/blog" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/blog" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/design</loc>
-    <lastmod>2026-07-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design" />
+    <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/design/category/logos</loc>
-    <lastmod>2026-07-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/category/logos" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/category/logos" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/category/logos" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design/category/logos</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/category/logos" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/category/logos" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/category/logos" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/design/category/large-projects</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/category/large-projects" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/category/large-projects" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/category/large-projects" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design/category/large-projects</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/category/large-projects" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/category/large-projects" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/category/large-projects" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/design/category/restoration</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/category/restoration" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/category/restoration" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/category/restoration" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design/category/restoration</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/category/restoration" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/category/restoration" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/category/restoration" />
+    <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/design/category/business-cards</loc>
-    <lastmod>2026-07-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/category/business-cards" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/category/business-cards" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/category/business-cards" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design/category/business-cards</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/category/business-cards" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/category/business-cards" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/category/business-cards" />
+    <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/design/category/brand-identity</loc>
-    <lastmod>2026-07-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/category/brand-identity" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/category/brand-identity" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/category/brand-identity" />
+    <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://vetor-studio.ru/design/category/youtube</loc>
-    <lastmod>2026-07-02</lastmod>
+    <loc>https://vetor-studio.ru/en/design/category/brand-identity</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/category/brand-identity" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/category/brand-identity" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/category/brand-identity" />
+    <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://vetor-studio.ru/design/category/stickers</loc>
-    <lastmod>2026-07-02</lastmod>
+    <loc>https://vetor-studio.ru/design/category/websites</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/category/websites" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/category/websites" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/category/websites" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design/category/websites</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/category/websites" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/category/websites" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/category/websites" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/design/item/gallery-032</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/gallery-032" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/gallery-032" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/gallery-032" />
+    <lastmod>2026-08-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design/item/gallery-032</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/gallery-032" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/gallery-032" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/gallery-032" />
+    <lastmod>2026-08-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/design/item/gallery-031</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/gallery-031" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/gallery-031" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/gallery-031" />
+    <lastmod>2026-08-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design/item/gallery-031</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/gallery-031" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/gallery-031" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/gallery-031" />
+    <lastmod>2026-08-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/design/item/case-wowmyeyes</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/case-wowmyeyes" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/case-wowmyeyes" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/case-wowmyeyes" />
+    <lastmod>2026-08-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design/item/case-wowmyeyes</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/case-wowmyeyes" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/case-wowmyeyes" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/case-wowmyeyes" />
+    <lastmod>2026-08-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/design/item/case-kislota</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/case-kislota" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/case-kislota" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/case-kislota" />
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design/item/case-kislota</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/case-kislota" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/case-kislota" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/case-kislota" />
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/design/item/case-lifecopy</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/case-lifecopy" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/case-lifecopy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/case-lifecopy" />
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design/item/case-lifecopy</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/case-lifecopy" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/case-lifecopy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/case-lifecopy" />
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/design/item/gallery-restoration-001</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/gallery-restoration-001" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/gallery-restoration-001" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/gallery-restoration-001" />
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design/item/gallery-restoration-001</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/gallery-restoration-001" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/gallery-restoration-001" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/gallery-restoration-001" />
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/design/item/gallery-restoration-002</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/gallery-restoration-002" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/gallery-restoration-002" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/gallery-restoration-002" />
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design/item/gallery-restoration-002</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/gallery-restoration-002" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/gallery-restoration-002" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/gallery-restoration-002" />
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/design/item/gallery-restoration-003</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/gallery-restoration-003" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/gallery-restoration-003" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/gallery-restoration-003" />
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design/item/gallery-restoration-003</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/gallery-restoration-003" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/gallery-restoration-003" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/gallery-restoration-003" />
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/design/item/gallery-restoration-004</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/gallery-restoration-004" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/gallery-restoration-004" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/gallery-restoration-004" />
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design/item/gallery-restoration-004</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/gallery-restoration-004" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/gallery-restoration-004" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/gallery-restoration-004" />
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/design/item/gallery-restoration-005</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/gallery-restoration-005" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/gallery-restoration-005" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/gallery-restoration-005" />
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design/item/gallery-restoration-005</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/gallery-restoration-005" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/gallery-restoration-005" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/gallery-restoration-005" />
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/design/item/gallery-restoration-006</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/gallery-restoration-006" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/gallery-restoration-006" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/gallery-restoration-006" />
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design/item/gallery-restoration-006</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/gallery-restoration-006" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/gallery-restoration-006" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/gallery-restoration-006" />
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/design/item/gallery-restoration-007</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/gallery-restoration-007" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/gallery-restoration-007" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/gallery-restoration-007" />
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design/item/gallery-restoration-007</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/gallery-restoration-007" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/gallery-restoration-007" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/gallery-restoration-007" />
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/design/item/gallery-restoration-008</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/gallery-restoration-008" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/gallery-restoration-008" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/gallery-restoration-008" />
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design/item/gallery-restoration-008</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/gallery-restoration-008" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/gallery-restoration-008" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/gallery-restoration-008" />
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/design/item/card-lifecopy-1</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/card-lifecopy-1" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/card-lifecopy-1" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/card-lifecopy-1" />
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design/item/card-lifecopy-1</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/card-lifecopy-1" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/card-lifecopy-1" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/card-lifecopy-1" />
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/design/item/card-lifecopy-2</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/card-lifecopy-2" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/card-lifecopy-2" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/card-lifecopy-2" />
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design/item/card-lifecopy-2</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/card-lifecopy-2" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/card-lifecopy-2" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/card-lifecopy-2" />
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/design/item/card-lifecopy-3</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/card-lifecopy-3" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/card-lifecopy-3" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/card-lifecopy-3" />
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design/item/card-lifecopy-3</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/card-lifecopy-3" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/card-lifecopy-3" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/card-lifecopy-3" />
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/design/item/card-kislota-1</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/card-kislota-1" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/card-kislota-1" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/card-kislota-1" />
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design/item/card-kislota-1</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/card-kislota-1" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/card-kislota-1" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/card-kislota-1" />
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/design/item/card-kislota-3</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/card-kislota-3" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/card-kislota-3" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/card-kislota-3" />
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design/item/card-kislota-3</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/card-kislota-3" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/card-kislota-3" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/card-kislota-3" />
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/design/item/kislota-logo</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/kislota-logo" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/kislota-logo" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/kislota-logo" />
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design/item/kislota-logo</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/kislota-logo" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/kislota-logo" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/kislota-logo" />
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/design/item/logo-vetor</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/logo-vetor" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/logo-vetor" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/logo-vetor" />
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design/item/logo-vetor</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/logo-vetor" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/logo-vetor" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/logo-vetor" />
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/design/item/logo-lifecopy</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/logo-lifecopy" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/logo-lifecopy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/logo-lifecopy" />
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design/item/logo-lifecopy</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/logo-lifecopy" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/logo-lifecopy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/logo-lifecopy" />
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/design/item/logo-wow-my-ice</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/logo-wow-my-ice" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/logo-wow-my-ice" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/logo-wow-my-ice" />
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design/item/logo-wow-my-ice</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/logo-wow-my-ice" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/logo-wow-my-ice" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/logo-wow-my-ice" />
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/design/item/logo-morf</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/logo-morf" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/logo-morf" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/logo-morf" />
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design/item/logo-morf</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/logo-morf" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/logo-morf" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/logo-morf" />
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/design/item/logo-mantis</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/logo-mantis" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/logo-mantis" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/logo-mantis" />
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design/item/logo-mantis</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/logo-mantis" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/logo-mantis" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/logo-mantis" />
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/design/item/logo-bermud</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/logo-bermud" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/logo-bermud" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/logo-bermud" />
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design/item/logo-bermud</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/logo-bermud" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/logo-bermud" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/logo-bermud" />
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/design/item/logo-kukolka</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/logo-kukolka" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/logo-kukolka" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/logo-kukolka" />
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design/item/logo-kukolka</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/logo-kukolka" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/logo-kukolka" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/logo-kukolka" />
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/design/item/logo-zhuzhu</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/logo-zhuzhu" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/logo-zhuzhu" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/logo-zhuzhu" />
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design/item/logo-zhuzhu</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/logo-zhuzhu" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/logo-zhuzhu" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/logo-zhuzhu" />
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/design/item/kislota-infographic</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/kislota-infographic" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/kislota-infographic" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/kislota-infographic" />
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design/item/kislota-infographic</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/kislota-infographic" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/kislota-infographic" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/kislota-infographic" />
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/design/item/site-kislota</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/site-kislota" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/site-kislota" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/site-kislota" />
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design/item/site-kislota</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/site-kislota" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/site-kislota" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/site-kislota" />
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/design/item/site-kukolka</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/site-kukolka" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/site-kukolka" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/site-kukolka" />
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design/item/site-kukolka</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/site-kukolka" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/site-kukolka" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/site-kukolka" />
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/design/item/site-lifecopy</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/site-lifecopy" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/site-lifecopy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/site-lifecopy" />
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design/item/site-lifecopy</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/site-lifecopy" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/site-lifecopy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/site-lifecopy" />
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/design/item/card-wow</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/card-wow" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/card-wow" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/card-wow" />
+    <lastmod>2026-08-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/design/item/card-wow</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/design/item/card-wow" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/design/item/card-wow" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/design/item/card-wow" />
+    <lastmod>2026-08-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/price</loc>
-    <lastmod>2026-07-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/price" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/price" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/price" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/price</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/price" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/price" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/price" />
+    <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://vetor-studio.ru/plugins</loc>
-    <lastmod>2026-07-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/plugins" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/plugins" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/plugins" />
+    <lastmod>2026-08-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/plugins</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/plugins" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/plugins" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/plugins" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/plugins/resto</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/plugins/resto" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/plugins/resto" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/plugins/resto" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/plugins/resto</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/plugins/resto" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/plugins/resto" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/plugins/resto" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/fonts</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/fonts" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/fonts" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/fonts" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/fonts</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/fonts" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/fonts" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/fonts" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/about</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/about" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/about" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/about" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/about</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/about" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/about" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/about" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/privacy</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/privacy" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/privacy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/privacy" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/privacy</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/privacy" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/privacy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/privacy" />
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
   </url>
 </urlset>

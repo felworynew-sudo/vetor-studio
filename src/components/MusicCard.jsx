@@ -2,9 +2,11 @@ import ImageWithFallback from './ImageWithFallback';
 import { formatDate, withBase } from '../utils/format';
 import { getLocalizedText } from '../utils/i18n';
 import { getResponsiveImageProps } from '../utils/responsiveImages';
+import { buildMusicAlt } from '../utils/imageAlt';
 
 function MusicCard({ item, language, tagsMap, index = 0, onOpen }) {
   const title = item[language === 'ru' ? 'ruTitle' : 'enTitle'];
+  const coverAlt = buildMusicAlt(item, language);
   const leadTag = item.tags[0] ? tagsMap.get(item.tags[0]) : null;
   const coverImageProps = getResponsiveImageProps(item.cover);
   const isPriorityImage = item.featured && index < 2;
@@ -23,7 +25,7 @@ function MusicCard({ item, language, tagsMap, index = 0, onOpen }) {
           <ImageWithFallback
             src={withBase(item.cover)}
             fallback={withBase('/music/placeholder-cover.svg')}
-            alt={title}
+            alt={coverAlt}
             loading={isPriorityImage ? 'eager' : 'lazy'}
             fetchPriority={isPriorityImage ? 'high' : 'auto'}
             {...coverImageProps}

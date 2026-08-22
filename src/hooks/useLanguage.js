@@ -17,8 +17,10 @@ function getInitialLanguage() {
   return siteConfig.defaultLanguage || 'ru';
 }
 
-export function useLanguage() {
-  const [language, setLanguage] = useState(getInitialLanguage);
+export function useLanguage(initialLanguage) {
+  const [language, setLanguage] = useState(
+    () => (initialLanguage === 'ru' || initialLanguage === 'en' ? initialLanguage : getInitialLanguage()),
+  );
 
   useEffect(() => {
     window.localStorage.setItem(STORAGE_KEY, language);

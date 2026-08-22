@@ -3,9 +3,11 @@ import { formatDate, withBase } from '../utils/format';
 import { getLocalizedText } from '../utils/i18n';
 import { isPsdDownloadItem } from '../utils/links';
 import { getResponsiveImageProps } from '../utils/responsiveImages';
+import { buildVideoAlt } from '../utils/imageAlt';
 
 function VideoCard({ item, language, tagsMap, index = 0, onOpen }) {
   const title = item[language === 'ru' ? 'ruTitle' : 'enTitle'];
+  const thumbnailAlt = buildVideoAlt(item, language);
   const isPsd = isPsdDownloadItem(item);
   const psdTag = tagsMap.get('psd');
   const leadTag = isPsd ? psdTag : item.tags[0] ? tagsMap.get(item.tags[0]) : null;
@@ -26,7 +28,7 @@ function VideoCard({ item, language, tagsMap, index = 0, onOpen }) {
           <ImageWithFallback
             src={withBase(item.thumbnail)}
             fallback={withBase('/thumbs/placeholder-video.svg')}
-            alt={title}
+            alt={thumbnailAlt}
             loading={isPriorityImage ? 'eager' : 'lazy'}
             fetchPriority={isPriorityImage ? 'high' : 'auto'}
             {...thumbnailImageProps}

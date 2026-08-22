@@ -13,7 +13,7 @@ const copyMap = {
       'Привет! Меня зовут Кирилл Шелудько, я основатель студии Vetor и универсальный дизайнер из Краснодара.',
       'Я закрываю не только визуал — превью для YouTube, обложки, логотипы, фирменный стиль, шрифты и сайты, — но и техническую часть. Пишу для бизнеса софт и системы: плагины, CRM, автоматизацию рутины. То есть могу собрать проект целиком: от знака и лендинга до внутреннего инструмента, который реально ускоряет работу.',
       'Работаю так, чтобы дизайн не просто красиво выглядел, а решал задачу — приводил клиентов, поднимал средний чек, убирал ручную рутину. Без созвонов ради созвонов: пишете задачу — согласуем формат, сроки и стоимость, и я делаю.',
-      'Часть работ в портфолио — коммерческие, часть я делал из интереса, когда цеплял вайб бренда (как со студией «Кислота»). Подход в обоих случаях одинаковый — как к своему.',
+      'Часть работ в портфолио — коммерческие, часть я делал из интереса, когда цеплял вайб бренда. Подход в обоих случаях одинаковый — как к своему.',
     ],
   },
   en: {
@@ -27,7 +27,7 @@ const copyMap = {
       "Hi! I'm Kirill Sheludko, founder of Vetor and a versatile designer based in Krasnodar.",
       'I cover not only the visuals — YouTube thumbnails, covers, logos, brand identity, fonts, and websites — but also the technical side. I build software and systems for business: plugins, CRMs, and routine automation. So I can deliver a whole project: from a mark and a landing page to an internal tool that genuinely speeds up work.',
       'I make design that not only looks good but solves the task — brings clients, raises the average order value, and removes manual routine. No calls for the sake of calls: you describe the task, we agree on scope, timing, and price, and I build it.',
-      'Some works in the portfolio are commercial; some I did out of interest when a brand’s vibe caught me (like the “Kislota” studio). Either way, I treat it as my own.',
+      'Some works in the portfolio are commercial; some I did out of interest when a brand’s vibe caught me. Either way, I treat it as my own.',
     ],
   },
 };

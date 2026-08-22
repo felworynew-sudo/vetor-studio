@@ -111,11 +111,24 @@ async function main() {
   const routes = [];
   const addRoute = (pathname, lastmod, changefreq = 'weekly', priority = '0.7') => {
     routes.push({
-      loc: `${domain}${pathname}`,
+      pathname: pathname === '/' ? '' : pathname,
       lastmod: normalizeDate(lastmod),
       changefreq,
       priority,
     });
+  };
+
+  // RU живёт на корне, EN — под /en/. x-default указывает на RU.
+  const ruHref = (pathname) => `${domain}${pathname || '/'}`;
+  const enHref = (pathname) => `${domain}/en${pathname || ''}`;
+  const alternatesXml = (pathname) => {
+    const ru = escapeXml(ruHref(pathname));
+    const en = escapeXml(enHref(pathname));
+    return [
+      `    <xhtml:link rel="alternate" hreflang="ru" href="${ru}" />`,
+      `    <xhtml:link rel="alternate" hreflang="en" href="${en}" />`,
+      `    <xhtml:link rel="alternate" hreflang="x-default" href="${ru}" />`,
+    ].join('\n');
   };
 
   if (sections.home) {
@@ -180,19 +193,26 @@ async function main() {
   addRoute('/about', null, 'monthly', '0.7');
   addRoute('/privacy', null, 'yearly', '0.3');
 
-  const urlset = routes
-    .map(
-      (route) => `  <url>
-    <loc>${escapeXml(route.loc)}</loc>
+  // На каждый логический маршрут — две записи (RU и EN), и в обеих полный набор
+  // hreflang-альтернат, как требует спецификация (каждая языковая страница
+  // ссылается на все версии, включая себя).
+  const urlEntry = (loc, route) => `  <url>
+    <loc>${escapeXml(loc)}</loc>
+${alternatesXml(route.pathname)}
     <lastmod>${route.lastmod}</lastmod>
     <changefreq>${route.changefreq}</changefreq>
     <priority>${route.priority}</priority>
-  </url>`,
-    )
+  </url>`;
+
+  const urlset = routes
+    .flatMap((route) => [
+      urlEntry(ruHref(route.pathname), route),
+      urlEntry(enHref(route.pathname), route),
+    ])
     .join('\n');
 
   const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 ${urlset}
 </urlset>
 `;
