@@ -24,6 +24,10 @@ const READY_COMPONENTS = {
   'voronoi-generator': lazy(() => import('../components/tools/VoronoiBackground')),
   'color-weight': lazy(() => import('../components/tools/ColorWeight')),
   'rule-of-thirds': lazy(() => import('../components/tools/RuleOfThirds')),
+  'icon-scaler': lazy(() => import('../components/tools/IconScaler')),
+  'eink-simulator': lazy(() => import('../components/tools/EinkSimulator')),
+  'pastel-pairs': lazy(() => import('../components/tools/PastelPairs')),
+  'karma-counter': lazy(() => import('../components/tools/KarmaCounter')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;

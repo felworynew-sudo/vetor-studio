@@ -657,3 +657,40 @@ a.tool-card:hover {
 .rot-grid { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .rot-grid line { stroke: rgba(255, 255, 255, 0.75); stroke-width: 0.4; }
 .rot-point { fill: var(--accent); }
+
+/* --- Масштабатор иконок --- */
+.is-cell {
+  display: flex; align-items: center; justify-content: center;
+  background:
+    linear-gradient(45deg, #2a2c38 25%, transparent 25%, transparent 75%, #2a2c38 75%) 0 0 / 12px 12px,
+    linear-gradient(45deg, #2a2c38 25%, transparent 25%, transparent 75%, #2a2c38 75%) 6px 6px / 12px 12px,
+    var(--bg);
+  border-radius: 8px; padding: 6px;
+}
+
+/* --- E-Ink --- */
+.eink-canvas { background: #fff; }
+
+/* --- Пастельные пары --- */
+.pp-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 16px 0; }
+.pp-card {
+  border: 1px solid var(--stroke); border-radius: 14px; padding: 18px 14px; cursor: pointer;
+  display: flex; flex-direction: column; gap: 4px; text-align: left; min-height: 96px;
+}
+.pp-card-label { font-size: 12px; opacity: 0.75; }
+.pp-card-hex { font-family: monospace; font-size: 16px; font-weight: 700; }
+.pp-card-sub { font-size: 12px; opacity: 0.75; margin-top: auto; }
+.pp-previews { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.pp-preview { border-radius: 14px; padding: 22px; display: flex; flex-direction: column; align-items: center; gap: 12px; border: 1px solid var(--stroke); }
+.pp-preview-cap { font-size: 12px; }
+.pp-btn { padding: 10px 22px; border-radius: 10px; font-weight: 700; font-size: 14px; }
+
+/* --- Karma-счётчик --- */
+.karma-counter { text-align: center; }
+.kc-display { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 14px 0 6px; }
+.kc-emoji { font-size: 48px; line-height: 1; }
+.kc-count { font-size: 64px; font-weight: 800; line-height: 1; letter-spacing: -0.03em; }
+.kc-title { font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+.kc-tier { font-size: 17px; font-weight: 700; color: var(--t-accent-strong); margin-top: 4px; }
+.kc-next { color: var(--text-muted); font-size: 14px; margin: 10px 0 0; }
+.kc-actions { justify-content: center; }

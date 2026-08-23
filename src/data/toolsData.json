@@ -40,6 +40,14 @@
       "en": { "title": "Color weight analyzer", "desc": "The percentage split of colors in a design to check the 60-30-10 rule." }
     },
     {
+      "slug": "pastel-pairs",
+      "categoryId": "color",
+      "status": "ready",
+      "icon": "🩰",
+      "ru": { "title": "Пастельные и тёмные пары", "desc": "Подбор контрастного текста и мягкой/тёмной пары для UI-элементов по базовому цвету." },
+      "en": { "title": "Pastel & dark pairs", "desc": "Contrast text plus a soft/dark pair for UI elements, from a base color." }
+    },
+    {
       "slug": "palette-extractor",
       "categoryId": "color",
       "status": "ready",
@@ -86,6 +94,22 @@
       "icon": "📐",
       "ru": { "title": "Правило третей", "desc": "Композиционная сетка (трети, золотое сечение, диагонали) поверх изображения." },
       "en": { "title": "Rule of thirds", "desc": "A composition grid (thirds, golden ratio, diagonals) over your image." }
+    },
+    {
+      "slug": "icon-scaler",
+      "categoryId": "image",
+      "status": "ready",
+      "icon": "🔲",
+      "ru": { "title": "Масштабатор иконок", "desc": "Вписывает иконку в стандартные размеры (16–128px) с центрированием и отступом." },
+      "en": { "title": "Icon scaler", "desc": "Fits an icon into standard sizes (16–128px) with centering and padding." }
+    },
+    {
+      "slug": "eink-simulator",
+      "categoryId": "image",
+      "status": "ready",
+      "icon": "🖨️",
+      "ru": { "title": "Симулятор E-Ink", "desc": "Как интерфейс выглядит на монохромном экране ридера: серый, 1-бит, дизеринг." },
+      "en": { "title": "E-Ink simulator", "desc": "How a UI looks on a monochrome e-reader: grayscale, 1-bit, dithering." }
     },
     {
       "slug": "svg-cleaner",
@@ -150,6 +174,14 @@
       "icon": "⏱️",
       "ru": { "title": "Таймер 20-20-20", "desc": "Напоминание давать отдых глазам каждые 20 минут." },
       "en": { "title": "20-20-20 timer", "desc": "Reminds you to rest your eyes every 20 minutes." }
+    },
+    {
+      "slug": "karma-counter",
+      "categoryId": "utility",
+      "status": "ready",
+      "icon": "🎯",
+      "ru": { "title": "Счётчик правок", "desc": "Шуточный трекер правок от клиента с ачивками. Хранится локально." },
+      "en": { "title": "Revision counter", "desc": "A playful client-revision tracker with achievements. Stored locally." }
     }
   ]
 }

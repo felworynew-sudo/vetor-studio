@@ -1891,6 +1891,24 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://vetor-studio.ru/tools/pastel-pairs</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/pastel-pairs" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/pastel-pairs" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/pastel-pairs" />
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/tools/pastel-pairs</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/pastel-pairs" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/pastel-pairs" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/pastel-pairs" />
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://vetor-studio.ru/tools/palette-extractor</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/palette-extractor" />
     <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/palette-extractor" />
@@ -1994,6 +2012,42 @@
     <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/rule-of-thirds" />
     <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/rule-of-thirds" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/rule-of-thirds" />
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/tools/icon-scaler</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/icon-scaler" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/icon-scaler" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/icon-scaler" />
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/tools/icon-scaler</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/icon-scaler" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/icon-scaler" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/icon-scaler" />
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/tools/eink-simulator</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/eink-simulator" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/eink-simulator" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/eink-simulator" />
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/tools/eink-simulator</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/eink-simulator" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/eink-simulator" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/eink-simulator" />
     <lastmod>2026-08-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -2138,6 +2192,24 @@
     <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/break-timer" />
     <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/break-timer" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/break-timer" />
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/tools/karma-counter</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/karma-counter" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/karma-counter" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/karma-counter" />
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/tools/karma-counter</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/karma-counter" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/karma-counter" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/karma-counter" />
     <lastmod>2026-08-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
