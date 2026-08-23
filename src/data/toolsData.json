@@ -82,7 +82,7 @@
     {
       "slug": "qr-generator",
       "categoryId": "generators",
-      "status": "soon",
+      "status": "ready",
       "icon": "🔳",
       "ru": { "title": "QR-код: генератор и сканер", "desc": "Выгрузка в SVG/PNG, настройка цвета и фона." },
       "en": { "title": "QR code: generator & scanner", "desc": "Export to SVG/PNG, custom color and background." }

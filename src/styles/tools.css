@@ -596,3 +596,30 @@ a.tool-card:hover {
   border: 1px solid var(--stroke); font-family: monospace; font-size: 12.5px; color: var(--text);
   overflow-x: auto; white-space: pre;
 }
+
+/* --- QR-код --- */
+.qr-tabs { margin-bottom: 18px; }
+.qr-gen { display: grid; grid-template-columns: 1fr 260px; gap: 22px; align-items: start; }
+.qr-gen-left { display: flex; flex-direction: column; gap: 14px; }
+.qr-data {
+  width: 100%; resize: vertical; padding: 10px 12px; border-radius: 10px;
+  border: 1px solid var(--stroke-strong); background: var(--bg); color: var(--text); font-size: 14px;
+}
+.qr-preview {
+  border-radius: 14px; border: 1px solid var(--stroke); padding: 14px; background: #fff;
+  aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+}
+.qr-preview.is-transparent {
+  background:
+    repeating-conic-gradient(#e8e8f0 0% 25%, #ffffff 0% 50%) 50% / 20px 20px;
+}
+.qr-preview svg { width: 100%; height: 100%; display: block; }
+.qr-result { margin-top: 16px; display: flex; flex-direction: column; gap: 8px; }
+.qr-result-code {
+  padding: 12px 14px; border-radius: 10px; background: var(--surface-strong); border: 1px solid var(--stroke);
+  font-family: monospace; font-size: 14px; color: var(--text); word-break: break-all;
+}
+@media (max-width: 640px) {
+  .qr-gen { grid-template-columns: 1fr; }
+  .qr-preview { max-width: 260px; }
+}

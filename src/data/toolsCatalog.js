@@ -19,6 +19,7 @@ const READY_COMPONENTS = {
   'color-harmony': lazy(() => import('../components/tools/ColorHarmony')),
   'gradient-generator': lazy(() => import('../components/tools/GradientGenerator')),
   'favicon-generator': lazy(() => import('../components/tools/FaviconGenerator')),
+  'qr-generator': lazy(() => import('../components/tools/QrTool')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;

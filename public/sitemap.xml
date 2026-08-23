@@ -1981,6 +1981,24 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://vetor-studio.ru/tools/qr-generator</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/qr-generator" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/qr-generator" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/qr-generator" />
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/tools/qr-generator</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/qr-generator" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/qr-generator" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/qr-generator" />
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://vetor-studio.ru/tools/noise-generator</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/noise-generator" />
     <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/noise-generator" />
