@@ -4,6 +4,7 @@
     { "id": "color", "ru": "Цвет", "en": "Color", "icon": "🎨" },
     { "id": "svg", "ru": "SVG и вектор", "en": "SVG & vector", "icon": "✒️" },
     { "id": "generators", "ru": "Генераторы", "en": "Generators", "icon": "✨" },
+    { "id": "ai", "ru": "AI-инструменты", "en": "AI tools", "icon": "🤖" },
     { "id": "utility", "ru": "Утилиты", "en": "Utilities", "icon": "🛠️" }
   ],
   "tools": [
@@ -174,6 +175,14 @@
       "icon": "⏱️",
       "ru": { "title": "Таймер 20-20-20", "desc": "Напоминание давать отдых глазам каждые 20 минут." },
       "en": { "title": "20-20-20 timer", "desc": "Reminds you to rest your eyes every 20 minutes." }
+    },
+    {
+      "slug": "background-remover",
+      "categoryId": "ai",
+      "status": "ready",
+      "icon": "✂️",
+      "ru": { "title": "Вырезатель фона (AI)", "desc": "Удаляет фон с фото прямо в браузере: ИИ-модель скачивается один раз, снимок никуда не передаётся." },
+      "en": { "title": "Background remover (AI)", "desc": "Removes the background right in your browser: the AI model downloads once, the photo never leaves your device." }
     },
     {
       "slug": "karma-counter",

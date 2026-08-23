@@ -28,6 +28,7 @@ const READY_COMPONENTS = {
   'eink-simulator': lazy(() => import('../components/tools/EinkSimulator')),
   'pastel-pairs': lazy(() => import('../components/tools/PastelPairs')),
   'karma-counter': lazy(() => import('../components/tools/KarmaCounter')),
+  'background-remover': lazy(() => import('../components/tools/BackgroundRemover')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;
