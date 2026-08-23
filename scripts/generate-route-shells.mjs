@@ -364,7 +364,7 @@ const CATEGORY_META = {
   },
 };
 
-function collectMeta(lang, { videos, music, blog, gallery, tags, absoluteImage, domain }) {
+function collectMeta(lang, { videos, music, blog, gallery, tags, tools = [], absoluteImage, domain }) {
   const meta = new Map();
 
   for (const item of asArray(videos)) {
@@ -480,6 +480,46 @@ function collectMeta(lang, { videos, music, blog, gallery, tags, absoluteImage, 
     if (!meta.has(pathname)) meta.set(pathname, value);
   }
 
+  // Студия инструментов: хаб + страница каждого готового тула (client-side).
+  const studioName = t(lang, 'Верстак', 'Verstak');
+  if (!meta.has('/tools')) {
+    meta.set('/tools', {
+      title: t(lang, `${studioName} — инструменты для дизайнеров`, `${studioName} — tools for designers`),
+      heading: t(lang, 'Инструменты для дизайнеров', 'Tools for designers'),
+      description: t(
+        lang,
+        'Бесплатные онлайн-инструменты для цвета, изображений и вектора — всё считается прямо в браузере, без регистрации и загрузки файлов на сервер.',
+        'Free online tools for color, images and vector — everything runs right in your browser, no sign-up, nothing uploaded to a server.',
+      ),
+      image: '/og/default.png',
+    });
+  }
+  for (const tool of tools) {
+    if (tool.status !== 'ready') continue;
+    const pathname = `/tools/${tool.slug}`;
+    if (meta.has(pathname)) continue;
+    const title = tool[lang]?.title || tool.slug;
+    const desc = tool[lang]?.desc || '';
+    meta.set(pathname, {
+      title: `${title} — ${studioName}`,
+      ogTitle: title,
+      heading: title,
+      description: desc,
+      image: '/og/default.png',
+      jsonld: [{
+        '@context': 'https://schema.org',
+        '@type': 'WebApplication',
+        name: title,
+        description: desc,
+        applicationCategory: 'DesignApplication',
+        operatingSystem: 'Web browser',
+        url: `${domain}${lang === 'en' ? '/en' : ''}${pathname}`,
+        offers: { '@type': 'Offer', price: '0', priceCurrency: 'RUB' },
+        provider: { '@type': 'Organization', name: 'Vetor Studio', url: domain },
+      }],
+    });
+  }
+
   return meta;
 }
 
@@ -504,14 +544,16 @@ function buildBreadcrumb(logicalPath, lang, langUrl, heading) {
 }
 
 async function main() {
-  const [siteConfig, tags, videos, music, blog, gallery] = await Promise.all([
+  const [siteConfig, tags, videos, music, blog, gallery, toolsData] = await Promise.all([
     readJson('siteConfig.json', {}),
     readJson('tags.json', []),
     readJson('videos.json', []),
     readJson('music.json', []),
     readJson('blog.json', []),
     readJson('gallery.json', []),
+    readJson('toolsData.json', { tools: [] }),
   ]);
+  const tools = toolsData.tools || [];
 
   let domain = (siteConfig.domain || 'https://vetor-studio.ru').replace(/\/+$/, '');
   try {
@@ -531,8 +573,8 @@ async function main() {
   };
 
   const metaByLang = {
-    ru: collectMeta('ru', { videos, music, blog, gallery, tags, absoluteImage, domain }),
-    en: collectMeta('en', { videos, music, blog, gallery, tags, absoluteImage, domain }),
+    ru: collectMeta('ru', { videos, music, blog, gallery, tags, tools, absoluteImage, domain }),
+    en: collectMeta('en', { videos, music, blog, gallery, tags, tools, absoluteImage, domain }),
   };
 
   const sitemapXml = await readFile(sitemapPath, 'utf8');

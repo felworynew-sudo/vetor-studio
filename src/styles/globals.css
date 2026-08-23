@@ -7008,3 +7008,16 @@ select {
   .flipcard { max-width: none; flex-basis: 100%; }
   .case-logo-oldnew { grid-template-columns: 1fr; }
 }
+
+.site-footer-tools-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.site-footer-tools-tag {
+  font-size: 11px;
+  color: #7e83ff;
+  border: 1px solid rgba(97, 102, 255, 0.4);
+  border-radius: 999px;
+  padding: 1px 7px;
+}

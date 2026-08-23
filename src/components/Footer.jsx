@@ -72,6 +72,10 @@ function Footer({ language }) {
         <div className="site-footer-legal">
           <a href={withLanguagePrefix('/about', language)} className="site-footer-legal-link">{language === 'ru' ? 'О студии' : 'About'}</a>
           <a href={withLanguagePrefix('/privacy', language)} className="site-footer-legal-link">{language === 'ru' ? 'Политика конфиденциальности' : 'Privacy Policy'}</a>
+          <a href="/tools" className="site-footer-legal-link site-footer-tools-link">
+            🧰 {language === 'ru' ? 'Бесплатные инструменты' : 'Free tools'}
+            <span className="site-footer-tools-tag">{language === 'ru' ? 'для дизайнеров' : 'for designers'}</span>
+          </a>
         </div>
         <span className="site-footer-copy">ИНН 233505486022 · {copy.rights}</span>
       </div>

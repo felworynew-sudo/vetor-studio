@@ -1,0 +1,107 @@
+{
+  "categories": [
+    { "id": "image", "ru": "Изображения", "en": "Images", "icon": "🖼️" },
+    { "id": "color", "ru": "Цвет", "en": "Color", "icon": "🎨" },
+    { "id": "svg", "ru": "SVG и вектор", "en": "SVG & vector", "icon": "✒️" },
+    { "id": "generators", "ru": "Генераторы", "en": "Generators", "icon": "✨" },
+    { "id": "utility", "ru": "Утилиты", "en": "Utilities", "icon": "🛠️" }
+  ],
+  "tools": [
+    {
+      "slug": "image-converter",
+      "categoryId": "image",
+      "status": "ready",
+      "icon": "🔄",
+      "ru": { "title": "Конвертер изображений", "desc": "PNG, JPG, WebP — конвертация прямо в браузере, пакетно, без загрузки на сервер." },
+      "en": { "title": "Image converter", "desc": "PNG, JPG, WebP — convert right in your browser, in batches, nothing uploaded to a server." }
+    },
+    {
+      "slug": "color-converter",
+      "categoryId": "color",
+      "status": "ready",
+      "icon": "🌈",
+      "ru": { "title": "Конвертер цветов", "desc": "HEX ⇆ RGB, HSL и приблизительный CMYK. Живой предпросмотр и копирование в клик." },
+      "en": { "title": "Color converter", "desc": "HEX ⇆ RGB, HSL and approximate CMYK. Live preview and one-click copy." }
+    },
+    {
+      "slug": "palette-extractor",
+      "categoryId": "color",
+      "status": "soon",
+      "icon": "💧",
+      "ru": { "title": "Экстрактор палитры", "desc": "Достаёт основные цвета из загруженного изображения." },
+      "en": { "title": "Palette extractor", "desc": "Pulls the key colors out of an uploaded image." }
+    },
+    {
+      "slug": "contrast-checker",
+      "categoryId": "color",
+      "status": "soon",
+      "icon": "🔬",
+      "ru": { "title": "Проверка контраста (WCAG)", "desc": "Контрастность текста и фона по стандартам доступности." },
+      "en": { "title": "Contrast checker (WCAG)", "desc": "Text/background contrast against accessibility standards." }
+    },
+    {
+      "slug": "colorblind-simulator",
+      "categoryId": "color",
+      "status": "soon",
+      "icon": "👁️",
+      "ru": { "title": "Симулятор дальтонизма", "desc": "Как макет видят люди с разными типами дальтонизма." },
+      "en": { "title": "Colorblind simulator", "desc": "How your design looks with different color-vision types." }
+    },
+    {
+      "slug": "webp-batch",
+      "categoryId": "image",
+      "status": "soon",
+      "icon": "📦",
+      "ru": { "title": "Пакетный WebP", "desc": "Папку PNG/JPG — в лёгкий WebP прямо в памяти браузера." },
+      "en": { "title": "Batch WebP", "desc": "A folder of PNG/JPG into lightweight WebP, in-browser." }
+    },
+    {
+      "slug": "favicon-generator",
+      "categoryId": "image",
+      "status": "soon",
+      "icon": "⭐",
+      "ru": { "title": "Генератор фавиконок", "desc": "Полный набор иконок + manifest.json из одной картинки." },
+      "en": { "title": "Favicon generator", "desc": "A full icon set + manifest.json from a single image." }
+    },
+    {
+      "slug": "watermark",
+      "categoryId": "image",
+      "status": "soon",
+      "icon": "🔖",
+      "ru": { "title": "Водяные знаки", "desc": "Пакетное наложение логотипа/текста на концепты." },
+      "en": { "title": "Watermark", "desc": "Batch-stamp a logo or text onto your concepts." }
+    },
+    {
+      "slug": "svg-cleaner",
+      "categoryId": "svg",
+      "status": "soon",
+      "icon": "🧹",
+      "ru": { "title": "Очиститель SVG", "desc": "Убирает мусор и метаданные из экспортов Figma/Illustrator." },
+      "en": { "title": "SVG cleaner", "desc": "Strips junk and metadata from Figma/Illustrator exports." }
+    },
+    {
+      "slug": "qr-generator",
+      "categoryId": "generators",
+      "status": "soon",
+      "icon": "🔳",
+      "ru": { "title": "QR-код: генератор и сканер", "desc": "Выгрузка в SVG/PNG, настройка цвета и фона." },
+      "en": { "title": "QR code: generator & scanner", "desc": "Export to SVG/PNG, custom color and background." }
+    },
+    {
+      "slug": "noise-generator",
+      "categoryId": "generators",
+      "status": "soon",
+      "icon": "🌫️",
+      "ru": { "title": "Генератор шума", "desc": "Белый/розовый шум для концентрации в работе." },
+      "en": { "title": "Noise generator", "desc": "White/pink noise to help you focus." }
+    },
+    {
+      "slug": "break-timer",
+      "categoryId": "utility",
+      "status": "soon",
+      "icon": "⏱️",
+      "ru": { "title": "Таймер 20-20-20", "desc": "Напоминание давать отдых глазам каждые 20 минут." },
+      "en": { "title": "20-20-20 timer", "desc": "Reminds you to rest your eyes every 20 minutes." }
+    }
+  ]
+}

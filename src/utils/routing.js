@@ -109,6 +109,7 @@ export function parseRoute(locationLike) {
     blogId: '',
     galleryId: '',
     pluginId: '',
+    toolSlug: '',
     designCategory: queryDesignCategory || 'all',
     isPriceOpen: params.get('price') === '1',
     isNotFound: false,
@@ -160,6 +161,14 @@ export function parseRoute(locationLike) {
 
   if (pathname.startsWith('/plugins/')) {
     return { ...base, section: 'plugins', pluginId: pathname.slice('/plugins/'.length) };
+  }
+
+  if (pathname === '/tools') {
+    return { ...base, section: 'tools' };
+  }
+
+  if (pathname.startsWith('/tools/')) {
+    return { ...base, section: 'tools', toolSlug: pathname.slice('/tools/'.length) };
   }
 
   if (pathname.startsWith('/design/item/')) {
@@ -218,7 +227,15 @@ export function buildSectionPath(section) {
     return '/plugins';
   }
 
+  if (section === 'tools') {
+    return '/tools';
+  }
+
   return '/';
+}
+
+export function buildToolPath(slug) {
+  return `/tools/${encodeURIComponent(slug)}`;
 }
 
 export function buildTagPath(tagSlug) {
@@ -257,6 +274,7 @@ export function buildUrl({
   blogId = '',
   galleryId = '',
   pluginId = '',
+  toolSlug = '',
   designCategory = 'all',
   isPriceOpen = false,
   language = DEFAULT_LANGUAGE,
@@ -271,6 +289,8 @@ export function buildUrl({
     pathname = buildGalleryPath(galleryId);
   } else if (section === 'plugins' && pluginId) {
     pathname = buildPluginPath(pluginId);
+  } else if (section === 'tools' && toolSlug) {
+    pathname = buildToolPath(toolSlug);
   } else if (section === 'price') {
     pathname = buildPricePath();
   } else if (section === 'gallery' && designCategory && designCategory !== 'all') {

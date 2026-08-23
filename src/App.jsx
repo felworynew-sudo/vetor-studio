@@ -64,7 +64,7 @@ const DEFAULT_SECTIONS_VISIBILITY = {
   privacy: true,
 };
 
-const KNOWN_SECTIONS = ['home', 'previews', 'blog', 'gallery', 'fonts', 'price', 'plugins', 'about', 'privacy'];
+const KNOWN_SECTIONS = ['home', 'previews', 'blog', 'gallery', 'fonts', 'price', 'plugins', 'about', 'privacy', 'tools'];
 
 const FONTS_PROMO_COPY = {
   ru: {
@@ -88,6 +88,7 @@ const GalleryItemEditorModal = lazy(() => import('./components/GalleryItemEditor
 const JsonEditModal = lazy(() => import('./components/JsonEditModal'));
 const TextEditModal = lazy(() => import('./components/TextEditModal'));
 const PaletteModal = lazy(() => import('./components/PaletteModal'));
+const ToolsStudio = lazy(() => import('./components/tools/ToolsStudio'));
 
 function isStudioModeEnabled() {
   if (typeof window === 'undefined') {
@@ -587,7 +588,9 @@ function App() {
           ? 'gallery'
           : routeState.section;
     const normalizedSection = isSectionKnown(targetSection) ? targetSection : 'home';
-    const sectionAllowed = Boolean(visibleSections[normalizedSection]);
+    // Студия инструментов (/tools) не управляется конфигом видимости секций —
+    // это отдельный саб-бренд, всегда доступный.
+    const sectionAllowed = normalizedSection === 'tools' ? true : Boolean(visibleSections[normalizedSection]);
 
     const nextWork = routeState.workId ? allWorks.find((item) => item.id === routeState.workId) ?? null : null;
     const nextBlog = routeState.blogId ? blogPosts.find((post) => post.id === routeState.blogId) ?? null : null;
@@ -643,6 +646,12 @@ function App() {
       return;
     }
 
+    // Студия инструментов сама управляет своим URL (/tools, /tools/:slug) —
+    // не даём общему синхронизатору перетереть путь на голый /tools.
+    if (activeSection === 'tools') {
+      return;
+    }
+
     const url = buildUrl({
       section: activeSection,
       query,
@@ -688,12 +697,18 @@ function App() {
       document.head.appendChild(robotsMeta);
     }
 
-    const shouldNoIndex = studioEnabled || isRouteNotFound || !visibleSections[activeSection];
+    const shouldNoIndex = studioEnabled || isRouteNotFound || (activeSection !== 'tools' && !visibleSections[activeSection]);
     robotsMeta.setAttribute('content', shouldNoIndex ? 'noindex, nofollow' : 'index, follow');
   }, [activeSection, isRouteNotFound, studioEnabled, visibleSections]);
 
   useEffect(() => {
     if (typeof document === 'undefined' || typeof window === 'undefined') {
+      return;
+    }
+
+    // Студия инструментов сама управляет <title> и мета — не перетираем.
+    if (activeSection === 'tools') {
+      document.documentElement.lang = language;
       return;
     }
 
@@ -1773,6 +1788,19 @@ function App() {
     setRouteState(parseRoute(window.location));
   }
 
+  // SPA-переход по абсолютному пути (для студии инструментов и т.п.).
+  function navigateTo(path) {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    if (`${window.location.pathname}${window.location.search}` === path) {
+      return;
+    }
+    window.history.pushState({}, '', path);
+    setRouteState(parseRoute(window.location));
+    window.scrollTo(0, 0);
+  }
+
   function buildSectionHref(section) {
     if (section === 'price') {
       return buildUrl({ section: 'price', language });
@@ -1850,6 +1878,23 @@ function App() {
       ? 'Работаем удаленно по России и за ее пределами.'
       : 'Working remotely across Russia and worldwide.',
   };
+
+  // Студия инструментов — отдельный саб-бренд со своим layout (сайдбар + свой
+  // хедер), поэтому рендерим её вместо основного каркаса сайта.
+  if (activeSection === 'tools') {
+    return (
+      <Suspense fallback={<div className="tools-boot">Загрузка…</div>}>
+        <ToolsStudio
+          language={language}
+          onLanguageChange={handleLanguageChange}
+          toolSlug={routeState.toolSlug || ''}
+          onNavigate={navigateTo}
+          telegramUrl={siteConfig.contacts?.telegramUrl}
+          contactEmail={siteConfig.contacts?.email}
+        />
+      </Suspense>
+    );
+  }
 
   return (
     <div className="app-shell">

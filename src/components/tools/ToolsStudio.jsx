@@ -1,0 +1,282 @@
+import { Suspense, useEffect, useMemo, useState } from 'react';
+import {
+  TOOL_CATEGORIES,
+  TOOLS,
+  getToolBySlug,
+  getToolsByCategory,
+} from '../../data/toolsCatalog';
+import { buildToolPath } from '../../utils/routing';
+import '../../styles/tools.css';
+
+// РАБОЧЕЕ НАЗВАНИЕ саб-бренда студии инструментов. Меняется в одном месте.
+const STUDIO_NAME = { ru: 'Верстак', en: 'Verstak' };
+const STUDIO_TAGLINE = { ru: 'инструменты от Vetor', en: 'tools by Vetor' };
+
+const UI = {
+  ru: {
+    heroTitle: 'Инструменты для дизайнеров',
+    heroSubtitle: 'Онлайн-инструменты для работы с цветом, изображениями и вектором. Всё считается прямо в браузере — без регистрации и без загрузки файлов на сервер.',
+    search: 'Поиск инструментов…',
+    all: 'Все инструменты',
+    soon: 'Скоро',
+    ready: 'Готово',
+    toMainSite: 'На основной сайт Vetor',
+    forDesigners: 'для дизайнеров',
+    back: 'Все инструменты',
+    open: 'Открыть',
+    nothing: 'Ничего не нашлось',
+    ideasTitle: 'Есть идея инструмента?',
+    ideasText: 'Напишите — соберём то, чего не хватает.',
+    count: (n) => `${n} инструментов`,
+  },
+  en: {
+    heroTitle: 'Tools for designers',
+    heroSubtitle: 'Online tools for color, images, and vector work. Everything runs right in your browser — no sign-up, nothing uploaded to a server.',
+    search: 'Search tools…',
+    all: 'All tools',
+    soon: 'Soon',
+    ready: 'Ready',
+    toMainSite: 'Back to the main Vetor site',
+    forDesigners: 'for designers',
+    back: 'All tools',
+    open: 'Open',
+    nothing: 'Nothing found',
+    ideasTitle: 'Got a tool idea?',
+    ideasText: 'Drop us a line — we’ll build what’s missing.',
+    count: (n) => `${n} tools`,
+  },
+};
+
+function ToolsStudio({
+  language = 'ru',
+  onLanguageChange,
+  toolSlug = '',
+  onNavigate,
+  telegramUrl,
+  contactEmail,
+}) {
+  const lang = language === 'en' ? 'en' : 'ru';
+  const ui = UI[lang];
+  const [search, setSearch] = useState('');
+
+  const activeTool = toolSlug ? getToolBySlug(toolSlug) : null;
+  const readyCount = useMemo(() => TOOLS.filter((tItem) => tItem.status === 'ready').length, []);
+
+  // SPA-переход по внутренним ссылкам (href остаётся для SEO/новой вкладки).
+  const go = (path) => (event) => {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button === 1) {
+      return;
+    }
+    event.preventDefault();
+    onNavigate?.(path);
+  };
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    if (activeTool) {
+      document.title = `${activeTool[lang].title} — ${STUDIO_NAME[lang]}`;
+    } else {
+      document.title = `${STUDIO_NAME[lang]} — ${ui.heroTitle}`;
+    }
+  }, [activeTool, lang, ui.heroTitle]);
+
+  const filteredTools = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return TOOLS;
+    return TOOLS.filter((tItem) => (
+      `${tItem[lang].title} ${tItem[lang].desc}`.toLowerCase().includes(q)
+    ));
+  }, [search, lang]);
+
+  return (
+    <div className="tools-studio" data-lang={lang}>
+      {/* Хедер студии */}
+      <header className="tools-header">
+        <a href="/tools" className="tools-brand" onClick={go('/tools')}>
+          <span className="tools-brand-mark" aria-hidden="true">🧰</span>
+          <span className="tools-brand-text">
+            <strong>{STUDIO_NAME[lang]}</strong>
+            <em>{STUDIO_TAGLINE[lang]}</em>
+          </span>
+        </a>
+
+        <div className="tools-header-right">
+          <div className="tools-lang" role="group" aria-label="Language">
+            <button
+              type="button"
+              className={lang === 'ru' ? 'is-active' : ''}
+              onClick={() => onLanguageChange?.('ru')}
+            >
+              RU
+            </button>
+            <button
+              type="button"
+              className={lang === 'en' ? 'is-active' : ''}
+              onClick={() => onLanguageChange?.('en')}
+            >
+              EN
+            </button>
+          </div>
+          <a href="/" className="tools-exit" onClick={go('/')}>
+            ← {ui.toMainSite}
+          </a>
+        </div>
+      </header>
+
+      <div className="tools-body">
+        {/* Сайдбар с рубриками */}
+        <aside className="tools-sidebar">
+          <a
+            href="/tools"
+            className={!activeTool ? 'tools-side-all is-active' : 'tools-side-all'}
+            onClick={go('/tools')}
+          >
+            📂 {ui.all} <span className="tools-side-count">{TOOLS.length}</span>
+          </a>
+          {TOOL_CATEGORIES.map((cat) => {
+            const catTools = getToolsByCategory(cat.id);
+            if (catTools.length === 0) return null;
+            return (
+              <div key={cat.id} className="tools-side-group">
+                <div className="tools-side-cat">
+                  <span>{cat.icon} {cat[lang]}</span>
+                  <span className="tools-side-count">{catTools.length}</span>
+                </div>
+                <ul>
+                  {catTools.map((tItem) => {
+                    const isActive = activeTool?.slug === tItem.slug;
+                    const isReady = tItem.status === 'ready';
+                    const cls = [
+                      'tools-side-item',
+                      isActive ? 'is-active' : '',
+                      isReady ? '' : 'is-soon',
+                    ].filter(Boolean).join(' ');
+                    if (!isReady) {
+                      return (
+                        <li key={tItem.slug}>
+                          <span className={cls} title={ui.soon}>
+                            {tItem.icon} {tItem[lang].title}
+                            <span className="tools-soon-dot">{ui.soon}</span>
+                          </span>
+                        </li>
+                      );
+                    }
+                    return (
+                      <li key={tItem.slug}>
+                        <a
+                          href={buildToolPath(tItem.slug)}
+                          className={cls}
+                          onClick={go(buildToolPath(tItem.slug))}
+                        >
+                          {tItem.icon} {tItem[lang].title}
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            );
+          })}
+        </aside>
+
+        {/* Основная область */}
+        <main className="tools-main">
+          {activeTool ? (
+            <ToolView tool={activeTool} lang={lang} ui={ui} onBack={go('/tools')} />
+          ) : (
+            <>
+              <section className="tools-hero">
+                <div className="tools-hero-inner">
+                  <span className="tools-hero-eyebrow">{STUDIO_NAME[lang]} · {ui.count(readyCount)}</span>
+                  <h1>{ui.heroTitle}</h1>
+                  <p>{ui.heroSubtitle}</p>
+                  <input
+                    type="search"
+                    className="tools-search"
+                    placeholder={ui.search}
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
+                </div>
+              </section>
+
+              {filteredTools.length === 0 ? (
+                <p className="tools-empty">{ui.nothing}</p>
+              ) : (
+                <div className="tools-grid">
+                  {filteredTools.map((tItem) => (
+                    <ToolCard
+                      key={tItem.slug}
+                      tool={tItem}
+                      lang={lang}
+                      ui={ui}
+                      onOpen={go(buildToolPath(tItem.slug))}
+                    />
+                  ))}
+                </div>
+              )}
+
+              <section className="tools-ideas">
+                <div>
+                  <h2>{ui.ideasTitle}</h2>
+                  <p>{ui.ideasText}</p>
+                </div>
+                {contactEmail && (
+                  <a className="tools-btn primary" href={`mailto:${contactEmail}?subject=Идея инструмента`}>
+                    {contactEmail}
+                  </a>
+                )}
+              </section>
+            </>
+          )}
+        </main>
+      </div>
+    </div>
+  );
+}
+
+function ToolCard({ tool, lang, ui, onOpen }) {
+  const isReady = tool.status === 'ready';
+  const cat = TOOL_CATEGORIES.find((c) => c.id === tool.categoryId);
+  if (!isReady) {
+    return (
+      <div className="tool-card is-soon" aria-disabled="true">
+        <span className="tool-card-icon">{tool.icon}</span>
+        <span className="tool-card-badge soon">{ui.soon}</span>
+        <h3>{tool[lang].title}</h3>
+        <p>{tool[lang].desc}</p>
+        {cat && <span className="tool-card-cat">{cat.icon} {cat[lang]}</span>}
+      </div>
+    );
+  }
+  return (
+    <a href={buildToolPath(tool.slug)} className="tool-card" onClick={onOpen}>
+      <span className="tool-card-icon">{tool.icon}</span>
+      <span className="tool-card-badge ready">{ui.ready}</span>
+      <h3>{tool[lang].title}</h3>
+      <p>{tool[lang].desc}</p>
+      {cat && <span className="tool-card-cat">{cat.icon} {cat[lang]}</span>}
+    </a>
+  );
+}
+
+function ToolView({ tool, lang, ui, onBack }) {
+  const ToolComponent = tool.component;
+  return (
+    <div className="tool-view">
+      <a href="/tools" className="tool-back" onClick={onBack}>← {ui.back}</a>
+      <header className="tool-view-head">
+        <span className="tool-view-icon">{tool.icon}</span>
+        <div>
+          <h1>{tool[lang].title}</h1>
+          <p>{tool[lang].desc}</p>
+        </div>
+      </header>
+      <Suspense fallback={<div className="tool-loading">…</div>}>
+        {ToolComponent ? <ToolComponent language={lang} /> : null}
+      </Suspense>
+    </div>
+  );
+}
+
+export default ToolsStudio;

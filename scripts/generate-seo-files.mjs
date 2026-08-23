@@ -82,13 +82,14 @@ async function readJson(fileName, fallback) {
 }
 
 async function main() {
-  const [siteConfig, tags, videos, music, blog, gallery] = await Promise.all([
+  const [siteConfig, tags, videos, music, blog, gallery, toolsData] = await Promise.all([
     readJson('siteConfig.json', {}),
     readJson('tags.json', []),
     readJson('videos.json', []),
     readJson('music.json', []),
     readJson('blog.json', []),
     readJson('gallery.json', []),
+    readJson('toolsData.json', { tools: [] }),
   ]);
 
   const rawDomain = (siteConfig.domain || 'https://vetor-studio.ru').replace(/\/+$/, '');
@@ -192,6 +193,14 @@ async function main() {
 
   addRoute('/about', null, 'monthly', '0.7');
   addRoute('/privacy', null, 'yearly', '0.3');
+
+  // Студия инструментов (/tools) — хаб + страница каждого готового тула.
+  addRoute('/tools', null, 'weekly', '0.8');
+  for (const tool of toolsData.tools || []) {
+    if (tool.status === 'ready') {
+      addRoute(`/tools/${encodeURIComponent(tool.slug)}`, null, 'monthly', '0.7');
+    }
+  }
 
   // На каждый логический маршрут — две записи (RU и EN), и в обеих полный набор
   // hreflang-альтернат, как требует спецификация (каждая языковая страница
