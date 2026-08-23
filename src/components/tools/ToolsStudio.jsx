@@ -58,8 +58,26 @@ function ToolsStudio({
   const lang = language === 'en' ? 'en' : 'ru';
   const ui = UI[lang];
   const [search, setSearch] = useState('');
+  const [collapsed, setCollapsed] = useState(() => new Set());
 
   const activeTool = toolSlug ? getToolBySlug(toolSlug) : null;
+
+  const toggleCat = (id) => setCollapsed((prev) => {
+    const next = new Set(prev);
+    if (next.has(id)) next.delete(id); else next.add(id);
+    return next;
+  });
+
+  // Категория открытого инструмента всегда раскрыта.
+  useEffect(() => {
+    if (!activeTool) return;
+    setCollapsed((prev) => {
+      if (!prev.has(activeTool.categoryId)) return prev;
+      const next = new Set(prev);
+      next.delete(activeTool.categoryId);
+      return next;
+    });
+  }, [activeTool]);
   const readyCount = useMemo(() => TOOLS.filter((tItem) => tItem.status === 'ready').length, []);
 
   // SPA-переход по внутренним ссылкам (href остаётся для SEO/новой вкладки).
@@ -136,12 +154,22 @@ function ToolsStudio({
           {TOOL_CATEGORIES.map((cat) => {
             const catTools = getToolsByCategory(cat.id);
             if (catTools.length === 0) return null;
+            const isOpen = !collapsed.has(cat.id);
             return (
-              <div key={cat.id} className="tools-side-group">
-                <div className="tools-side-cat">
-                  <span>{cat.icon} {cat[lang]}</span>
-                  <span className="tools-side-count">{catTools.length}</span>
-                </div>
+              <div key={cat.id} className={isOpen ? 'tools-side-group is-open' : 'tools-side-group is-collapsed'}>
+                <button
+                  type="button"
+                  className="tools-side-cat"
+                  onClick={() => toggleCat(cat.id)}
+                  aria-expanded={isOpen}
+                >
+                  <span className="tools-side-cat-label">{cat.icon} {cat[lang]}</span>
+                  <span className="tools-side-cat-right">
+                    <span className="tools-side-count">{catTools.length}</span>
+                    <span className="tools-side-chevron" aria-hidden="true">▾</span>
+                  </span>
+                </button>
+                {isOpen && (
                 <ul>
                   {catTools.map((tItem) => {
                     const isActive = activeTool?.slug === tItem.slug;
@@ -174,6 +202,7 @@ function ToolsStudio({
                     );
                   })}
                 </ul>
+                )}
               </div>
             );
           })}
