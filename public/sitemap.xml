@@ -1909,6 +1909,42 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://vetor-studio.ru/tools/watermark</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/watermark" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/watermark" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/watermark" />
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/tools/watermark</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/watermark" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/watermark" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/watermark" />
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/tools/svg-cleaner</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/svg-cleaner" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/svg-cleaner" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/svg-cleaner" />
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/tools/svg-cleaner</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/svg-cleaner" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/svg-cleaner" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/svg-cleaner" />
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://vetor-studio.ru/tools/noise-generator</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/noise-generator" />
     <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/noise-generator" />
@@ -1922,6 +1958,24 @@
     <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/noise-generator" />
     <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/noise-generator" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/noise-generator" />
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/tools/design-challenge</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/design-challenge" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/design-challenge" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/design-challenge" />
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/tools/design-challenge</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/design-challenge" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/design-challenge" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/design-challenge" />
     <lastmod>2026-08-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>

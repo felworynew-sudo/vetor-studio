@@ -48,14 +48,6 @@
       "en": { "title": "Colorblind simulator", "desc": "How your design looks with different color-vision types." }
     },
     {
-      "slug": "webp-batch",
-      "categoryId": "image",
-      "status": "soon",
-      "icon": "📦",
-      "ru": { "title": "Пакетный WebP", "desc": "Папку PNG/JPG — в лёгкий WebP прямо в памяти браузера." },
-      "en": { "title": "Batch WebP", "desc": "A folder of PNG/JPG into lightweight WebP, in-browser." }
-    },
-    {
       "slug": "favicon-generator",
       "categoryId": "image",
       "status": "soon",
@@ -66,7 +58,7 @@
     {
       "slug": "watermark",
       "categoryId": "image",
-      "status": "soon",
+      "status": "ready",
       "icon": "🔖",
       "ru": { "title": "Водяные знаки", "desc": "Пакетное наложение логотипа/текста на концепты." },
       "en": { "title": "Watermark", "desc": "Batch-stamp a logo or text onto your concepts." }
@@ -74,7 +66,7 @@
     {
       "slug": "svg-cleaner",
       "categoryId": "svg",
-      "status": "soon",
+      "status": "ready",
       "icon": "🧹",
       "ru": { "title": "Очиститель SVG", "desc": "Убирает мусор и метаданные из экспортов Figma/Illustrator." },
       "en": { "title": "SVG cleaner", "desc": "Strips junk and metadata from Figma/Illustrator exports." }
@@ -94,6 +86,14 @@
       "icon": "🌫️",
       "ru": { "title": "Генератор шума", "desc": "Белый/розовый шум для концентрации в работе." },
       "en": { "title": "Noise generator", "desc": "White/pink noise to help you focus." }
+    },
+    {
+      "slug": "design-challenge",
+      "categoryId": "generators",
+      "status": "ready",
+      "icon": "🎲",
+      "ru": { "title": "Генератор дизайн-челленджей", "desc": "Случайное задание для прокачки портфолио: объект, аудитория, стиль и палитра." },
+      "en": { "title": "Design challenge generator", "desc": "A random brief to grow your portfolio: object, audience, style and palette." }
     },
     {
       "slug": "break-timer",

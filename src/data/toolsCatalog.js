@@ -13,6 +13,9 @@ const READY_COMPONENTS = {
   'colorblind-simulator': lazy(() => import('../components/tools/ColorblindSimulator')),
   'noise-generator': lazy(() => import('../components/tools/NoiseGenerator')),
   'break-timer': lazy(() => import('../components/tools/BreakTimer')),
+  watermark: lazy(() => import('../components/tools/Watermark')),
+  'svg-cleaner': lazy(() => import('../components/tools/SvgCleaner')),
+  'design-challenge': lazy(() => import('../components/tools/DesignChallenge')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;

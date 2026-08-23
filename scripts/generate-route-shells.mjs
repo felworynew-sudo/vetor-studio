@@ -185,8 +185,8 @@ const NAV_LINKS = {
 };
 
 const SECTION_CRUMB = {
-  ru: { '/previews': 'Превью', '/design': 'Дизайн', '/blog': 'Блог', '/price': 'Цены', '/fonts': 'Шрифты', '/plugins': 'Софт', '/about': 'О студии', '/privacy': 'Конфиденциальность' },
-  en: { '/previews': 'Previews', '/design': 'Design', '/blog': 'Blog', '/price': 'Pricing', '/fonts': 'Fonts', '/plugins': 'Software', '/about': 'About', '/privacy': 'Privacy' },
+  ru: { '/previews': 'Превью', '/design': 'Дизайн', '/blog': 'Блог', '/price': 'Цены', '/fonts': 'Шрифты', '/plugins': 'Софт', '/about': 'О студии', '/privacy': 'Конфиденциальность', '/tools': 'Верстак' },
+  en: { '/previews': 'Previews', '/design': 'Design', '/blog': 'Blog', '/price': 'Pricing', '/fonts': 'Fonts', '/plugins': 'Software', '/about': 'About', '/privacy': 'Privacy', '/tools': 'Verstak' },
 };
 
 const DEFAULTS = {
@@ -491,7 +491,7 @@ function collectMeta(lang, { videos, music, blog, gallery, tags, tools = [], abs
         'Бесплатные онлайн-инструменты для цвета, изображений и вектора — всё считается прямо в браузере, без регистрации и загрузки файлов на сервер.',
         'Free online tools for color, images and vector — everything runs right in your browser, no sign-up, nothing uploaded to a server.',
       ),
-      image: '/og/default.png',
+      image: '/og/tools.png',
     });
   }
   for (const tool of tools) {
@@ -505,7 +505,7 @@ function collectMeta(lang, { videos, music, blog, gallery, tags, tools = [], abs
       ogTitle: title,
       heading: title,
       description: desc,
-      image: '/og/default.png',
+      image: '/og/tools.png',
       jsonld: [{
         '@context': 'https://schema.org',
         '@type': 'WebApplication',
@@ -530,6 +530,7 @@ function buildBreadcrumb(logicalPath, lang, langUrl, heading) {
   else if (logicalPath.startsWith('/design')) sectionPath = '/design';
   else if (logicalPath.startsWith('/blog')) sectionPath = '/blog';
   else if (logicalPath.startsWith('/plugins')) sectionPath = '/plugins';
+  else if (logicalPath.startsWith('/tools')) sectionPath = '/tools';
   else if (SECTION_CRUMB[lang][logicalPath]) sectionPath = logicalPath;
 
   const isSectionRoot = sectionPath === logicalPath;

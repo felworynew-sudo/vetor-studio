@@ -281,7 +281,6 @@ function ToolCard({ tool, lang, ui, onOpen }) {
   return (
     <a href={buildToolPath(tool.slug)} className="tool-card" onClick={onOpen}>
       <span className="tool-card-icon">{tool.icon}</span>
-      <span className="tool-card-badge ready">{ui.ready}</span>
       <h3>{tool[lang].title}</h3>
       <p>{tool[lang].desc}</p>
       {cat && <span className="tool-card-cat">{cat.icon} {cat[lang]}</span>}

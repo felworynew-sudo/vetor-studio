@@ -517,3 +517,42 @@ a.tool-card:hover {
 .pe-swatch:hover { border-color: var(--t-accent); }
 .pe-swatch-color { height: 64px; width: 100%; }
 .pe-swatch-hex { padding: 8px; font-family: monospace; font-size: 13px; color: var(--text); }
+
+/* --- Дизайн-челлендж --- */
+.design-challenge { text-align: center; }
+.dc-brief {
+  font-size: clamp(20px, 3vw, 28px); font-weight: 700; line-height: 1.35;
+  margin: 6px 0 20px; letter-spacing: -0.01em;
+}
+.dc-tags { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 20px; }
+.dc-tag {
+  display: inline-flex; flex-direction: column; gap: 2px; align-items: flex-start;
+  padding: 8px 14px; border-radius: 12px; background: var(--bg); border: 1px solid var(--stroke);
+  font-size: 14px; color: var(--text);
+}
+.dc-tag em { font-style: normal; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-soft); }
+.dc-palette { margin-bottom: 20px; }
+.dc-palette-label { display: block; font-size: 12px; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+.dc-palette-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.dc-palette-color {
+  width: 96px; height: 56px; border-radius: 10px; border: 1px solid var(--stroke-strong);
+  display: flex; align-items: flex-end; justify-content: center; padding-bottom: 5px;
+  font-family: monospace; font-size: 11px; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+}
+.design-challenge .tool-actions { justify-content: center; }
+
+/* --- Очиститель SVG --- */
+.svgc-input, .svgc-output {
+  width: 100%; min-height: 140px; resize: vertical; margin-top: 12px;
+  padding: 12px 14px; border-radius: 12px; border: 1px solid var(--stroke-strong);
+  background: var(--bg); color: var(--text); font-family: monospace; font-size: 13px; line-height: 1.5;
+}
+.svgc-output { background: var(--surface-strong); }
+.svgc-stats { display: flex; align-items: center; gap: 10px; margin: 14px 0 4px; font-size: 13.5px; color: var(--text-muted); }
+
+/* --- Водяные знаки --- */
+.wm-check { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; color: var(--text); cursor: pointer; }
+.wm-text-input {
+  padding: 9px 12px; border-radius: 10px; border: 1px solid var(--stroke-strong);
+  background: var(--bg); color: var(--text); font-size: 14px; width: 200px;
+}

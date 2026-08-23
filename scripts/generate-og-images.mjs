@@ -21,6 +21,7 @@ const cards = [
   { file: 'price', title: 'Прайс без созвонов' },
   { file: 'plugins', title: 'Resto — реставрация фото' },
   { file: 'blog', title: 'Блог о дизайне' },
+  { file: 'tools', title: 'Верстак — инструменты' },
   // Английские варианты для /en/ (превью ссылок в международных соцсетях).
   { file: 'default-en', title: 'Thumbnails, covers & branding' },
   { file: 'previews-en', title: 'YouTube thumbnails' },
@@ -29,6 +30,7 @@ const cards = [
   { file: 'price-en', title: 'Pricing, no calls needed' },
   { file: 'plugins-en', title: 'Resto — photo restoration' },
   { file: 'blog-en', title: 'Design blog' },
+  { file: 'tools-en', title: 'Verstak — tools' },
 ];
 
 function esc(s) {
