@@ -26,7 +26,7 @@
     {
       "slug": "palette-extractor",
       "categoryId": "color",
-      "status": "soon",
+      "status": "ready",
       "icon": "💧",
       "ru": { "title": "Экстрактор палитры", "desc": "Достаёт основные цвета из загруженного изображения." },
       "en": { "title": "Palette extractor", "desc": "Pulls the key colors out of an uploaded image." }
@@ -34,7 +34,7 @@
     {
       "slug": "contrast-checker",
       "categoryId": "color",
-      "status": "soon",
+      "status": "ready",
       "icon": "🔬",
       "ru": { "title": "Проверка контраста (WCAG)", "desc": "Контрастность текста и фона по стандартам доступности." },
       "en": { "title": "Contrast checker (WCAG)", "desc": "Text/background contrast against accessibility standards." }
@@ -42,7 +42,7 @@
     {
       "slug": "colorblind-simulator",
       "categoryId": "color",
-      "status": "soon",
+      "status": "ready",
       "icon": "👁️",
       "ru": { "title": "Симулятор дальтонизма", "desc": "Как макет видят люди с разными типами дальтонизма." },
       "en": { "title": "Colorblind simulator", "desc": "How your design looks with different color-vision types." }
@@ -90,7 +90,7 @@
     {
       "slug": "noise-generator",
       "categoryId": "generators",
-      "status": "soon",
+      "status": "ready",
       "icon": "🌫️",
       "ru": { "title": "Генератор шума", "desc": "Белый/розовый шум для концентрации в работе." },
       "en": { "title": "Noise generator", "desc": "White/pink noise to help you focus." }
@@ -98,7 +98,7 @@
     {
       "slug": "break-timer",
       "categoryId": "utility",
-      "status": "soon",
+      "status": "ready",
       "icon": "⏱️",
       "ru": { "title": "Таймер 20-20-20", "desc": "Напоминание давать отдых глазам каждые 20 минут." },
       "en": { "title": "20-20-20 timer", "desc": "Reminds you to rest your eyes every 20 minutes." }

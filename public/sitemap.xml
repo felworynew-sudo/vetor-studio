@@ -1854,4 +1854,94 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>https://vetor-studio.ru/tools/palette-extractor</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/palette-extractor" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/palette-extractor" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/palette-extractor" />
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/tools/palette-extractor</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/palette-extractor" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/palette-extractor" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/palette-extractor" />
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/tools/contrast-checker</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/contrast-checker" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/contrast-checker" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/contrast-checker" />
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/tools/contrast-checker</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/contrast-checker" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/contrast-checker" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/contrast-checker" />
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/tools/colorblind-simulator</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/colorblind-simulator" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/colorblind-simulator" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/colorblind-simulator" />
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/tools/colorblind-simulator</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/colorblind-simulator" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/colorblind-simulator" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/colorblind-simulator" />
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/tools/noise-generator</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/noise-generator" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/noise-generator" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/noise-generator" />
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/tools/noise-generator</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/noise-generator" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/noise-generator" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/noise-generator" />
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/tools/break-timer</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/break-timer" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/break-timer" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/break-timer" />
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/tools/break-timer</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/break-timer" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/break-timer" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/break-timer" />
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>

@@ -8,6 +8,11 @@ import toolsData from './toolsData.json';
 const READY_COMPONENTS = {
   'image-converter': lazy(() => import('../components/tools/ImageConverter')),
   'color-converter': lazy(() => import('../components/tools/ColorConverter')),
+  'contrast-checker': lazy(() => import('../components/tools/ContrastChecker')),
+  'palette-extractor': lazy(() => import('../components/tools/PaletteExtractor')),
+  'colorblind-simulator': lazy(() => import('../components/tools/ColorblindSimulator')),
+  'noise-generator': lazy(() => import('../components/tools/NoiseGenerator')),
+  'break-timer': lazy(() => import('../components/tools/BreakTimer')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;
