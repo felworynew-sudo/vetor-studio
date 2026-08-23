@@ -72,6 +72,9 @@ function toOptimizedPath(src) {
   const file = parts.slice(1).join('/');
   const dotIndex = file.lastIndexOf('.');
   if (!width || dotIndex === -1) return src;
+  // Студийные загрузки (/gallery/uploads/...) оптимизатор не трогает, а prune их
+  // не удаляет — оптимизированного webp нет, отдаём оригинал (иначе og:image 404).
+  if (parts.length !== 2) return src;
   const name = sanitizeAssetName(file.slice(0, dotIndex));
   return `/optimized/${folder}/${name}-${width}.webp`;
 }

@@ -39,6 +39,14 @@ function getOptimizedPath(src, width) {
     return '';
   }
 
+  // Оптимизатор (scripts/optimize-images.mjs) обрабатывает только верхний
+  // уровень папки, поэтому webp генерятся лишь для /<folder>/<file>. Студийные
+  // загрузки лежат в подпапке (/gallery/uploads/...) — оптимизированного
+  // варианта у них НЕТ, и подмена на /optimized/... даёт 404. Отдаём оригинал.
+  if (parts.length !== 2) {
+    return '';
+  }
+
   const name = sanitizeAssetName(file.slice(0, dotIndex));
   return `/optimized/${folder}/${name}-${width}.webp`;
 }
@@ -70,7 +78,12 @@ export function getOptimizedImageSrc(src, requestedWidth) {
     return withBase(src);
   }
 
-  return encodeURI(withBase(getOptimizedPath(src, width)));
+  const optimized = getOptimizedPath(src, width);
+  if (!optimized) {
+    return withBase(src);
+  }
+
+  return encodeURI(withBase(optimized));
 }
 
 export function getResponsiveImageProps(src) {
@@ -79,6 +92,12 @@ export function getResponsiveImageProps(src) {
   const preset = imagePresets[folder];
 
   if (!preset) {
+    return {};
+  }
+
+  // Нет оптимизированного варианта (студийные загрузки в подпапке) — не строим
+  // srcSet на несуществующие /optimized/... webp, отдаём только оригинал.
+  if (!getOptimizedPath(src, preset.widths[0])) {
     return {};
   }
 
