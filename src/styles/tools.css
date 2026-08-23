@@ -556,3 +556,43 @@ a.tool-card:hover {
   padding: 9px 12px; border-radius: 10px; border: 1px solid var(--stroke-strong);
   background: var(--bg); color: var(--text); font-size: 14px; width: 200px;
 }
+
+/* --- Цветовые схемы --- */
+.ch-swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; margin: 18px 0; }
+.ch-swatch { display: flex; flex-direction: column; border: 1px solid var(--stroke); border-radius: 12px; overflow: hidden; cursor: pointer; background: var(--bg); padding: 0; }
+.ch-swatch:hover { border-color: var(--t-accent); }
+.ch-swatch-color { height: 72px; width: 100%; }
+.ch-swatch-hex { padding: 8px; font-family: monospace; font-size: 13px; color: var(--text); }
+
+/* --- Генератор градиентов --- */
+.gg-preview { height: 180px; border-radius: 16px; border: 1px solid var(--stroke); margin-bottom: 18px; }
+.gg-stops { display: flex; flex-direction: column; gap: 10px; margin: 6px 0 16px; }
+.gg-stop { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.gg-stop input[type="range"] { flex: 1; min-width: 120px; accent-color: var(--t-accent); }
+.gg-stop-hex {
+  width: 100px; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--stroke-strong);
+  background: var(--bg); color: var(--text); font-family: monospace; font-size: 13px;
+}
+.gg-stop-pos { font-size: 12px; color: var(--text-muted); width: 40px; }
+.gg-css {
+  display: block; padding: 12px 14px; border-radius: 10px; background: var(--surface-strong);
+  border: 1px solid var(--stroke); font-family: monospace; font-size: 13px; color: var(--text);
+  word-break: break-all; margin-bottom: 14px;
+}
+
+/* --- Генератор фавиконок --- */
+.fv-grid { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end; margin-bottom: 18px; }
+.fv-item {
+  display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer;
+  background: var(--bg); border: 1px solid var(--stroke); border-radius: 12px; padding: 12px;
+}
+.fv-item:hover { border-color: var(--t-accent); }
+.fv-item img { image-rendering: auto; border-radius: 4px; }
+.fv-item-size { font-size: 11px; color: var(--text-soft); }
+.fv-code { margin-top: 16px; }
+.fv-code-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.fv-pre {
+  margin: 0; padding: 12px 14px; border-radius: 10px; background: var(--surface-strong);
+  border: 1px solid var(--stroke); font-family: monospace; font-size: 12.5px; color: var(--text);
+  overflow-x: auto; white-space: pre;
+}

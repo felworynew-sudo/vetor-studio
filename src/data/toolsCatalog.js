@@ -16,6 +16,9 @@ const READY_COMPONENTS = {
   watermark: lazy(() => import('../components/tools/Watermark')),
   'svg-cleaner': lazy(() => import('../components/tools/SvgCleaner')),
   'design-challenge': lazy(() => import('../components/tools/DesignChallenge')),
+  'color-harmony': lazy(() => import('../components/tools/ColorHarmony')),
+  'gradient-generator': lazy(() => import('../components/tools/GradientGenerator')),
+  'favicon-generator': lazy(() => import('../components/tools/FaviconGenerator')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;

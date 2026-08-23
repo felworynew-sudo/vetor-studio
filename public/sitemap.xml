@@ -1855,6 +1855,24 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://vetor-studio.ru/tools/color-harmony</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/color-harmony" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/color-harmony" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/color-harmony" />
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/tools/color-harmony</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/color-harmony" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/color-harmony" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/color-harmony" />
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://vetor-studio.ru/tools/palette-extractor</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/palette-extractor" />
     <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/palette-extractor" />
@@ -1904,6 +1922,24 @@
     <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/colorblind-simulator" />
     <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/colorblind-simulator" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/colorblind-simulator" />
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/tools/favicon-generator</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/favicon-generator" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/favicon-generator" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/favicon-generator" />
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/tools/favicon-generator</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/favicon-generator" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/favicon-generator" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/favicon-generator" />
     <lastmod>2026-08-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -1976,6 +2012,24 @@
     <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/design-challenge" />
     <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/design-challenge" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/design-challenge" />
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/tools/gradient-generator</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/gradient-generator" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/gradient-generator" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/gradient-generator" />
+    <lastmod>2026-08-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/tools/gradient-generator</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/gradient-generator" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/gradient-generator" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/gradient-generator" />
     <lastmod>2026-08-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>

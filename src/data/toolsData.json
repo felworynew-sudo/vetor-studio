@@ -24,6 +24,14 @@
       "en": { "title": "Color converter", "desc": "HEX ⇆ RGB, HSL and approximate CMYK. Live preview and one-click copy." }
     },
     {
+      "slug": "color-harmony",
+      "categoryId": "color",
+      "status": "ready",
+      "icon": "🎡",
+      "ru": { "title": "Цветовые схемы (круг Иттена)", "desc": "Гармоничные сочетания по базовому цвету: комплементарные, триады, аналоговые и другие." },
+      "en": { "title": "Color schemes (Itten wheel)", "desc": "Harmonious combinations from a base color: complementary, triadic, analogous and more." }
+    },
+    {
       "slug": "palette-extractor",
       "categoryId": "color",
       "status": "ready",
@@ -50,7 +58,7 @@
     {
       "slug": "favicon-generator",
       "categoryId": "image",
-      "status": "soon",
+      "status": "ready",
       "icon": "⭐",
       "ru": { "title": "Генератор фавиконок", "desc": "Полный набор иконок + manifest.json из одной картинки." },
       "en": { "title": "Favicon generator", "desc": "A full icon set + manifest.json from a single image." }
@@ -94,6 +102,14 @@
       "icon": "🎲",
       "ru": { "title": "Генератор дизайн-челленджей", "desc": "Случайное задание для прокачки портфолио: объект, аудитория, стиль и палитра." },
       "en": { "title": "Design challenge generator", "desc": "A random brief to grow your portfolio: object, audience, style and palette." }
+    },
+    {
+      "slug": "gradient-generator",
+      "categoryId": "generators",
+      "status": "ready",
+      "icon": "🌅",
+      "ru": { "title": "Генератор градиентов", "desc": "Красивые CSS-градиенты: стопы, угол, тип — готовый код в клик." },
+      "en": { "title": "Gradient generator", "desc": "Beautiful CSS gradients: stops, angle, type — copy-ready code in a click." }
     },
     {
       "slug": "break-timer",
