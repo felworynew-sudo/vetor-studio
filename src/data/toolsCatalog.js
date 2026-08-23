@@ -20,6 +20,10 @@ const READY_COMPONENTS = {
   'gradient-generator': lazy(() => import('../components/tools/GradientGenerator')),
   'favicon-generator': lazy(() => import('../components/tools/FaviconGenerator')),
   'qr-generator': lazy(() => import('../components/tools/QrTool')),
+  'barcode-generator': lazy(() => import('../components/tools/Barcode')),
+  'voronoi-generator': lazy(() => import('../components/tools/VoronoiBackground')),
+  'color-weight': lazy(() => import('../components/tools/ColorWeight')),
+  'rule-of-thirds': lazy(() => import('../components/tools/RuleOfThirds')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;

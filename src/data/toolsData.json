@@ -32,6 +32,14 @@
       "en": { "title": "Color schemes (Itten wheel)", "desc": "Harmonious combinations from a base color: complementary, triadic, analogous and more." }
     },
     {
+      "slug": "color-weight",
+      "categoryId": "color",
+      "status": "ready",
+      "icon": "📊",
+      "ru": { "title": "Анализатор цветового веса", "desc": "Процентное соотношение цветов на макете для проверки правила 60-30-10." },
+      "en": { "title": "Color weight analyzer", "desc": "The percentage split of colors in a design to check the 60-30-10 rule." }
+    },
+    {
       "slug": "palette-extractor",
       "categoryId": "color",
       "status": "ready",
@@ -72,6 +80,14 @@
       "en": { "title": "Watermark", "desc": "Batch-stamp a logo or text onto your concepts." }
     },
     {
+      "slug": "rule-of-thirds",
+      "categoryId": "image",
+      "status": "ready",
+      "icon": "📐",
+      "ru": { "title": "Правило третей", "desc": "Композиционная сетка (трети, золотое сечение, диагонали) поверх изображения." },
+      "en": { "title": "Rule of thirds", "desc": "A composition grid (thirds, golden ratio, diagonals) over your image." }
+    },
+    {
       "slug": "svg-cleaner",
       "categoryId": "svg",
       "status": "ready",
@@ -86,6 +102,22 @@
       "icon": "🔳",
       "ru": { "title": "QR-код: генератор и сканер", "desc": "Выгрузка в SVG/PNG, настройка цвета и фона." },
       "en": { "title": "QR code: generator & scanner", "desc": "Export to SVG/PNG, custom color and background." }
+    },
+    {
+      "slug": "barcode-generator",
+      "categoryId": "generators",
+      "status": "ready",
+      "icon": "▐║▌",
+      "ru": { "title": "Генератор штрих-кодов", "desc": "CODE128, EAN, UPC и другие форматы. Экспорт в SVG и PNG." },
+      "en": { "title": "Barcode generator", "desc": "CODE128, EAN, UPC and more. Export to SVG and PNG." }
+    },
+    {
+      "slug": "voronoi-generator",
+      "categoryId": "generators",
+      "status": "ready",
+      "icon": "🔷",
+      "ru": { "title": "Генератор фонов Вороного", "desc": "Стильные геометрические фоны (Вороного/Делоне). Экспорт SVG/PNG." },
+      "en": { "title": "Voronoi background generator", "desc": "Stylish geometric backgrounds (Voronoi/Delaunay). Export SVG/PNG." }
     },
     {
       "slug": "noise-generator",

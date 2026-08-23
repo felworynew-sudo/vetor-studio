@@ -623,3 +623,37 @@ a.tool-card:hover {
   .qr-gen { grid-template-columns: 1fr; }
   .qr-preview { max-width: 260px; }
 }
+
+/* --- Штрих-код --- */
+.barcode-preview {
+  border-radius: 12px; border: 1px solid var(--stroke); padding: 16px; margin: 16px 0;
+  display: flex; align-items: center; justify-content: center; overflow-x: auto;
+}
+.barcode-preview svg { max-width: 100%; height: auto; }
+
+/* --- Вороного --- */
+.voronoi-preview {
+  border-radius: 14px; overflow: hidden; border: 1px solid var(--stroke); margin-bottom: 16px;
+  aspect-ratio: 16 / 9; background: var(--bg);
+}
+.voronoi-preview svg { width: 100%; height: 100%; display: block; }
+.voronoi-palettes { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.voronoi-pal { width: 64px; height: 28px; border-radius: 8px; border: 2px solid transparent; cursor: pointer; }
+.voronoi-pal.is-active { border-color: var(--text); }
+
+/* --- Цветовой вес 60-30-10 --- */
+.cw-bar { display: flex; height: 40px; border-radius: 10px; overflow: hidden; margin: 8px 0 16px; border: 1px solid var(--stroke); }
+.cw-bar-seg { height: 100%; }
+.cw-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.cw-row { display: grid; grid-template-columns: 28px 1fr auto auto; align-items: center; gap: 10px; padding: 6px 10px; border-radius: 8px; background: var(--bg); border: 1px solid var(--stroke); }
+.cw-swatch { width: 24px; height: 24px; border-radius: 6px; border: 1px solid var(--stroke-strong); }
+.cw-hex { background: transparent; border: 0; color: var(--text); font-family: monospace; font-size: 13px; cursor: pointer; text-align: left; }
+.cw-role { font-size: 12px; color: var(--text-soft); }
+.cw-pct { font-weight: 700; font-size: 14px; min-width: 44px; text-align: right; }
+
+/* --- Правило третей --- */
+.rot-canvas { position: relative; display: inline-block; max-width: 100%; margin-top: 14px; border-radius: 12px; overflow: hidden; border: 1px solid var(--stroke); }
+.rot-img { display: block; max-width: 100%; height: auto; }
+.rot-grid { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.rot-grid line { stroke: rgba(255, 255, 255, 0.75); stroke-width: 0.4; }
+.rot-point { fill: var(--accent); }
