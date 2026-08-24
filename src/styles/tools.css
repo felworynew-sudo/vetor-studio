@@ -779,3 +779,15 @@ a.tool-card:hover {
   background: var(--bg);
 }
 .ae-manual .tool-field input[type="range"] { width: 100%; }
+
+/* --- Вырезатель фона: редактор кисти --- */
+.bgr-edit { position: relative; }
+.bgr-canvas { display: block; max-width: 100%; height: auto; touch-action: none; cursor: crosshair; }
+.bgr-canvas.mode-restore { cursor: copy; }
+.bgr-brush {
+  display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+  padding: 14px 16px; margin-bottom: 14px; border: 1px solid var(--stroke);
+  border-radius: 14px; background: var(--bg);
+}
+.bgr-brush .tool-field input[type="range"] { width: 160px; }
+.bgr-brush-hint { font-size: 12.5px; color: var(--text-soft); flex: 1; min-width: 180px; }
