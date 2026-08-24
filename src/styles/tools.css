@@ -51,6 +51,12 @@
   line-height: 1;
   filter: drop-shadow(0 4px 12px rgba(97, 102, 255, 0.4));
 }
+.tools-brand-logo {
+  height: 44px;
+  width: auto;
+  display: block;
+  filter: drop-shadow(0 4px 14px rgba(97, 102, 255, 0.35));
+}
 .tools-brand-text { display: flex; flex-direction: column; line-height: 1.15; }
 .tools-brand-text strong { font-size: 19px; font-weight: 800; letter-spacing: -0.01em; }
 .tools-brand-text em {
@@ -429,18 +435,32 @@ a.tool-card:hover {
 /* Адаптив */
 @media (max-width: 900px) {
   .tools-body { grid-template-columns: 1fr; }
-  .tools-sidebar {
-    position: static;
-    max-height: none;
-    flex-direction: row;
-    flex-wrap: wrap;
-    border-right: 0;
-    border-bottom: 1px solid var(--stroke);
-    gap: 8px;
-  }
-  .tools-side-group { margin-top: 0; width: 100%; }
-  .tools-main { padding: 20px 18px 44px; }
-  .tools-hero { padding: 28px 22px; }
+  /* На мобиле сайдбар прячем — навигация через сетку карточек и кнопку
+     «← Все инструменты» на странице тула. */
+  .tools-sidebar { display: none; }
+  .tools-main { padding: 18px 16px 44px; }
+  .tools-hero { padding: 26px 20px; }
+  .tools-header { padding: 12px 16px; }
+  .tools-brand-logo { height: 36px; }
+  .tools-exit { font-size: 0; }
+  .tools-exit::before { content: '← Vetor'; font-size: 13px; }
+}
+@media (max-width: 560px) {
+  .tools-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .tool-card { padding: 14px; }
+  .tool-card-icon { font-size: 24px; }
+  .tool-card h3 { font-size: 15px; }
+  .tool-card p { display: none; }
+  .tools-hero h1 { font-size: 24px; }
+  .tools-hero p { font-size: 14px; }
+  .tool-controls { gap: 14px; }
+  .tools-ideas { padding: 20px; }
+  .tool-view-head h1 { font-size: 21px; }
+  .tool-panel { padding: 16px; }
+  .tools-lang button { padding: 5px 9px; }
+}
+@media (max-width: 380px) {
+  .tools-grid { grid-template-columns: 1fr; }
 }
 
 /* --- Проверка контраста --- */
@@ -711,3 +731,23 @@ a.tool-card:hover {
 .bgr-progress { margin: 8px 0 14px; display: flex; flex-direction: column; gap: 8px; font-size: 14px; color: var(--text-muted); }
 .bgr-bar { height: 8px; border-radius: 999px; background: var(--surface-strong); overflow: hidden; }
 .bgr-bar-fill { height: 100%; background: var(--t-accent); transition: width 0.2s ease; }
+.bgr-model { margin-bottom: 14px; max-width: 360px; }
+
+/* --- Лофи-радио --- */
+.lofi-radio { text-align: center; }
+.lofi-art { position: relative; max-width: 460px; margin: 0 auto 10px; }
+.lofi-art-img { width: 100%; height: auto; display: block; filter: drop-shadow(0 20px 50px rgba(97, 102, 255, 0.28)); }
+.lofi-eq { position: absolute; right: 14%; bottom: 16%; display: inline-flex; align-items: flex-end; gap: 3px; height: 20px; }
+.lofi-eq i { width: 4px; background: #ffe52b; border-radius: 2px; animation: lofi-bounce 0.9s ease-in-out infinite; }
+.lofi-eq i:nth-child(1) { height: 40%; animation-delay: 0s; }
+.lofi-eq i:nth-child(2) { height: 80%; animation-delay: 0.15s; }
+.lofi-eq i:nth-child(3) { height: 55%; animation-delay: 0.3s; }
+.lofi-eq i:nth-child(4) { height: 95%; animation-delay: 0.45s; }
+@keyframes lofi-bounce { 0%, 100% { transform: scaleY(0.4); } 50% { transform: scaleY(1); } }
+.lofi-now { color: var(--text-muted); font-size: 14px; margin: 0 0 16px; }
+.lofi-now span { color: var(--text-soft); text-transform: uppercase; font-size: 11px; letter-spacing: 0.06em; margin-right: 6px; }
+.lofi-controls { display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap; }
+.lofi-toggle { min-width: 170px; }
+.lofi-toggle.is-playing { background: rgba(255, 92, 99, 0.16); border-color: var(--accent); color: #ff8f94; }
+.lofi-volume { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+.lofi-volume input[type="range"] { width: 180px; accent-color: var(--t-accent); }

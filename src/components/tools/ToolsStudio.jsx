@@ -110,12 +110,8 @@ function ToolsStudio({
     <div className="tools-studio" data-lang={lang}>
       {/* Хедер студии */}
       <header className="tools-header">
-        <a href="/tools" className="tools-brand" onClick={go('/tools')}>
-          <span className="tools-brand-mark" aria-hidden="true">🧰</span>
-          <span className="tools-brand-text">
-            <strong>{STUDIO_NAME[lang]}</strong>
-            <em>{STUDIO_TAGLINE[lang]}</em>
-          </span>
+        <a href="/tools" className="tools-brand" onClick={go('/tools')} aria-label={STUDIO_NAME[lang]}>
+          <img src="/tools/verstak-logo.svg" alt={STUDIO_NAME[lang]} className="tools-brand-logo" />
         </a>
 
         <div className="tools-header-right">

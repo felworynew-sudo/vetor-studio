@@ -10,34 +10,39 @@ const TEXT = {
     run: 'Убрать фон', loadingModel: 'Загрузка модели…', processing: 'Обработка…',
     download: 'Скачать PNG', change: 'Другое фото', modelNote: 'Первый запуск скачает модель (~25 МБ). Дальше — мгновенно и без интернета.',
     error: 'Не удалось обработать. Попробуйте другое изображение или браузер на Chromium.',
-    original: 'Оригинал', result: 'Без фона',
+    original: 'Оригинал', result: 'Без фона', model: 'Модель',
   },
   en: {
     drop: 'Upload a photo (a person or object works best)', hint: 'PNG, JPG, WebP — processed locally',
     run: 'Remove background', loadingModel: 'Loading model…', processing: 'Processing…',
     download: 'Download PNG', change: 'Another photo', modelNote: 'The first run downloads the model (~25 MB). After that it is instant and offline.',
     error: 'Could not process. Try another image or a Chromium browser.',
-    original: 'Original', result: 'No background',
+    original: 'Original', result: 'No background', model: 'Model',
   },
 };
 
-// Кэшируем модель между открытиями тула в рамках сессии.
-let modelPromise = null;
-async function getModel(onProgress) {
-  if (modelPromise) return modelPromise;
-  modelPromise = (async () => {
-    const { AutoModel, AutoProcessor, env } = await import('@huggingface/transformers');
+export const MODELS = [
+  { id: 'Xenova/modnet', ru: 'MODNet — портреты и люди', en: 'MODNet — portraits & people' },
+  { id: 'briaai/RMBG-1.4', ru: 'RMBG 1.4 — универсальная', en: 'RMBG 1.4 — general purpose' },
+];
+
+// Кэшируем модели между открытиями тула в рамках сессии (по id).
+const modelCache = {};
+async function getModel(modelId, onProgress) {
+  if (modelCache[modelId]) return modelCache[modelId];
+  modelCache[modelId] = (async () => {
+    const lib = await import('@huggingface/transformers');
+    const { AutoModel, AutoProcessor, env } = lib;
     env.allowLocalModels = false;
     let device;
     try {
       device = (typeof navigator !== 'undefined' && navigator.gpu) ? 'webgpu' : 'wasm';
     } catch { device = 'wasm'; }
-    const model = await AutoModel.from_pretrained('Xenova/modnet', { device, progress_callback: onProgress });
-    const processor = await AutoProcessor.from_pretrained('Xenova/modnet');
-    const lib = await import('@huggingface/transformers');
+    const model = await AutoModel.from_pretrained(modelId, { device, progress_callback: onProgress });
+    const processor = await AutoProcessor.from_pretrained(modelId);
     return { model, processor, RawImage: lib.RawImage };
   })();
-  return modelPromise;
+  return modelCache[modelId];
 }
 
 function BackgroundRemover({ language = 'ru' }) {
@@ -47,6 +52,7 @@ function BackgroundRemover({ language = 'ru' }) {
   const [resultUrl, setResultUrl] = useState('');
   const [status, setStatus] = useState('idle'); // idle | loading | processing | done | error
   const [progress, setProgress] = useState(0);
+  const [modelId, setModelId] = useState(MODELS[0].id);
 
   function loadFile(file) {
     if (!file || !file.type.startsWith('image/')) return;
@@ -60,7 +66,7 @@ function BackgroundRemover({ language = 'ru' }) {
     try {
       setStatus('loading');
       setProgress(0);
-      const { model, processor, RawImage } = await getModel((p) => {
+      const { model, processor, RawImage } = await getModel(modelId, (p) => {
         if (p && p.status === 'progress' && p.total) {
           setProgress(Math.round((p.loaded / p.total) * 100));
         }
@@ -69,8 +75,10 @@ function BackgroundRemover({ language = 'ru' }) {
       setStatus('processing');
       const image = await RawImage.fromURL(srcUrl);
       const { pixel_values } = await processor(image);
-      const { output } = await model({ input: pixel_values });
-      const maskData = output[0].mul(255).to('uint8');
+      const out = await model({ input: pixel_values });
+      // Разные модели возвращают маску под разными ключами — берём первый тензор.
+      const tensor = out.output ?? out.last_hidden_state ?? Object.values(out)[0];
+      const maskData = tensor[0].mul(255).to('uint8');
       const mask = await RawImage.fromTensor(maskData).resize(image.width, image.height);
 
       const canvas = document.createElement('canvas');
@@ -127,6 +135,15 @@ function BackgroundRemover({ language = 'ru' }) {
               </div>
             )}
           </div>
+
+          {!busy && status !== 'done' && (
+            <div className="tool-field bgr-model">
+              <span className="tool-field-label">{t.model}</span>
+              <select className="cb-select" value={modelId} onChange={(e) => setModelId(e.target.value)}>
+                {MODELS.map((m) => <option key={m.id} value={m.id}>{m[language] || m.ru}</option>)}
+              </select>
+            </div>
+          )}
 
           {busy && (
             <div className="bgr-progress">

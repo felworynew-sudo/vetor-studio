@@ -5,6 +5,7 @@
     { "id": "svg", "ru": "SVG и вектор", "en": "SVG & vector", "icon": "✒️" },
     { "id": "generators", "ru": "Генераторы", "en": "Generators", "icon": "✨" },
     { "id": "ai", "ru": "AI-инструменты", "en": "AI tools", "icon": "🤖" },
+    { "id": "audio", "ru": "Аудио", "en": "Audio", "icon": "🎧" },
     { "id": "utility", "ru": "Утилиты", "en": "Utilities", "icon": "🛠️" }
   ],
   "tools": [
@@ -183,6 +184,22 @@
       "icon": "✂️",
       "ru": { "title": "Вырезатель фона (AI)", "desc": "Удаляет фон с фото прямо в браузере: ИИ-модель скачивается один раз, снимок никуда не передаётся." },
       "en": { "title": "Background remover (AI)", "desc": "Removes the background right in your browser: the AI model downloads once, the photo never leaves your device." }
+    },
+    {
+      "slug": "upscaler",
+      "categoryId": "ai",
+      "status": "ready",
+      "icon": "🔍",
+      "ru": { "title": "AI-апскейлер (×2)", "desc": "Увеличивает разрешение изображения нейросетью Swin2SR прямо в браузере, без потери деталей." },
+      "en": { "title": "AI upscaler (×2)", "desc": "Upscales image resolution with the Swin2SR neural network right in your browser, keeping details." }
+    },
+    {
+      "slug": "lofi-radio",
+      "categoryId": "audio",
+      "status": "ready",
+      "icon": "📻",
+      "ru": { "title": "Лофи-радио", "desc": "Фоновая лофи-музыка для работы: старт/стоп, громкость и плавные переходы между треками." },
+      "en": { "title": "Lo-fi radio", "desc": "Background lo-fi music for work: start/stop, volume, and smooth crossfades between tracks." }
     },
     {
       "slug": "karma-counter",

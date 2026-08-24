@@ -7,7 +7,37 @@ const FORMATS = [
   { id: 'image/png', label: 'PNG', ext: 'png', lossy: false },
   { id: 'image/jpeg', label: 'JPG', ext: 'jpg', lossy: true },
   { id: 'image/webp', label: 'WebP', ext: 'webp', lossy: true },
+  { id: 'image/bmp', label: 'BMP', ext: 'bmp', lossy: false },
 ];
+
+// Ручной кодировщик BMP (24-бит), т.к. canvas.toBlob формат BMP не поддерживает.
+function encodeBMP(imageData) {
+  const { width, height, data } = imageData;
+  const rowSize = Math.floor((24 * width + 31) / 32) * 4;
+  const pixelArraySize = rowSize * height;
+  const fileSize = 54 + pixelArraySize;
+  const buf = new ArrayBuffer(fileSize);
+  const dv = new DataView(buf);
+  dv.setUint16(0, 0x424d, false);
+  dv.setUint32(2, fileSize, true);
+  dv.setUint32(10, 54, true);
+  dv.setUint32(14, 40, true);
+  dv.setInt32(18, width, true);
+  dv.setInt32(22, height, true);
+  dv.setUint16(26, 1, true);
+  dv.setUint16(28, 24, true);
+  dv.setUint32(34, pixelArraySize, true);
+  for (let y = 0; y < height; y += 1) {
+    let p = 54 + (height - 1 - y) * rowSize;
+    for (let x = 0; x < width; x += 1) {
+      const i = (y * width + x) * 4;
+      dv.setUint8(p, data[i + 2]); p += 1;
+      dv.setUint8(p, data[i + 1]); p += 1;
+      dv.setUint8(p, data[i]); p += 1;
+    }
+  }
+  return new Blob([buf], { type: 'image/bmp' });
+}
 
 const TEXT = {
   ru: {
@@ -99,16 +129,22 @@ function ImageConverter({ language = 'ru' }) {
     canvas.width = img.naturalWidth || img.width;
     canvas.height = img.naturalHeight || img.height;
     const ctx = canvas.getContext('2d');
-    if (activeFormat.id === 'image/jpeg') {
+    // Форматы без прозрачности (JPG, BMP) — заливаем фон.
+    if (activeFormat.id === 'image/jpeg' || activeFormat.id === 'image/bmp') {
       ctx.fillStyle = jpgBg;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
     ctx.drawImage(img, 0, 0);
     revoke();
 
-    const blob = await new Promise((resolve) => {
-      canvas.toBlob(resolve, activeFormat.id, activeFormat.lossy ? quality : undefined);
-    });
+    let blob;
+    if (activeFormat.id === 'image/bmp') {
+      blob = encodeBMP(ctx.getImageData(0, 0, canvas.width, canvas.height));
+    } else {
+      blob = await new Promise((resolve) => {
+        canvas.toBlob(resolve, activeFormat.id, activeFormat.lossy ? quality : undefined);
+      });
+    }
     if (!blob) throw new Error('encode-error');
 
     const baseName = item.name.replace(/\.[^.]+$/, '');
@@ -193,7 +229,7 @@ function ImageConverter({ language = 'ru' }) {
           </div>
         )}
 
-        {activeFormat.id === 'image/jpeg' && (
+        {(activeFormat.id === 'image/jpeg' || activeFormat.id === 'image/bmp') && (
           <div className="tool-field">
             <span className="tool-field-label">{t.jpgBg}</span>
             <input type="color" value={jpgBg} onChange={(e) => setJpgBg(e.target.value)} />

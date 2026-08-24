@@ -29,6 +29,8 @@ const READY_COMPONENTS = {
   'pastel-pairs': lazy(() => import('../components/tools/PastelPairs')),
   'karma-counter': lazy(() => import('../components/tools/KarmaCounter')),
   'background-remover': lazy(() => import('../components/tools/BackgroundRemover')),
+  upscaler: lazy(() => import('../components/tools/Upscaler')),
+  'lofi-radio': lazy(() => import('../components/tools/LofiRadio')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;
