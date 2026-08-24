@@ -882,3 +882,15 @@ a.tool-card:hover {
 .aid-label { font-size: 18px; font-weight: 700; }
 .aid-conf { margin-left: auto; color: var(--text-muted); font-size: 14px; }
 @media (max-width: 560px) { .am-fields { grid-template-columns: 1fr; } }
+
+/* --- Превью с YouTube --- */
+.yt-input-row { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+.yt-input { flex: 1; min-width: 220px; padding: 11px 14px; border-radius: 10px; border: 1px solid var(--stroke-strong); background: var(--bg); color: var(--text); font-size: 14px; }
+.yt-input:focus { outline: none; border-color: var(--t-accent); }
+.yt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-bottom: 8px; }
+.yt-card { border: 1px solid var(--stroke); border-radius: 14px; overflow: hidden; background: var(--bg); display: flex; flex-direction: column; }
+.yt-thumb-box { aspect-ratio: 16 / 9; background: #000; display: flex; align-items: center; justify-content: center; }
+.yt-thumb-box img { width: 100%; height: 100%; object-fit: cover; }
+.yt-size { padding: 10px 12px 4px; font-size: 13px; color: var(--text-muted); }
+.yt-actions { display: flex; gap: 8px; padding: 8px 12px 12px; }
+.yt-actions .tool-btn { text-decoration: none; }

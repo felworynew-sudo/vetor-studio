@@ -298,6 +298,14 @@
       "en": { "title": "ID3 tag editor", "desc": "View, edit and fully clean MP3 tags (incl. foreign/AI markers), without re-encoding." }
     },
     {
+      "slug": "yt-thumbnail",
+      "categoryId": "utility",
+      "status": "ready",
+      "icon": "📺",
+      "ru": { "title": "Превью с YouTube", "desc": "Скачивает миниатюру видео по ссылке во всех размерах. Ссылка не уходит на сервер." },
+      "en": { "title": "YouTube thumbnail grabber", "desc": "Downloads a video thumbnail by link in all sizes. The link never leaves your device." }
+    },
+    {
       "slug": "karma-counter",
       "categoryId": "utility",
       "status": "ready",
