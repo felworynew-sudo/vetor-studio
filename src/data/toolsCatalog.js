@@ -35,6 +35,8 @@ const READY_COMPONENTS = {
   'blur-analyzer': lazy(() => import('../components/tools/BlurAnalyzer')),
   'mood-palettes': lazy(() => import('../components/tools/MoodPalettes')),
   'ascii-art': lazy(() => import('../components/tools/AsciiArt')),
+  'css-from-svg': lazy(() => import('../components/tools/CssFromSvg')),
+  isometry: lazy(() => import('../components/tools/Isometry')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;

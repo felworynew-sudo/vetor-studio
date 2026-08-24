@@ -122,6 +122,14 @@
       "en": { "title": "Rule of thirds", "desc": "A composition grid (thirds, golden ratio, diagonals) over your image." }
     },
     {
+      "slug": "isometry",
+      "categoryId": "image",
+      "status": "ready",
+      "icon": "🧊",
+      "ru": { "title": "Изометрия", "desc": "Превращает плоскую картинку или SVG в изометрическую проекцию. Грани, фон, экспорт PNG." },
+      "en": { "title": "Isometric projection", "desc": "Turns a flat image or SVG into an isometric projection. Faces, background, PNG export." }
+    },
+    {
       "slug": "icon-scaler",
       "categoryId": "image",
       "status": "ready",
@@ -144,6 +152,14 @@
       "icon": "🧹",
       "ru": { "title": "Очиститель SVG", "desc": "Убирает мусор и метаданные из экспортов Figma/Illustrator." },
       "en": { "title": "SVG cleaner", "desc": "Strips junk and metadata from Figma/Illustrator exports." }
+    },
+    {
+      "slug": "css-from-svg",
+      "categoryId": "svg",
+      "status": "ready",
+      "icon": "📋",
+      "ru": { "title": "Экстрактор CSS из SVG", "desc": "Вытаскивает цвета, градиенты и стили из векторного файла в виде готового CSS." },
+      "en": { "title": "CSS from SVG", "desc": "Pulls colors, gradients and styles out of a vector file as ready CSS." }
     },
     {
       "slug": "qr-generator",
