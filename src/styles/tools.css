@@ -791,3 +791,29 @@ a.tool-card:hover {
 }
 .bgr-brush .tool-field input[type="range"] { width: 160px; }
 .bgr-brush-hint { font-size: 12.5px; color: var(--text-soft); flex: 1; min-width: 180px; }
+
+/* --- Анализатор размытия --- */
+.ba-badge { padding: 3px 10px; font-size: 12px; }
+
+/* --- Палитры по настроению --- */
+.mood-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+.mood-tag {
+  padding: 8px 16px; border-radius: 999px; border: 1px solid var(--stroke-strong);
+  background: var(--bg); color: var(--text-muted); cursor: pointer; font-weight: 600; font-size: 13.5px;
+}
+.mood-tag.is-active { background: var(--t-accent); border-color: var(--t-accent); color: #fff; }
+.mood-list { display: flex; flex-direction: column; gap: 12px; }
+.mood-palette { display: flex; border-radius: 12px; overflow: hidden; border: 1px solid var(--stroke); height: 72px; }
+.mood-swatch {
+  flex: 1; border: 0; cursor: pointer; display: flex; align-items: flex-end; justify-content: center;
+  padding-bottom: 8px; font-family: monospace; font-size: 11px; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.7);
+  transition: flex 0.15s ease;
+}
+.mood-swatch:hover { flex: 1.5; }
+
+/* --- ASCII-арт --- */
+.ascii-out {
+  margin: 4px 0 14px; padding: 12px; border-radius: 10px; background: #05060a; border: 1px solid var(--stroke);
+  font-family: monospace; font-size: 6px; line-height: 6px; letter-spacing: 0; color: #d7e0ea;
+  overflow: auto; max-height: 460px; white-space: pre;
+}

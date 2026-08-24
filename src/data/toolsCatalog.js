@@ -32,6 +32,9 @@ const READY_COMPONENTS = {
   upscaler: lazy(() => import('../components/tools/Upscaler')),
   'lofi-radio': lazy(() => import('../components/tools/LofiRadio')),
   'audio-enhancer': lazy(() => import('../components/tools/AudioEnhancer')),
+  'blur-analyzer': lazy(() => import('../components/tools/BlurAnalyzer')),
+  'mood-palettes': lazy(() => import('../components/tools/MoodPalettes')),
+  'ascii-art': lazy(() => import('../components/tools/AsciiArt')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;

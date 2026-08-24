@@ -42,6 +42,14 @@
       "en": { "title": "Color weight analyzer", "desc": "The percentage split of colors in a design to check the 60-30-10 rule." }
     },
     {
+      "slug": "mood-palettes",
+      "categoryId": "color",
+      "status": "ready",
+      "icon": "🌈",
+      "ru": { "title": "Палитры по настроению", "desc": "Готовые сочетания по эмоциональным тегам: киберпанк, винтаж, уют, неон и другие." },
+      "en": { "title": "Mood palettes", "desc": "Ready color combos by emotional tags: cyberpunk, vintage, cozy, neon and more." }
+    },
+    {
       "slug": "pastel-pairs",
       "categoryId": "color",
       "status": "ready",
@@ -88,6 +96,22 @@
       "icon": "🔖",
       "ru": { "title": "Водяные знаки", "desc": "Пакетное наложение логотипа/текста на концепты." },
       "en": { "title": "Watermark", "desc": "Batch-stamp a logo or text onto your concepts." }
+    },
+    {
+      "slug": "blur-analyzer",
+      "categoryId": "image",
+      "status": "ready",
+      "icon": "📷",
+      "ru": { "title": "Анализатор размытия", "desc": "Отсеивает смазанные кадры из пакета фото по дисперсии Лапласиана. Для фотографов." },
+      "en": { "title": "Blur analyzer", "desc": "Filters out blurry shots from a batch by Laplacian variance. For photographers." }
+    },
+    {
+      "slug": "ascii-art",
+      "categoryId": "generators",
+      "status": "ready",
+      "icon": "🔡",
+      "ru": { "title": "Генератор ASCII-арта", "desc": "Превращает картинку в текстовый арт: ширина, набор символов, инверсия." },
+      "en": { "title": "ASCII art generator", "desc": "Turns an image into text art: width, charset, invert." }
     },
     {
       "slug": "rule-of-thirds",
