@@ -31,7 +31,11 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        # --ignore-scripts: пропускаем postinstall нативных пакетов. onnxruntime-node
+        # (транзитив transformers.js) качает бинарник с CDN и периодически ловит
+        # таймаут; в браузере он не нужен (используется onnxruntime-web). sharp/esbuild
+        # ставят бинарники как обычные @img/@esbuild пакеты, install-скрипт им не нужен.
+        run: npm ci --ignore-scripts
 
       - name: Build
         run: npm run build
