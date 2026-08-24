@@ -202,6 +202,14 @@
       "en": { "title": "Lo-fi radio", "desc": "Background lo-fi music for work: start/stop, volume, and smooth crossfades between tracks." }
     },
     {
+      "slug": "audio-enhancer",
+      "categoryId": "audio",
+      "status": "ready",
+      "icon": "🎚️",
+      "ru": { "title": "Улучшение аудио", "desc": "Шумоподавление, нормализация громкости и чистота голоса. Пакетно, локально, выход WAV." },
+      "en": { "title": "Audio enhancer", "desc": "Noise reduction, loudness normalization and voice clarity. Batch, local, WAV output." }
+    },
+    {
       "slug": "karma-counter",
       "categoryId": "utility",
       "status": "ready",

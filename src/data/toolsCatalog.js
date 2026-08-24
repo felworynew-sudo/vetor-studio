@@ -31,6 +31,7 @@ const READY_COMPONENTS = {
   'background-remover': lazy(() => import('../components/tools/BackgroundRemover')),
   upscaler: lazy(() => import('../components/tools/Upscaler')),
   'lofi-radio': lazy(() => import('../components/tools/LofiRadio')),
+  'audio-enhancer': lazy(() => import('../components/tools/AudioEnhancer')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;
