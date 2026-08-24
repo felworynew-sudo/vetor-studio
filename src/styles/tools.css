@@ -837,3 +837,8 @@ a.tool-card:hover {
     #1a1b22;
 }
 .iso-canvas { max-width: 100%; height: auto; display: block; }
+
+.glyph-meta { color: var(--text-muted); font-size: 14px; margin: 0 0 10px; }
+
+.mood-generated { height: 120px; margin: 14px 0; }
+.mood-generated .mood-swatch { font-size: 12px; }

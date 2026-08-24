@@ -37,6 +37,7 @@ const READY_COMPONENTS = {
   'ascii-art': lazy(() => import('../components/tools/AsciiArt')),
   'css-from-svg': lazy(() => import('../components/tools/CssFromSvg')),
   isometry: lazy(() => import('../components/tools/Isometry')),
+  'glyph-map': lazy(() => import('../components/tools/GlyphMap')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;

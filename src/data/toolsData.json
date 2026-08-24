@@ -106,6 +106,14 @@
       "en": { "title": "Blur analyzer", "desc": "Filters out blurry shots from a batch by Laplacian variance. For photographers." }
     },
     {
+      "slug": "glyph-map",
+      "categoryId": "generators",
+      "status": "ready",
+      "icon": "🔤",
+      "ru": { "title": "Генератор глиф-карт", "desc": "Постер со всеми символами шрифта из TTF/OTF/WOFF. Цвета, столбцы, экспорт PNG." },
+      "en": { "title": "Glyph map generator", "desc": "A poster with all glyphs from a TTF/OTF/WOFF font. Colors, columns, PNG export." }
+    },
+    {
       "slug": "ascii-art",
       "categoryId": "generators",
       "status": "ready",
