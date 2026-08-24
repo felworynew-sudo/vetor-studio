@@ -2017,6 +2017,24 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://vetor-studio.ru/tools/image-metadata</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/image-metadata" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/image-metadata" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/image-metadata" />
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/tools/image-metadata</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/image-metadata" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/image-metadata" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/image-metadata" />
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://vetor-studio.ru/tools/blur-analyzer</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/blur-analyzer" />
     <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/blur-analyzer" />
@@ -2359,6 +2377,24 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://vetor-studio.ru/tools/ai-detector</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/ai-detector" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/ai-detector" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/ai-detector" />
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/tools/ai-detector</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/ai-detector" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/ai-detector" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/ai-detector" />
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://vetor-studio.ru/tools/lofi-radio</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/lofi-radio" />
     <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/lofi-radio" />
@@ -2390,6 +2426,42 @@
     <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/audio-enhancer" />
     <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/audio-enhancer" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/audio-enhancer" />
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/tools/audio-trimmer</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/audio-trimmer" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/audio-trimmer" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/audio-trimmer" />
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/tools/audio-trimmer</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/audio-trimmer" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/audio-trimmer" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/audio-trimmer" />
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/tools/audio-metadata</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/audio-metadata" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/audio-metadata" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/audio-metadata" />
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/tools/audio-metadata</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/audio-metadata" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/audio-metadata" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/audio-metadata" />
     <lastmod>2026-08-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
