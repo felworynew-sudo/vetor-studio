@@ -842,3 +842,14 @@ a.tool-card:hover {
 
 .mood-generated { height: 120px; margin: 14px 0; }
 .mood-generated .mood-swatch { font-size: 12px; }
+
+/* --- Smart Crop --- */
+.sc-grid { display: flex; flex-wrap: wrap; gap: 12px; margin: 16px 0; }
+.sc-item { padding: 0; border: 0; background: transparent; cursor: pointer; }
+.sc-thumb {
+  max-height: 150px; max-width: 200px; border-radius: 12px; border: 1px solid var(--stroke); display: block;
+  background:
+    linear-gradient(45deg, #2a2c38 25%, transparent 25%, transparent 75%, #2a2c38 75%) 0 0 / 16px 16px,
+    linear-gradient(45deg, #2a2c38 25%, transparent 25%, transparent 75%, #2a2c38 75%) 8px 8px / 16px 16px, #1a1b22;
+}
+.sc-thumb.circle { border-radius: 50%; }

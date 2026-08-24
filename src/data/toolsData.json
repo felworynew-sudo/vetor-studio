@@ -242,6 +242,14 @@
       "en": { "title": "AI upscaler (×2)", "desc": "Upscales image resolution with the Swin2SR neural network right in your browser, keeping details." }
     },
     {
+      "slug": "smart-crop",
+      "categoryId": "ai",
+      "status": "ready",
+      "icon": "🎯",
+      "ru": { "title": "Smart Crop (AI)", "desc": "ИИ находит лицо/главный объект и кадрирует под квадрат, сторис, широкий формат или аватар-круг. Пакетно." },
+      "en": { "title": "Smart Crop (AI)", "desc": "The AI finds the face/main subject and crops to square, story, wide or a circular avatar. Batch." }
+    },
+    {
       "slug": "lofi-radio",
       "categoryId": "audio",
       "status": "ready",
