@@ -894,3 +894,17 @@ a.tool-card:hover {
 .yt-size { padding: 10px 12px 4px; font-size: 13px; color: var(--text-muted); }
 .yt-actions { display: flex; gap: 8px; padding: 8px 12px 12px; }
 .yt-actions .tool-btn { text-decoration: none; }
+
+/* --- AI-детектор: доп. состояния --- */
+.aid-verdict.is-mixed { background: rgba(255,229,43,0.12); border-color: rgba(255,229,43,0.4); }
+.aid-signals { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 8px 0 4px; }
+.aid-sig { font-size: 12px; padding: 3px 10px; border-radius: 999px; background: var(--surface-strong); border: 1px solid var(--stroke); color: var(--text-muted); }
+.aid-warn { color: #ffd76a; }
+
+/* --- Оффлайн-инфо на хабе --- */
+.tools-offline {
+  margin-top: 24px; padding: 18px 22px; border-radius: 16px;
+  border: 1px solid var(--stroke); background: var(--surface-soft);
+  color: var(--text-muted); font-size: 14px; line-height: 1.6;
+}
+.tools-offline strong { color: var(--text); }

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { aiBrowserHint } from '../../utils/aiSupport';
 
 // Вырезатель фона: сегментация в браузере через transformers.js (модель MODNet).
 // Модель (~25 МБ) скачивается один раз при первом запуске и работает локально —
@@ -275,6 +276,7 @@ function BackgroundRemover({ language = 'ru' }) {
       )}
 
       <input ref={inputRef} type="file" accept="image/*" hidden onChange={(e) => { loadFile(e.target.files[0]); e.target.value = ''; }} />
+      {aiBrowserHint(language) && <p className="tool-local-note aid-warn">⚠️ {aiBrowserHint(language)}</p>}
       <p className="tool-local-note">🔒 {t.modelNote}</p>
     </div>
   );

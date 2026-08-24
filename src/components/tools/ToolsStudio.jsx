@@ -28,6 +28,8 @@ const UI = {
     ideasTitle: 'Есть идея инструмента?',
     ideasText: 'Напишите — соберём то, чего не хватает.',
     count: (n) => `${n} инструментов`,
+    offlineTitle: 'Работает без интернета',
+    offlineText: 'Все инструменты считаются прямо в вашем браузере — файлы никуда не уходят. После первой загрузки страницы обычные инструменты работают офлайн. AI-инструменты один раз скачивают модель (она кешируется браузером), а дальше тоже работают без сети. Чтобы гарантированно иметь всё офлайн: откройте нужные инструменты один раз при интернете — браузер сохранит их в кеш.',
   },
   en: {
     heroTitle: 'Tools for designers',
@@ -44,6 +46,8 @@ const UI = {
     ideasTitle: 'Got a tool idea?',
     ideasText: 'Drop us a line — we’ll build what’s missing.',
     count: (n) => `${n} tools`,
+    offlineTitle: 'Works offline',
+    offlineText: 'Every tool runs right in your browser — files never leave your device. After the page loads once, regular tools work offline. AI tools download a model once (cached by the browser) and then work without a network too. To be sure everything is available offline: open the tools you need once while online — the browser will cache them.',
   },
 };
 
@@ -251,6 +255,10 @@ function ToolsStudio({
                     {contactEmail}
                   </a>
                 )}
+              </section>
+
+              <section className="tools-offline">
+                <strong>🔌 {ui.offlineTitle}.</strong> {ui.offlineText}
               </section>
             </>
           )}

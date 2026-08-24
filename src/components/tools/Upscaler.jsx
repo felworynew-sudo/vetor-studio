@@ -1,11 +1,14 @@
 import { useRef, useState } from 'react';
+import { aiBrowserHint, aiErrorHint } from '../../utils/aiSupport';
 
 // AI-апскейлер: увеличение разрешения ×2 нейросетью Swin2SR прямо в браузере
 // (transformers.js). Модель (~5–15 МБ) грузится один раз, снимок не уходит на
 // сервер. WebGPU при поддержке, иначе WASM.
 
 const MODEL_ID = 'Xenova/swin2SR-lightweight-x2-64';
-const MAX_SIDE = 1024; // выше — очень медленно/тяжело для браузера
+// Жёсткий лимит входа: Swin2SR обрабатывает картинку целиком (без тайлинга) и на
+// больших изображениях может съесть всю память и уронить систему. 512 → выход 1024.
+const MAX_SIDE = 512;
 
 const TEXT = {
   ru: {
@@ -143,7 +146,7 @@ function Upscaler({ language = 'ru' }) {
               <div className="bgr-bar"><div className="bgr-bar-fill" style={{ width: `${status === 'loading' ? progress : 100}%` }} /></div>
             </div>
           )}
-          {status === 'error' && <p className="color-invalid">{t.error}</p>}
+          {status === 'error' && <p className="color-invalid">{aiErrorHint(language)}</p>}
 
           <div className="tool-actions">
             {status !== 'done' && <button type="button" className="tool-btn primary" onClick={run} disabled={busy}>{busy ? '…' : t.run}</button>}
@@ -154,6 +157,7 @@ function Upscaler({ language = 'ru' }) {
       )}
 
       <input ref={inputRef} type="file" accept="image/*" hidden onChange={(e) => { loadFile(e.target.files[0]); e.target.value = ''; }} />
+      {aiBrowserHint(language) && <p className="tool-local-note aid-warn">⚠️ {aiBrowserHint(language)}</p>}
       <p className="tool-local-note">🔒 {t.modelNote}</p>
     </div>
   );

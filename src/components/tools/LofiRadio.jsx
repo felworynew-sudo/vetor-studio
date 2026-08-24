@@ -19,8 +19,8 @@ const TRACKS = [
 ];
 
 const TEXT = {
-  ru: { start: 'Включить радио', stop: 'Выключить', volume: 'Громкость', now: 'Сейчас играет', hint: 'Фоновая музыка для работы. Треки сменяются плавно, без пауз.' },
-  en: { start: 'Play radio', stop: 'Stop', volume: 'Volume', now: 'Now playing', hint: 'Background music for work. Tracks crossfade with no gaps.' },
+  ru: { start: 'Включить радио', stop: 'Выключить', volume: 'Громкость', now: 'Сейчас играет', hint: 'Фоновая музыка для работы.' },
+  en: { start: 'Play radio', stop: 'Stop', volume: 'Volume', now: 'Now playing', hint: 'Background music for work.' },
 };
 
 function rampVolume(audio, from, to, secs, done) {

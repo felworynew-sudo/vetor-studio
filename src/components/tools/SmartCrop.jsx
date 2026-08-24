@@ -1,4 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
+import { aiBrowserHint, aiErrorHint } from '../../utils/aiSupport';
 
 // Smart Crop: ИИ находит главный объект/лицо и кадрирует под нужный формат
 // (квадрат, сторис, широкий, аватар-круг) без обрезки важного. Пакетно, локально
@@ -41,17 +42,28 @@ async function getDetector(onProgress) {
   return detectorPromise;
 }
 
-// Выбираем главный объект: приоритет person, иначе самый уверенный.
-function pickSubject(dets, W, H) {
-  if (!dets || !dets.length) return { xmin: W * 0.2, ymin: H * 0.2, xmax: W * 0.8, ymax: H * 0.8 };
-  const persons = dets.filter((d) => d.label === 'person');
-  const pool = persons.length ? persons : dets;
-  const best = pool.reduce((a, b) => (b.score > a.score ? b : a));
-  return best.box;
+// Все значимые объекты: приоритет person, иначе самый уверенный.
+function pickSubjects(dets, W, H) {
+  if (!dets || !dets.length) return [{ xmin: W * 0.2, ymin: H * 0.2, xmax: W * 0.8, ymax: H * 0.8 }];
+  const persons = dets.filter((d) => d.label === 'person' && d.score > 0.5);
+  const pool = persons.length ? persons : [dets.reduce((a, b) => (b.score > a.score ? b : a))];
+  return pool.map((d) => d.box || d);
+}
+function unionBox(boxes) {
+  return {
+    xmin: Math.min(...boxes.map((b) => b.xmin)), ymin: Math.min(...boxes.map((b) => b.ymin)),
+    xmax: Math.max(...boxes.map((b) => b.xmax)), ymax: Math.max(...boxes.map((b) => b.ymax)),
+  };
+}
+function largestBox(boxes) {
+  return boxes.reduce((a, b) => (((b.xmax - b.xmin) * (b.ymax - b.ymin)) > ((a.xmax - a.xmin) * (a.ymax - a.ymin)) ? b : a));
 }
 
-function cropToAspect(img, box, aspect) {
+function cropToAspect(img, subjects, aspect) {
   const W = img.naturalWidth; const H = img.naturalHeight;
+  // Для аватара фокус на самом крупном лице; для рамок — объединяем всех, чтобы
+  // при 2+ людях никого не обрезать.
+  const box = aspect.circle ? largestBox(subjects) : unionBox(subjects);
   const cx = (box.xmin + box.xmax) / 2;
   let cy = (box.ymin + box.ymax) / 2;
   const boxW = box.xmax - box.xmin; const boxH = box.ymax - box.ymin;
@@ -130,8 +142,8 @@ function SmartCrop({ language = 'ru' }) {
           const { img, revoke } = await loadImage(item.file);
           // eslint-disable-next-line no-await-in-loop
           const dets = await detector(item.file ? URL.createObjectURL(item.file) : img.src, { threshold: 0.5 });
-          const box = pickSubject(dets, img.naturalWidth, img.naturalHeight);
-          const crop = cropToAspect(img, box, aspect);
+          const subjects = pickSubjects(dets, img.naturalWidth, img.naturalHeight);
+          const crop = cropToAspect(img, subjects, aspect);
           const canvas = render(img, crop);
           revoke();
           // eslint-disable-next-line no-await-in-loop
@@ -186,7 +198,7 @@ function SmartCrop({ language = 'ru' }) {
           <div className="bgr-bar"><div className="bgr-bar-fill" style={{ width: `${status === 'loading' ? progress : 100}%` }} /></div>
         </div>
       )}
-      {status === 'error' && <p className="color-invalid">{t.error}</p>}
+      {(status === 'error' || items.some((it) => it.status === 'error')) && <p className="color-invalid">{aiErrorHint(language)}</p>}
 
       {items.length > 0 && (
         <div className="tool-actions">
@@ -216,6 +228,7 @@ function SmartCrop({ language = 'ru' }) {
       </ul>
 
       <input ref={inputRef} type="file" accept="image/*" multiple hidden onChange={(e) => { addFiles(e.target.files); e.target.value = ''; }} />
+      {aiBrowserHint(language) && <p className="tool-local-note aid-warn">⚠️ {aiBrowserHint(language)}</p>}
       <p className="tool-local-note">🔒 {t.note}</p>
     </div>
   );
