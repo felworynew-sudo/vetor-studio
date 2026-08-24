@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { dominantColors, imageToData } from '../../utils/quantize';
 
 // Экстрактор палитры: достаёт доминирующие цвета из изображения. Квантизация
 // по бакетам + сортировка по частоте. Всё локально в <canvas>.
@@ -8,38 +9,8 @@ const TEXT = {
   en: { drop: 'Upload an image', hint: 'PNG, JPG, WebP — processed locally', count: 'Colors', change: 'Another image', copied: 'Copied' },
 };
 
-function toHex(r, g, b) {
-  return `#${[r, g, b].map((v) => v.toString(16).padStart(2, '0')).join('')}`;
-}
-
 function extractPalette(img, count) {
-  const canvas = document.createElement('canvas');
-  const maxDim = 160; // даунскейл для скорости
-  const scale = Math.min(1, maxDim / Math.max(img.naturalWidth, img.naturalHeight));
-  canvas.width = Math.max(1, Math.round(img.naturalWidth * scale));
-  canvas.height = Math.max(1, Math.round(img.naturalHeight * scale));
-  const ctx = canvas.getContext('2d');
-  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-  const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
-  // Бакеты по 4 бита на канал (4096 бакетов), копим сумму и счётчик.
-  const buckets = new Map();
-  for (let i = 0; i < data.length; i += 4) {
-    if (data[i + 3] < 125) continue; // пропускаем прозрачные
-    const r = data[i]; const g = data[i + 1]; const b = data[i + 2];
-    const key = ((r >> 4) << 8) | ((g >> 4) << 4) | (b >> 4);
-    const bucket = buckets.get(key);
-    if (bucket) { bucket.r += r; bucket.g += g; bucket.b += b; bucket.n += 1; }
-    else buckets.set(key, { r, g, b, n: 1 });
-  }
-
-  return [...buckets.values()]
-    .sort((a, b) => b.n - a.n)
-    .slice(0, count)
-    .map((bucket) => ({
-      hex: toHex(Math.round(bucket.r / bucket.n), Math.round(bucket.g / bucket.n), Math.round(bucket.b / bucket.n)),
-      weight: bucket.n,
-    }));
+  return dominantColors(imageToData(img, 200), count, { mergeDist: 46 });
 }
 
 function PaletteExtractor({ language = 'ru' }) {

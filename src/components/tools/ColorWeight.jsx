@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { dominantColors, imageToData } from '../../utils/quantize';
 
 // Анализатор цветового веса: показывает процентное соотношение доминирующих
 // цветов на макете — для проверки правила 60-30-10. Локально в <canvas>.
@@ -16,36 +17,8 @@ const TEXT = {
   },
 };
 
-function toHex(r, g, b) {
-  return `#${[r, g, b].map((v) => v.toString(16).padStart(2, '0')).join('')}`;
-}
-
 function analyze(img, groups = 6) {
-  const canvas = document.createElement('canvas');
-  const maxDim = 200;
-  const scale = Math.min(1, maxDim / Math.max(img.naturalWidth, img.naturalHeight));
-  canvas.width = Math.max(1, Math.round(img.naturalWidth * scale));
-  canvas.height = Math.max(1, Math.round(img.naturalHeight * scale));
-  const ctx = canvas.getContext('2d');
-  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-  const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
-  const buckets = new Map();
-  let total = 0;
-  for (let i = 0; i < data.length; i += 4) {
-    if (data[i + 3] < 125) continue;
-    const r = data[i]; const g = data[i + 1]; const b = data[i + 2];
-    const key = ((r >> 5) << 6) | ((g >> 5) << 3) | (b >> 5); // 3 бита на канал
-    const bk = buckets.get(key);
-    if (bk) { bk.r += r; bk.g += g; bk.b += b; bk.n += 1; } else buckets.set(key, { r, g, b, n: 1 });
-    total += 1;
-  }
-  const sorted = [...buckets.values()].sort((a, b) => b.n - a.n).slice(0, groups);
-  const shown = sorted.reduce((s, x) => s + x.n, 0);
-  return sorted.map((bk) => ({
-    hex: toHex(Math.round(bk.r / bk.n), Math.round(bk.g / bk.n), Math.round(bk.b / bk.n)),
-    pct: Math.round((bk.n / shown) * 100),
-  }));
+  return dominantColors(imageToData(img, 220), groups, { mergeDist: 46 });
 }
 
 function ColorWeight({ language = 'ru' }) {

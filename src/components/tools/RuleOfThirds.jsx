@@ -66,7 +66,13 @@ function RuleOfThirds({ language = 'ru' }) {
             </div>
           </div>
 
-          <div className="rot-canvas">
+          <div
+            className="rot-canvas"
+            onClick={() => inputRef.current?.click()}
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={(e) => { e.preventDefault(); loadFile(e.dataTransfer.files[0]); }}
+            title={t.change}
+          >
             <img src={preview} alt="" className="rot-img" />
             <svg className="rot-grid" viewBox="0 0 100 100" preserveAspectRatio="none">
               {lines.v.map((x) => <line key={`v${x}`} x1={x * 100} y1="0" x2={x * 100} y2="100" />)}

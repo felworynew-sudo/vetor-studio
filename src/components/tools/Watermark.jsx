@@ -1,21 +1,51 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 // Водяные знаки: наложение текста или логотипа на изображения. Пакетно, локально
 // через <canvas>. Режим — плитка по диагонали или одиночный в углу.
+
+// Общая отрисовка знака — используется и в предпросмотре, и в финальной обработке.
+function drawWatermark(ctx, W, H, { useLogo, logoImg, wmText, color, opacity, size, mode }) {
+  ctx.globalAlpha = opacity;
+  const unit = W * size;
+  const drawStamp = (cx, cy) => {
+    if (useLogo && logoImg) {
+      const w = unit;
+      const h = (logoImg.naturalHeight / logoImg.naturalWidth) * unit;
+      ctx.drawImage(logoImg, cx - w / 2, cy - h / 2, w, h);
+    } else {
+      ctx.fillStyle = color;
+      ctx.font = `600 ${Math.max(10, unit * 0.5)}px Inter, Arial, sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(wmText || ' ', cx, cy);
+    }
+  };
+  if (mode === 'tile') {
+    const stepX = unit * 2.4; const stepY = unit * 2.0;
+    ctx.save();
+    ctx.translate(W / 2, H / 2); ctx.rotate(-Math.PI / 6); ctx.translate(-W / 2, -H / 2);
+    for (let y = -H; y < H * 2; y += stepY) for (let x = -W; x < W * 2; x += stepX) drawStamp(x, y);
+    ctx.restore();
+  } else {
+    const margin = unit * 0.9;
+    drawStamp(W - margin, H - margin * 0.6);
+  }
+  ctx.globalAlpha = 1;
+}
 
 const TEXT = {
   ru: {
     drop: 'Перетащите изображения сюда или нажмите', hint: 'Можно несколько файлов сразу',
     wmText: 'Текст водяного знака', useLogo: 'Использовать логотип', logo: 'Логотип (PNG)',
     opacity: 'Прозрачность', size: 'Размер', mode: 'Режим', tile: 'Плиткой', corner: 'В углу',
-    color: 'Цвет', apply: 'Наложить и скачать всё', empty: 'Пока нет файлов',
+    color: 'Цвет', apply: 'Наложить и скачать всё', empty: 'Пока нет файлов', preview: 'Предпросмотр',
     local: 'Всё обрабатывается в браузере, файлы никуда не передаются.', download: 'Скачать',
   },
   en: {
     drop: 'Drop images here or click', hint: 'Several files at once are fine',
     wmText: 'Watermark text', useLogo: 'Use a logo', logo: 'Logo (PNG)',
     opacity: 'Opacity', size: 'Size', mode: 'Mode', tile: 'Tiled', corner: 'Corner',
-    color: 'Color', apply: 'Apply & download all', empty: 'No files yet',
+    color: 'Color', apply: 'Apply & download all', empty: 'No files yet', preview: 'Preview',
     local: 'Everything is processed in your browser, files are never uploaded.', download: 'Download',
   },
 };
@@ -43,6 +73,38 @@ function Watermark({ language = 'ru' }) {
   const [mode, setMode] = useState('tile');
   const [color, setColor] = useState('#ffffff');
   const [busy, setBusy] = useState(false);
+  const previewCanvasRef = useRef(null);
+  const previewImgRef = useRef({ id: null, img: null });
+
+  // Живой предпросмотр на первой загруженной картинке — чтобы масштаб/плотность
+  // настраивались не вслепую.
+  useEffect(() => {
+    const first = items[0];
+    const canvas = previewCanvasRef.current;
+    if (!first || !canvas) return;
+    let cancelled = false;
+    const render = (img) => {
+      if (cancelled) return;
+      const maxW = 480;
+      const scale = Math.min(1, maxW / img.naturalWidth);
+      canvas.width = Math.round(img.naturalWidth * scale);
+      canvas.height = Math.round(img.naturalHeight * scale);
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      drawWatermark(ctx, canvas.width, canvas.height, { useLogo, logoImg, wmText, color, opacity, size, mode });
+    };
+    if (previewImgRef.current.id === first.id && previewImgRef.current.img) {
+      render(previewImgRef.current.img);
+    } else {
+      loadImageFromFile(first.file).then(({ img, revoke }) => {
+        previewImgRef.current = { id: first.id, img };
+        revoke();
+        render(img);
+      }).catch(() => {});
+    }
+    return () => { cancelled = true; };
+  }, [items, useLogo, logoImg, wmText, color, opacity, size, mode]);
 
   const addFiles = useCallback((fileList) => {
     const files = Array.from(fileList || []).filter((f) => f.type.startsWith('image/'));
@@ -55,6 +117,8 @@ function Watermark({ language = 'ru' }) {
     loadImageFromFile(file).then(({ img, revoke }) => { setLogoImg(img); setUseLogo(true); revoke(); });
   }
 
+  const wmOpts = { useLogo, logoImg, wmText, color, opacity, size, mode };
+
   async function processOne(item) {
     const { img, revoke } = await loadImageFromFile(item.file);
     const canvas = document.createElement('canvas');
@@ -63,42 +127,7 @@ function Watermark({ language = 'ru' }) {
     const ctx = canvas.getContext('2d');
     ctx.drawImage(img, 0, 0);
     revoke();
-    ctx.globalAlpha = opacity;
-
-    const unit = canvas.width * size;
-    const drawStamp = (cx, cy) => {
-      if (useLogo && logoImg) {
-        const w = unit;
-        const h = (logoImg.naturalHeight / logoImg.naturalWidth) * unit;
-        ctx.drawImage(logoImg, cx - w / 2, cy - h / 2, w, h);
-      } else {
-        ctx.fillStyle = color;
-        ctx.font = `600 ${Math.max(12, unit * 0.5)}px Inter, Arial, sans-serif`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(wmText || ' ', cx, cy);
-      }
-    };
-
-    if (mode === 'tile') {
-      const stepX = unit * 2.4;
-      const stepY = unit * 2.0;
-      ctx.save();
-      ctx.translate(canvas.width / 2, canvas.height / 2);
-      ctx.rotate(-Math.PI / 6);
-      ctx.translate(-canvas.width / 2, -canvas.height / 2);
-      for (let y = -canvas.height; y < canvas.height * 2; y += stepY) {
-        for (let x = -canvas.width; x < canvas.width * 2; x += stepX) {
-          drawStamp(x, y);
-        }
-      }
-      ctx.restore();
-    } else {
-      const margin = unit * 0.9;
-      drawStamp(canvas.width - margin, canvas.height - margin * 0.6);
-    }
-
-    ctx.globalAlpha = 1;
+    drawWatermark(ctx, canvas.width, canvas.height, wmOpts);
     const blob = await new Promise((res) => canvas.toBlob(res, 'image/png'));
     const baseName = item.name.replace(/\.[^.]+$/, '');
     return { outUrl: URL.createObjectURL(blob), outName: `${baseName}-wm.png` };
@@ -177,6 +206,13 @@ function Watermark({ language = 'ru' }) {
         <span className="tool-dropzone-title">{t.drop}</span>
         <span className="tool-dropzone-hint">{t.hint}</span>
       </button>
+
+      {items.length > 0 && (
+        <div className="wm-preview">
+          <span className="tool-field-label">{t.preview}</span>
+          <div className="wm-preview-box"><canvas ref={previewCanvasRef} /></div>
+        </div>
+      )}
 
       {items.length > 0 && (
         <div className="tool-actions">

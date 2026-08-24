@@ -52,7 +52,7 @@
   filter: drop-shadow(0 4px 12px rgba(97, 102, 255, 0.4));
 }
 .tools-brand-logo {
-  height: 44px;
+  height: 79px;
   width: auto;
   display: block;
   filter: drop-shadow(0 4px 14px rgba(97, 102, 255, 0.35));
@@ -441,7 +441,7 @@ a.tool-card:hover {
   .tools-main { padding: 18px 16px 44px; }
   .tools-hero { padding: 26px 20px; }
   .tools-header { padding: 12px 16px; }
-  .tools-brand-logo { height: 36px; }
+  .tools-brand-logo { height: 58px; }
   .tools-exit { font-size: 0; }
   .tools-exit::before { content: '← Vetor'; font-size: 13px; }
 }
@@ -660,6 +660,21 @@ a.tool-card:hover {
 .voronoi-palettes { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
 .voronoi-pal { width: 64px; height: 28px; border-radius: 8px; border: 2px solid transparent; cursor: pointer; }
 .voronoi-pal.is-active { border-color: var(--text); }
+.voronoi-custom { margin-bottom: 16px; }
+.voronoi-custom-row { display: flex; gap: 8px; margin-top: 6px; }
+.voronoi-custom-row input[type="color"] { width: 48px; height: 34px; border: 1px solid var(--stroke-strong); border-radius: 8px; background: transparent; cursor: pointer; }
+
+/* --- Предпросмотр водяных знаков --- */
+.wm-preview { margin: 16px 0; }
+.wm-preview-box {
+  margin-top: 6px; border-radius: 12px; overflow: hidden; border: 1px solid var(--stroke);
+  display: inline-block; max-width: 100%;
+  background:
+    linear-gradient(45deg, #2a2c38 25%, transparent 25%, transparent 75%, #2a2c38 75%) 0 0 / 20px 20px,
+    linear-gradient(45deg, #2a2c38 25%, transparent 25%, transparent 75%, #2a2c38 75%) 10px 10px / 20px 20px,
+    #1a1b22;
+}
+.wm-preview-box canvas { display: block; max-width: 100%; height: auto; }
 
 /* --- Цветовой вес 60-30-10 --- */
 .cw-bar { display: flex; height: 40px; border-radius: 10px; overflow: hidden; margin: 8px 0 16px; border: 1px solid var(--stroke); }

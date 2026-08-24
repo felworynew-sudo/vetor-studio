@@ -18,12 +18,12 @@ const PALETTES = [
 
 const TEXT = {
   ru: {
-    points: 'Точек', palette: 'Палитра', style: 'Стиль', cells: 'Ячейки', mesh: 'Сетка',
+    points: 'Точек', palette: 'Палитра', style: 'Стиль', cells: 'Ячейки', mesh: 'Сетка', custom: 'Свои цвета',
     regen: 'Обновить', dlSvg: 'Скачать SVG', dlPng: 'Скачать PNG',
     hint: 'Готовый фон для баннеров, обложек и презентаций.',
   },
   en: {
-    points: 'Points', palette: 'Palette', style: 'Style', cells: 'Cells', mesh: 'Mesh',
+    points: 'Points', palette: 'Palette', style: 'Style', cells: 'Cells', mesh: 'Mesh', custom: 'Custom colors',
     regen: 'Regenerate', dlSvg: 'Download SVG', dlPng: 'Download PNG',
     hint: 'A ready background for banners, covers and slides.',
   },
@@ -45,13 +45,14 @@ function VoronoiBackground({ language = 'ru' }) {
   const t = TEXT[language] || TEXT.ru;
   const [count, setCount] = useState(60);
   const [paletteIdx, setPaletteIdx] = useState(0);
+  const [customPalette, setCustomPalette] = useState(['#6166ff', '#a05cff', '#ff5c63']);
   const [style, setStyle] = useState('cells');
   const [seed, setSeed] = useState(1);
   const [svg, setSvg] = useState('');
   const wrapRef = useRef(null);
 
   const build = useCallback(() => {
-    const pal = PALETTES[paletteIdx];
+    const pal = paletteIdx === 'custom' ? customPalette : PALETTES[paletteIdx];
     const pts = [];
     for (let i = 0; i < count; i += 1) pts.push([Math.random() * W, Math.random() * H]);
     const delaunay = Delaunay.from(pts);
@@ -77,7 +78,7 @@ function VoronoiBackground({ language = 'ru' }) {
       }
     }
     setSvg(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}">${body}</svg>`);
-  }, [count, paletteIdx, style, seed]);
+  }, [count, paletteIdx, style, seed, customPalette]);
 
   useEffect(() => { build(); }, [build]);
 
@@ -131,6 +132,31 @@ function VoronoiBackground({ language = 'ru' }) {
             aria-label={`palette ${i + 1}`}
           />
         ))}
+        <button
+          type="button"
+          className={paletteIdx === 'custom' ? 'voronoi-pal is-active' : 'voronoi-pal'}
+          onClick={() => setPaletteIdx('custom')}
+          style={{ background: `linear-gradient(90deg, ${customPalette.join(', ')})` }}
+          aria-label={t.custom}
+          title={t.custom}
+        />
+      </div>
+
+      <div className="voronoi-custom">
+        <span className="tool-field-label">{t.custom}</span>
+        <div className="voronoi-custom-row">
+          {customPalette.map((c, i) => (
+            <input
+              key={i}
+              type="color"
+              value={c}
+              onChange={(e) => {
+                const next = customPalette.slice(); next[i] = e.target.value;
+                setCustomPalette(next); setPaletteIdx('custom');
+              }}
+            />
+          ))}
+        </div>
       </div>
 
       <div className="tool-actions">
