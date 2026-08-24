@@ -206,8 +206,8 @@
       "categoryId": "audio",
       "status": "ready",
       "icon": "🎚️",
-      "ru": { "title": "Улучшение аудио", "desc": "Шумоподавление, нормализация громкости и чистота голоса. Пакетно, локально, выход WAV." },
-      "en": { "title": "Audio enhancer", "desc": "Noise reduction, loudness normalization and voice clarity. Batch, local, WAV output." }
+      "ru": { "title": "Улучшение аудио", "desc": "Эквализация, компрессия, де-эссер, шумовой гейт, нормализация и лимитер. Авто и ручной режим, пакетно, локально." },
+      "en": { "title": "Audio enhancer", "desc": "EQ, compression, de-esser, noise gate, normalization and limiter. Auto and manual modes, batch, local." }
     },
     {
       "slug": "karma-counter",

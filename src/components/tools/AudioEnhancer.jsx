@@ -1,32 +1,45 @@
 import { useCallback, useRef, useState } from 'react';
 
-// Улучшение аудио: шумовой гейт + high-pass (убрать гул) + компрессор +
-// presence-EQ + нормализация громкости. Пакетно, локально через Web Audio.
-// Выход — WAV (без потерь). Ничего не уходит на сервер.
+// Улучшение аудио — цепочка профессиональных фильтров, как у аудио-энхансеров:
+// эквализация (тепло/чёткость/воздух) → шумовой гейт → динамическая компрессия
+// → де-эссер → нормализация громкости → лимитер (защита от клиппинга).
+// Авто-пресеты и ручной режим. Пакетно, локально (Web Audio), выход WAV.
 
 const PRESETS = {
   voice: {
     ru: 'Голос / подкаст', en: 'Voice / podcast',
-    hp: 90, compThresh: -24, compRatio: 3.5, presFreq: 3200, presGain: 3.5, presQ: 1, makeup: 1.15, gate: true,
+    hp: 90, warmth: 2, clarity: 3.5, air: 2, compThresh: -24, compRatio: 3.5, gate: 0.6, deess: 0.35, targetRms: -16, ceiling: 0.95,
+  },
+  clarity: {
+    ru: 'Голос — макс. чистота', en: 'Voice — max clarity',
+    hp: 110, warmth: 1, clarity: 5, air: 3, compThresh: -28, compRatio: 4.5, gate: 0.8, deess: 0.5, targetRms: -15, ceiling: 0.95,
   },
   music: {
     ru: 'Музыка (бережно)', en: 'Music (gentle)',
-    hp: 32, compThresh: -18, compRatio: 2, presFreq: 5000, presGain: 1.5, presQ: 0.7, makeup: 1.05, gate: false,
+    hp: 30, warmth: 1, clarity: 1.5, air: 1, compThresh: -18, compRatio: 2, gate: 0, deess: 0, targetRms: -15, ceiling: 0.98,
   },
 };
 
 const TEXT = {
   ru: {
     drop: 'Перетащите аудио сюда или нажмите', hint: 'MP3, WAV, M4A, OGG — можно несколько файлов',
-    preset: 'Пресет', denoise: 'Шумоподавление', normalize: 'Нормализация громкости',
+    mode: 'Режим', auto: 'Авто', manual: 'Ручной', preset: 'Пресет',
+    warmth: 'Тепло (низ)', clarity: 'Чёткость (голос)', air: 'Воздух (верх)',
+    compThresh: 'Порог компрессии', compRatio: 'Степень сжатия', gate: 'Шумовой порог', deess: 'Де-эссер', loud: 'Громкость',
     process: 'Улучшить всё', processing: 'Обработка…', download: 'Скачать', downloadAll: 'Скачать всё',
-    clear: 'Очистить', empty: 'Пока нет файлов', local: 'Всё считается в браузере, файлы никуда не передаются.',
+    clear: 'Очистить', empty: 'Пока нет файлов',
+    local: 'Всё считается в браузере, файлы никуда не передаются. Выход — WAV без потерь.',
+    chain: 'Эквализация → шумовой гейт → компрессор → де-эссер → нормализация → лимитер.',
   },
   en: {
     drop: 'Drop audio here or click', hint: 'MP3, WAV, M4A, OGG — several files are fine',
-    preset: 'Preset', denoise: 'Noise reduction', normalize: 'Loudness normalize',
+    mode: 'Mode', auto: 'Auto', manual: 'Manual', preset: 'Preset',
+    warmth: 'Warmth (low)', clarity: 'Clarity (voice)', air: 'Air (high)',
+    compThresh: 'Compression threshold', compRatio: 'Compression ratio', gate: 'Noise gate', deess: 'De-esser', loud: 'Loudness',
     process: 'Enhance all', processing: 'Processing…', download: 'Download', downloadAll: 'Download all',
-    clear: 'Clear', empty: 'No files yet', local: 'Everything runs in your browser, files are never uploaded.',
+    clear: 'Clear', empty: 'No files yet',
+    local: 'Everything runs in your browser, files are never uploaded. Output is lossless WAV.',
+    chain: 'EQ → noise gate → compressor → de-esser → normalize → limiter.',
   },
 };
 
@@ -36,29 +49,25 @@ function fmtBytes(b) {
   return `${(b / 1048576).toFixed(1)} MB`;
 }
 
-// Оценка шумового порога: 15-й перцентиль RMS коротких кадров.
 function estimateFloor(buffer) {
   const d = buffer.getChannelData(0);
-  const frame = 1024;
-  const rms = [];
+  const frame = 1024; const rms = [];
   for (let i = 0; i + frame < d.length; i += frame) {
     let s = 0;
     for (let j = 0; j < frame; j += 1) s += d[i + j] * d[i + j];
     rms.push(Math.sqrt(s / frame));
   }
-  if (rms.length === 0) return 0;
+  if (!rms.length) return 0;
   rms.sort((a, b) => a - b);
   return rms[Math.floor(rms.length * 0.15)] || 0;
 }
 
-// Нисходящий экспандер (мягкий шумовой гейт) по каждому каналу.
-function applyGate(buffer, floor) {
-  const threshold = floor * 2.2;
-  if (threshold <= 0) return;
+function applyGate(buffer, floor, amount) {
+  const threshold = floor * (1 + amount * 2.5);
+  if (threshold <= 0 || amount <= 0) return;
   const sr = buffer.sampleRate;
-  const aC = Math.exp(-1 / (sr * 0.005));
-  const rC = Math.exp(-1 / (sr * 0.08));
-  const reduction = 0.12;
+  const aC = Math.exp(-1 / (sr * 0.005)); const rC = Math.exp(-1 / (sr * 0.08));
+  const reduction = 1 - amount * 0.9;
   for (let c = 0; c < buffer.numberOfChannels; c += 1) {
     const d = buffer.getChannelData(c);
     let env = 0; let gain = 1;
@@ -72,34 +81,50 @@ function applyGate(buffer, floor) {
   }
 }
 
-function normalizePeak(buffer, targetDb = -1) {
-  let peak = 0;
-  for (let c = 0; c < buffer.numberOfChannels; c += 1) {
-    const d = buffer.getChannelData(c);
-    for (let i = 0; i < d.length; i += 1) { const a = Math.abs(d[i]); if (a > peak) peak = a; }
-  }
-  if (peak === 0) return;
-  const target = 10 ** (targetDb / 20);
-  const gain = Math.min(12, target / peak);
-  for (let c = 0; c < buffer.numberOfChannels; c += 1) {
-    const d = buffer.getChannelData(c);
-    for (let i = 0; i < d.length; i += 1) d[i] *= gain;
-  }
-}
-
-async function renderChain(buffer, preset) {
+async function renderChain(buffer, p) {
   const ctx = new OfflineAudioContext(buffer.numberOfChannels, buffer.length, buffer.sampleRate);
   const src = ctx.createBufferSource(); src.buffer = buffer;
-  const hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = preset.hp;
+  const hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = p.hp;
+  const warm = ctx.createBiquadFilter(); warm.type = 'lowshelf'; warm.frequency.value = 160; warm.gain.value = p.warmth;
+  const clar = ctx.createBiquadFilter(); clar.type = 'peaking'; clar.frequency.value = 3000; clar.Q.value = 1; clar.gain.value = p.clarity;
+  const air = ctx.createBiquadFilter(); air.type = 'highshelf'; air.frequency.value = 10000; air.gain.value = p.air;
+  const deess = ctx.createBiquadFilter(); deess.type = 'peaking'; deess.frequency.value = 6800; deess.Q.value = 3.2; deess.gain.value = -p.deess * 11;
   const comp = ctx.createDynamicsCompressor();
-  comp.threshold.value = preset.compThresh; comp.ratio.value = preset.compRatio;
+  comp.threshold.value = p.compThresh; comp.ratio.value = p.compRatio;
   comp.attack.value = 0.003; comp.release.value = 0.25; comp.knee.value = 6;
-  const pres = ctx.createBiquadFilter(); pres.type = 'peaking';
-  pres.frequency.value = preset.presFreq; pres.gain.value = preset.presGain; pres.Q.value = preset.presQ;
-  const makeup = ctx.createGain(); makeup.gain.value = preset.makeup;
-  src.connect(hp); hp.connect(comp); comp.connect(pres); pres.connect(makeup); makeup.connect(ctx.destination);
+  src.connect(hp); hp.connect(warm); warm.connect(clar); clar.connect(air); air.connect(deess); deess.connect(comp); comp.connect(ctx.destination);
   src.start();
   return ctx.startRendering();
+}
+
+function rmsOf(buffer) {
+  let s = 0; let n = 0;
+  for (let c = 0; c < buffer.numberOfChannels; c += 1) {
+    const d = buffer.getChannelData(c);
+    for (let i = 0; i < d.length; i += 1) s += d[i] * d[i];
+    n += d.length;
+  }
+  return Math.sqrt(s / (n || 1));
+}
+
+// Нормализация к целевой громкости + линкованный лимитер (защита от клиппинга).
+function normalizeAndLimit(buffer, targetRms, ceiling) {
+  const measured = rmsOf(buffer);
+  const gain = measured > 0 ? Math.min(16, (10 ** (targetRms / 20)) / measured) : 1;
+  const sr = buffer.sampleRate;
+  const aC = Math.exp(-1 / (sr * 0.001)); const rC = Math.exp(-1 / (sr * 0.05));
+  const chans = [];
+  for (let c = 0; c < buffer.numberOfChannels; c += 1) chans.push(buffer.getChannelData(c));
+  let g = 1;
+  for (let i = 0; i < buffer.length; i += 1) {
+    let peak = 0;
+    for (let c = 0; c < chans.length; c += 1) { const a = Math.abs(chans[c][i] * gain); if (a > peak) peak = a; }
+    const need = peak > ceiling ? ceiling / peak : 1;
+    g = need < g ? aC * g + (1 - aC) * need : rC * g + (1 - rC) * need;
+    for (let c = 0; c < chans.length; c += 1) {
+      chans[c][i] = Math.max(-1, Math.min(1, chans[c][i] * gain * g));
+    }
+  }
 }
 
 function encodeWAV(buffer) {
@@ -133,10 +158,13 @@ function AudioEnhancer({ language = 'ru' }) {
   const t = TEXT[language] || TEXT.ru;
   const inputRef = useRef(null);
   const [items, setItems] = useState([]);
-  const [preset, setPreset] = useState('voice');
-  const [denoise, setDenoise] = useState(true);
-  const [normalize, setNormalize] = useState(true);
+  const [mode, setMode] = useState('auto');
+  const [presetKey, setPresetKey] = useState('voice');
+  const [manual, setManual] = useState({ ...PRESETS.voice });
   const [busy, setBusy] = useState(false);
+
+  const params = mode === 'auto' ? PRESETS[presetKey] : manual;
+  const setM = (k, v) => setManual((m) => ({ ...m, [k]: v }));
 
   const addFiles = useCallback((fileList) => {
     const files = Array.from(fileList || []).filter((f) => f.type.startsWith('audio/') || /\.(mp3|wav|m4a|ogg|aac|flac)$/i.test(f.name));
@@ -144,15 +172,14 @@ function AudioEnhancer({ language = 'ru' }) {
     setItems((prev) => [...prev, ...files.map((file, i) => ({ id: `${Date.now()}-${i}`, file, name: file.name, inSize: file.size, outUrl: '', outSize: 0, outName: '', status: 'idle' }))]);
   }, []);
 
-  async function processOne(item) {
+  async function processOne(item, p) {
     const arrayBuf = await item.file.arrayBuffer();
     const decoded = await getCtx().decodeAudioData(arrayBuf.slice(0));
-    // Копируем в рабочий буфер (decodeAudioData возвращает read-only в части браузеров).
     const work = getCtx().createBuffer(decoded.numberOfChannels, decoded.length, decoded.sampleRate);
     for (let c = 0; c < decoded.numberOfChannels; c += 1) work.copyToChannel(decoded.getChannelData(c).slice(), c);
-    if (denoise) applyGate(work, estimateFloor(work));
-    const rendered = await renderChain(work, PRESETS[preset]);
-    if (normalize) normalizePeak(rendered, -1);
+    if (p.gate > 0) applyGate(work, estimateFloor(work), p.gate);
+    const rendered = await renderChain(work, p);
+    normalizeAndLimit(rendered, p.targetRms, p.ceiling);
     const blob = encodeWAV(rendered);
     const base = item.name.replace(/\.[^.]+$/, '');
     return { outUrl: URL.createObjectURL(blob), outSize: blob.size, outName: `${base}-enhanced.wav` };
@@ -160,10 +187,11 @@ function AudioEnhancer({ language = 'ru' }) {
 
   async function processAll() {
     setBusy(true);
+    const p = params;
     for (const item of items) {
       try {
         // eslint-disable-next-line no-await-in-loop
-        const r = await processOne(item);
+        const r = await processOne(item, p);
         setItems((prev) => prev.map((it) => (it.id === item.id ? { ...it, ...r, status: 'done' } : it)));
       } catch {
         setItems((prev) => prev.map((it) => (it.id === item.id ? { ...it, status: 'error' } : it)));
@@ -180,20 +208,46 @@ function AudioEnhancer({ language = 'ru' }) {
 
   const doneCount = items.filter((it) => it.status === 'done').length;
 
+  const Slider = ({ k, label, min, max, step, unit = '' }) => (
+    <div className="tool-field">
+      <span className="tool-field-label">{label}: {manual[k]}{unit}</span>
+      <input type="range" min={min} max={max} step={step} value={manual[k]} onChange={(e) => setM(k, Number(e.target.value))} />
+    </div>
+  );
+
   return (
     <div className="tool-panel audio-enhancer">
       <div className="tool-controls">
         <div className="tool-field">
-          <span className="tool-field-label">{t.preset}</span>
+          <span className="tool-field-label">{t.mode}</span>
           <div className="segmented">
-            {Object.entries(PRESETS).map(([k, v]) => (
-              <button key={k} type="button" className={k === preset ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => setPreset(k)}>{v[language] || v.ru}</button>
-            ))}
+            <button type="button" className={mode === 'auto' ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => setMode('auto')}>{t.auto}</button>
+            <button type="button" className={mode === 'manual' ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => setMode('manual')}>{t.manual}</button>
           </div>
         </div>
-        <label className="wm-check"><input type="checkbox" checked={denoise} onChange={(e) => setDenoise(e.target.checked)} />{t.denoise}</label>
-        <label className="wm-check"><input type="checkbox" checked={normalize} onChange={(e) => setNormalize(e.target.checked)} />{t.normalize}</label>
+        {mode === 'auto' && (
+          <div className="tool-field">
+            <span className="tool-field-label">{t.preset}</span>
+            <div className="segmented">
+              {Object.entries(PRESETS).map(([k, v]) => (
+                <button key={k} type="button" className={k === presetKey ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => { setPresetKey(k); setManual({ ...PRESETS[k] }); }}>{v[language] || v.ru}</button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
+
+      {mode === 'manual' && (
+        <div className="ae-manual">
+          <Slider k="warmth" label={t.warmth} min={-6} max={8} step={0.5} unit=" dB" />
+          <Slider k="clarity" label={t.clarity} min={-3} max={9} step={0.5} unit=" dB" />
+          <Slider k="air" label={t.air} min={-3} max={8} step={0.5} unit=" dB" />
+          <Slider k="compThresh" label={t.compThresh} min={-50} max={0} step={1} unit=" dB" />
+          <Slider k="compRatio" label={t.compRatio} min={1} max={12} step={0.5} unit=":1" />
+          <Slider k="gate" label={t.gate} min={0} max={1} step={0.05} />
+          <Slider k="deess" label={t.deess} min={0} max={1} step={0.05} />
+        </div>
+      )}
 
       <button
         type="button"
@@ -231,6 +285,7 @@ function AudioEnhancer({ language = 'ru' }) {
       </ul>
 
       <input ref={inputRef} type="file" accept="audio/*" multiple hidden onChange={(e) => { addFiles(e.target.files); e.target.value = ''; }} />
+      <p className="tool-local-note">🎚️ {t.chain}</p>
       <p className="tool-local-note">🔒 {t.local}</p>
     </div>
   );

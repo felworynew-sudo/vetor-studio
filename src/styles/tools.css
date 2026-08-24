@@ -766,3 +766,16 @@ a.tool-card:hover {
 .lofi-toggle.is-playing { background: rgba(255, 92, 99, 0.16); border-color: var(--accent); color: #ff8f94; }
 .lofi-volume { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
 .lofi-volume input[type="range"] { width: 180px; accent-color: var(--t-accent); }
+
+/* --- Улучшатель аудио: ручной режим --- */
+.ae-manual {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px 22px;
+  padding: 16px;
+  margin-bottom: 16px;
+  border: 1px solid var(--stroke);
+  border-radius: 14px;
+  background: var(--bg);
+}
+.ae-manual .tool-field input[type="range"] { width: 100%; }
