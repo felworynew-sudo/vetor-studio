@@ -18,6 +18,14 @@
       "en": { "title": "Image converter", "desc": "PNG, JPG, WebP — convert right in your browser, in batches, nothing uploaded to a server." }
     },
     {
+      "slug": "crop",
+      "categoryId": "image",
+      "status": "ready",
+      "icon": "✂️",
+      "ru": { "title": "Обрезка изображения", "desc": "Кадрируйте фото рамкой с пресетами 1:1, 4:3, 16:9 и свободной. В исходном качестве, локально." },
+      "en": { "title": "Crop image", "desc": "Crop a photo with a frame and presets: 1:1, 4:3, 16:9 or free. Full quality, done locally." }
+    },
+    {
       "slug": "color-converter",
       "categoryId": "color",
       "status": "ready",

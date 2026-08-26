@@ -782,8 +782,63 @@ a.tool-card:hover {
 
 /* --- Вырезатель фона: редактор кисти --- */
 .bgr-edit { position: relative; }
-.bgr-canvas { display: block; max-width: 100%; height: auto; touch-action: none; cursor: crosshair; }
-.bgr-canvas.mode-restore { cursor: copy; }
+.bgr-canvas { display: block; max-width: 100%; height: auto; touch-action: none; cursor: none; }
+/* Кольцо-прицел кисти: показывает реальный диаметр под курсором. */
+.bgr-cursor {
+  position: absolute; pointer-events: none; border-radius: 50%;
+  transform: translate(-50%, -50%); box-sizing: border-box;
+  border: 1.5px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 0 0 0 1.5px rgba(0, 0, 0, 0.55), inset 0 0 0 1px rgba(0, 0, 0, 0.35);
+}
+.bgr-cursor.mode-erase { background: rgba(255, 70, 70, 0.18); }
+.bgr-cursor.mode-restore { background: rgba(70, 220, 130, 0.20); }
+
+/* --- Обрезка изображения --- */
+.crop-ratios { margin-bottom: 14px; }
+.crop-ratio-btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.crop-ratio {
+  padding: 7px 12px; border-radius: 9px; border: 1px solid var(--stroke);
+  background: var(--bg); color: var(--text); font: inherit; font-size: 13px; cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.crop-ratio:hover { border-color: var(--t-accent); }
+.crop-ratio.is-active { background: var(--t-accent); border-color: var(--t-accent); color: #fff; }
+.crop-stage { display: flex; justify-content: center; margin-bottom: 16px; }
+.crop-wrap {
+  position: relative; display: inline-block; max-width: 100%;
+  touch-action: none; user-select: none; line-height: 0;
+}
+.crop-img { display: block; max-width: 100%; max-height: 62vh; height: auto; width: auto; }
+.crop-shade { position: absolute; background: rgba(6, 7, 12, 0.62); pointer-events: none; }
+.crop-frame { position: absolute; box-sizing: border-box; border: 1px solid rgba(255, 255, 255, 0.9); cursor: move; }
+.crop-grid { position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.35) 1px, transparent 1px),
+    linear-gradient(rgba(255,255,255,0.35) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.35) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.35) 1px, transparent 1px);
+  background-size: 100% 33.33%, 100% 33.33%, 33.33% 100%, 33.33% 100%;
+  background-position: 0 33.33%, 0 66.66%, 33.33% 0, 66.66% 0;
+  background-repeat: no-repeat;
+}
+.crop-dim {
+  position: absolute; top: 6px; left: 50%; transform: translateX(-50%);
+  padding: 2px 8px; border-radius: 6px; font-size: 12px; line-height: 1.6;
+  background: rgba(6, 7, 12, 0.72); color: #fff; white-space: nowrap; pointer-events: none;
+}
+.crop-handle {
+  position: absolute; width: 14px; height: 14px; box-sizing: border-box;
+  background: #fff; border: 1px solid rgba(6, 7, 12, 0.5); border-radius: 3px;
+}
+.crop-handle.h-nw { left: -7px; top: -7px; cursor: nwse-resize; }
+.crop-handle.h-ne { right: -7px; top: -7px; cursor: nesw-resize; }
+.crop-handle.h-se { right: -7px; bottom: -7px; cursor: nwse-resize; }
+.crop-handle.h-sw { left: -7px; bottom: -7px; cursor: nesw-resize; }
+.crop-handle.h-n { left: 50%; top: -7px; transform: translateX(-50%); cursor: ns-resize; }
+.crop-handle.h-s { left: 50%; bottom: -7px; transform: translateX(-50%); cursor: ns-resize; }
+.crop-handle.h-e { right: -7px; top: 50%; transform: translateY(-50%); cursor: ew-resize; }
+.crop-handle.h-w { left: -7px; top: 50%; transform: translateY(-50%); cursor: ew-resize; }
+.crop-controls { display: flex; align-items: flex-end; gap: 18px; flex-wrap: wrap; margin-bottom: 14px; }
 .bgr-brush {
   display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
   padding: 14px 16px; margin-bottom: 14px; border: 1px solid var(--stroke);

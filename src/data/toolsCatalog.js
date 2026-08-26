@@ -44,6 +44,7 @@ const READY_COMPONENTS = {
   isometry: lazy(() => import('../components/tools/Isometry')),
   'glyph-map': lazy(() => import('../components/tools/GlyphMap')),
   'yt-thumbnail': lazy(() => import('../components/tools/YtThumbnail')),
+  crop: lazy(() => import('../components/tools/CropTool')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;

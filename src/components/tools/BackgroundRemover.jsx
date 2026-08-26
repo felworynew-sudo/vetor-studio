@@ -60,6 +60,7 @@ function BackgroundRemover({ language = 'ru' }) {
   const [modelId, setModelId] = useState(MODELS[0].id);
   const [brushMode, setBrushMode] = useState('erase'); // erase | restore
   const [brushSize, setBrushSize] = useState(40);
+  const [cursor, setCursor] = useState({ x: 0, y: 0, on: false }); // прицел кисти
 
   const editCanvasRef = useRef(null);
   const origCanvasRef = useRef(null); // офскрин с оригиналом (для «вернуть»)
@@ -138,8 +139,12 @@ function BackgroundRemover({ language = 'ru' }) {
     lastPt.current = pt;
   }
   function onPointerDown(e) { painting.current = true; lastPt.current = null; e.currentTarget.setPointerCapture?.(e.pointerId); paintTo(canvasPoint(e)); }
-  function onPointerMove(e) { if (painting.current) paintTo(canvasPoint(e)); }
+  function onPointerMove(e) {
+    setCursor({ x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY, on: true });
+    if (painting.current) paintTo(canvasPoint(e));
+  }
   function onPointerUp() { painting.current = false; lastPt.current = null; }
+  function onPointerLeaveCanvas() { painting.current = false; lastPt.current = null; setCursor((c) => ({ ...c, on: false })); }
 
   async function run() {
     if (!srcUrl) return;
@@ -225,8 +230,15 @@ function BackgroundRemover({ language = 'ru' }) {
                     onPointerDown={onPointerDown}
                     onPointerMove={onPointerMove}
                     onPointerUp={onPointerUp}
-                    onPointerLeave={onPointerUp}
+                    onPointerLeave={onPointerLeaveCanvas}
                   />
+                  {cursor.on && (
+                    <span
+                      className={`bgr-cursor mode-${brushMode}`}
+                      style={{ left: cursor.x, top: cursor.y, width: brushSize, height: brushSize }}
+                      aria-hidden="true"
+                    />
+                  )}
                 </div>
               </div>
             )}
