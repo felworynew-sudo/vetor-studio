@@ -34,7 +34,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 14px 28px;
+  padding: 9px 26px;
   background: rgba(13, 13, 17, 0.82);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--stroke);
@@ -52,10 +52,10 @@
   filter: drop-shadow(0 4px 12px rgba(97, 102, 255, 0.4));
 }
 .tools-brand-logo {
-  height: 79px;
+  height: 54px;
   width: auto;
   display: block;
-  filter: drop-shadow(0 4px 14px rgba(97, 102, 255, 0.35));
+  filter: drop-shadow(0 3px 10px rgba(97, 102, 255, 0.3));
 }
 .tools-brand-text { display: flex; flex-direction: column; line-height: 1.15; }
 .tools-brand-text strong { font-size: 19px; font-weight: 800; letter-spacing: -0.01em; }
@@ -1067,29 +1067,24 @@ a.tool-card:hover {
 /* ============================================================
    ПИКСЕЛЬ / АРКАДА — визуальный язык Верстака (8-бит, Марио-стиль)
    ============================================================ */
+/* Pixel Operator — свободный (public domain) 8-бит шрифт с кириллицей.
+   Regular + Bold, чёткий и читаемый, «квадратно-марио». */
 @font-face {
-  font-family: 'Handjet'; font-style: normal; font-weight: 400 700; font-display: swap;
-  src: url('/tools/fonts/handjet-cyrillic.woff2') format('woff2');
-  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  font-family: 'Pixel Operator'; font-style: normal; font-weight: 400; font-display: swap;
+  src: url('/tools/fonts/PixelOperator.ttf') format('truetype');
 }
 @font-face {
-  font-family: 'Handjet'; font-style: normal; font-weight: 400 700; font-display: swap;
-  src: url('/tools/fonts/handjet-latin-ext.woff2') format('woff2');
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-@font-face {
-  font-family: 'Handjet'; font-style: normal; font-weight: 400 700; font-display: swap;
-  src: url('/tools/fonts/handjet-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  font-family: 'Pixel Operator'; font-style: normal; font-weight: 700; font-display: swap;
+  src: url('/tools/fonts/PixelOperator-Bold.ttf') format('truetype');
 }
 
-/* Handjet — вариативный пиксельный с кириллицей; ELSH 0 = КВАДРАТНЫЕ пиксели
-   (блочно, по-марио и читаемо). */
-.tools-studio { --px: 'Handjet', 'Courier New', monospace; --px-shadow: rgba(0, 0, 0, 0.55); }
+.tools-studio { --px: 'Pixel Operator', 'Courier New', monospace; --px-shadow: rgba(0, 0, 0, 0.55); }
 
 /* Пиксель-иконки — чёткие квадраты, без бикубического размытия. */
 .px-icon { image-rendering: pixelated; display: inline-block; object-fit: contain; }
 .tools-side-icon { width: 20px; height: 20px; vertical-align: -5px; }
+.tb-arrow { width: 20px; height: 20px; vertical-align: -4px; }
+.tool-back { display: inline-flex; align-items: center; gap: 6px; }
 .tools-side-cat-label .tools-side-icon { width: 18px; height: 18px; }
 
 /* Пиксель-шрифт на заголовках, бренде, кнопках и лейблах.
@@ -1146,3 +1141,15 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
   .tools-brand-logo { animation: px-bob 3.2s steps(2, end) infinite; }
   @keyframes px-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
 }
+
+/* ============================================================
+   ЖЁСТКИЙ SHAPE-LOCK: пиксель-стиль = острые углы ВЕЗДЕ.
+   Один scoped-сброс вместо перечисления десятков классов.
+   ============================================================ */
+.tools-studio *,
+.tools-studio *::before,
+.tools-studio *::after { border-radius: 0 !important; }
+/* Круг оставляем только там, где он несёт смысл: */
+.bgr-cursor { border-radius: 50% !important; }   /* кольцо-прицел кисти = диаметр */
+.sc-thumb.circle { border-radius: 50% !important; } /* превью круглого кропа (аватар) */
+.lofi-eq i, .bgr-bar, .rec-meter-bar, .bgr-bar-fill { border-radius: 0 !important; }

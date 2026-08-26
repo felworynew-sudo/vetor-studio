@@ -125,7 +125,7 @@ function ToolsStudio({
       {/* Хедер студии */}
       <header className="tools-header">
         <a href="/tools" className="tools-brand" onClick={go('/tools')} aria-label={STUDIO_NAME[lang]}>
-          <img src="/tools/verstak-logo.svg" alt={STUDIO_NAME[lang]} className="tools-brand-logo" />
+          <img src="/tools/verstak-logo-px.png" alt={STUDIO_NAME[lang]} className="tools-brand-logo" />
         </a>
 
         <div className="tools-header-right">
@@ -306,7 +306,9 @@ function ToolView({ tool, lang, ui, onBack }) {
   const ToolComponent = tool.component;
   return (
     <div className="tool-view">
-      <a href="/tools" className="tool-back" onClick={onBack}>← {ui.back}</a>
+      <a href="/tools" className="tool-back" onClick={onBack}>
+        <img src="/tools/icons/strelka-vlevo.png" alt="" className="px-icon tb-arrow" /> {ui.back}
+      </a>
       <header className="tool-view-head">
         <PxIcon src={tool.img} emoji={tool.icon} className="tool-view-icon" />
         <div>

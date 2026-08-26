@@ -259,7 +259,7 @@
         "title": "Metadata cleaner (EXIF/C2PA)",
         "desc": "Strips EXIF, XMP, GPS, IPTC and C2PA/AI markers from JPEG/PNG losslessly. Shows what was found. Batch."
       },
-      "img": "birka.png"
+      "img": "pipidastr.png"
     },
     {
       "slug": "blur-analyzer",
@@ -364,7 +364,7 @@
         "title": "E-Ink simulator",
         "desc": "How a UI looks on a monochrome e-reader: grayscale, 1-bit, dithering."
       },
-      "img": "monitor.png"
+      "img": "printer.png"
     },
     {
       "slug": "svg-cleaner",
@@ -379,7 +379,7 @@
         "title": "SVG cleaner",
         "desc": "Strips junk and metadata from Figma/Illustrator exports."
       },
-      "img": "svg.png"
+      "img": "pipidastr.png"
     },
     {
       "slug": "css-from-svg",
@@ -514,7 +514,7 @@
         "title": "Background remover (AI)",
         "desc": "Removes the background right in your browser: the AI model downloads once, the photo never leaves your device."
       },
-      "img": "pipidastr.png"
+      "img": "nozhnicy.png"
     },
     {
       "slug": "upscaler",
