@@ -1168,3 +1168,11 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
 .pix-controls { display: flex; flex-direction: column; gap: 14px; }
 .pix-actions { flex-wrap: wrap; }
 @media (max-width: 820px) { .pix-layout { grid-template-columns: 1fr; } }
+
+/* Подсветка зон загрузки, пока над окном тащат файл (глобальный drag-отклик). */
+.tools-studio.is-dragging .tool-dropzone {
+  border-color: var(--t-accent);
+  background: var(--t-accent-soft);
+  box-shadow: 0 0 0 3px var(--t-accent-soft);
+}
+.tools-studio.is-dragging .tool-dropzone-title { color: var(--t-accent-strong); }

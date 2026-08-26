@@ -73,8 +73,28 @@ function ToolsStudio({
   const ui = UI[lang];
   const [search, setSearch] = useState('');
   const [collapsed, setCollapsed] = useState(() => new Set());
+  const [dragging, setDragging] = useState(false);
 
   const activeTool = toolSlug ? getToolBySlug(toolSlug) : null;
+
+  // Пока пользователь тащит файл над окном — подсвечиваем зоны загрузки во всех
+  // инструментах (раньше визуального отклика на drag не было вовсе).
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+    let depth = 0;
+    const hasFiles = (e) => e.dataTransfer && Array.from(e.dataTransfer.types || []).includes('Files');
+    const onEnter = (e) => { if (hasFiles(e)) { depth += 1; setDragging(true); } };
+    const onLeave = () => { depth = Math.max(0, depth - 1); if (depth === 0) setDragging(false); };
+    const onDrop = () => { depth = 0; setDragging(false); };
+    window.addEventListener('dragenter', onEnter);
+    window.addEventListener('dragleave', onLeave);
+    window.addEventListener('drop', onDrop);
+    return () => {
+      window.removeEventListener('dragenter', onEnter);
+      window.removeEventListener('dragleave', onLeave);
+      window.removeEventListener('drop', onDrop);
+    };
+  }, []);
 
   const toggleCat = (id) => setCollapsed((prev) => {
     const next = new Set(prev);
@@ -121,7 +141,7 @@ function ToolsStudio({
   }, [search, lang]);
 
   return (
-    <div className="tools-studio" data-lang={lang}>
+    <div className={dragging ? 'tools-studio is-dragging' : 'tools-studio'} data-lang={lang}>
       {/* Хедер студии */}
       <header className="tools-header">
         <a href="/tools" className="tools-brand" onClick={go('/tools')} aria-label={STUDIO_NAME[lang]}>
