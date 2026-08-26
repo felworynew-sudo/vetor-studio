@@ -393,4 +393,9 @@ export default defineConfig(({ command }) => ({
     port: 5173,
     allowedHosts: ['.trycloudflare.com'],
   },
+  // Emscripten-glue ImageMagick ломается при esbuild-пребандле (WebAssembly
+  // LinkError) — отдаём пакет как есть, wasm грузится по same-origin URL.
+  optimizeDeps: {
+    exclude: ['@imagemagick/magick-wasm'],
+  },
 }));

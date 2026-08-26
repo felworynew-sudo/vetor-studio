@@ -16,6 +16,7 @@
   "dependencies": {
     "@breezystack/lamejs": "^1.2.7",
     "@huggingface/transformers": "^4.2.0",
+    "@imagemagick/magick-wasm": "^0.0.43",
     "d3-delaunay": "^6.0.4",
     "isomorphic-git": "^1.38.8",
     "jsbarcode": "^3.12.3",

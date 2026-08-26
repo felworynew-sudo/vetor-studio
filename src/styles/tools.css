@@ -894,6 +894,10 @@ a.tool-card:hover {
   color: var(--text); font: inherit; font-size: 12px; cursor: pointer; white-space: nowrap; }
 .ae-ab-btn:hover { border-color: var(--t-accent); }
 .ae-ab-btn.is-on { background: var(--t-accent); border-color: var(--t-accent); color: #fff; }
+
+/* --- Конвертер: селект формата + загрузка движка --- */
+.conv-format { min-width: 200px; }
+.conv-engine { margin: 4px 0 10px; font-size: 13px; color: var(--t-accent); }
 .bgr-brush {
   display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
   padding: 14px 16px; margin-bottom: 14px; border: 1px solid var(--stroke);

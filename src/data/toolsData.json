@@ -14,8 +14,8 @@
       "categoryId": "image",
       "status": "ready",
       "icon": "🔄",
-      "ru": { "title": "Конвертер изображений", "desc": "PNG, JPG, WebP — конвертация прямо в браузере, пакетно, без загрузки на сервер." },
-      "en": { "title": "Image converter", "desc": "PNG, JPG, WebP — convert right in your browser, in batches, nothing uploaded to a server." }
+      "ru": { "title": "Конвертер изображений", "desc": "Любой формат в любой: PNG, JPG, WebP, AVIF, TIFF, GIF, BMP, ICO, PSD, TGA и десятки других. Пакетно, в браузере." },
+      "en": { "title": "Image converter", "desc": "Any format to any: PNG, JPG, WebP, AVIF, TIFF, GIF, BMP, ICO, PSD, TGA and dozens more. Batch, in the browser." }
     },
     {
       "slug": "crop",
