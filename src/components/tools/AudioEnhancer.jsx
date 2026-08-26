@@ -24,6 +24,8 @@ const TEXT = {
   ru: {
     drop: 'Перетащите аудио сюда или нажмите', hint: 'MP3, WAV, M4A, OGG — можно несколько файлов',
     mode: 'Режим', auto: 'Авто', manual: 'Ручной', preset: 'Пресет',
+    autoNote: 'Авто-режим сам определит тип каждого файла (голос / музыка) и подберёт обработку.',
+    detected: 'Определено', before: 'До', after: 'После',
     warmth: 'Тепло (низ)', clarity: 'Чёткость (голос)', air: 'Воздух (верх)',
     compThresh: 'Порог компрессии', compRatio: 'Степень сжатия', gate: 'Шумовой порог', deess: 'Де-эссер', loud: 'Громкость',
     process: 'Улучшить всё', processing: 'Обработка…', download: 'Скачать', downloadAll: 'Скачать всё',
@@ -34,6 +36,8 @@ const TEXT = {
   en: {
     drop: 'Drop audio here or click', hint: 'MP3, WAV, M4A, OGG — several files are fine',
     mode: 'Mode', auto: 'Auto', manual: 'Manual', preset: 'Preset',
+    autoNote: 'Auto mode detects each file’s type (voice / music) and picks the processing itself.',
+    detected: 'Detected', before: 'Before', after: 'After',
     warmth: 'Warmth (low)', clarity: 'Clarity (voice)', air: 'Air (high)',
     compThresh: 'Compression threshold', compRatio: 'Compression ratio', gate: 'Noise gate', deess: 'De-esser', loud: 'Loudness',
     process: 'Enhance all', processing: 'Processing…', download: 'Download', downloadAll: 'Download all',
@@ -60,6 +64,33 @@ function estimateFloor(buffer) {
   if (!rms.length) return 0;
   rms.sort((a, b) => a - b);
   return rms[Math.floor(rms.length * 0.15)] || 0;
+}
+
+// Авто-определение типа записи: стереоширина (музыка шире), доля пауз (у речи
+// больше), zero-crossing rate (шипящие/ВЧ). Возвращает ключ пресета.
+function detectKind(buffer) {
+  const sr = buffer.sampleRate;
+  const L = buffer.getChannelData(0);
+  const R = buffer.numberOfChannels > 1 ? buffer.getChannelData(1) : null;
+  const n = L.length;
+  let width = 0;
+  if (R) {
+    let sLR = 0; let sLL = 0; let sRR = 0; const step = Math.max(1, Math.floor(n / 200000));
+    for (let i = 0; i < n; i += step) { sLR += L[i] * R[i]; sLL += L[i] * L[i]; sRR += R[i] * R[i]; }
+    const corr = sLR / (Math.sqrt(sLL * sRR) || 1);
+    width = 1 - Math.max(0, Math.min(1, corr));
+  }
+  const frame = Math.floor(sr * 0.05); const rms = [];
+  for (let i = 0; i + frame < n; i += frame) { let s = 0; for (let j = 0; j < frame; j += 1) s += L[i + j] * L[i + j]; rms.push(Math.sqrt(s / frame)); }
+  const peak = rms.reduce((m, r) => (r > m ? r : m), 1e-6);
+  const silenceRatio = rms.length ? rms.filter((r) => r < peak * 0.06).length / rms.length : 0;
+  let zc = 0; let cnt = 0; const step = Math.max(1, Math.floor(n / 300000));
+  for (let i = step; i < n; i += step) { if ((L[i] >= 0) !== (L[i - step] >= 0)) zc += 1; cnt += 1; }
+  const zcr = zc / (cnt || 1);
+  if (width > 0.28) return 'music';
+  if (silenceRatio > 0.18) return 'voice';
+  if (zcr > 0.09) return 'clarity';
+  return 'voice';
 }
 
 function applyGate(buffer, floor, amount) {
@@ -159,11 +190,11 @@ function AudioEnhancer({ language = 'ru' }) {
   const inputRef = useRef(null);
   const [items, setItems] = useState([]);
   const [mode, setMode] = useState('auto');
-  const [presetKey, setPresetKey] = useState('voice');
   const [manual, setManual] = useState({ ...PRESETS.voice });
   const [busy, setBusy] = useState(false);
+  const [ab, setAb] = useState({ id: '', which: '' });
+  const abRef = useRef(null);
 
-  const params = mode === 'auto' ? PRESETS[presetKey] : manual;
   const setM = (k, v) => setManual((m) => ({ ...m, [k]: v }));
 
   const addFiles = useCallback((fileList) => {
@@ -172,32 +203,46 @@ function AudioEnhancer({ language = 'ru' }) {
     setItems((prev) => [...prev, ...files.map((file, i) => ({ id: `${Date.now()}-${i}`, file, name: file.name, inSize: file.size, outUrl: '', outSize: 0, outName: '', status: 'idle' }))]);
   }, []);
 
-  async function processOne(item, p) {
+  async function processOne(item, autoDetect, manualP) {
     const arrayBuf = await item.file.arrayBuffer();
     const decoded = await getCtx().decodeAudioData(arrayBuf.slice(0));
     const work = getCtx().createBuffer(decoded.numberOfChannels, decoded.length, decoded.sampleRate);
     for (let c = 0; c < decoded.numberOfChannels; c += 1) work.copyToChannel(decoded.getChannelData(c).slice(), c);
+    // В авто-режиме определяем тип записи по самому звуку и берём его пресет.
+    const detected = autoDetect ? detectKind(work) : null;
+    const p = autoDetect ? PRESETS[detected] : manualP;
     if (p.gate > 0) applyGate(work, estimateFloor(work), p.gate);
     const rendered = await renderChain(work, p);
     normalizeAndLimit(rendered, p.targetRms, p.ceiling);
     const blob = encodeWAV(rendered);
     const base = item.name.replace(/\.[^.]+$/, '');
-    return { outUrl: URL.createObjectURL(blob), outSize: blob.size, outName: `${base}-enhanced.wav` };
+    return {
+      outUrl: URL.createObjectURL(blob), outSize: blob.size, outName: `${base}-enhanced.wav`,
+      detected, beforeUrl: URL.createObjectURL(item.file),
+    };
   }
 
   async function processAll() {
     setBusy(true);
-    const p = params;
+    const autoDetect = mode === 'auto';
     for (const item of items) {
       try {
         // eslint-disable-next-line no-await-in-loop
-        const r = await processOne(item, p);
+        const r = await processOne(item, autoDetect, manual);
         setItems((prev) => prev.map((it) => (it.id === item.id ? { ...it, ...r, status: 'done' } : it)));
       } catch {
         setItems((prev) => prev.map((it) => (it.id === item.id ? { ...it, status: 'error' } : it)));
       }
     }
     setBusy(false);
+  }
+
+  // A/B прослушивание: один общий <audio>, переключаем до/после.
+  function playAB(item, which) {
+    const el = abRef.current; if (!el) return;
+    const url = which === 'before' ? item.beforeUrl : item.outUrl;
+    if (ab.id === item.id && ab.which === which && !el.paused) { el.pause(); setAb({ id: '', which: '' }); return; }
+    el.src = url; el.play().catch(() => {}); setAb({ id: item.id, which });
   }
 
   function download(item) {
@@ -225,16 +270,7 @@ function AudioEnhancer({ language = 'ru' }) {
             <button type="button" className={mode === 'manual' ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => setMode('manual')}>{t.manual}</button>
           </div>
         </div>
-        {mode === 'auto' && (
-          <div className="tool-field">
-            <span className="tool-field-label">{t.preset}</span>
-            <div className="segmented">
-              {Object.entries(PRESETS).map(([k, v]) => (
-                <button key={k} type="button" className={k === presetKey ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => { setPresetKey(k); setManual({ ...PRESETS[k] }); }}>{v[language] || v.ru}</button>
-              ))}
-            </div>
-          </div>
-        )}
+        {mode === 'auto' && <p className="ae-auto-note">✨ {t.autoNote}</p>}
       </div>
 
       {mode === 'manual' && (
@@ -272,7 +308,18 @@ function AudioEnhancer({ language = 'ru' }) {
         {items.length === 0 && <li className="convert-empty">{t.empty}</li>}
         {items.map((item) => (
           <li key={item.id} className={`convert-row status-${item.status}`}>
-            <span className="convert-name" title={item.name}>{item.name}</span>
+            <span className="convert-name" title={item.name}>
+              {item.name}
+              {item.status === 'done' && item.detected && (
+                <span className="ae-detected">{t.detected}: {PRESETS[item.detected][language] || PRESETS[item.detected].ru}</span>
+              )}
+            </span>
+            {item.status === 'done' && (
+              <span className="ae-ab">
+                <button type="button" className={ab.id === item.id && ab.which === 'before' ? 'ae-ab-btn is-on' : 'ae-ab-btn'} onClick={() => playAB(item, 'before')}>▶ {t.before}</button>
+                <button type="button" className={ab.id === item.id && ab.which === 'after' ? 'ae-ab-btn is-on' : 'ae-ab-btn'} onClick={() => playAB(item, 'after')}>▶ {t.after}</button>
+              </span>
+            )}
             <span className="convert-sizes">
               {fmtBytes(item.inSize)}
               {item.status === 'done' && <> <span className="convert-arrow">→</span> <strong>{fmtBytes(item.outSize)}</strong></>}
@@ -284,6 +331,7 @@ function AudioEnhancer({ language = 'ru' }) {
         ))}
       </ul>
 
+      <audio ref={abRef} hidden onEnded={() => setAb({ id: '', which: '' })} />
       <input ref={inputRef} type="file" accept="audio/*" multiple hidden onChange={(e) => { addFiles(e.target.files); e.target.value = ''; }} />
       <p className="tool-local-note">🎚️ {t.chain}</p>
       <p className="tool-local-note">🔒 {t.local}</p>

@@ -884,6 +884,16 @@ a.tool-card:hover {
 .rec-encoding { color: var(--text-muted); font-size: 13px; }
 .rec-opts { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 10px; }
 .rec-opt { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; color: var(--text-muted); cursor: pointer; }
+
+/* --- Улучшатор: авто-нота, A/B, определённый тип --- */
+.ae-auto-note { margin: 4px 0 0; font-size: 13px; color: var(--text-muted); max-width: 520px; }
+.ae-detected { display: inline-block; margin-left: 10px; padding: 1px 8px; border-radius: 999px;
+  font-size: 11px; background: var(--surface-strong); color: var(--t-accent); vertical-align: middle; }
+.ae-ab { display: inline-flex; gap: 6px; }
+.ae-ab-btn { padding: 4px 10px; border-radius: 8px; border: 1px solid var(--stroke); background: var(--bg);
+  color: var(--text); font: inherit; font-size: 12px; cursor: pointer; white-space: nowrap; }
+.ae-ab-btn:hover { border-color: var(--t-accent); }
+.ae-ab-btn.is-on { background: var(--t-accent); border-color: var(--t-accent); color: #fff; }
 .bgr-brush {
   display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
   padding: 14px 16px; margin-bottom: 14px; border: 1px solid var(--stroke);
