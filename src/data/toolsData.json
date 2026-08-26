@@ -352,6 +352,21 @@
       "img": "t-izometriya.png"
     },
     {
+      "slug": "text-3d",
+      "categoryId": "generators",
+      "status": "ready",
+      "icon": "🔤",
+      "img": "abv.png",
+      "ru": {
+        "title": "3D-текст",
+        "desc": "Объёмные буквы с экструзией, фаской и скруглением. Материал, поворот ракурса, свой шрифт, экспорт PNG."
+      },
+      "en": {
+        "title": "3D text",
+        "desc": "Volumetric letters with extrusion, bevel and rounding. Material, orbit view, custom font, PNG export."
+      }
+    },
+    {
       "slug": "icon-scaler",
       "categoryId": "image",
       "status": "ready",

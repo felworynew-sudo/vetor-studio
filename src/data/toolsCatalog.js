@@ -48,6 +48,7 @@ const READY_COMPONENTS = {
   'color-grade': lazy(() => import('../components/tools/ColorGrade')),
   'voice-recorder': lazy(() => import('../components/tools/VoiceRecorder')),
   pixelizer: lazy(() => import('../components/tools/Pixelizer')),
+  'text-3d': lazy(() => import('../components/tools/Text3D')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;

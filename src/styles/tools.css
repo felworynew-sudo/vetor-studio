@@ -1198,3 +1198,7 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
 
 /* --- Карта глифов: кнопки набора --- */
 .gm-sets { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+
+/* --- 3D-текст --- */
+.t3-row { display: flex; gap: 16px; }
+.t3-color { display: flex; flex-direction: column; gap: 5px; }
