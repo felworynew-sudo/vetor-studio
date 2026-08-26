@@ -76,7 +76,7 @@ function encodeBMP(imageData) {
 const TEXT = {
   ru: {
     drop: 'Перетащите картинки сюда или нажмите, чтобы выбрать',
-    hint: 'Любой формат в любой: PNG, JPG, WebP, AVIF, TIFF, GIF, BMP, ICO, PSD, TGA и десятки других',
+    hint: 'Любой формат в любой: PNG, JPG, WebP, AVIF, TIFF, GIF, BMP, ICO, PSD, TGA и десятки других. На входе — даже HEIC с айфона',
     format: 'Формат на выходе', quality: 'Качество',
     convertAll: 'Конвертировать всё', download: 'Скачать', downloadAll: 'Скачать всё',
     clear: 'Очистить', processing: 'Обработка…',
@@ -88,7 +88,7 @@ const TEXT = {
   },
   en: {
     drop: 'Drop images here or click to choose',
-    hint: 'Any format to any: PNG, JPG, WebP, AVIF, TIFF, GIF, BMP, ICO, PSD, TGA and dozens more',
+    hint: 'Any format to any: PNG, JPG, WebP, AVIF, TIFF, GIF, BMP, ICO, PSD, TGA and dozens more. Even iPhone HEIC on input',
     format: 'Output format', quality: 'Quality',
     convertAll: 'Convert all', download: 'Download', downloadAll: 'Download all',
     clear: 'Clear', processing: 'Processing…',
@@ -162,7 +162,8 @@ function ImageConverter({ language = 'ru' }) {
     setEngineLoading(true);
     const { magickConvert } = await import('../../utils/magick');
     const bytes = await item.file.arrayBuffer();
-    const ext = (item.name.split('.').pop() || '').toLowerCase();
+    // формат ВХОДА берём от фактического файла (после HEIC-декода это уже .png)
+    const ext = (item.file.name.split('.').pop() || '').toLowerCase();
     const out = await magickConvert(bytes, fmt.magick, fmt.lossy ? Math.round(quality * 100) : undefined, EXT2MAGICK[ext] || null);
     setEngineLoading(false);
     const blob = new Blob([out], { type: MIME[fmt.ext] || 'application/octet-stream' });
@@ -172,11 +173,23 @@ function ImageConverter({ language = 'ru' }) {
 
   async function convertOne(item) {
     const fmt = activeFormat;
-    const inNative = NATIVE_IN.test(item.file.name) || (item.file.type && /(png|jpeg|webp|gif|bmp|avif|icon)/.test(item.file.type));
-    if (fmt.native && inNative) {
-      try { return await canvasConvert(item, fmt); } catch { /* упало нативно — пробуем через magick */ }
+    let work = item;
+    // HEIC/HEIF (фото с айфонов) браузер и ImageMagick-сборка не декодируют —
+    // сначала разжимаем через heic-to (libheif inline) в PNG, дальше обычный путь.
+    const ext = (item.name.split('.').pop() || '').toLowerCase();
+    if (ext === 'heic' || ext === 'heif' || /heic|heif/.test(item.file.type)) {
+      setEngineLoading(true);
+      const { heicTo } = await import('heic-to/csp');
+      const png = await heicTo({ blob: item.file, type: 'image/png' });
+      work = { ...item, file: new File([png], `${item.name}.png`, { type: 'image/png' }) };
+      setEngineLoading(false);
     }
-    return magickConvertItem(item, fmt);
+    const f = work.file;
+    const inNative = NATIVE_IN.test(f.name) || (f.type && /(png|jpeg|webp|gif|bmp|avif|icon)/.test(f.type));
+    if (fmt.native && inNative) {
+      try { return await canvasConvert(work, fmt); } catch { /* упало нативно — пробуем через magick */ }
+    }
+    return magickConvertItem(work, fmt);
   }
 
   async function handleConvertAll() {
