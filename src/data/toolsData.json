@@ -67,6 +67,15 @@
       "img": "fayly.png"
     },
     {
+      "slug": "pixelizer",
+      "categoryId": "image",
+      "status": "ready",
+      "icon": "👾",
+      "img": "monitor.png",
+      "ru": { "title": "Пикселизатор", "desc": "Превращает картинку в пиксель-арт по соседним пикселям (без размытия) + палитра. Экспорт в PNG и SVG-вектор." },
+      "en": { "title": "Pixelizer", "desc": "Turns an image into pixel art with nearest-neighbor scaling (no blur) + palette. Exports PNG and SVG vector." }
+    },
+    {
       "slug": "crop",
       "categoryId": "image",
       "status": "ready",
