@@ -298,11 +298,11 @@
       "icon": "🔤",
       "ru": {
         "title": "Генератор глиф-карт",
-        "desc": "Постер со всеми символами шрифта из TTF/OTF/WOFF. Цвета, столбцы, экспорт PNG."
+        "desc": "Постер символов шрифта: весь набор или только латиница/кириллица/цифры/своя фраза. Фон — цвет, градиент или картинка."
       },
       "en": {
         "title": "Glyph map generator",
-        "desc": "A poster with all glyphs from a TTF/OTF/WOFF font. Colors, columns, PNG export."
+        "desc": "A poster of a font: whole set or just Latin/Cyrillic/digits/custom text. Background: color, gradient or image."
       },
       "img": "abv.png"
     },

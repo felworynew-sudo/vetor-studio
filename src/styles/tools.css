@@ -1067,15 +1067,23 @@ a.tool-card:hover {
 /* ============================================================
    ПИКСЕЛЬ / АРКАДА — визуальный язык Верстака (8-бит, Марио-стиль)
    ============================================================ */
-/* Pixel Operator — свободный (public domain) 8-бит шрифт с кириллицей.
-   Regular + Bold, чёткий и читаемый, «квадратно-марио». */
+/* Pixel Operator — свободный (public domain) 8-бит шрифт. Латиница/цифры/пунктуация.
+   У него НЕТ кириллицы, поэтому кириллический блок отдаём Handjet (тоже пиксельный)
+   через unicode-range — семейство одно, глифы подбираются по диапазону. */
 @font-face {
   font-family: 'Pixel Operator'; font-style: normal; font-weight: 400; font-display: swap;
   src: url('/tools/fonts/PixelOperator.ttf') format('truetype');
+  unicode-range: U+0000-03FF, U+0500-FFFF;
 }
 @font-face {
   font-family: 'Pixel Operator'; font-style: normal; font-weight: 700; font-display: swap;
   src: url('/tools/fonts/PixelOperator-Bold.ttf') format('truetype');
+  unicode-range: U+0000-03FF, U+0500-FFFF;
+}
+@font-face {
+  font-family: 'Pixel Operator'; font-style: normal; font-weight: 400 700; font-display: swap;
+  src: url('/tools/fonts/handjet-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-04FF;
 }
 
 .tools-studio { --px: 'Pixel Operator', 'Courier New', monospace; --px-shadow: rgba(0, 0, 0, 0.55); }
@@ -1187,3 +1195,6 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
   font-size: 12px; background: rgba(6,7,12,0.72); color: #fff; pointer-events: none; opacity: 0.85; white-space: nowrap; }
 .iso-controls { display: flex; flex-direction: column; gap: 14px; }
 @media (max-width: 820px) { .iso-layout { grid-template-columns: 1fr; } .iso-mount { height: 340px; } }
+
+/* --- Карта глифов: кнопки набора --- */
+.gm-sets { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
