@@ -15,14 +15,12 @@ const TEXT = {
     placeholder: 'Вставьте ссылку на видео YouTube или ID',
     get: 'Показать превью', invalid: 'Не удалось распознать видео в ссылке',
     download: 'Скачать', open: 'Открыть', unavailable: 'нет',
-    channelNote: 'Аватарку и шапку канала без YouTube API (ключ на сервере) достать нельзя — CORS блокирует. Если нужно — сделаю через бэкенд-бота.',
     hint: 'Работает со ссылками watch?v=, youtu.be, /shorts/, /embed/ и с чистым ID. Максимальное превью есть не у всех видео.',
   },
   en: {
     placeholder: 'Paste a YouTube video URL or ID',
     get: 'Show thumbnails', invalid: 'Could not find a video in the link',
     download: 'Download', open: 'Open', unavailable: 'n/a',
-    channelNote: 'Channel avatar/banner cannot be fetched without the YouTube API (server key) — CORS blocks it. I can add it via the backend bot if needed.',
     hint: 'Works with watch?v=, youtu.be, /shorts/, /embed/ links and a bare ID. Max-res thumbnail is not available for every video.',
   },
 };
@@ -109,7 +107,6 @@ function YtThumbnail({ language = 'ru' }) {
         </div>
       )}
 
-      <p className="tool-local-note">📺 {t.channelNote}</p>
       <p className="tool-local-note">ℹ️ {t.hint}</p>
     </div>
   );

@@ -46,8 +46,8 @@
       "categoryId": "color",
       "status": "ready",
       "icon": "🌈",
-      "ru": { "title": "Палитры по настроению", "desc": "Готовые сочетания по эмоциональным тегам: киберпанк, винтаж, уют, неон и другие." },
-      "en": { "title": "Mood palettes", "desc": "Ready color combos by emotional tags: cyberpunk, vintage, cozy, neon and more." }
+      "ru": { "title": "Палитры по настроению", "desc": "Генерирует случайную палитру под настроение: киберпанк, винтаж, уют, неон и другие." },
+      "en": { "title": "Mood palettes", "desc": "Generates a random palette to match a mood: cyberpunk, vintage, cozy, neon and more." }
     },
     {
       "slug": "pastel-pairs",
@@ -110,8 +110,8 @@
       "categoryId": "image",
       "status": "ready",
       "icon": "📷",
-      "ru": { "title": "Анализатор размытия", "desc": "Отсеивает смазанные кадры из пакета фото по дисперсии Лапласиана. Для фотографов." },
-      "en": { "title": "Blur analyzer", "desc": "Filters out blurry shots from a batch by Laplacian variance. For photographers." }
+      "ru": { "title": "Анализатор размытия", "desc": "Отсеивает смазанные кадры из пакета фото и сортирует от размытых к резким." },
+      "en": { "title": "Blur analyzer", "desc": "Filters out blurry shots from a batch and sorts them blurry → sharp." }
     },
     {
       "slug": "glyph-map",
