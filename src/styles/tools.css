@@ -1176,3 +1176,14 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
   box-shadow: 0 0 0 3px var(--t-accent-soft);
 }
 .tools-studio.is-dragging .tool-dropzone-title { color: var(--t-accent-strong); }
+
+/* --- 3D-экструзия (Изометрия) --- */
+.iso-layout { display: grid; grid-template-columns: 1fr 280px; gap: 20px; align-items: start; }
+.iso-stage { position: relative; border: 1px solid var(--stroke); background: var(--surface-strong); overflow: hidden; }
+.iso-mount { width: 100%; height: 440px; touch-action: none; cursor: grab; }
+.iso-mount:active { cursor: grabbing; }
+.iso-mount canvas { display: block; }
+.iso-drag { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); padding: 4px 10px;
+  font-size: 12px; background: rgba(6,7,12,0.72); color: #fff; pointer-events: none; opacity: 0.85; white-space: nowrap; }
+.iso-controls { display: flex; flex-direction: column; gap: 14px; }
+@media (max-width: 820px) { .iso-layout { grid-template-columns: 1fr; } .iso-mount { height: 340px; } }

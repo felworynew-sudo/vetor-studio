@@ -72,8 +72,14 @@
       "status": "ready",
       "icon": "👾",
       "img": "monitor.png",
-      "ru": { "title": "Пикселизатор", "desc": "Превращает картинку в пиксель-арт по соседним пикселям (без размытия) + палитра. Экспорт в PNG и SVG-вектор." },
-      "en": { "title": "Pixelizer", "desc": "Turns an image into pixel art with nearest-neighbor scaling (no blur) + palette. Exports PNG and SVG vector." }
+      "ru": {
+        "title": "Пикселизатор",
+        "desc": "Превращает картинку в пиксель-арт по соседним пикселям (без размытия) + палитра. Экспорт в PNG и SVG-вектор."
+      },
+      "en": {
+        "title": "Pixelizer",
+        "desc": "Turns an image into pixel art with nearest-neighbor scaling (no blur) + palette. Exports PNG and SVG vector."
+      }
     },
     {
       "slug": "crop",
@@ -336,12 +342,12 @@
       "status": "ready",
       "icon": "🧊",
       "ru": {
-        "title": "Изометрия",
-        "desc": "Превращает плоскую картинку или SVG в изометрическую проекцию. Грани, фон, экспорт PNG."
+        "title": "3D-экструзия",
+        "desc": "Выдавливает картинку или SVG в объём: каждый пиксель — 3D-кубик. Крутите мышью, сохраняйте PNG."
       },
       "en": {
-        "title": "Isometric projection",
-        "desc": "Turns a flat image or SVG into an isometric projection. Faces, background, PNG export."
+        "title": "3D extrude",
+        "desc": "Extrudes an image or SVG into 3D: each pixel becomes a cube. Rotate with the mouse, save PNG."
       },
       "img": "t-izometriya.png"
     },
