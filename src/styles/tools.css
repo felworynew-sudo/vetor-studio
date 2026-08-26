@@ -1063,3 +1063,86 @@ a.tool-card:hover {
   color: var(--text-muted); font-size: 14px; line-height: 1.6;
 }
 .tools-offline strong { color: var(--text); }
+
+/* ============================================================
+   ПИКСЕЛЬ / АРКАДА — визуальный язык Верстака (8-бит, Марио-стиль)
+   ============================================================ */
+@font-face {
+  font-family: 'Handjet'; font-style: normal; font-weight: 400 700; font-display: swap;
+  src: url('/tools/fonts/handjet-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Handjet'; font-style: normal; font-weight: 400 700; font-display: swap;
+  src: url('/tools/fonts/handjet-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Handjet'; font-style: normal; font-weight: 400 700; font-display: swap;
+  src: url('/tools/fonts/handjet-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* Handjet — вариативный пиксельный с кириллицей; ELSH 0 = КВАДРАТНЫЕ пиксели
+   (блочно, по-марио и читаемо). */
+.tools-studio { --px: 'Handjet', 'Courier New', monospace; --px-shadow: rgba(0, 0, 0, 0.55); }
+
+/* Пиксель-иконки — чёткие квадраты, без бикубического размытия. */
+.px-icon { image-rendering: pixelated; display: inline-block; object-fit: contain; }
+.tools-side-icon { width: 20px; height: 20px; vertical-align: -5px; }
+.tools-side-cat-label .tools-side-icon { width: 18px; height: 18px; }
+
+/* Пиксель-шрифт на заголовках, бренде, кнопках и лейблах.
+   Описания/тело остаются читаемым sans — юзерфрендли важнее. */
+.tools-hero h1, .tool-view-head h1, .tools-ideas h2, .tools-hero-eyebrow,
+.tool-field-label, .tool-btn, .segmented-btn, .tools-lang button,
+.tool-card h3, .tools-side-cat-label, .tools-side-all, .crop-ratio,
+.tools-exit, .tool-back, .ae-ab-btn, .tools-search::placeholder {
+  font-family: var(--px);
+  font-weight: 700; /* Handjet 400 был слишком тонким */
+}
+.tools-hero h1 { letter-spacing: 0; line-height: 1.35; }
+.tools-hero-eyebrow { letter-spacing: 0; }
+.tool-card h3 { font-size: 14px; line-height: 1.45; letter-spacing: 0; }
+.tool-view-head h1 { letter-spacing: 0; line-height: 1.35; }
+.tool-field-label { letter-spacing: 0; }
+
+/* Острые углы везде — shape lock под пиксель. */
+.tool-card, .tool-panel, .tool-btn, .segmented, .segmented-btn, .tool-dropzone,
+.cb-select, .conv-format, .tools-lang, .tools-lang button, .crop-ratio,
+.tool-field input[type="color"], .tools-search, .ae-ab-btn, .tool-card-badge,
+.rec-orb, .grade-preview, .crop-frame, .crop-handle { border-radius: 0; }
+
+/* Аркадные блоки: карточки с жёсткой offset-тенью, «выпрыгивают» на ховере. */
+.tool-card { border-width: 3px; border-color: var(--stroke-strong); box-shadow: 5px 5px 0 var(--px-shadow); }
+a.tool-card:hover { transform: translate(-2px, -3px); box-shadow: 7px 8px 0 var(--t-accent); border-color: var(--t-accent); }
+a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--px-shadow); }
+/* Иконка тула сидит в пиксель-тайле. */
+.tool-card-icon.px-icon { width: 58px; height: 58px; padding: 8px; background: var(--surface-strong); border: 2px solid var(--stroke); }
+.tool-card > span.tool-card-icon { font-size: 40px; } /* эмодзи-фолбэк крупнее для баланса */
+.tool-view-icon.px-icon { width: 46px; height: 46px; padding: 6px; background: var(--surface-strong); border: 2px solid var(--stroke); }
+
+/* Кнопки-блоки, которые вдавливаются при нажатии. */
+.tool-btn { border-width: 2px; box-shadow: 3px 3px 0 var(--px-shadow); font-size: 12px; }
+.tool-btn:hover:not(:disabled):not(.primary) { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--px-shadow); background: var(--surface); }
+.tool-btn.primary:hover:not(:disabled) { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--px-shadow); }
+.tool-btn:active:not(:disabled) { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--px-shadow); }
+.tool-btn.small { box-shadow: 2px 2px 0 var(--px-shadow); }
+
+/* Сегменты и пресеты — активный «нажат». */
+.segmented { border-width: 2px; padding: 2px; }
+.segmented-btn.is-active { box-shadow: inset 2px 2px 0 rgba(0, 0, 0, 0.35); }
+.crop-ratio.is-active { box-shadow: inset 2px 2px 0 rgba(0, 0, 0, 0.35); }
+
+/* Дропзона — толще пунктир, свой блок. */
+.tool-dropzone { border-width: 3px; }
+.tool-dropzone-title { font-family: var(--px); font-size: 14px; }
+
+/* Хедер: бренд-выход и язык в пикселе. */
+.tools-lang button { font-size: 12px; }
+
+/* Лёгкое «дыхание» призрака-маскота в логотипе (уважает reduced-motion). */
+@media (prefers-reduced-motion: no-preference) {
+  .tools-brand-logo { animation: px-bob 3.2s steps(2, end) infinite; }
+  @keyframes px-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+}

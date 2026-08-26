@@ -51,6 +51,16 @@ const UI = {
   },
 };
 
+const ICON_BASE = '/tools/icons/';
+// Пиксель-иконка (PNG, image-rendering: pixelated) с фолбэком на эмодзи,
+// пока для инструмента не назначена своя иконка.
+function PxIcon({ src, emoji, className = '' }) {
+  if (src) {
+    return <img src={`${ICON_BASE}${src}`} alt="" className={`px-icon ${className}`} loading="lazy" draggable="false" />;
+  }
+  return <span className={className} aria-hidden="true">{emoji}</span>;
+}
+
 function ToolsStudio({
   language = 'ru',
   onLanguageChange,
@@ -163,7 +173,7 @@ function ToolsStudio({
                   onClick={() => toggleCat(cat.id)}
                   aria-expanded={isOpen}
                 >
-                  <span className="tools-side-cat-label">{cat.icon} {cat[lang]}</span>
+                  <span className="tools-side-cat-label"><PxIcon src={cat.img} emoji={cat.icon} className="tools-side-icon" /> {cat[lang]}</span>
                   <span className="tools-side-cat-right">
                     <span className="tools-side-count">{catTools.length}</span>
                     <span className="tools-side-chevron" aria-hidden="true">▾</span>
@@ -183,7 +193,7 @@ function ToolsStudio({
                       return (
                         <li key={tItem.slug}>
                           <span className={cls} title={ui.soon}>
-                            {tItem.icon} {tItem[lang].title}
+                            <PxIcon src={tItem.img} emoji={tItem.icon} className="tools-side-icon" /> {tItem[lang].title}
                             <span className="tools-soon-dot">{ui.soon}</span>
                           </span>
                         </li>
@@ -196,7 +206,7 @@ function ToolsStudio({
                           className={cls}
                           onClick={go(buildToolPath(tItem.slug))}
                         >
-                          {tItem.icon} {tItem[lang].title}
+                          <PxIcon src={tItem.img} emoji={tItem.icon} className="tools-side-icon" /> {tItem[lang].title}
                         </a>
                       </li>
                     );
@@ -274,17 +284,17 @@ function ToolCard({ tool, lang, ui, onOpen }) {
   if (!isReady) {
     return (
       <div className="tool-card is-soon" aria-disabled="true">
-        <span className="tool-card-icon">{tool.icon}</span>
+        <PxIcon src={tool.img} emoji={tool.icon} className="tool-card-icon" />
         <span className="tool-card-badge soon">{ui.soon}</span>
         <h3>{tool[lang].title}</h3>
         <p>{tool[lang].desc}</p>
-        {cat && <span className="tool-card-cat">{cat.icon} {cat[lang]}</span>}
+        {cat && <span className="tool-card-cat"><PxIcon src={cat.img} emoji={cat.icon} className="tools-side-icon" /> {cat[lang]}</span>}
       </div>
     );
   }
   return (
     <a href={buildToolPath(tool.slug)} className="tool-card" onClick={onOpen}>
-      <span className="tool-card-icon">{tool.icon}</span>
+      <PxIcon src={tool.img} emoji={tool.icon} className="tool-card-icon" />
       <h3>{tool[lang].title}</h3>
       <p>{tool[lang].desc}</p>
       {cat && <span className="tool-card-cat">{cat.icon} {cat[lang]}</span>}
@@ -298,7 +308,7 @@ function ToolView({ tool, lang, ui, onBack }) {
     <div className="tool-view">
       <a href="/tools" className="tool-back" onClick={onBack}>← {ui.back}</a>
       <header className="tool-view-head">
-        <span className="tool-view-icon">{tool.icon}</span>
+        <PxIcon src={tool.img} emoji={tool.icon} className="tool-view-icon" />
         <div>
           <h1>{tool[lang].title}</h1>
           <p>{tool[lang].desc}</p>

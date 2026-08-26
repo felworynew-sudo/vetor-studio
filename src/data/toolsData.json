@@ -1,12 +1,54 @@
 {
   "categories": [
-    { "id": "image", "ru": "Изображения", "en": "Images", "icon": "🖼️" },
-    { "id": "color", "ru": "Цвет", "en": "Color", "icon": "🎨" },
-    { "id": "svg", "ru": "SVG и вектор", "en": "SVG & vector", "icon": "✒️" },
-    { "id": "generators", "ru": "Генераторы", "en": "Generators", "icon": "✨" },
-    { "id": "ai", "ru": "AI-инструменты", "en": "AI tools", "icon": "🤖" },
-    { "id": "audio", "ru": "Аудио", "en": "Audio", "icon": "🎧" },
-    { "id": "utility", "ru": "Утилиты", "en": "Utilities", "icon": "🛠️" }
+    {
+      "id": "image",
+      "ru": "Изображения",
+      "en": "Images",
+      "icon": "🖼️",
+      "img": "foto.png"
+    },
+    {
+      "id": "color",
+      "ru": "Цвет",
+      "en": "Color",
+      "icon": "🎨",
+      "img": "palitra.png"
+    },
+    {
+      "id": "svg",
+      "ru": "SVG и вектор",
+      "en": "SVG & vector",
+      "icon": "✒️",
+      "img": "svg.png"
+    },
+    {
+      "id": "generators",
+      "ru": "Генераторы",
+      "en": "Generators",
+      "icon": "✨",
+      "img": "zvezdy.png"
+    },
+    {
+      "id": "ai",
+      "ru": "AI-инструменты",
+      "en": "AI tools",
+      "icon": "🤖",
+      "img": "mozg.png"
+    },
+    {
+      "id": "audio",
+      "ru": "Аудио",
+      "en": "Audio",
+      "icon": "🎧",
+      "img": "naushniki.png"
+    },
+    {
+      "id": "utility",
+      "ru": "Утилиты",
+      "en": "Utilities",
+      "icon": "🛠️",
+      "img": "klyuch-gaechnyy.png"
+    }
   ],
   "tools": [
     {
@@ -14,328 +56,614 @@
       "categoryId": "image",
       "status": "ready",
       "icon": "🔄",
-      "ru": { "title": "Конвертер изображений", "desc": "Любой формат в любой: PNG, JPG, WebP, AVIF, TIFF, GIF, BMP, ICO, PSD, TGA и десятки других. Пакетно, в браузере." },
-      "en": { "title": "Image converter", "desc": "Any format to any: PNG, JPG, WebP, AVIF, TIFF, GIF, BMP, ICO, PSD, TGA and dozens more. Batch, in the browser." }
+      "ru": {
+        "title": "Конвертер изображений",
+        "desc": "Любой формат в любой: PNG, JPG, WebP, AVIF, TIFF, GIF, BMP, ICO, PSD, TGA и десятки других. Пакетно, в браузере."
+      },
+      "en": {
+        "title": "Image converter",
+        "desc": "Any format to any: PNG, JPG, WebP, AVIF, TIFF, GIF, BMP, ICO, PSD, TGA and dozens more. Batch, in the browser."
+      },
+      "img": "fayly.png"
     },
     {
       "slug": "crop",
       "categoryId": "image",
       "status": "ready",
       "icon": "✂️",
-      "ru": { "title": "Обрезка изображения", "desc": "Кадрируйте фото рамкой с пресетами 1:1, 4:3, 16:9 и свободной. В исходном качестве, локально." },
-      "en": { "title": "Crop image", "desc": "Crop a photo with a frame and presets: 1:1, 4:3, 16:9 or free. Full quality, done locally." }
+      "ru": {
+        "title": "Обрезка изображения",
+        "desc": "Кадрируйте фото рамкой с пресетами 1:1, 4:3, 16:9 и свободной. В исходном качестве, локально."
+      },
+      "en": {
+        "title": "Crop image",
+        "desc": "Crop a photo with a frame and presets: 1:1, 4:3, 16:9 or free. Full quality, done locally."
+      },
+      "img": "nozhnicy.png"
     },
     {
       "slug": "color-grade",
       "categoryId": "image",
       "status": "ready",
       "icon": "🎚️",
-      "ru": { "title": "Цветокоррекция фото", "desc": "Экспозиция, контраст, света и тени, температура, резкость, шумоподавление — как в Lightroom, но в браузере." },
-      "en": { "title": "Photo color grading", "desc": "Exposure, contrast, highlights & shadows, temperature, sharpness, noise reduction — Lightroom-style, in your browser." }
+      "ru": {
+        "title": "Цветокоррекция фото",
+        "desc": "Экспозиция, контраст, света и тени, температура, резкость, шумоподавление — как в Lightroom, но в браузере."
+      },
+      "en": {
+        "title": "Photo color grading",
+        "desc": "Exposure, contrast, highlights & shadows, temperature, sharpness, noise reduction — Lightroom-style, in your browser."
+      },
+      "img": "foto.png"
     },
     {
       "slug": "color-converter",
       "categoryId": "color",
       "status": "ready",
       "icon": "🌈",
-      "ru": { "title": "Конвертер цветов", "desc": "HEX ⇆ RGB, HSL и приблизительный CMYK. Живой предпросмотр и копирование в клик." },
-      "en": { "title": "Color converter", "desc": "HEX ⇆ RGB, HSL and approximate CMYK. Live preview and one-click copy." }
+      "ru": {
+        "title": "Конвертер цветов",
+        "desc": "HEX ⇆ RGB, HSL и приблизительный CMYK. Живой предпросмотр и копирование в клик."
+      },
+      "en": {
+        "title": "Color converter",
+        "desc": "HEX ⇆ RGB, HSL and approximate CMYK. Live preview and one-click copy."
+      },
+      "img": "cveta.png"
     },
     {
       "slug": "color-harmony",
       "categoryId": "color",
       "status": "ready",
       "icon": "🎡",
-      "ru": { "title": "Цветовые схемы (круг Иттена)", "desc": "Гармоничные сочетания по базовому цвету: комплементарные, триады, аналоговые и другие." },
-      "en": { "title": "Color schemes (Itten wheel)", "desc": "Harmonious combinations from a base color: complementary, triadic, analogous and more." }
+      "ru": {
+        "title": "Цветовые схемы (круг Иттена)",
+        "desc": "Гармоничные сочетания по базовому цвету: комплементарные, триады, аналоговые и другие."
+      },
+      "en": {
+        "title": "Color schemes (Itten wheel)",
+        "desc": "Harmonious combinations from a base color: complementary, triadic, analogous and more."
+      },
+      "img": "itenkrug.png"
     },
     {
       "slug": "color-weight",
       "categoryId": "color",
       "status": "ready",
       "icon": "📊",
-      "ru": { "title": "Анализатор цветового веса", "desc": "Процентное соотношение цветов на макете для проверки правила 60-30-10." },
-      "en": { "title": "Color weight analyzer", "desc": "The percentage split of colors in a design to check the 60-30-10 rule." }
+      "ru": {
+        "title": "Анализатор цветового веса",
+        "desc": "Процентное соотношение цветов на макете для проверки правила 60-30-10."
+      },
+      "en": {
+        "title": "Color weight analyzer",
+        "desc": "The percentage split of colors in a design to check the 60-30-10 rule."
+      },
+      "img": "vesy.png"
     },
     {
       "slug": "mood-palettes",
       "categoryId": "color",
       "status": "ready",
       "icon": "🌈",
-      "ru": { "title": "Палитры по настроению", "desc": "Генерирует случайную палитру под настроение: киберпанк, винтаж, уют, неон и другие." },
-      "en": { "title": "Mood palettes", "desc": "Generates a random palette to match a mood: cyberpunk, vintage, cozy, neon and more." }
+      "ru": {
+        "title": "Палитры по настроению",
+        "desc": "Генерирует случайную палитру под настроение: киберпанк, винтаж, уют, неон и другие."
+      },
+      "en": {
+        "title": "Mood palettes",
+        "desc": "Generates a random palette to match a mood: cyberpunk, vintage, cozy, neon and more."
+      },
+      "img": "palitra.png"
     },
     {
       "slug": "pastel-pairs",
       "categoryId": "color",
       "status": "ready",
       "icon": "🩰",
-      "ru": { "title": "Пастельные и тёмные пары", "desc": "Подбор контрастного текста и мягкой/тёмной пары для UI-элементов по базовому цвету." },
-      "en": { "title": "Pastel & dark pairs", "desc": "Contrast text plus a soft/dark pair for UI elements, from a base color." }
+      "ru": {
+        "title": "Пастельные и тёмные пары",
+        "desc": "Подбор контрастного текста и мягкой/тёмной пары для UI-элементов по базовому цвету."
+      },
+      "en": {
+        "title": "Pastel & dark pairs",
+        "desc": "Contrast text plus a soft/dark pair for UI elements, from a base color."
+      },
+      "img": "pastel-i-temn-para.png"
     },
     {
       "slug": "palette-extractor",
       "categoryId": "color",
       "status": "ready",
       "icon": "💧",
-      "ru": { "title": "Экстрактор палитры", "desc": "Достаёт основные цвета из загруженного изображения." },
-      "en": { "title": "Palette extractor", "desc": "Pulls the key colors out of an uploaded image." }
+      "ru": {
+        "title": "Экстрактор палитры",
+        "desc": "Достаёт основные цвета из загруженного изображения."
+      },
+      "en": {
+        "title": "Palette extractor",
+        "desc": "Pulls the key colors out of an uploaded image."
+      },
+      "img": "palitra-iz-foto.png"
     },
     {
       "slug": "contrast-checker",
       "categoryId": "color",
       "status": "ready",
       "icon": "🔬",
-      "ru": { "title": "Проверка контраста (WCAG)", "desc": "Контрастность текста и фона по стандартам доступности." },
-      "en": { "title": "Contrast checker (WCAG)", "desc": "Text/background contrast against accessibility standards." }
+      "ru": {
+        "title": "Проверка контраста (WCAG)",
+        "desc": "Контрастность текста и фона по стандартам доступности."
+      },
+      "en": {
+        "title": "Contrast checker (WCAG)",
+        "desc": "Text/background contrast against accessibility standards."
+      },
+      "img": "kontrast.png"
     },
     {
       "slug": "colorblind-simulator",
       "categoryId": "color",
       "status": "ready",
       "icon": "👁️",
-      "ru": { "title": "Симулятор дальтонизма", "desc": "Как макет видят люди с разными типами дальтонизма." },
-      "en": { "title": "Colorblind simulator", "desc": "How your design looks with different color-vision types." }
+      "ru": {
+        "title": "Симулятор дальтонизма",
+        "desc": "Как макет видят люди с разными типами дальтонизма."
+      },
+      "en": {
+        "title": "Colorblind simulator",
+        "desc": "How your design looks with different color-vision types."
+      },
+      "img": "ochki.png"
     },
     {
       "slug": "favicon-generator",
       "categoryId": "image",
       "status": "ready",
       "icon": "⭐",
-      "ru": { "title": "Генератор фавиконок", "desc": "Полный набор иконок + manifest.json из одной картинки." },
-      "en": { "title": "Favicon generator", "desc": "A full icon set + manifest.json from a single image." }
+      "ru": {
+        "title": "Генератор фавиконок",
+        "desc": "Полный набор иконок + manifest.json из одной картинки."
+      },
+      "en": {
+        "title": "Favicon generator",
+        "desc": "A full icon set + manifest.json from a single image."
+      },
+      "img": "favikon.png"
     },
     {
       "slug": "watermark",
       "categoryId": "image",
       "status": "ready",
       "icon": "🔖",
-      "ru": { "title": "Водяные знаки", "desc": "Пакетное наложение логотипа/текста на концепты." },
-      "en": { "title": "Watermark", "desc": "Batch-stamp a logo or text onto your concepts." }
+      "ru": {
+        "title": "Водяные знаки",
+        "desc": "Пакетное наложение логотипа/текста на концепты."
+      },
+      "en": {
+        "title": "Watermark",
+        "desc": "Batch-stamp a logo or text onto your concepts."
+      },
+      "img": "birka.png"
     },
     {
       "slug": "image-metadata",
       "categoryId": "image",
       "status": "ready",
       "icon": "🧾",
-      "ru": { "title": "Очистка метаданных (EXIF/C2PA)", "desc": "Удаляет EXIF, XMP, GPS, IPTC и C2PA/ИИ-метки из JPEG/PNG без потери качества. Показывает найденное. Пакетно." },
-      "en": { "title": "Metadata cleaner (EXIF/C2PA)", "desc": "Strips EXIF, XMP, GPS, IPTC and C2PA/AI markers from JPEG/PNG losslessly. Shows what was found. Batch." }
+      "ru": {
+        "title": "Очистка метаданных (EXIF/C2PA)",
+        "desc": "Удаляет EXIF, XMP, GPS, IPTC и C2PA/ИИ-метки из JPEG/PNG без потери качества. Показывает найденное. Пакетно."
+      },
+      "en": {
+        "title": "Metadata cleaner (EXIF/C2PA)",
+        "desc": "Strips EXIF, XMP, GPS, IPTC and C2PA/AI markers from JPEG/PNG losslessly. Shows what was found. Batch."
+      },
+      "img": "birka.png"
     },
     {
       "slug": "blur-analyzer",
       "categoryId": "image",
       "status": "ready",
       "icon": "📷",
-      "ru": { "title": "Анализатор размытия", "desc": "Отсеивает смазанные кадры из пакета фото и сортирует от размытых к резким." },
-      "en": { "title": "Blur analyzer", "desc": "Filters out blurry shots from a batch and sorts them blurry → sharp." }
+      "ru": {
+        "title": "Анализатор размытия",
+        "desc": "Отсеивает смазанные кадры из пакета фото и сортирует от размытых к резким."
+      },
+      "en": {
+        "title": "Blur analyzer",
+        "desc": "Filters out blurry shots from a batch and sorts them blurry → sharp."
+      },
+      "img": "glaz.png"
     },
     {
       "slug": "glyph-map",
       "categoryId": "generators",
       "status": "ready",
       "icon": "🔤",
-      "ru": { "title": "Генератор глиф-карт", "desc": "Постер со всеми символами шрифта из TTF/OTF/WOFF. Цвета, столбцы, экспорт PNG." },
-      "en": { "title": "Glyph map generator", "desc": "A poster with all glyphs from a TTF/OTF/WOFF font. Colors, columns, PNG export." }
+      "ru": {
+        "title": "Генератор глиф-карт",
+        "desc": "Постер со всеми символами шрифта из TTF/OTF/WOFF. Цвета, столбцы, экспорт PNG."
+      },
+      "en": {
+        "title": "Glyph map generator",
+        "desc": "A poster with all glyphs from a TTF/OTF/WOFF font. Colors, columns, PNG export."
+      },
+      "img": "abv.png"
     },
     {
       "slug": "ascii-art",
       "categoryId": "generators",
       "status": "ready",
       "icon": "🔡",
-      "ru": { "title": "Генератор ASCII-арта", "desc": "Превращает картинку в текстовый арт: ширина, набор символов, инверсия." },
-      "en": { "title": "ASCII art generator", "desc": "Turns an image into text art: width, charset, invert." }
+      "ru": {
+        "title": "Генератор ASCII-арта",
+        "desc": "Превращает картинку в текстовый арт: ширина, набор символов, инверсия."
+      },
+      "en": {
+        "title": "ASCII art generator",
+        "desc": "Turns an image into text art: width, charset, invert."
+      },
+      "img": "monitor.png"
     },
     {
       "slug": "rule-of-thirds",
       "categoryId": "image",
       "status": "ready",
       "icon": "📐",
-      "ru": { "title": "Правило третей", "desc": "Композиционная сетка (трети, золотое сечение, диагонали) поверх изображения." },
-      "en": { "title": "Rule of thirds", "desc": "A composition grid (thirds, golden ratio, diagonals) over your image." }
+      "ru": {
+        "title": "Правило третей",
+        "desc": "Композиционная сетка (трети, золотое сечение, диагонали) поверх изображения."
+      },
+      "en": {
+        "title": "Rule of thirds",
+        "desc": "A composition grid (thirds, golden ratio, diagonals) over your image."
+      },
+      "img": "pravilo-tretey.png"
     },
     {
       "slug": "isometry",
       "categoryId": "image",
       "status": "ready",
       "icon": "🧊",
-      "ru": { "title": "Изометрия", "desc": "Превращает плоскую картинку или SVG в изометрическую проекцию. Грани, фон, экспорт PNG." },
-      "en": { "title": "Isometric projection", "desc": "Turns a flat image or SVG into an isometric projection. Faces, background, PNG export." }
+      "ru": {
+        "title": "Изометрия",
+        "desc": "Превращает плоскую картинку или SVG в изометрическую проекцию. Грани, фон, экспорт PNG."
+      },
+      "en": {
+        "title": "Isometric projection",
+        "desc": "Turns a flat image or SVG into an isometric projection. Faces, background, PNG export."
+      },
+      "img": "t-izometriya.png"
     },
     {
       "slug": "icon-scaler",
       "categoryId": "image",
       "status": "ready",
       "icon": "🔲",
-      "ru": { "title": "Масштабатор иконок", "desc": "Вписывает иконку в стандартные размеры (16–128px) с центрированием и отступом." },
-      "en": { "title": "Icon scaler", "desc": "Fits an icon into standard sizes (16–128px) with centering and padding." }
+      "ru": {
+        "title": "Масштабатор иконок",
+        "desc": "Вписывает иконку в стандартные размеры (16–128px) с центрированием и отступом."
+      },
+      "en": {
+        "title": "Icon scaler",
+        "desc": "Fits an icon into standard sizes (16–128px) with centering and padding."
+      },
+      "img": "masshtab.png"
     },
     {
       "slug": "eink-simulator",
       "categoryId": "image",
       "status": "ready",
       "icon": "🖨️",
-      "ru": { "title": "Симулятор E-Ink", "desc": "Как интерфейс выглядит на монохромном экране ридера: серый, 1-бит, дизеринг." },
-      "en": { "title": "E-Ink simulator", "desc": "How a UI looks on a monochrome e-reader: grayscale, 1-bit, dithering." }
+      "ru": {
+        "title": "Симулятор E-Ink",
+        "desc": "Как интерфейс выглядит на монохромном экране ридера: серый, 1-бит, дизеринг."
+      },
+      "en": {
+        "title": "E-Ink simulator",
+        "desc": "How a UI looks on a monochrome e-reader: grayscale, 1-bit, dithering."
+      },
+      "img": "monitor.png"
     },
     {
       "slug": "svg-cleaner",
       "categoryId": "svg",
       "status": "ready",
       "icon": "🧹",
-      "ru": { "title": "Очиститель SVG", "desc": "Убирает мусор и метаданные из экспортов Figma/Illustrator." },
-      "en": { "title": "SVG cleaner", "desc": "Strips junk and metadata from Figma/Illustrator exports." }
+      "ru": {
+        "title": "Очиститель SVG",
+        "desc": "Убирает мусор и метаданные из экспортов Figma/Illustrator."
+      },
+      "en": {
+        "title": "SVG cleaner",
+        "desc": "Strips junk and metadata from Figma/Illustrator exports."
+      },
+      "img": "svg.png"
     },
     {
       "slug": "css-from-svg",
       "categoryId": "svg",
       "status": "ready",
       "icon": "📋",
-      "ru": { "title": "Экстрактор CSS из SVG", "desc": "Вытаскивает цвета, градиенты и стили из векторного файла в виде готового CSS." },
-      "en": { "title": "CSS from SVG", "desc": "Pulls colors, gradients and styles out of a vector file as ready CSS." }
+      "ru": {
+        "title": "Экстрактор CSS из SVG",
+        "desc": "Вытаскивает цвета, градиенты и стили из векторного файла в виде готового CSS."
+      },
+      "en": {
+        "title": "CSS from SVG",
+        "desc": "Pulls colors, gradients and styles out of a vector file as ready CSS."
+      },
+      "img": "svg.png"
     },
     {
       "slug": "qr-generator",
       "categoryId": "generators",
       "status": "ready",
       "icon": "🔳",
-      "ru": { "title": "QR-код: генератор и сканер", "desc": "Выгрузка в SVG/PNG, настройка цвета и фона." },
-      "en": { "title": "QR code: generator & scanner", "desc": "Export to SVG/PNG, custom color and background." }
+      "ru": {
+        "title": "QR-код: генератор и сканер",
+        "desc": "Выгрузка в SVG/PNG, настройка цвета и фона."
+      },
+      "en": {
+        "title": "QR code: generator & scanner",
+        "desc": "Export to SVG/PNG, custom color and background."
+      },
+      "img": "kyuar.png"
     },
     {
       "slug": "barcode-generator",
       "categoryId": "generators",
       "status": "ready",
       "icon": "▐║▌",
-      "ru": { "title": "Генератор штрих-кодов", "desc": "CODE128, EAN, UPC и другие форматы. Экспорт в SVG и PNG." },
-      "en": { "title": "Barcode generator", "desc": "CODE128, EAN, UPC and more. Export to SVG and PNG." }
+      "ru": {
+        "title": "Генератор штрих-кодов",
+        "desc": "CODE128, EAN, UPC и другие форматы. Экспорт в SVG и PNG."
+      },
+      "en": {
+        "title": "Barcode generator",
+        "desc": "CODE128, EAN, UPC and more. Export to SVG and PNG."
+      },
+      "img": "shtrihkod.png"
     },
     {
       "slug": "voronoi-generator",
       "categoryId": "generators",
       "status": "ready",
       "icon": "🔷",
-      "ru": { "title": "Генератор фонов Вороного", "desc": "Стильные геометрические фоны (Вороного/Делоне). Экспорт SVG/PNG." },
-      "en": { "title": "Voronoi background generator", "desc": "Stylish geometric backgrounds (Voronoi/Delaunay). Export SVG/PNG." }
+      "ru": {
+        "title": "Генератор фонов Вороного",
+        "desc": "Стильные геометрические фоны (Вороного/Делоне). Экспорт SVG/PNG."
+      },
+      "en": {
+        "title": "Voronoi background generator",
+        "desc": "Stylish geometric backgrounds (Voronoi/Delaunay). Export SVG/PNG."
+      },
+      "img": "voroniy.png"
     },
     {
       "slug": "noise-generator",
       "categoryId": "generators",
       "status": "ready",
       "icon": "🌫️",
-      "ru": { "title": "Генератор шума", "desc": "Белый/розовый шум для концентрации в работе." },
-      "en": { "title": "Noise generator", "desc": "White/pink noise to help you focus." }
+      "ru": {
+        "title": "Генератор шума",
+        "desc": "Белый/розовый шум для концентрации в работе."
+      },
+      "en": {
+        "title": "Noise generator",
+        "desc": "White/pink noise to help you focus."
+      },
+      "img": "shum.png"
     },
     {
       "slug": "design-challenge",
       "categoryId": "generators",
       "status": "ready",
       "icon": "🎲",
-      "ru": { "title": "Генератор дизайн-челленджей", "desc": "Случайное задание для прокачки портфолио: объект, аудитория, стиль и палитра." },
-      "en": { "title": "Design challenge generator", "desc": "A random brief to grow your portfolio: object, audience, style and palette." }
+      "ru": {
+        "title": "Генератор дизайн-челленджей",
+        "desc": "Случайное задание для прокачки портфолио: объект, аудитория, стиль и палитра."
+      },
+      "en": {
+        "title": "Design challenge generator",
+        "desc": "A random brief to grow your portfolio: object, audience, style and palette."
+      },
+      "img": "lampochka.png"
     },
     {
       "slug": "gradient-generator",
       "categoryId": "generators",
       "status": "ready",
       "icon": "🌅",
-      "ru": { "title": "Генератор градиентов", "desc": "Красивые CSS-градиенты: стопы, угол, тип — готовый код в клик." },
-      "en": { "title": "Gradient generator", "desc": "Beautiful CSS gradients: stops, angle, type — copy-ready code in a click." }
+      "ru": {
+        "title": "Генератор градиентов",
+        "desc": "Красивые CSS-градиенты: стопы, угол, тип — готовый код в клик."
+      },
+      "en": {
+        "title": "Gradient generator",
+        "desc": "Beautiful CSS gradients: stops, angle, type — copy-ready code in a click."
+      },
+      "img": "palitra-1.png"
     },
     {
       "slug": "break-timer",
       "categoryId": "utility",
       "status": "ready",
       "icon": "⏱️",
-      "ru": { "title": "Таймер 20-20-20", "desc": "Напоминание давать отдых глазам каждые 20 минут." },
-      "en": { "title": "20-20-20 timer", "desc": "Reminds you to rest your eyes every 20 minutes." }
+      "ru": {
+        "title": "Таймер 20-20-20",
+        "desc": "Напоминание давать отдых глазам каждые 20 минут."
+      },
+      "en": {
+        "title": "20-20-20 timer",
+        "desc": "Reminds you to rest your eyes every 20 minutes."
+      },
+      "img": "taymer.png"
     },
     {
       "slug": "background-remover",
       "categoryId": "ai",
       "status": "ready",
       "icon": "✂️",
-      "ru": { "title": "Вырезатель фона (AI)", "desc": "Удаляет фон с фото прямо в браузере: ИИ-модель скачивается один раз, снимок никуда не передаётся." },
-      "en": { "title": "Background remover (AI)", "desc": "Removes the background right in your browser: the AI model downloads once, the photo never leaves your device." }
+      "ru": {
+        "title": "Вырезатель фона (AI)",
+        "desc": "Удаляет фон с фото прямо в браузере: ИИ-модель скачивается один раз, снимок никуда не передаётся."
+      },
+      "en": {
+        "title": "Background remover (AI)",
+        "desc": "Removes the background right in your browser: the AI model downloads once, the photo never leaves your device."
+      },
+      "img": "pipidastr.png"
     },
     {
       "slug": "upscaler",
       "categoryId": "ai",
       "status": "ready",
       "icon": "🔍",
-      "ru": { "title": "AI-апскейлер (×2)", "desc": "Увеличивает разрешение изображения нейросетью Swin2SR прямо в браузере, без потери деталей." },
-      "en": { "title": "AI upscaler (×2)", "desc": "Upscales image resolution with the Swin2SR neural network right in your browser, keeping details." }
+      "ru": {
+        "title": "AI-апскейлер (×2)",
+        "desc": "Увеличивает разрешение изображения нейросетью Swin2SR прямо в браузере, без потери деталей."
+      },
+      "en": {
+        "title": "AI upscaler (×2)",
+        "desc": "Upscales image resolution with the Swin2SR neural network right in your browser, keeping details."
+      },
+      "img": "apskeyl.png"
     },
     {
       "slug": "smart-crop",
       "categoryId": "ai",
       "status": "ready",
       "icon": "🎯",
-      "ru": { "title": "Smart Crop (AI)", "desc": "ИИ находит лицо/главный объект и кадрирует под квадрат, сторис, широкий формат или аватар-круг. Пакетно." },
-      "en": { "title": "Smart Crop (AI)", "desc": "The AI finds the face/main subject and crops to square, story, wide or a circular avatar. Batch." }
+      "ru": {
+        "title": "Smart Crop (AI)",
+        "desc": "ИИ находит лицо/главный объект и кадрирует под квадрат, сторис, широкий формат или аватар-круг. Пакетно."
+      },
+      "en": {
+        "title": "Smart Crop (AI)",
+        "desc": "The AI finds the face/main subject and crops to square, story, wide or a circular avatar. Batch."
+      },
+      "img": "mishen.png"
     },
     {
       "slug": "ai-detector",
       "categoryId": "ai",
       "status": "ready",
       "icon": "🕵️",
-      "ru": { "title": "Детектор AI-изображений", "desc": "Оценивает, сгенерирована ли картинка нейросетью. Модель работает локально в браузере." },
-      "en": { "title": "AI image detector", "desc": "Estimates whether an image was generated by a neural network. The model runs locally in your browser." }
+      "ru": {
+        "title": "Детектор AI-изображений",
+        "desc": "Оценивает, сгенерирована ли картинка нейросетью. Модель работает локально в браузере."
+      },
+      "en": {
+        "title": "AI image detector",
+        "desc": "Estimates whether an image was generated by a neural network. The model runs locally in your browser."
+      },
+      "img": "lupaii.png"
     },
     {
       "slug": "voice-recorder",
       "categoryId": "audio",
       "status": "ready",
       "icon": "🎙️",
-      "ru": { "title": "Диктофон", "desc": "Запись с микрофона с паузой и уровнем звука, прослушивание и экспорт в WAV или MP3. Локально." },
-      "en": { "title": "Voice recorder", "desc": "Record from the mic with pause and level meter, play back and export to WAV or MP3. Local." }
+      "ru": {
+        "title": "Диктофон",
+        "desc": "Запись с микрофона с паузой и уровнем звука, прослушивание и экспорт в WAV или MP3. Локально."
+      },
+      "en": {
+        "title": "Voice recorder",
+        "desc": "Record from the mic with pause and level meter, play back and export to WAV or MP3. Local."
+      }
     },
     {
       "slug": "lofi-radio",
       "categoryId": "audio",
       "status": "ready",
       "icon": "📻",
-      "ru": { "title": "Лофи-радио", "desc": "Фоновая лофи-музыка для работы: старт/стоп, громкость и плавные переходы между треками." },
-      "en": { "title": "Lo-fi radio", "desc": "Background lo-fi music for work: start/stop, volume, and smooth crossfades between tracks." }
+      "ru": {
+        "title": "Лофи-радио",
+        "desc": "Фоновая лофи-музыка для работы: старт/стоп, громкость и плавные переходы между треками."
+      },
+      "en": {
+        "title": "Lo-fi radio",
+        "desc": "Background lo-fi music for work: start/stop, volume, and smooth crossfades between tracks."
+      },
+      "img": "radio.png"
     },
     {
       "slug": "audio-enhancer",
       "categoryId": "audio",
       "status": "ready",
       "icon": "🎚️",
-      "ru": { "title": "Улучшение аудио", "desc": "Эквализация, компрессия, де-эссер, шумовой гейт, нормализация и лимитер. Авто и ручной режим, пакетно, локально." },
-      "en": { "title": "Audio enhancer", "desc": "EQ, compression, de-esser, noise gate, normalization and limiter. Auto and manual modes, batch, local." }
+      "ru": {
+        "title": "Улучшение аудио",
+        "desc": "Эквализация, компрессия, де-эссер, шумовой гейт, нормализация и лимитер. Авто и ручной режим, пакетно, локально."
+      },
+      "en": {
+        "title": "Audio enhancer",
+        "desc": "EQ, compression, de-esser, noise gate, normalization and limiter. Auto and manual modes, batch, local."
+      },
+      "img": "zvukplyus.png"
     },
     {
       "slug": "audio-trimmer",
       "categoryId": "audio",
       "status": "ready",
       "icon": "✂️",
-      "ru": { "title": "Обрезка аудио", "desc": "Волновая форма, выбор фрагмента ручками, фейды, экспорт WAV. Локально." },
-      "en": { "title": "Audio trimmer", "desc": "Waveform, drag-handle selection, fades, WAV export. Local." }
+      "ru": {
+        "title": "Обрезка аудио",
+        "desc": "Волновая форма, выбор фрагмента ручками, фейды, экспорт WAV. Локально."
+      },
+      "en": {
+        "title": "Audio trimmer",
+        "desc": "Waveform, drag-handle selection, fades, WAV export. Local."
+      },
+      "img": "naushniki.png"
     },
     {
       "slug": "audio-metadata",
       "categoryId": "audio",
       "status": "ready",
       "icon": "🏷️",
-      "ru": { "title": "Редактор ID3-тегов", "desc": "Просмотр, правка и полная очистка тегов MP3 (в т.ч. сторонних/ИИ-меток), без перекодирования." },
-      "en": { "title": "ID3 tag editor", "desc": "View, edit and fully clean MP3 tags (incl. foreign/AI markers), without re-encoding." }
+      "ru": {
+        "title": "Редактор ID3-тегов",
+        "desc": "Просмотр, правка и полная очистка тегов MP3 (в т.ч. сторонних/ИИ-меток), без перекодирования."
+      },
+      "en": {
+        "title": "ID3 tag editor",
+        "desc": "View, edit and fully clean MP3 tags (incl. foreign/AI markers), without re-encoding."
+      },
+      "img": "birka.png"
     },
     {
       "slug": "yt-thumbnail",
       "categoryId": "utility",
       "status": "ready",
       "icon": "📺",
-      "ru": { "title": "Превью с YouTube", "desc": "Скачивает миниатюру видео по ссылке во всех размерах. Ссылка не уходит на сервер." },
-      "en": { "title": "YouTube thumbnail grabber", "desc": "Downloads a video thumbnail by link in all sizes. The link never leaves your device." }
+      "ru": {
+        "title": "Превью с YouTube",
+        "desc": "Скачивает миниатюру видео по ссылке во всех размерах. Ссылка не уходит на сервер."
+      },
+      "en": {
+        "title": "YouTube thumbnail grabber",
+        "desc": "Downloads a video thumbnail by link in all sizes. The link never leaves your device."
+      },
+      "img": "yutub.png"
     },
     {
       "slug": "karma-counter",
       "categoryId": "utility",
       "status": "ready",
       "icon": "🎯",
-      "ru": { "title": "Счётчик правок", "desc": "Шуточный трекер правок от клиента с ачивками. Хранится локально." },
-      "en": { "title": "Revision counter", "desc": "A playful client-revision tracker with achievements. Stored locally." }
+      "ru": {
+        "title": "Счётчик правок",
+        "desc": "Шуточный трекер правок от клиента с ачивками. Хранится локально."
+      },
+      "en": {
+        "title": "Revision counter",
+        "desc": "A playful client-revision tracker with achievements. Stored locally."
+      },
+      "img": "schety.png"
     }
   ]
 }
