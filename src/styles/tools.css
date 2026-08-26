@@ -839,6 +839,51 @@ a.tool-card:hover {
 .crop-handle.h-e { right: -7px; top: 50%; transform: translateY(-50%); cursor: ew-resize; }
 .crop-handle.h-w { left: -7px; top: 50%; transform: translateY(-50%); cursor: ew-resize; }
 .crop-controls { display: flex; align-items: flex-end; gap: 18px; flex-wrap: wrap; margin-bottom: 14px; }
+
+/* --- Цветокоррекция --- */
+.grade-layout { display: grid; grid-template-columns: 1fr 300px; gap: 22px; align-items: start; }
+.grade-preview { position: relative; display: flex; justify-content: center; align-items: flex-start;
+  background: var(--surface-strong); border: 1px solid var(--stroke); border-radius: 14px; padding: 12px; min-height: 200px; }
+.grade-canvas { display: block; max-width: 100%; max-height: 68vh; height: auto; border-radius: 8px; touch-action: none; cursor: pointer; }
+.grade-before-hint { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
+  padding: 4px 10px; border-radius: 999px; font-size: 12px; background: rgba(6,7,12,0.72); color: #fff; pointer-events: none; opacity: 0.8; }
+.grade-sliders { display: flex; flex-direction: column; gap: 13px; }
+.grade-row { display: flex; flex-direction: column; gap: 5px; font-size: 13px; }
+.grade-row-head { display: flex; justify-content: space-between; align-items: baseline; color: var(--text); }
+.grade-val { font-variant-numeric: tabular-nums; color: var(--text-muted); font-size: 12px; }
+.grade-val.is-set { color: var(--t-accent); font-weight: 600; }
+.grade-row input[type=range] { width: 100%; }
+.grade-actions { margin-top: 6px; }
+@media (max-width: 820px) { .grade-layout { grid-template-columns: 1fr; } }
+
+/* --- Диктофон --- */
+.recorder { text-align: center; }
+.rec-stage { display: flex; flex-direction: column; align-items: center; gap: 16px; margin: 10px 0 20px; }
+.rec-orb {
+  position: relative; width: 150px; height: 150px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--stroke); background: var(--surface-strong); overflow: hidden;
+}
+.rec-orb-fill {
+  position: absolute; width: 150px; height: 150px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(97,102,255,0.55), rgba(97,102,255,0.12));
+  transition: transform 0.08s linear;
+}
+.rec-orb.status-recording { border-color: #ff5b5b; }
+.rec-orb.status-recording .rec-orb-fill { background: radial-gradient(circle, rgba(255,80,80,0.6), rgba(255,80,80,0.12)); }
+.rec-time { position: relative; z-index: 1; font-size: 30px; font-variant-numeric: tabular-nums; font-weight: 600; color: var(--text); }
+.rec-meter { display: flex; align-items: center; gap: 10px; width: min(320px, 90%); }
+.rec-meter-bar { flex: 1; height: 8px; border-radius: 999px; background: var(--surface-strong); overflow: hidden; }
+.rec-meter-fill { height: 100%; background: linear-gradient(90deg, #46dc82, #e6c419 70%, #ff5b5b); transition: width 0.08s linear; }
+.rec-audio { width: min(440px, 100%); margin: 6px 0 14px; }
+.rec-controls { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.rec-main { min-width: 130px; font-size: 15px; }
+.tool-btn.is-rec { background: #ff5b5b; border-color: #ff5b5b; color: #fff; }
+.rec-export { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+.rec-export-btns { display: flex; gap: 8px; }
+.rec-encoding { color: var(--text-muted); font-size: 13px; }
+.rec-opts { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 10px; }
+.rec-opt { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; color: var(--text-muted); cursor: pointer; }
 .bgr-brush {
   display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
   padding: 14px 16px; margin-bottom: 14px; border: 1px solid var(--stroke);

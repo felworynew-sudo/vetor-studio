@@ -24,6 +24,31 @@ export function encodeWAV(buffer) {
   return new Blob([ab], { type: 'audio/wav' });
 }
 
+// MP3-энкодер (lamejs подгружается лениво — тянется только когда реально нужен).
+export async function encodeMp3(buffer, kbps = 192) {
+  const lame = await import('@breezystack/lamejs');
+  const Mp3Encoder = lame.Mp3Encoder || (lame.default && lame.default.Mp3Encoder);
+  const nc = Math.min(2, buffer.numberOfChannels);
+  const enc = new Mp3Encoder(nc, buffer.sampleRate, kbps);
+  const toInt16 = (f) => {
+    const o = new Int16Array(f.length);
+    for (let i = 0; i < f.length; i += 1) { const s = Math.max(-1, Math.min(1, f[i])); o[i] = s < 0 ? s * 0x8000 : s * 0x7fff; }
+    return o;
+  };
+  const L = toInt16(buffer.getChannelData(0));
+  const R = nc > 1 ? toInt16(buffer.getChannelData(1)) : null;
+  const block = 1152;
+  const chunks = [];
+  for (let i = 0; i < L.length; i += block) {
+    const lc = L.subarray(i, i + block);
+    const mp3 = R ? enc.encodeBuffer(lc, R.subarray(i, i + block)) : enc.encodeBuffer(lc);
+    if (mp3.length > 0) chunks.push(new Uint8Array(mp3));
+  }
+  const end = enc.flush();
+  if (end.length > 0) chunks.push(new Uint8Array(end));
+  return new Blob(chunks, { type: 'audio/mpeg' });
+}
+
 export function downloadBlob(blob, name) {
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob); a.download = name;

@@ -45,6 +45,8 @@ const READY_COMPONENTS = {
   'glyph-map': lazy(() => import('../components/tools/GlyphMap')),
   'yt-thumbnail': lazy(() => import('../components/tools/YtThumbnail')),
   crop: lazy(() => import('../components/tools/CropTool')),
+  'color-grade': lazy(() => import('../components/tools/ColorGrade')),
+  'voice-recorder': lazy(() => import('../components/tools/VoiceRecorder')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;
