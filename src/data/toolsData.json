@@ -367,6 +367,21 @@
       }
     },
     {
+      "slug": "fire-smoke",
+      "categoryId": "generators",
+      "status": "ready",
+      "icon": "🔥",
+      "img": "lampochka.png",
+      "ru": {
+        "title": "Генератор огня и дыма",
+        "desc": "Пламя (свеча, костёр, факел, фаербол) и дым частицами. Свечение, старт/стоп, прозрачный или чёрный фон, экспорт PNG."
+      },
+      "en": {
+        "title": "Fire & smoke generator",
+        "desc": "Flame (candle, campfire, torch, fireball) and smoke via particles. Glow, play/stop, transparent or black background, PNG export."
+      }
+    },
+    {
       "slug": "icon-scaler",
       "categoryId": "image",
       "status": "ready",

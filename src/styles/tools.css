@@ -1202,3 +1202,14 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
 /* --- 3D-текст --- */
 .t3-row { display: flex; gap: 16px; }
 .t3-color { display: flex; flex-direction: column; gap: 5px; }
+
+/* --- Генератор огня и дыма --- */
+.fs-stage { display: flex; align-items: center; justify-content: center; }
+.fs-stage[data-bg="transparent"] {
+  background:
+    linear-gradient(45deg, #1b1d27 25%, transparent 25%, transparent 75%, #1b1d27 75%) 0 0 / 20px 20px,
+    linear-gradient(45deg, #1b1d27 25%, transparent 25%, transparent 75%, #1b1d27 75%) 10px 10px / 20px 20px,
+    var(--surface-strong);
+}
+.fs-stage[data-bg="black"] { background: #000; }
+.fs-canvas { max-width: 100%; height: auto; display: block; }
