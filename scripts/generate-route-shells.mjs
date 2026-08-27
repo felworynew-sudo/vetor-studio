@@ -1,5 +1,6 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { toolFaqs } from '../src/utils/toolSeo.js';
 
 const projectRoot = process.cwd();
 const distDir = path.join(projectRoot, 'dist');
@@ -564,17 +565,26 @@ function collectMeta(lang, { videos, music, blog, gallery, tags, tools = [], abs
       keywords,
       toolUsp: usp,
       image: '/og/tools.png',
-      jsonld: [{
-        '@context': 'https://schema.org',
-        '@type': 'WebApplication',
-        name: title,
-        description: desc,
-        applicationCategory: 'DesignApplication',
-        operatingSystem: 'Web browser',
-        url: `${domain}${lang === 'en' ? '/en' : ''}${pathname}`,
-        offers: { '@type': 'Offer', price: '0', priceCurrency: 'RUB' },
-        provider: { '@type': 'Organization', name: 'Vetor Studio', url: domain },
-      }],
+      jsonld: [
+        {
+          '@context': 'https://schema.org',
+          '@type': 'WebApplication',
+          name: title,
+          description: desc,
+          applicationCategory: 'DesignApplication',
+          operatingSystem: 'Web browser',
+          url: `${domain}${lang === 'en' ? '/en' : ''}${pathname}`,
+          offers: { '@type': 'Offer', price: '0', priceCurrency: 'RUB' },
+          provider: { '@type': 'Organization', name: 'Vetor Studio', url: domain },
+        },
+        {
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: toolFaqs(tool, lang).map((f) => ({
+            '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a },
+          })),
+        },
+      ],
     });
   }
 

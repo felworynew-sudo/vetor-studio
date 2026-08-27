@@ -6,6 +6,7 @@ import {
   getToolsByCategory,
 } from '../../data/toolsCatalog';
 import { buildToolPath } from '../../utils/routing';
+import { toolHowto, toolFaqs } from '../../utils/toolSeo';
 import '../../styles/tools.css';
 
 // РАБОЧЕЕ НАЗВАНИЕ саб-бренда студии инструментов. Меняется в одном месте.
@@ -241,7 +242,7 @@ function ToolsStudio({
         {/* Основная область */}
         <main className="tools-main">
           {activeTool ? (
-            <ToolView tool={activeTool} lang={lang} ui={ui} onBack={go('/tools')} />
+            <ToolView tool={activeTool} lang={lang} ui={ui} onBack={go('/tools')} go={go} />
           ) : (
             <>
               <section className="tools-hero">
@@ -322,8 +323,11 @@ function ToolCard({ tool, lang, ui, onOpen }) {
   );
 }
 
-function ToolView({ tool, lang, ui, onBack }) {
+function ToolView({ tool, lang, ui, onBack, go }) {
   const ToolComponent = tool.component;
+  const howto = toolHowto(tool, lang);
+  const faqs = toolFaqs(tool, lang);
+  const related = getToolsByCategory(tool.categoryId).filter((r) => r.status === 'ready' && r.slug !== tool.slug).slice(0, 6);
   return (
     <div className="tool-view">
       <a href="/tools" className="tool-back" onClick={onBack}>
@@ -339,6 +343,37 @@ function ToolView({ tool, lang, ui, onBack }) {
       <Suspense fallback={<div className="tool-loading">…</div>}>
         {ToolComponent ? <ToolComponent language={lang} /> : null}
       </Suspense>
+
+      {/* SEO/UX-контент: как пользоваться, FAQ, смежные инструменты. */}
+      <section className="tool-article">
+        <h2>{lang === 'en' ? 'How to use' : 'Как пользоваться'}</h2>
+        <ol className="tool-howto">{howto.map((step, i) => <li key={i}>{step}</li>)}</ol>
+
+        <h2>{lang === 'en' ? 'FAQ' : 'Вопросы и ответы'}</h2>
+        <div className="tool-faq">
+          {faqs.map((f) => (
+            <details key={f.q} className="tool-faq-item">
+              <summary>{f.q}</summary>
+              <p>{f.a}</p>
+            </details>
+          ))}
+        </div>
+
+        {related.length > 0 && (
+          <>
+            <h2>{lang === 'en' ? 'Related tools' : 'Похожие инструменты'}</h2>
+            <ul className="tool-related">
+              {related.map((r) => (
+                <li key={r.slug}>
+                  <a href={buildToolPath(r.slug)} onClick={go(buildToolPath(r.slug))}>
+                    <PxIcon src={r.img} emoji={r.icon} className="tools-side-icon" /> {r[lang].title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+      </section>
     </div>
   );
 }
