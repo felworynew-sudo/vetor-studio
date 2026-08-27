@@ -146,7 +146,7 @@ function injectHreflang(html, ruUrl, enUrl) {
 // Заменяет заглушку #app-fallback осмысленным no-JS контентом: H1 + описание +
 // навигация. Так у краулеров без JS (в т.ч. Яндекс) на странице есть реальный
 // заголовок и текст, а не пустой #root. React при монтировании заменит блок.
-function setFallbackBody(html, { heading, description, navLinks, homeHref, telegramUrl, lang }) {
+function setFallbackBody(html, { heading, description, navLinks, homeHref, telegramUrl, lang, extraHtml = '' }) {
   const nav = navLinks
     .map(([label, href]) => `<a href="${escAttr(href)}" style="color:#b7a7ff;margin-right:16px;white-space:nowrap">${escText(label)}</a>`)
     .join('');
@@ -158,6 +158,7 @@ function setFallbackBody(html, { heading, description, navLinks, homeHref, teleg
         <nav style="margin:0 0 14px;display:flex;flex-wrap:wrap;gap:8px 0" aria-label="${lang === 'ru' ? 'Разделы' : 'Sections'}">${nav}</nav>
         <p id="app-fallback-status" style="margin:0 0 8px;color:#a8afbc">${loading}</p>
         <p style="margin:0"><a href="${escAttr(homeHref)}" style="color:#b7a7ff">${refresh}</a> · <a href="${escAttr(telegramUrl)}" style="color:#b7a7ff" rel="nofollow">Telegram</a></p>
+        ${extraHtml}
       </div>`;
   return html.replace(/<div id="app-fallback"[\s\S]*?<\/div>\s*<\/div>/i, `${block}\n    </div>`);
 }
@@ -623,6 +624,7 @@ async function main() {
     readJson('toolsData.json', { tools: [] }),
   ]);
   const tools = toolsData.tools || [];
+  const toolCategories = toolsData.categories || [];
 
   let domain = (siteConfig.domain || 'https://vetor-studio.ru').replace(/\/+$/, '');
   try {
@@ -784,6 +786,28 @@ async function main() {
     html = injectJsonLd(html, ld);
 
     const navLinks = NAV_LINKS[lang].map(([label, href]) => [label, withLang(href)]);
+
+    // Хаб /tools: в no-JS fallback перечисляем ВСЕ инструменты со ссылками и
+    // описаниями (по категориям) — краулеры без JS (Яндекс) получают пути обхода
+    // ко всем страницам тулов и релевантный контент для ранжирования хаба.
+    let extraHtml = '';
+    if (logicalPath === '/tools') {
+      const ready = tools.filter((tool) => tool.status === 'ready');
+      const groups = toolCategories.map((cat) => {
+        const items = ready.filter((tool) => tool.categoryId === cat.id);
+        if (!items.length) return '';
+        const lis = items.map((tool) => {
+          const href = withLang(`/tools/${tool.slug}`);
+          const label = escText(tool[lang]?.title || tool.slug);
+          const d = escText(truncate(tool[lang]?.desc || '', 120));
+          return `<li style="margin:0 0 6px"><a href="${escAttr(href)}" style="color:#b7a7ff">${label}</a> — <span style="color:#a8afbc">${d}</span></li>`;
+        }).join('');
+        return `<h2 style="font-size:18px;margin:18px 0 8px;color:#e8e8f5">${escText(cat[lang] || cat.id)}</h2><ul style="margin:0;padding-left:18px;max-width:840px">${lis}</ul>`;
+      }).join('');
+      const intro = t(lang, 'Все инструменты студии — бесплатно, прямо в браузере, без загрузки файлов на сервер:', 'All studio tools — free, right in your browser, nothing uploaded to a server:');
+      extraHtml = `<div style="margin-top:20px"><p style="margin:0 0 6px;color:#c7cad6">${intro}</p>${groups}</div>`;
+    }
+
     html = setFallbackBody(html, {
       heading,
       description,
@@ -791,6 +815,7 @@ async function main() {
       homeHref: withLang('/'),
       telegramUrl,
       lang,
+      extraHtml,
     });
 
     if (m) enriched += 1;
