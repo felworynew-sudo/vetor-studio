@@ -844,6 +844,36 @@
         "title": "CRT / glitch effect",
         "desc": "Retro effects on an image: scanlines, RGB shift, noise, glitch bands, vignette. PNG export."
       }
+    },
+    {
+      "slug": "base64",
+      "categoryId": "utility",
+      "status": "ready",
+      "icon": "🔡",
+      "img": "file.png",
+      "ru": {
+        "title": "Base64 / data-URI кодер",
+        "desc": "Текст ⇆ base64 и картинка → data-URI для инлайна в CSS/HTML. Копирование в клик."
+      },
+      "en": {
+        "title": "Base64 / data-URI encoder",
+        "desc": "Text ⇆ base64 and image → data-URI to inline in CSS/HTML. One-click copy."
+      }
+    },
+    {
+      "slug": "halftone",
+      "categoryId": "image",
+      "status": "ready",
+      "icon": "⚫",
+      "img": "palitra-1.png",
+      "ru": {
+        "title": "Halftone (полутон)",
+        "desc": "Картинка в сетку точек по яркости — газетно-комиксный эффект. Угол, шаг, цвет, экспорт PNG."
+      },
+      "en": {
+        "title": "Halftone",
+        "desc": "An image into a dot grid by luminance — newspaper/comic effect. Angle, step, color, PNG export."
+      }
     }
   ]
 }

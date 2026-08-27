@@ -59,6 +59,8 @@ const READY_COMPONENTS = {
   'mesh-gradient': lazy(() => import('../components/tools/MeshGradient')),
   'cubic-bezier': lazy(() => import('../components/tools/CubicBezier')),
   'crt-glitch': lazy(() => import('../components/tools/CrtGlitch')),
+  base64: lazy(() => import('../components/tools/Base64Tool')),
+  halftone: lazy(() => import('../components/tools/Halftone')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;
