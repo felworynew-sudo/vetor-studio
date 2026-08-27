@@ -53,6 +53,7 @@ const READY_COMPONENTS = {
   'box-shadow': lazy(() => import('../components/tools/BoxShadow')),
   glassmorphism: lazy(() => import('../components/tools/Glassmorphism')),
   blob: lazy(() => import('../components/tools/BlobGen')),
+  compressor: lazy(() => import('../components/tools/ImageCompressor')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;

@@ -67,6 +67,21 @@
       "img": "fayly.png"
     },
     {
+      "slug": "compressor",
+      "categoryId": "image",
+      "status": "ready",
+      "icon": "🗜️",
+      "img": "masshtab.png",
+      "ru": {
+        "title": "Компрессор изображений",
+        "desc": "Ужимает фото под целевой размер («до N КБ») или качество. Бинарный поиск + даунскейл. WebP/JPG, пакетно."
+      },
+      "en": {
+        "title": "Image compressor",
+        "desc": "Shrinks photos to a target size (\"under N KB\") or quality. Binary search + downscale. WebP/JPG, batch."
+      }
+    },
+    {
       "slug": "pixelizer",
       "categoryId": "image",
       "status": "ready",
