@@ -1233,3 +1233,6 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
 
 /* Единый акцент у всех ползунков студии (не только .tool-field). */
 .tools-studio input[type="range"] { accent-color: var(--t-accent); }
+
+/* --- Mesh-градиент / паттерны стейдж --- */
+.mesh-stage { min-height: 360px; }

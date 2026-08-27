@@ -769,6 +769,51 @@
         "title": "SVG blob generator",
         "desc": "Smooth organic shapes for backgrounds and decoration. Reroll, color or gradient, SVG export."
       }
+    },
+    {
+      "slug": "duotone",
+      "categoryId": "image",
+      "status": "ready",
+      "icon": "🎭",
+      "img": "foto.png",
+      "ru": {
+        "title": "Дуотон",
+        "desc": "Перекрашивает фото в два цвета по яркости — трендовый эффект для обложек и постеров. Экспорт PNG."
+      },
+      "en": {
+        "title": "Duotone",
+        "desc": "Recolors a photo into two colors by luminance — a trendy cover/poster effect. PNG export."
+      }
+    },
+    {
+      "slug": "pattern-gen",
+      "categoryId": "generators",
+      "status": "ready",
+      "icon": "⬡",
+      "img": "zvezdy.png",
+      "ru": {
+        "title": "Генератор паттернов",
+        "desc": "Бесшовные SVG-узоры: точки, сетка, полоски, клетка, волны, треугольники. CSS и SVG в клик."
+      },
+      "en": {
+        "title": "Pattern generator",
+        "desc": "Seamless SVG patterns: dots, grid, stripes, checkers, waves, triangles. CSS and SVG in a click."
+      }
+    },
+    {
+      "slug": "mesh-gradient",
+      "categoryId": "generators",
+      "status": "ready",
+      "icon": "🌈",
+      "img": "cveta.png",
+      "ru": {
+        "title": "Mesh-градиент",
+        "desc": "Модный многоцветный фон из цветовых точек. Реролл, экспорт CSS и PNG."
+      },
+      "en": {
+        "title": "Mesh gradient",
+        "desc": "A trendy multicolor background from color points. Reroll, CSS and PNG export."
+      }
     }
   ]
 }

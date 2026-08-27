@@ -54,6 +54,9 @@ const READY_COMPONENTS = {
   glassmorphism: lazy(() => import('../components/tools/Glassmorphism')),
   blob: lazy(() => import('../components/tools/BlobGen')),
   compressor: lazy(() => import('../components/tools/ImageCompressor')),
+  duotone: lazy(() => import('../components/tools/Duotone')),
+  'pattern-gen': lazy(() => import('../components/tools/PatternGen')),
+  'mesh-gradient': lazy(() => import('../components/tools/MeshGradient')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;
