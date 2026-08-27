@@ -57,6 +57,8 @@ const READY_COMPONENTS = {
   duotone: lazy(() => import('../components/tools/Duotone')),
   'pattern-gen': lazy(() => import('../components/tools/PatternGen')),
   'mesh-gradient': lazy(() => import('../components/tools/MeshGradient')),
+  'cubic-bezier': lazy(() => import('../components/tools/CubicBezier')),
+  'crt-glitch': lazy(() => import('../components/tools/CrtGlitch')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;

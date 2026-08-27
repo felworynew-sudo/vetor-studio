@@ -814,6 +814,36 @@
         "title": "Mesh gradient",
         "desc": "A trendy multicolor background from color points. Reroll, CSS and PNG export."
       }
+    },
+    {
+      "slug": "cubic-bezier",
+      "categoryId": "generators",
+      "status": "ready",
+      "icon": "📈",
+      "img": "panelupravleniya.png",
+      "ru": {
+        "title": "Cubic-bezier редактор",
+        "desc": "Кривая плавности для transition/animation: тяните точки, смотрите живую анимацию, забирайте CSS."
+      },
+      "en": {
+        "title": "Cubic-bezier editor",
+        "desc": "Easing curve for transition/animation: drag the points, watch a live demo, copy the CSS."
+      }
+    },
+    {
+      "slug": "crt-glitch",
+      "categoryId": "image",
+      "status": "ready",
+      "icon": "📺",
+      "img": "monitor.png",
+      "ru": {
+        "title": "CRT / глитч эффект",
+        "desc": "Ретро-эффекты на картинку: скан-линии, RGB-сдвиг, шум, глитч-полосы, виньетка. Экспорт PNG."
+      },
+      "en": {
+        "title": "CRT / glitch effect",
+        "desc": "Retro effects on an image: scanlines, RGB shift, noise, glitch bands, vignette. PNG export."
+      }
     }
   ]
 }

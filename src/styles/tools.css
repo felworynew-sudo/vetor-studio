@@ -1236,3 +1236,12 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
 
 /* --- Mesh-градиент / паттерны стейдж --- */
 .mesh-stage { min-height: 360px; }
+
+/* --- Cubic-bezier редактор --- */
+.cb-stage { display: flex; align-items: center; justify-content: center; }
+.cb-svg { width: 100%; max-width: 300px; height: auto; touch-action: none; }
+.cb-handle { cursor: grab; }
+.cb-handle:active { cursor: grabbing; }
+.cb-demo { position: relative; height: 40px; background: var(--bg); border: 1px solid var(--stroke); margin-bottom: 12px; overflow: hidden; }
+.cb-ball { position: absolute; top: 8px; left: 6px; width: 24px; height: 24px; background: var(--t-accent); animation: cb-move 1.6s infinite alternate; }
+@keyframes cb-move { from { left: 6px; } to { left: calc(100% - 30px); } }

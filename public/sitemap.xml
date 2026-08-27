@@ -2736,4 +2736,40 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>https://vetor-studio.ru/tools/cubic-bezier</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/cubic-bezier" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/cubic-bezier" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/cubic-bezier" />
+    <lastmod>2026-08-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/tools/cubic-bezier</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/cubic-bezier" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/cubic-bezier" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/cubic-bezier" />
+    <lastmod>2026-08-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/tools/crt-glitch</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/crt-glitch" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/crt-glitch" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/crt-glitch" />
+    <lastmod>2026-08-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vetor-studio.ru/en/tools/crt-glitch</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vetor-studio.ru/tools/crt-glitch" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://vetor-studio.ru/en/tools/crt-glitch" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vetor-studio.ru/tools/crt-glitch" />
+    <lastmod>2026-08-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
