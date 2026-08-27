@@ -364,6 +364,52 @@ const CATEGORY_META = {
   },
 };
 
+// Ключевое преимущество студии перед облачными конвертерами: обработка идёт в
+// браузере, файлы НЕ загружаются на сервер. Это и SEO-ключ, и УТП — выносим в
+// title/description каждого инструмента.
+const TOOL_USP = {
+  ru: 'Работает прямо в браузере — бесплатно, без регистрации и загрузки файлов на сервер.',
+  en: 'Runs right in your browser — free, no sign-up, nothing uploaded to a server.',
+};
+
+// Ручные SEO-заголовки/описания/ключи под реальные поисковые запросы для
+// высокочастотных инструментов (RU-рынок первичен). Остальные — по шаблону.
+const SEO_TOOLS = {
+  ru: {
+    'image-converter': { title: 'Конвертер изображений онлайн — PNG, JPG, WebP, HEIC, TIFF, PSD и др.', keywords: 'конвертер изображений, конвертировать webp в png, jpg в png, heic в jpg, конвертер картинок онлайн, изменить формат изображения' },
+    compressor: { title: 'Сжать изображение до нужного размера онлайн — бесплатно', keywords: 'сжать изображение, сжать фото онлайн, уменьшить размер картинки, сжать jpg, сжать png, компрессор изображений до кб' },
+    'background-remover': { title: 'Удалить фон с фото онлайн — бесплатно, без регистрации', keywords: 'удалить фон, убрать фон с фото, удалить фон онлайн, вырезать фон, фон прозрачный онлайн бесплатно' },
+    upscaler: { title: 'Увеличить изображение без потери качества онлайн (AI)', keywords: 'увеличить изображение, апскейл фото, улучшить качество фото, увеличить картинку без потери качества, ai upscale' },
+    'color-converter': { title: 'Конвертер цветов онлайн — HEX, RGB, HSL, CMYK', keywords: 'конвертер цветов, hex в rgb, rgb в hex, перевести цвет в hex, hsl, cmyk онлайн' },
+    'contrast-checker': { title: 'Проверка контраста цветов онлайн (WCAG) — бесплатно', keywords: 'проверка контраста, контраст текста и фона, wcag контраст, контрастность цветов онлайн, доступность цвета' },
+    'palette-extractor': { title: 'Извлечь палитру цветов из изображения онлайн', keywords: 'палитра из фото, извлечь цвета из картинки, определить цвета изображения, подбор палитры онлайн' },
+    'favicon-generator': { title: 'Генератор favicon онлайн — иконки сайта из картинки бесплатно', keywords: 'генератор favicon, сделать favicon, иконка сайта, favicon из png, favicon ico онлайн' },
+    'qr-generator': { title: 'Генератор QR-кода онлайн — создать QR бесплатно, с цветом', keywords: 'генератор qr кода, создать qr код, qr код онлайн, сделать qr, qr код с цветом бесплатно' },
+    crop: { title: 'Обрезать фото онлайн — кадрирование с пропорциями бесплатно', keywords: 'обрезать фото, кадрировать изображение, обрезка фото онлайн, обрезать картинку 1:1 16:9, кроп онлайн' },
+    watermark: { title: 'Водяной знак на фото онлайн — наложить логотип пакетно', keywords: 'водяной знак, наложить водяной знак, watermark онлайн, вотермарк на фото, защитить фото логотипом' },
+    'color-grade': { title: 'Цветокоррекция фото онлайн — экспозиция, контраст, резкость', keywords: 'цветокоррекция онлайн, обработать фото, коррекция цвета, экспозиция контраст резкость, редактор фото онлайн' },
+    'box-shadow': { title: 'Генератор CSS box-shadow онлайн — тени с кодом', keywords: 'генератор теней css, box-shadow generator, css тень, сгенерировать тень css онлайн' },
+    'gradient-generator': { title: 'Генератор CSS-градиентов онлайн — код градиента в клик', keywords: 'генератор градиентов css, css gradient, сделать градиент онлайн, линейный радиальный градиент код' },
+    glassmorphism: { title: 'Генератор glassmorphism (матовое стекло) CSS онлайн', keywords: 'glassmorphism generator, матовое стекло css, эффект стекла, frosted glass css онлайн' },
+    'image-metadata': { title: 'Удалить метаданные (EXIF) из фото онлайн — очистка C2PA/AI-меток', keywords: 'удалить метаданные, очистить exif, удалить exif из фото, убрать geo из фото, удалить c2pa ai метки' },
+    pixelizer: { title: 'Пикселизатор онлайн — сделать пиксель-арт из фото + вектор', keywords: 'пикселизатор, сделать пиксель арт, pixel art из фото, пикселизация изображения онлайн, пиксель в вектор' },
+    duotone: { title: 'Дуотон онлайн — перекрасить фото в два цвета бесплатно', keywords: 'дуотон, duotone онлайн, фото в два цвета, эффект duotone, двухцветное фото' },
+    'mesh-gradient': { title: 'Генератор mesh-градиента онлайн — CSS и PNG', keywords: 'mesh gradient generator, меш градиент, многоцветный градиент css, сетчатый градиент онлайн' },
+  },
+  en: {
+    'image-converter': { title: 'Image converter online — PNG, JPG, WebP, HEIC, TIFF, PSD and more', keywords: 'image converter, convert webp to png, heic to jpg, change image format online, free image converter' },
+    'background-remover': { title: 'Remove background from image online — free, no sign-up', keywords: 'remove background, background remover, remove bg online, transparent background, cut out background free' },
+    compressor: { title: 'Compress image to target size online — free', keywords: 'compress image, reduce image size, compress jpg png, image compressor to kb online' },
+  },
+};
+
+function autoKeywords(title, lang) {
+  const base = String(title).toLowerCase().replace(/[()]/g, '');
+  return lang === 'ru'
+    ? `${base}, онлайн, бесплатно, в браузере, без регистрации, инструмент для дизайнера`
+    : `${base}, online, free, in browser, no sign-up, designer tool`;
+}
+
 function collectMeta(lang, { videos, music, blog, gallery, tags, tools = [], absoluteImage, domain }) {
   const meta = new Map();
 
@@ -484,13 +530,14 @@ function collectMeta(lang, { videos, music, blog, gallery, tags, tools = [], abs
   const studioName = t(lang, 'Верстак', 'Verstak');
   if (!meta.has('/tools')) {
     meta.set('/tools', {
-      title: t(lang, `${studioName} — инструменты для дизайнеров`, `${studioName} — tools for designers`),
+      title: t(lang, 'Бесплатные онлайн-инструменты для дизайнеров — конвертер, генераторы, редакторы | Vetor', 'Free online tools for designers — converters, generators, editors | Vetor'),
       heading: t(lang, 'Инструменты для дизайнеров', 'Tools for designers'),
       description: t(
         lang,
-        'Бесплатные онлайн-инструменты для цвета, изображений и вектора — всё считается прямо в браузере, без регистрации и загрузки файлов на сервер.',
-        'Free online tools for color, images and vector — everything runs right in your browser, no sign-up, nothing uploaded to a server.',
+        'Более 50 бесплатных онлайн-инструментов для дизайнеров: конвертер изображений, сжатие фото, удаление фона, работа с цветом, CSS-генераторы, пиксель-арт и 3D. Всё считается прямо в браузере — без регистрации и загрузки файлов на сервер.',
+        'Over 50 free online tools for designers: image converter, photo compression, background removal, color tools, CSS generators, pixel art and 3D. Everything runs in your browser — no sign-up, nothing uploaded.',
       ),
+      keywords: t(lang, 'инструменты для дизайнера, онлайн инструменты, конвертер изображений, генератор css, удалить фон, сжать фото, работа с цветом, бесплатно в браузере', 'designer tools, online tools, image converter, css generator, remove background, compress image, color tools, free in browser'),
       image: '/og/tools.png',
     });
   }
@@ -500,11 +547,22 @@ function collectMeta(lang, { videos, music, blog, gallery, tags, tools = [], abs
     if (meta.has(pathname)) continue;
     const title = tool[lang]?.title || tool.slug;
     const desc = tool[lang]?.desc || '';
+    const usp = TOOL_USP[lang];
+    const override = SEO_TOOLS[lang]?.[tool.slug];
+    // SEO-title: ручной оверрайд ИЛИ шаблон с интент-ключами и понятным брендом.
+    const seoTitle = override?.title
+      ? `${override.title} — Vetor`
+      : t(lang, `${title} онлайн — бесплатно, в браузере | Vetor`, `${title} online — free, in your browser | Vetor`);
+    // description ≤ ~200 симв.: суть тула + УТП (приватность/бесплатно).
+    const seoDesc = truncate(`${desc} ${usp}`, 200);
+    const keywords = override?.keywords || autoKeywords(title, lang);
     meta.set(pathname, {
-      title: `${title} — ${studioName}`,
+      title: seoTitle,
       ogTitle: title,
       heading: title,
-      description: desc,
+      description: seoDesc,
+      keywords,
+      toolUsp: usp,
       image: '/og/tools.png',
       jsonld: [{
         '@context': 'https://schema.org',
