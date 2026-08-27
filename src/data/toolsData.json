@@ -709,6 +709,51 @@
         "desc": "A playful client-revision tracker with achievements. Stored locally."
       },
       "img": "schety.png"
+    },
+    {
+      "slug": "box-shadow",
+      "categoryId": "generators",
+      "status": "ready",
+      "icon": "🌑",
+      "img": "panelupravleniya.png",
+      "ru": {
+        "title": "Генератор теней (box-shadow)",
+        "desc": "Многослойные CSS-тени с живым предпросмотром и готовым кодом в клик. inset, разброс, цвет."
+      },
+      "en": {
+        "title": "Box-shadow generator",
+        "desc": "Layered CSS shadows with live preview and ready-to-copy code. Inset, spread, color."
+      }
+    },
+    {
+      "slug": "glassmorphism",
+      "categoryId": "generators",
+      "status": "ready",
+      "icon": "🧊",
+      "img": "oblako.png",
+      "ru": {
+        "title": "Glassmorphism (матовое стекло)",
+        "desc": "CSS-эффект матового стекла: размытие, прозрачность, насыщенность, граница. Предпросмотр + код."
+      },
+      "en": {
+        "title": "Glassmorphism generator",
+        "desc": "Frosted-glass CSS: blur, opacity, saturation, border. Live preview + code."
+      }
+    },
+    {
+      "slug": "blob",
+      "categoryId": "generators",
+      "status": "ready",
+      "icon": "🫧",
+      "img": "palitra-1.png",
+      "ru": {
+        "title": "Генератор SVG-блобов",
+        "desc": "Плавные органические формы для фонов и украшений. Реролл, цвет или градиент, экспорт SVG."
+      },
+      "en": {
+        "title": "SVG blob generator",
+        "desc": "Smooth organic shapes for backgrounds and decoration. Reroll, color or gradient, SVG export."
+      }
     }
   ]
 }

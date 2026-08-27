@@ -1213,3 +1213,23 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
 }
 .fs-stage[data-bg="black"] { background: #000; }
 .fs-canvas { max-width: 100%; height: auto; display: block; }
+
+/* --- Генераторы CSS: box-shadow / glassmorphism / blob --- */
+.bs-stage { display: flex; align-items: center; justify-content: center; min-height: 320px; }
+.bs-box { width: 150px; height: 150px; border-radius: 12px; }
+.bs-layer { border: 1px solid var(--stroke); background: var(--bg); padding: 10px 12px; margin-bottom: 4px; }
+.bs-layer-head { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
+.bs-layer-head input[type=color] { width: 34px; height: 26px; margin-left: auto; }
+.bs-sliders { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 14px; }
+.bs-mini { display: flex; flex-direction: column; gap: 2px; font-size: 11.5px; color: var(--text-soft); }
+.bs-mini input[type=range] { width: 100%; }
+.bs-code { margin: 14px 0 8px; padding: 12px 14px; background: #05060a; border: 1px solid var(--stroke); overflow-x: auto; font-size: 12.5px; color: #9ae6c0; white-space: pre-wrap; word-break: break-all; }
+.gl-stage { position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; min-height: 340px; }
+.gl-blob { position: absolute; width: 180px; height: 180px; border-radius: 50%; filter: blur(8px); opacity: 0.85; top: 12%; left: 12%; }
+.gl-blob2 { top: auto; left: auto; bottom: 12%; right: 14%; width: 140px; height: 140px; }
+.gl-card { position: relative; width: 62%; height: 190px; z-index: 1; }
+.bl-stage { display: flex; align-items: center; justify-content: center; min-height: 340px; }
+.bl-svg { width: 78%; max-width: 340px; height: auto; filter: drop-shadow(0 12px 30px rgba(0,0,0,0.35)); }
+
+/* Единый акцент у всех ползунков студии (не только .tool-field). */
+.tools-studio input[type="range"] { accent-color: var(--t-accent); }
