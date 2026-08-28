@@ -560,8 +560,10 @@ function App() {
   const filteredBlogPosts = useMemo(() => filterEditorialItems(blogPosts, query), [blogPosts, query]);
   const filteredGalleryItems = useMemo(() => filterEditorialItems(galleryItems, query), [galleryItems, query]);
   const filteredDesignItems = useMemo(() => {
+    // «Все» показывает всё, КРОМЕ реставрации — она появляется только когда её
+    // явно выбрали в фильтре (реставрация — сервисная категория, не портфолио).
     const base = activeDesignCategory === 'all'
-      ? filteredGalleryItems
+      ? filteredGalleryItems.filter((item) => normalizeDesignCategory(item.designCategory) !== 'restoration')
       : filteredGalleryItems.filter((item) => normalizeDesignCategory(item.designCategory) === activeDesignCategory);
     // Featured items always float to the top, preserving order otherwise (stable sort).
     return base

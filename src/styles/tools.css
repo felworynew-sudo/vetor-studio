@@ -1367,3 +1367,23 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
 .ve-stage-wrap { max-height: 70vh; overflow: auto; background: #0b0b0f; border: 1px solid var(--stroke); padding: 12px; display: flex; justify-content: flex-start; }
 .ve-stage { display: block; box-shadow: 0 0 0 1px var(--stroke); touch-action: none; background: #fff; }
 .ve-stage * { vector-effect: non-scaling-stroke; }
+
+/* ── Многодорожечный редактор V2 (панель эффектов + клипы) ─────────────── */
+.mt-tools { margin: 0 4px; }
+.mt-panel { position: relative; flex: none; width: 236px; border-right: 1px solid var(--stroke); background: var(--surface); transition: width .18s ease; overflow: hidden; }
+.mt-panel.is-closed { width: 18px; }
+.mt-panel-toggle { position: absolute; top: 6px; right: 4px; z-index: 3; width: 20px; height: 24px; border: 1px solid var(--stroke); background: var(--surface-strong); color: var(--text-muted); cursor: pointer; font-size: 13px; line-height: 1; }
+.mt-panel-in { padding: 12px 12px 12px; display: flex; flex-direction: column; gap: 9px; max-height: calc(26px + 4 * 96px); overflow-y: auto; }
+.mt-panel-title { font-size: 13px; font-weight: 700; color: var(--text); padding-right: 26px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mt-p-title2 { font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--text-soft); margin-top: 4px; }
+.mt-panel-empty { padding: 16px 14px; font-size: 12.5px; color: var(--text-soft); line-height: 1.5; }
+.mt-p-field { display: flex; flex-direction: column; gap: 3px; font-size: 11px; color: var(--text-soft); }
+.mt-p-field input[type="range"] { width: 100%; accent-color: var(--t-accent); }
+.mt-p-row { display: flex; gap: 6px; }
+.mt-p-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; border-top: 1px solid var(--stroke); padding-top: 10px; }
+.mt-clip-name { position: absolute; top: 2px; left: 6px; z-index: 2; font-size: 10.5px; color: rgba(255,255,255,0.85); pointer-events: none; text-shadow: 0 1px 2px rgba(0,0,0,0.6); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: calc(100% - 12px); }
+.mt-clip.is-sel { outline: 2px solid var(--t-accent-strong); outline-offset: -1px; z-index: 4; }
+.mt-lane-del { position: absolute; top: 4px; right: 4px; z-index: 3; width: 18px; height: 18px; border: 1px solid var(--stroke); background: rgba(13,13,17,0.6); color: var(--text-soft); cursor: pointer; font-size: 10px; opacity: 0; transition: opacity .15s; }
+.mt-lane:hover .mt-lane-del { opacity: 1; }
+.mt-lane-del:hover { color: #ff8f94; }
+.mt-timeline { cursor: default; }

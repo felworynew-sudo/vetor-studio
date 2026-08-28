@@ -1,12 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-// Лофи-радио для работы. Без плеера — только старт/стоп и громкость. Треки
-// переключаются плавным кроссфейдом: последние секунды текущего затухают, пока
-// следующий уже нарастает. Всё локально, музыка из /lofi.
-
-const CROSSFADE = 6; // секунды перекрытия
-const PRELOAD_LEAD = 22; // за сколько секунд до конца буферизуем следующий трек
-const STALL_MS = 5000; // если позиция не двигается дольше — считаем зависанием и перескакиваем
+// Лофи-радио для работы: простая надёжная карусель треков. Один <audio> в DOM,
+// по окончании трека — следующий, битый трек пропускаем. Громкость на лету,
+// мягкий fade-in при старте трека. Музыка из /lofi, всё локально.
 
 const TRACKS = [
   { src: '/lofi/after-rain-window.mp3', title: 'After Rain Window' },
@@ -21,25 +17,9 @@ const TRACKS = [
 ];
 
 const TEXT = {
-  ru: { start: 'Включить радио', stop: 'Выключить', volume: 'Громкость', now: 'Сейчас играет', hint: 'Фоновая музыка для работы.' },
-  en: { start: 'Play radio', stop: 'Stop', volume: 'Volume', now: 'Now playing', hint: 'Background music for work.' },
+  ru: { start: 'Включить радио', stop: 'Выключить', next: 'Следующий', volume: 'Громкость', now: 'Сейчас играет', hint: 'Фоновая музыка для работы.' },
+  en: { start: 'Play radio', stop: 'Stop', next: 'Next', volume: 'Volume', now: 'Now playing', hint: 'Background music for work.' },
 };
-
-// Плавная рампа громкости с отменой: новый вызов на том же элементе гасит
-// старый (иначе fade-in и fade-out дерутся за volume).
-function rampVolume(audio, from, to, secs, done) {
-  const token = (audio._fadeToken = (audio._fadeToken || 0) + 1);
-  const start = performance.now();
-  const dur = Math.max(1, secs * 1000);
-  function step(now) {
-    if (audio._fadeToken !== token) return; // отменён более новой рампой
-    const k = Math.min(1, (now - start) / dur);
-    audio.volume = Math.max(0, Math.min(1, from + (to - from) * k));
-    if (k < 1) requestAnimationFrame(step);
-    else if (done) done();
-  }
-  requestAnimationFrame(step);
-}
 
 function LofiRadio({ language = 'ru' }) {
   const t = TEXT[language] || TEXT.ru;
@@ -47,183 +27,71 @@ function LofiRadio({ language = 'ru' }) {
   const [volume, setVolume] = useState(0.7);
   const [title, setTitle] = useState('');
 
-  const players = useRef([]);
-  const cur = useRef(0);
-  const order = useRef([]);
-  const pos = useRef(0);
-  const crossing = useRef(false);
-  const preloadedFor = useRef(-1); // какой pos уже забуферизован в свободном плеере
+  const audioRef = useRef(null);
+  const orderRef = useRef([]);
+  const idxRef = useRef(0);
   const volRef = useRef(volume);
+  const fadeRef = useRef(0);
   volRef.current = volume;
-
-  function ensurePlayers() {
-    if (players.current.length === 0) {
-      const a = new Audio(); const b = new Audio();
-      [a, b].forEach((au) => { au.preload = 'auto'; au.crossOrigin = 'anonymous'; });
-      players.current = [a, b];
-    }
-  }
 
   function shuffle() {
     const idx = TRACKS.map((_, i) => i);
-    for (let i = idx.length - 1; i > 0; i -= 1) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [idx[i], idx[j]] = [idx[j], idx[i]];
-    }
-    order.current = idx;
-    pos.current = 0;
-    preloadedFor.current = -1;
+    for (let i = idx.length - 1; i > 0; i -= 1) { const j = Math.floor(Math.random() * (i + 1)); [idx[i], idx[j]] = [idx[j], idx[i]]; }
+    orderRef.current = idx;
+    idxRef.current = 0;
   }
 
-  function trackAt(p) { return TRACKS[order.current[((p % order.current.length) + order.current.length) % order.current.length]]; }
-
-  // Заранее грузим следующий трек в свободный плеер, чтобы к моменту кроссфейда
-  // он уже был забуферизован (иначе между треками возникает пауза на загрузку).
-  function preloadNext() {
-    const nextPos = pos.current + 1;
-    if (preloadedFor.current === nextPos) return;
-    const idle = players.current[1 - cur.current];
-    idle.pause();
-    idle.src = trackAt(nextPos).src;
-    idle.volume = 0;
-    try { idle.load(); } catch { /* */ }
-    preloadedFor.current = nextPos;
-  }
-
-  function onTimeUpdate(playerIdx) {
-    if (playerIdx !== cur.current || crossing.current) return;
-    const a = players.current[playerIdx];
-    if (!a.duration || Number.isNaN(a.duration)) return;
-    const remaining = a.duration - a.currentTime;
-    if (remaining <= PRELOAD_LEAD) preloadNext();
-    if (remaining <= CROSSFADE) doCrossfade();
-  }
-
-  // Кроссфейд: запускаем следующий плеер и переключаемся на него ТОЛЬКО когда он
-  // реально заиграл (play() зарезолвился). Если не смог — перескакиваем дальше,
-  // чтобы радио не заглохло в тишине.
-  function doCrossfade() {
-    if (crossing.current) return;
-    crossing.current = true;
-    const oldIdx = cur.current;
-    const newIdx = 1 - oldIdx;
-    const oldP = players.current[oldIdx];
-    const newP = players.current[newIdx];
-    pos.current += 1;
-    if (preloadedFor.current !== pos.current) {
-      newP.src = trackAt(pos.current).src;
-      try { newP.load(); } catch { /* */ }
-    }
-    newP.volume = 0;
-    attachHandlers(newP, newIdx);
-    setTitle(trackAt(pos.current).title);
-    preloadedFor.current = -1;
-
-    const begin = () => {
-      cur.current = newIdx;
-      rampVolume(newP, 0, volRef.current, CROSSFADE);
-      rampVolume(oldP, oldP.volume, 0, CROSSFADE, () => {
-        oldP.pause();
-        crossing.current = false;
-        preloadNext();
-      });
+  const fadeIn = useCallback(() => {
+    const a = audioRef.current; if (!a) return;
+    cancelAnimationFrame(fadeRef.current);
+    const start = performance.now(); const dur = 900; a.volume = 0;
+    const step = (now) => {
+      const k = Math.min(1, (now - start) / dur);
+      a.volume = Math.max(0, Math.min(1, volRef.current * k));
+      if (k < 1) fadeRef.current = requestAnimationFrame(step);
     };
-    const p = newP.play();
-    if (p && p.then) {
-      p.then(begin).catch(() => { crossing.current = false; skipNow(); });
-    } else { begin(); }
-  }
+    fadeRef.current = requestAnimationFrame(step);
+  }, []);
 
-  // Жёсткий перескок на следующий трек (после сбоя/зависания) — короткий фейд.
-  function skipNow() {
-    const oldIdx = cur.current;
-    const newIdx = 1 - oldIdx;
-    const oldP = players.current[oldIdx];
-    const newP = players.current[newIdx];
-    pos.current += 1;
-    preloadedFor.current = -1;
-    newP.src = trackAt(pos.current).src;
-    newP.volume = 0;
-    attachHandlers(newP, newIdx);
-    setTitle(trackAt(pos.current).title);
-    const p = newP.play();
-    const begin = () => {
-      cur.current = newIdx;
-      crossing.current = false;
-      rampVolume(newP, 0, volRef.current, 1.2);
-      rampVolume(oldP, oldP.volume, 0, 0.8, () => oldP.pause());
-      preloadNext();
-    };
-    if (p && p.then) p.then(begin).catch(() => { crossing.current = false; }); else begin();
-  }
-
-  function attachHandlers(a, playerIdx) {
-    a.ontimeupdate = () => onTimeUpdate(playerIdx);
-    // Если кроссфейд почему-то не сработал и трек доиграл — сразу перескакиваем.
-    a.onended = () => { if (playerIdx === cur.current && !crossing.current) skipNow(); };
-    a.onerror = () => { if (playerIdx === cur.current && !crossing.current) skipNow(); };
-  }
-
-  function startTrack(playerIdx, trackPos, fadeIn) {
-    const a = players.current[playerIdx];
-    const tr = trackAt(trackPos);
+  const playIndex = useCallback((i) => {
+    const a = audioRef.current; if (!a) return;
+    const len = orderRef.current.length || TRACKS.length;
+    idxRef.current = ((i % len) + len) % len;
+    const tr = TRACKS[orderRef.current[idxRef.current] ?? idxRef.current];
     a.src = tr.src;
-    a.volume = fadeIn ? 0 : volRef.current;
-    attachHandlers(a, playerIdx);
-    const p = a.play();
-    if (p && p.catch) p.catch(() => {});
     setTitle(tr.title);
-    if (fadeIn) rampVolume(a, 0, volRef.current, CROSSFADE);
-  }
+    const p = a.play();
+    if (p && p.then) p.then(fadeIn).catch(() => {}); else fadeIn();
+  }, [fadeIn]);
 
   function start() {
-    ensurePlayers();
-    shuffle();
-    cur.current = 0;
-    crossing.current = false;
-    startTrack(0, 0, true);
+    if (!orderRef.current.length) shuffle();
     setPlaying(true);
+    playIndex(idxRef.current);
   }
-
   function stop() {
-    players.current.forEach((a) => {
-      rampVolume(a, a.volume, 0, 0.6, () => { a.pause(); a.ontimeupdate = null; a.onended = null; a.onerror = null; });
-    });
-    crossing.current = false;
+    const a = audioRef.current; if (a) a.pause();
+    cancelAnimationFrame(fadeRef.current);
     setPlaying(false);
   }
-
-  // Вотчдог: если позиция активного плеера не двигается дольше STALL_MS —
-  // считаем, что радио зависло (сеть/декодер), и перескакиваем на следующий трек.
+  // Переход по окончании трека + пропуск битого. Слушатели на живом <audio>.
   useEffect(() => {
-    if (!playing) return undefined;
-    let lastT = -1;
-    let stuckSince = 0;
-    const id = setInterval(() => {
-      const a = players.current[cur.current];
-      if (!a || a.paused || crossing.current) { stuckSince = 0; return; }
-      if (Math.abs(a.currentTime - lastT) < 0.01) {
-        if (!stuckSince) stuckSince = Date.now();
-        else if (Date.now() - stuckSince > STALL_MS) { stuckSince = 0; skipNow(); }
-      } else { lastT = a.currentTime; stuckSince = 0; }
-    }, 1000);
-    return () => clearInterval(id);
-  }, [playing]);
+    const a = audioRef.current; if (!a) return undefined;
+    const onEnded = () => playIndex(idxRef.current + 1);
+    const onError = () => { if (playing) playIndex(idxRef.current + 1); };
+    a.addEventListener('ended', onEnded);
+    a.addEventListener('error', onError);
+    return () => { a.removeEventListener('ended', onEnded); a.removeEventListener('error', onError); };
+  }, [playIndex, playing]);
 
-  // Громкость на лету (когда не идёт кроссфейд).
-  useEffect(() => {
-    if (!playing || crossing.current) return;
-    const a = players.current[cur.current];
-    if (a) a.volume = volume;
-  }, [volume, playing]);
+  // Громкость на лету (fade-in сам её подхватит через volRef).
+  useEffect(() => { const a = audioRef.current; if (a) a.volume = volume; }, [volume]);
 
-  // Очистка при размонтировании.
-  useEffect(() => () => {
-    players.current.forEach((a) => { try { a.pause(); a.src = ''; } catch { /* */ } });
-  }, []);
+  useEffect(() => () => { const a = audioRef.current; if (a) { a.pause(); a.src = ''; } cancelAnimationFrame(fadeRef.current); }, []);
 
   return (
     <div className="tool-panel lofi-radio">
+      <audio ref={audioRef} preload="auto" />
       <div className="lofi-art">
         <img src="/tools/lofi-radio.png" alt="" className="lofi-art-img" />
         {playing && <span className="lofi-eq" aria-hidden="true"><i /><i /><i /><i /></span>}
