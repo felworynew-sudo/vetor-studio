@@ -502,7 +502,10 @@ function collectMeta(lang, { videos, music, blog, gallery, tags, tools = [], abs
       contentUrl: absoluteImage(toOptimizedPath(imgSrc)) || undefined,
       creator: { '@type': 'Organization', name: 'Vetor Studio', url: domain },
     }];
-    meta.set(`/design/item/${item.id}`, { title: `${name} — ${t(lang, 'Дизайн Vetor Studio', 'Vetor Studio Design')}`, ogTitle: name, heading: name, description, image: toOptimizedPath(imgSrc), jsonld });
+    // keywords: ручные (в т.ч. транслитерации бренда — юзеры ищут «лайфкопи», а
+    // не «LifeCopy») ИЛИ авто по названию. Помогает Яндексу по брендовым запросам.
+    const galleryKw = item[t(lang, 'ruKeywords', 'enKeywords')] || item.keywords || autoKeywords(name, lang);
+    meta.set(`/design/item/${item.id}`, { title: `${name} — ${t(lang, 'Дизайн Vetor Studio', 'Vetor Studio Design')}`, ogTitle: name, heading: name, description, keywords: galleryKw, image: toOptimizedPath(imgSrc), jsonld });
   }
 
   for (const tag of asArray(tags)) {
