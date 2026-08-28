@@ -1387,3 +1387,8 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
 .mt-lane:hover .mt-lane-del { opacity: 1; }
 .mt-lane-del:hover { color: #ff8f94; }
 .mt-timeline { cursor: default; }
+
+/* Ручка ресайза левой панели (тянуть правый край) */
+.mt-panel-resize { position: absolute; top: 0; right: 0; width: 6px; height: 100%; z-index: 2; cursor: col-resize; background: transparent; }
+.mt-panel-resize:hover { background: var(--t-accent-soft); }
+.mt-panel-in { padding-right: 14px; }

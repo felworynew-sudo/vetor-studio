@@ -76,6 +76,8 @@ function MultitrackEditor({ language = 'ru' }) {
   const [tool, setTool] = useState('select');
   const [sel, setSel] = useState(null); // { trackId, clipId }
   const [panelOpen, setPanelOpen] = useState(true);
+  const [panelW, setPanelW] = useState(236);
+  const panelDragRef = useRef(null);
 
   const soloActive = tracks.some((tk) => tk.solo);
   const totalDur = tracks.reduce((m, tk) => Math.max(m, tk.clips.reduce((mm, c) => Math.max(mm, c.offset + (c.trimEnd - c.trimStart)), 0)), 0);
@@ -258,6 +260,16 @@ function MultitrackEditor({ language = 'ru' }) {
     requestAnimationFrame(() => { if (laneWrapRef.current) laneWrapRef.current.scrollLeft = secAtMouse * next - (e.clientX - rect.left); });
   }
 
+  // Ресайз левой панели перетаскиванием её правого края.
+  function startPanelResize(e) {
+    e.preventDefault(); e.stopPropagation();
+    panelDragRef.current = { startX: e.clientX, startW: panelW };
+    window.addEventListener('pointermove', onPanelResize);
+    window.addEventListener('pointerup', endPanelResize);
+  }
+  function onPanelResize(e) { const d = panelDragRef.current; if (!d) return; setPanelW(clamp(d.startW + (e.clientX - d.startX), 150, 460)); }
+  function endPanelResize() { panelDragRef.current = null; window.removeEventListener('pointermove', onPanelResize); window.removeEventListener('pointerup', endPanelResize); }
+
   async function exportMix(kind) {
     if (!tracks.length || busy) return; stop(); setBusy(t.rendering);
     try {
@@ -309,8 +321,9 @@ function MultitrackEditor({ language = 'ru' }) {
       </div>
 
       <div className="mt-body">
-        <div className={panelOpen ? 'mt-panel' : 'mt-panel is-closed'}>
+        <div className={panelOpen ? 'mt-panel' : 'mt-panel is-closed'} style={panelOpen ? { width: panelW } : undefined}>
           <button type="button" className="mt-panel-toggle" onClick={() => setPanelOpen((v) => !v)} title={t.panel}>{panelOpen ? '‹' : '›'}</button>
+          {panelOpen && <span className="mt-panel-resize" onPointerDown={startPanelResize} title="↔" />}
           {panelOpen && (selClip ? (
             <div className="mt-panel-in">
               <div className="mt-panel-title">{selClip.name}</div>
