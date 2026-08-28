@@ -565,7 +565,9 @@ function collectMeta(lang, { videos, music, blog, gallery, tags, tools = [], abs
       description: seoDesc,
       keywords,
       toolUsp: usp,
-      image: '/og/tools.png',
+      // Уникальная OG-картинка на тул (генерит scripts/generate-tool-og.mjs).
+      // Путь с подпапкой не матчится localizeOg — задаём локализацию явно здесь.
+      image: lang === 'ru' ? `/og/tools/${tool.slug}.png` : `/og/tools/${tool.slug}-en.png`,
       jsonld: [
         {
           '@context': 'https://schema.org',

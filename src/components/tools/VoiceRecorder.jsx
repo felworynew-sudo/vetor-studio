@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { encodeWAV, encodeMp3, getAudioCtx, downloadBlob } from '../../utils/wav';
+import { setAudioHandoff } from '../../utils/audioHandoff';
+import { buildToolPath } from '../../utils/routing';
 
 // Диктофон: запись с микрофона (getUserMedia + MediaRecorder), пауза, таймер и
 // индикатор уровня, прослушивание, экспорт в WAV и MP3. Всё локально — запись
@@ -11,6 +13,7 @@ const TEXT = {
     again: 'Записать заново', denied: 'Нет доступа к микрофону. Разрешите доступ в браузере и попробуйте снова.',
     nomic: 'Микрофон недоступен в этом браузере.', preview: 'Прослушать', encoding: 'Кодирование…',
     ns: 'Шумоподавление', ec: 'Эхоподавление', dl: 'Скачать', level: 'Уровень',
+    toEditor: 'В аудио-редактор',
     note: 'Запись идёт локально в браузере и не загружается на сервер. Для MP3 звук кодируется на вашем устройстве.',
   },
   en: {
@@ -18,6 +21,7 @@ const TEXT = {
     again: 'Record again', denied: 'No microphone access. Allow it in the browser and try again.',
     nomic: 'Microphone is not available in this browser.', preview: 'Play back', encoding: 'Encoding…',
     ns: 'Noise suppression', ec: 'Echo cancellation', dl: 'Download', level: 'Level',
+    toEditor: 'To audio editor',
     note: 'Recording runs locally in the browser and is never uploaded. MP3 is encoded on your device.',
   },
 };
@@ -27,7 +31,7 @@ function fmtTime(s) {
   return `${m}:${String(sec).padStart(2, '0')}`;
 }
 
-function VoiceRecorder({ language = 'ru' }) {
+function VoiceRecorder({ language = 'ru', go }) {
   const t = TEXT[language] || TEXT.ru;
   const supported = typeof navigator !== 'undefined' && navigator.mediaDevices && window.MediaRecorder;
 
@@ -123,6 +127,15 @@ function VoiceRecorder({ language = 'ru' }) {
     setStatus('recorded');
   }
 
+  // Передаёт запись в многодорожечный редактор без перезагрузки (SPA-переход).
+  function goToEditor(e) {
+    const buffer = bufferRef.current;
+    if (!buffer) return;
+    const name = `${language === 'en' ? 'Recording' : 'Запись'} ${fmtTime(Math.round(buffer.duration))}`;
+    setAudioHandoff({ buffer, name });
+    if (go) go(buildToolPath('multitrack'))(e);
+  }
+
   if (!supported) return <div className="tool-panel"><p className="color-invalid">{t.nomic}</p></div>;
 
   const busy = status === 'encoding';
@@ -172,6 +185,7 @@ function VoiceRecorder({ language = 'ru' }) {
             <button type="button" className="tool-btn" onClick={() => exportAs('mp3')} disabled={busy}>MP3</button>
           </div>
           {busy && <span className="rec-encoding">{t.encoding}</span>}
+          <a href={buildToolPath('multitrack')} className="tool-btn rec-to-editor" onClick={goToEditor}>🎛 {t.toEditor}</a>
         </div>
       )}
 

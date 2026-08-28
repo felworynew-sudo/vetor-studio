@@ -7,8 +7,21 @@ function toHex(r, g, b) {
   return `#${[r, g, b].map((v) => Math.round(v).toString(16).padStart(2, '0')).join('')}`;
 }
 
+// Перцептивное расстояние цветов (redmean, аппроксимация compuphase). В отличие от
+// простого евклида по RGB, отражает то, как разницу видит глаз, — поэтому «оттенки,
+// которые на глаз не отличить» получают малое расстояние и корректно сливаются, а не
+// оседают в палитре почти-дублями. Возвращает НЕквадратичное расстояние (~0..765).
+function redmean(r1, g1, b1, r2, g2, b2) {
+  const rm = (r1 + r2) * 0.5;
+  const dr = r1 - r2; const dg = g1 - g2; const db = b1 - b2;
+  return Math.sqrt((2 + rm / 256) * dr * dr + 4 * dg * dg + (2 + (255 - rm) / 256) * db * db);
+}
+
 export function dominantColors(imageData, count = 6, options = {}) {
-  const { mergeDist = 46 } = options;
+  // mergeDist — порог слияния бакетов в кластеры; distinctDist — гарантия, что
+  // ИТОГОВЫЕ цвета палитры взаимно различимы (не показываем почти-дубли). Оба в
+  // redmean-единицах (перцептивные, ~2.5× крупнее прежнего евклида 46).
+  const { mergeDist = 100, distinctDist = 80 } = options;
   const { data } = imageData;
 
   // 1. Гистограмма 5 бит/канал (32³ ячейки), копим сумму для точного среднего.
@@ -24,12 +37,12 @@ export function dominantColors(imageData, count = 6, options = {}) {
     .map((e) => ({ r: e.r / e.n, g: e.g / e.n, b: e.b / e.n, n: e.n }))
     .sort((a, b) => b.n - a.n);
 
-  // 2. Жадное слияние близких по цвету бакетов в кластеры.
+  // 2. Жадное слияние перцептивно-близких бакетов в кластеры (redmean).
   const clusters = [];
   for (const bk of buckets) {
     let best = null; let bd = Infinity;
     for (const cl of clusters) {
-      const d = Math.sqrt((cl.r - bk.r) ** 2 + (cl.g - bk.g) ** 2 + (cl.b - bk.b) ** 2);
+      const d = redmean(cl.r, cl.g, cl.b, bk.r, bk.g, bk.b);
       if (d < bd) { bd = d; best = cl; }
     }
     if (best && bd < mergeDist) {
@@ -45,7 +58,15 @@ export function dominantColors(imageData, count = 6, options = {}) {
 
   clusters.sort((a, b) => b.n - a.n);
   const total = clusters.reduce((s, c) => s + c.n, 0) || 1;
-  return clusters.slice(0, count).map((c) => ({
+
+  // 3. Гарантия различимости: берём самые массовые кластеры, но пропускаем тот, что
+  // перцептивно неотличим от уже выбранного — так в палитре нет почти-дублей.
+  const picked = [];
+  for (const c of clusters) {
+    if (picked.every((p) => redmean(p.r, p.g, p.b, c.r, c.g, c.b) >= distinctDist)) picked.push(c);
+    if (picked.length >= count) break;
+  }
+  return picked.map((c) => ({
     hex: toHex(c.r, c.g, c.b),
     pct: Math.round((c.n / total) * 100),
     weight: c.n,

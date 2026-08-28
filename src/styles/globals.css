@@ -772,16 +772,21 @@ select {
   color: var(--text);
 }
 
+/* Кладка (masonry) многоколоночной вёрсткой: карточки стакаются вертикально
+   внутри колонки вплотную, а не выравниваются по строкам. Раньше был grid с
+   align-items:start — карточки разной высоты оставляли большие зазоры под
+   низкими в каждой «строке». columns:296px = авто-число колонок ≥296px (как
+   прежний auto-fit), вертикальный зазор — margin-bottom карточек. */
 .card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 296px), 1fr));
-  gap: 28px 24px;
-  align-items: start;
+  columns: 296px;
+  column-gap: 24px;
   margin-top: 28px;
 }
 
 .media-card {
   min-width: 0;
+  break-inside: avoid;
+  margin-bottom: 28px;
 }
 
 .card-hitbox {
@@ -2902,8 +2907,7 @@ select {
   }
 
   .card-grid {
-    grid-template-columns: 1fr;
-    gap: 24px;
+    columns: 1;
   }
 
   .home-feed {

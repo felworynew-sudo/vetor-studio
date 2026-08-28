@@ -10,7 +10,7 @@ const TEXT = {
 };
 
 function extractPalette(img, count) {
-  return dominantColors(imageToData(img, 200), count, { mergeDist: 46 });
+  return dominantColors(imageToData(img, 200), count);
 }
 
 function PaletteExtractor({ language = 'ru' }) {

@@ -18,7 +18,7 @@ const TEXT = {
 };
 
 function analyze(img, groups = 6) {
-  return dominantColors(imageToData(img, 220), groups, { mergeDist: 46 });
+  return dominantColors(imageToData(img, 220), groups);
 }
 
 function ColorWeight({ language = 'ru' }) {

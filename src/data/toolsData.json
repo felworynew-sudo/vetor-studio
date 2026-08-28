@@ -127,6 +127,36 @@
       "img": "foto.png"
     },
     {
+      "slug": "raster-editor",
+      "categoryId": "image",
+      "status": "ready",
+      "icon": "🖼️",
+      "ru": {
+        "title": "Растровый редактор",
+        "desc": "Слои с режимами наложения и непрозрачностью, кисть/ластик/заливка/фигуры/текст, коррекция яркости/контраста/насыщенности, undo/redo, экспорт PNG. В браузере."
+      },
+      "en": {
+        "title": "Raster editor",
+        "desc": "Layers with blend modes and opacity, brush/eraser/fill/shapes/text, brightness/contrast/saturation, undo/redo, PNG export. In the browser."
+      },
+      "img": "foto.png"
+    },
+    {
+      "slug": "vector-editor",
+      "categoryId": "svg",
+      "status": "ready",
+      "icon": "✒️",
+      "ru": {
+        "title": "Векторный редактор",
+        "desc": "Фигуры (прямоугольник/эллипс/линия/звезда/текст) и свободное перо, выделение/перемещение/масштаб, заливка и обводка, порядок слоёв, экспорт SVG и PNG."
+      },
+      "en": {
+        "title": "Vector editor",
+        "desc": "Shapes (rect/ellipse/line/star/text) and freehand pen, select/move/scale, fill and stroke, z-order, export SVG and PNG."
+      },
+      "img": "svg.png"
+    },
+    {
       "slug": "color-converter",
       "categoryId": "color",
       "status": "ready",
@@ -677,6 +707,36 @@
       "en": {
         "title": "Audio trimmer",
         "desc": "Waveform, drag-handle selection, fades, WAV export. Local."
+      },
+      "img": "naushniki.png"
+    },
+    {
+      "slug": "multitrack",
+      "categoryId": "audio",
+      "status": "ready",
+      "icon": "🎛️",
+      "ru": {
+        "title": "Многодорожечный редактор",
+        "desc": "Несколько дорожек на таймлинии: тащите клипы, режьте, громкость/панорама/фейды/эквалайзер на каждую. Сведение в WAV и MP3. Всё локально."
+      },
+      "en": {
+        "title": "Multitrack editor",
+        "desc": "Several tracks on a timeline: drag clips, trim, per-track volume/pan/fades/EQ. Mix down to WAV and MP3. All local."
+      },
+      "img": "zvukplyus.png"
+    },
+    {
+      "slug": "audio-converter",
+      "categoryId": "audio",
+      "status": "ready",
+      "icon": "🔄",
+      "ru": {
+        "title": "Конвертер аудио",
+        "desc": "Любой формат (WAV, MP3, OGG, FLAC, M4A, AAC) в WAV или MP3 с выбором битрейта. Пакетно, в браузере."
+      },
+      "en": {
+        "title": "Audio converter",
+        "desc": "Any format (WAV, MP3, OGG, FLAC, M4A, AAC) to WAV or MP3 with bitrate choice. Batch, in the browser."
       },
       "img": "naushniki.png"
     },

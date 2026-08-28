@@ -341,7 +341,7 @@ function ToolView({ tool, lang, ui, onBack, go }) {
         </div>
       </header>
       <Suspense fallback={<div className="tool-loading">…</div>}>
-        {ToolComponent ? <ToolComponent language={lang} /> : null}
+        {ToolComponent ? <ToolComponent language={lang} go={go} /> : null}
       </Suspense>
 
       {/* SEO/UX-контент: как пользоваться, FAQ, смежные инструменты. */}
