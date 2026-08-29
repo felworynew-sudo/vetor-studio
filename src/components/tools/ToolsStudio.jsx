@@ -21,6 +21,8 @@ const UI = {
     all: 'Все инструменты',
     soon: 'Скоро',
     ready: 'Готово',
+    hidePanel: 'Скрыть панель',
+    showPanel: 'Показать панель',
     toMainSite: 'На основной сайт Vetor',
     forDesigners: 'для дизайнеров',
     back: 'Все инструменты',
@@ -39,6 +41,8 @@ const UI = {
     all: 'All tools',
     soon: 'Soon',
     ready: 'Ready',
+    hidePanel: 'Hide panel',
+    showPanel: 'Show panel',
     toMainSite: 'Back to the main Vetor site',
     forDesigners: 'for designers',
     back: 'All tools',
@@ -75,6 +79,18 @@ function ToolsStudio({
   const [search, setSearch] = useState('');
   const [collapsed, setCollapsed] = useState(() => new Set());
   const [dragging, setDragging] = useState(false);
+  // Сайдбар инструментов: сворачивается и тянется за край; ширина/состояние запоминаются.
+  const [sidebarOpen, setSidebarOpen] = useState(() => { try { return localStorage.getItem('verstak-sb-open') !== '0'; } catch { return true; } });
+  const [sidebarW, setSidebarW] = useState(() => { try { const v = Number(localStorage.getItem('verstak-sb-w')); return v >= 200 && v <= 480 ? v : 288; } catch { return 288; } });
+  useEffect(() => { try { localStorage.setItem('verstak-sb-open', sidebarOpen ? '1' : '0'); localStorage.setItem('verstak-sb-w', String(sidebarW)); } catch { /* */ } }, [sidebarOpen, sidebarW]);
+  function startSidebarResize(e) {
+    e.preventDefault();
+    const startX = e.clientX; const startW = sidebarW;
+    const move = (ev) => setSidebarW(Math.max(200, Math.min(480, startW + (ev.clientX - startX))));
+    const up = () => { window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); document.body.classList.remove('is-col-resizing'); };
+    document.body.classList.add('is-col-resizing');
+    window.addEventListener('pointermove', move); window.addEventListener('pointerup', up);
+  }
 
   const activeTool = toolSlug ? getToolBySlug(toolSlug) : null;
 
@@ -145,6 +161,15 @@ function ToolsStudio({
     <div className={dragging ? 'tools-studio is-dragging' : 'tools-studio'} data-lang={lang}>
       {/* Хедер студии */}
       <header className="tools-header">
+        <button
+          type="button"
+          className="tools-sb-btn"
+          onClick={() => setSidebarOpen((v) => !v)}
+          aria-label={sidebarOpen ? ui.hidePanel : ui.showPanel}
+          title={sidebarOpen ? ui.hidePanel : ui.showPanel}
+        >
+          {sidebarOpen ? '⟨' : '☰'}
+        </button>
         <a href="/tools" className="tools-brand" onClick={go('/tools')} aria-label={STUDIO_NAME[lang]}>
           <img src="/tools/verstak-logo-px.png" alt={STUDIO_NAME[lang]} className="tools-brand-logo" />
         </a>
@@ -172,9 +197,10 @@ function ToolsStudio({
         </div>
       </header>
 
-      <div className="tools-body">
+      <div className="tools-body" style={{ '--t-sidebar': sidebarOpen ? `${sidebarW}px` : '0px' }}>
+        {sidebarOpen && <span className="tools-sb-resize" style={{ left: sidebarW }} onPointerDown={startSidebarResize} title="↔" aria-hidden="true" />}
         {/* Сайдбар с рубриками */}
-        <aside className="tools-sidebar">
+        <aside className={sidebarOpen ? 'tools-sidebar' : 'tools-sidebar is-hidden'}>
           <a
             href="/tools"
             className={!activeTool ? 'tools-side-all is-active' : 'tools-side-all'}

@@ -22,7 +22,8 @@ const TEXT = {
     fadeIn: 'Фейд ↗', fadeOut: 'Фейд ↘', eq: 'Эквалайзер', low: 'Низ', mid: 'Середина', high: 'Верх',
     reverse: 'Реверс', dupl: 'Дублировать', delClip: 'Удалить клип', delTrack: 'Удалить дорожку',
     noSel: 'Выберите клип на таймлинии, чтобы редактировать. Файлы можно бросать прямо на дорожку.',
-    dropLane: 'бросьте аудио', note: 'Скорость меняет темп и тон. Всё локально — файлы не уходят на сервер.',
+    dropLane: 'бросьте аудио', addZone: 'Перетащите файлы сюда или нажмите — добавить дорожку',
+    note: 'Скорость меняет темп и тон. Всё локально — файлы не уходят на сервер.',
   },
   en: {
     drop: 'Drop audio or click — several files at once', hint: 'WAV, MP3, OGG, FLAC, M4A — all local',
@@ -32,7 +33,8 @@ const TEXT = {
     fadeIn: 'Fade ↗', fadeOut: 'Fade ↘', eq: 'Equalizer', low: 'Low', mid: 'Mid', high: 'High',
     reverse: 'Reverse', dupl: 'Duplicate', delClip: 'Delete clip', delTrack: 'Delete track',
     noSel: 'Select a clip on the timeline to edit. You can drop files right onto a track.',
-    dropLane: 'drop audio', note: 'Speed changes tempo and pitch. All local — files never leave your device.',
+    dropLane: 'drop audio', addZone: 'Drop files here or click — add a track',
+    note: 'Speed changes tempo and pitch. All local — files never leave your device.',
   },
 };
 
@@ -370,6 +372,12 @@ function MultitrackEditor({ language = 'ru' }) {
                 <button type="button" className="mt-lane-del" onClick={(e) => { e.stopPropagation(); removeTrack(tk.id); }} title={t.delTrack}>✕</button>
               </div>
             ))}
+            <button type="button" className="mt-addzone" onClick={() => inputRef.current?.click()}
+              onPointerDown={(e) => e.stopPropagation()}
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={(e) => { e.preventDefault(); addFiles(e.dataTransfer.files); }}>
+              <span>⊕ {t.addZone}</span>
+            </button>
             <div className="mt-playhead" style={{ left: playhead * pxPerSec, height: RULER_H + tracks.length * ROW_H }} />
           </div>
         </div>

@@ -95,8 +95,9 @@
 
 /* Тело: сайдбар + контент */
 .tools-body {
+  position: relative;
   display: grid;
-  grid-template-columns: var(--t-sidebar) 1fr;
+  grid-template-columns: var(--t-sidebar) minmax(0, 1fr);
   align-items: start;
   gap: 0;
   max-width: var(--container);
@@ -104,6 +105,23 @@
   margin: 0 auto;
   flex: 1;
 }
+/* Свёрнутый сайдбар: ширина 0 (через --t-sidebar), прячем содержимое. */
+.tools-sidebar.is-hidden { overflow: hidden; padding: 0; border-right: none; }
+/* Кнопка сворачивания панели в хедере. */
+.tools-sb-btn {
+  flex: none; width: 34px; height: 32px; border: 1px solid var(--stroke);
+  background: var(--surface-strong); color: var(--text); cursor: pointer;
+  font-size: 15px; line-height: 1; display: inline-flex; align-items: center; justify-content: center;
+}
+.tools-sb-btn:hover { border-color: var(--t-accent); color: var(--t-accent-strong); }
+/* Ручка ресайза сайдбара — видимая полоса, тянется мышью. */
+.tools-sb-resize {
+  position: absolute; top: 0; bottom: 0; width: 9px; margin-left: -4px; z-index: 15;
+  cursor: col-resize; background: transparent;
+}
+.tools-sb-resize::before { content: ""; position: absolute; top: 0; bottom: 0; left: 4px; width: 1px; background: var(--stroke); }
+.tools-sb-resize:hover::before, body.is-col-resizing .tools-sb-resize::before { left: 3px; width: 3px; background: var(--t-accent); }
+body.is-col-resizing { cursor: col-resize; user-select: none; }
 
 /* Сайдбар */
 .tools-sidebar {
@@ -1392,3 +1410,18 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
 .mt-panel-resize { position: absolute; top: 0; right: 0; width: 6px; height: 100%; z-index: 2; cursor: col-resize; background: transparent; }
 .mt-panel-resize:hover { background: var(--t-accent-soft); }
 .mt-panel-in { padding-right: 14px; }
+
+/* ── Многодорожечник: заполняем пустое место дроп-зоной, фикс высоты ─────── */
+.mt-body { height: 60vh; min-height: 360px; align-items: stretch; }
+.mt-timeline { overflow: auto; }
+.mt-inner { display: flex; flex-direction: column; min-height: 100%; }
+.mt-ruler, .mt-lane { flex: none; }
+.mt-addzone {
+  flex: 1 0 96px; min-height: 96px; width: 100%;
+  display: flex; align-items: center; justify-content: center;
+  border: none; border-top: 1px dashed var(--stroke); margin-top: 2px;
+  background: transparent; color: var(--text-soft); cursor: pointer; font-size: 13px;
+}
+.mt-addzone:hover { background: var(--surface-strong); color: var(--t-accent-strong); }
+.mt-addzone span { pointer-events: none; padding: 0 20px; position: sticky; left: 24px; }
+.is-dragging .mt-addzone { border-color: var(--t-accent); color: var(--t-accent-strong); background: var(--t-accent-soft); }
