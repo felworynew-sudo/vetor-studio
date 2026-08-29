@@ -130,6 +130,7 @@
       "slug": "raster-editor",
       "categoryId": "image",
       "status": "ready",
+      "beta": true,
       "icon": "🖼️",
       "ru": {
         "title": "Растровый редактор",
@@ -145,6 +146,7 @@
       "slug": "vector-editor",
       "categoryId": "svg",
       "status": "ready",
+      "beta": true,
       "icon": "✒️",
       "ru": {
         "title": "Векторный редактор",

@@ -1425,3 +1425,11 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
 .mt-addzone:hover { background: var(--surface-strong); color: var(--t-accent-strong); }
 .mt-addzone span { pointer-events: none; padding: 0 20px; position: sticky; left: 24px; }
 .is-dragging .mt-addzone { border-color: var(--t-accent); color: var(--t-accent-strong); background: var(--t-accent-soft); }
+
+/* Плашка beta для крупных редакторов (в процессе доработки) */
+.tool-beta {
+  display: inline-block; margin-left: 8px; padding: 1px 7px; vertical-align: middle;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--t-accent-strong); background: var(--t-accent-soft); border: 1px solid var(--t-accent);
+}
+.tools-side-item .tool-beta { margin-left: 6px; padding: 0 5px; font-size: 9px; }

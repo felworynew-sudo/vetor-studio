@@ -254,6 +254,7 @@ function ToolsStudio({
                           onClick={go(buildToolPath(tItem.slug))}
                         >
                           <PxIcon src={tItem.img} emoji={tItem.icon} className="tools-side-icon" /> {tItem[lang].title}
+                          {tItem.beta && <span className="tool-beta">beta</span>}
                         </a>
                       </li>
                     );
@@ -342,7 +343,7 @@ function ToolCard({ tool, lang, ui, onOpen }) {
   return (
     <a href={buildToolPath(tool.slug)} className="tool-card" onClick={onOpen}>
       <PxIcon src={tool.img} emoji={tool.icon} className="tool-card-icon" />
-      <h3>{tool[lang].title}</h3>
+      <h3>{tool[lang].title}{tool.beta && <span className="tool-beta">beta</span>}</h3>
       <p>{tool[lang].desc}</p>
       {cat && <span className="tool-card-cat">{cat.icon} {cat[lang]}</span>}
     </a>
@@ -362,7 +363,7 @@ function ToolView({ tool, lang, ui, onBack, go }) {
       <header className="tool-view-head">
         <PxIcon src={tool.img} emoji={tool.icon} className="tool-view-icon" />
         <div>
-          <h1>{tool[lang].title}</h1>
+          <h1>{tool[lang].title}{tool.beta && <span className="tool-beta">beta</span>}</h1>
           <p>{tool[lang].desc}</p>
         </div>
       </header>
