@@ -23,6 +23,7 @@ const UI = {
     ready: 'Готово',
     hidePanel: 'Скрыть панель',
     showPanel: 'Показать панель',
+    pasteHint: 'Можно вставить картинку из буфера — Ctrl+V',
     toMainSite: 'На основной сайт Vetor',
     forDesigners: 'для дизайнеров',
     back: 'Все инструменты',
@@ -43,6 +44,7 @@ const UI = {
     ready: 'Ready',
     hidePanel: 'Hide panel',
     showPanel: 'Show panel',
+    pasteHint: 'You can paste an image from the clipboard — Ctrl+V',
     toMainSite: 'Back to the main Vetor site',
     forDesigners: 'for designers',
     back: 'All tools',
@@ -112,6 +114,32 @@ function ToolsStudio({
       window.removeEventListener('drop', onDrop);
     };
   }, []);
+
+  // Вставка картинки из буфера (Ctrl+V) в активный инструмент — скопировал скрин и
+  // сразу вставил, без «сохранить → загрузить». Работает для любого тула, который
+  // принимает изображения (ищем его file-input и скармливаем вставленный файл).
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+    const onPaste = (e) => {
+      const items = e.clipboardData && e.clipboardData.items; if (!items) return;
+      const el = document.activeElement;
+      if (el && (el.tagName === 'INPUT' && el.type === 'text' || el.tagName === 'TEXTAREA' || el.isContentEditable)) return; // не мешаем вводу текста
+      for (const it of items) {
+        if (it.type && it.type.startsWith('image/')) {
+          const file = it.getAsFile(); if (!file) continue; // eslint-disable-line no-continue
+          const input = document.querySelector('.tools-main input[type="file"]');
+          if (!input) return;
+          const accept = (input.getAttribute('accept') || '').toLowerCase();
+          if (accept && !accept.includes('image') && accept !== '*') return; // тул не для картинок
+          try { const dt = new DataTransfer(); dt.items.add(file); input.files = dt.files; input.dispatchEvent(new Event('change', { bubbles: true })); } catch { /* */ }
+          e.preventDefault();
+          return;
+        }
+      }
+    };
+    window.addEventListener('paste', onPaste);
+    return () => window.removeEventListener('paste', onPaste);
+  }, [activeTool]);
 
   const toggleCat = (id) => setCollapsed((prev) => {
     const next = new Set(prev);
@@ -365,6 +393,9 @@ function ToolView({ tool, lang, ui, onBack, go }) {
         <div>
           <h1>{tool[lang].title}{tool.beta && <span className="tool-beta">beta</span>}</h1>
           <p>{tool[lang].desc}</p>
+          {(tool.categoryId === 'image' || tool.categoryId === 'ai') && (
+            <p className="tool-paste-hint">💡 {ui.pasteHint}</p>
+          )}
         </div>
       </header>
       <Suspense fallback={<div className="tool-loading">…</div>}>
