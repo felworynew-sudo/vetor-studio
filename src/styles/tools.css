@@ -1436,3 +1436,29 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
 
 /* Подсказка про вставку из буфера (Ctrl+V) для тулов с изображениями */
 .tool-paste-hint { margin: 6px 0 0; font-size: 12.5px; color: var(--text-soft); }
+
+/* ── VRAVIO промо (отдельный полноценный редактор) ───────────────────────── */
+.tools-vravio {
+  display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;
+  margin: 8px 0 28px; padding: 20px 24px;
+  background: linear-gradient(120deg, var(--t-accent-soft), transparent 70%), var(--surface);
+  border: 1px solid var(--t-accent); border-left-width: 4px;
+}
+.tools-vravio-eyebrow {
+  display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--t-accent-strong); margin-bottom: 6px;
+}
+.tools-vravio-text h2 { margin: 0 0 4px; font-size: 19px; }
+.tools-vravio-text p { margin: 0; color: var(--text-muted); font-size: 14px; max-width: 56ch; }
+.tools-vravio-btn { flex: none; white-space: nowrap; }
+
+/* Ссылка на VRAVIO внутри beta-тула */
+.tool-vravio-link {
+  display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; padding: 6px 12px;
+  border: 1px solid var(--t-accent); color: var(--t-accent-strong); text-decoration: none; font-size: 12.5px; font-weight: 600;
+}
+.tool-vravio-link:hover { background: var(--t-accent-soft); }
+
+@media (max-width: 640px) {
+  .tools-vravio { flex-direction: column; align-items: flex-start; }
+}

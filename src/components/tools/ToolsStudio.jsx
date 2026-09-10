@@ -32,6 +32,10 @@ const UI = {
     ideasTitle: 'Есть идея инструмента?',
     ideasText: 'Напишите — соберём то, чего не хватает.',
     count: (n) => `${n} инструментов`,
+    vravioEyebrow: 'Отдельный проект',
+    vravioTitle: 'VRAVIO — полноценный редактор',
+    vravioText: 'Растр, вектор, аудио и видео на одном движке. Более мощная версия наших beta-редакторов, отдельным приложением.',
+    vravioBtn: 'Открыть редактор',
     offlineTitle: 'Работает без интернета',
     offlineText: 'Все инструменты считаются прямо в вашем браузере — файлы никуда не уходят. После первой загрузки страницы обычные инструменты работают офлайн. AI-инструменты один раз скачивают модель (она кешируется браузером), а дальше тоже работают без сети. Чтобы гарантированно иметь всё офлайн: откройте нужные инструменты один раз при интернете — браузер сохранит их в кеш.',
   },
@@ -53,6 +57,10 @@ const UI = {
     ideasTitle: 'Got a tool idea?',
     ideasText: 'Drop us a line — we’ll build what’s missing.',
     count: (n) => `${n} tools`,
+    vravioEyebrow: 'Separate project',
+    vravioTitle: 'VRAVIO — a full editor',
+    vravioText: 'Raster, vector, audio and video on one engine. A more powerful version of our beta editors, as a standalone app.',
+    vravioBtn: 'Open the editor',
     offlineTitle: 'Works offline',
     offlineText: 'Every tool runs right in your browser — files never leave your device. After the page loads once, regular tools work offline. AI tools download a model once (cached by the browser) and then work without a network too. To be sure everything is available offline: open the tools you need once while online — the browser will cache them.',
   },
@@ -315,6 +323,17 @@ function ToolsStudio({
                 </div>
               </section>
 
+              <section className="tools-vravio">
+                <div className="tools-vravio-text">
+                  <span className="tools-vravio-eyebrow">{ui.vravioEyebrow}</span>
+                  <h2>{ui.vravioTitle}</h2>
+                  <p>{ui.vravioText}</p>
+                </div>
+                <a className="tools-btn primary tools-vravio-btn" href="https://felworynew-sudo.github.io/VRAVIO/" target="_blank" rel="noopener noreferrer">
+                  {ui.vravioBtn} ↗
+                </a>
+              </section>
+
               {filteredTools.length === 0 ? (
                 <p className="tools-empty">{ui.nothing}</p>
               ) : (
@@ -395,6 +414,11 @@ function ToolView({ tool, lang, ui, onBack, go }) {
           <p>{tool[lang].desc}</p>
           {(tool.categoryId === 'image' || tool.categoryId === 'ai') && (
             <p className="tool-paste-hint">💡 {ui.pasteHint}</p>
+          )}
+          {tool.beta && (
+            <a className="tool-vravio-link" href="https://felworynew-sudo.github.io/VRAVIO/" target="_blank" rel="noopener noreferrer">
+              {ui.vravioTitle} — {ui.vravioBtn} ↗
+            </a>
           )}
         </div>
       </header>
