@@ -1462,3 +1462,6 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
 @media (max-width: 640px) {
   .tools-vravio { flex-direction: column; align-items: flex-start; }
 }
+
+/* Левая группа шапки (кнопка панели + лого) — держит лого у левого края. */
+.tools-header-left { display: flex; align-items: center; gap: 10px; }

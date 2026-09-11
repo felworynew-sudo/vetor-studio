@@ -197,18 +197,20 @@ function ToolsStudio({
     <div className={dragging ? 'tools-studio is-dragging' : 'tools-studio'} data-lang={lang}>
       {/* Хедер студии */}
       <header className="tools-header">
-        <button
-          type="button"
-          className="tools-sb-btn"
-          onClick={() => setSidebarOpen((v) => !v)}
-          aria-label={sidebarOpen ? ui.hidePanel : ui.showPanel}
-          title={sidebarOpen ? ui.hidePanel : ui.showPanel}
-        >
-          {sidebarOpen ? '⟨' : '☰'}
-        </button>
-        <a href="/tools" className="tools-brand" onClick={go('/tools')} aria-label={STUDIO_NAME[lang]}>
-          <img src="/tools/verstak-logo-px.png" alt={STUDIO_NAME[lang]} className="tools-brand-logo" />
-        </a>
+        <div className="tools-header-left">
+          <button
+            type="button"
+            className="tools-sb-btn"
+            onClick={() => setSidebarOpen((v) => !v)}
+            aria-label={sidebarOpen ? ui.hidePanel : ui.showPanel}
+            title={sidebarOpen ? ui.hidePanel : ui.showPanel}
+          >
+            {sidebarOpen ? '⟨' : '☰'}
+          </button>
+          <a href="/tools" className="tools-brand" onClick={go('/tools')} aria-label={STUDIO_NAME[lang]}>
+            <img src="/tools/verstak-logo-px.png" alt={STUDIO_NAME[lang]} className="tools-brand-logo" />
+          </a>
+        </div>
 
         <div className="tools-header-right">
           <div className="tools-lang" role="group" aria-label="Language">
