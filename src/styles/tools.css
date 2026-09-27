@@ -1249,8 +1249,56 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
 .bl-stage { display: flex; align-items: center; justify-content: center; min-height: 340px; }
 .bl-svg { width: 78%; max-width: 340px; height: auto; filter: drop-shadow(0 12px 30px rgba(0,0,0,0.35)); }
 
-/* Единый акцент у всех ползунков студии (не только .tool-field). */
-.tools-studio input[type="range"] { accent-color: var(--t-accent); }
+/* ============================================================
+   ПОЛЗУНКИ: тонкая прямоугольная дорожка + толстенький вертикальный
+   бегунок-фейдер (лёгкое скругление, не идеальный прямоугольник).
+   Полный ресет нативного вида — appearance:none снимает системный
+   слайдер, дальше рисуем трек/бегунок сами через псевдоэлементы.
+   ============================================================ */
+.tools-studio input[type="range"] {
+  accent-color: var(--t-accent); /* фолбэк для редких браузеров без псевдоэлементов ниже */
+  -webkit-appearance: none;
+  appearance: none;
+  width: 200px;
+  height: 22px;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.tools-studio input[type="range"]::-webkit-slider-runnable-track {
+  height: 5px;
+  background: var(--surface-strong);
+  border: 1px solid var(--stroke);
+}
+.tools-studio input[type="range"]::-moz-range-track {
+  height: 5px;
+  background: var(--surface-strong);
+  border: 1px solid var(--stroke);
+}
+.tools-studio input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 11px;
+  height: 22px;
+  margin-top: -9px; /* центрируем по 5px-дорожке (webkit не центрует сам) */
+  background: var(--t-accent);
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  border-radius: 3px;
+}
+.tools-studio input[type="range"]::-moz-range-thumb {
+  width: 11px;
+  height: 22px;
+  background: var(--t-accent);
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  border-radius: 3px;
+}
+.tools-studio input[type="range"]:hover::-webkit-slider-thumb,
+.tools-studio input[type="range"]:active::-webkit-slider-thumb { background: var(--t-accent-strong); }
+.tools-studio input[type="range"]:hover::-moz-range-thumb,
+.tools-studio input[type="range"]:active::-moz-range-thumb { background: var(--t-accent-strong); }
+.tools-studio input[type="range"]:focus-visible::-webkit-slider-thumb { outline: 2px solid var(--t-accent-strong); outline-offset: 2px; }
+.tools-studio input[type="range"]:focus-visible::-moz-range-thumb { outline: 2px solid var(--t-accent-strong); outline-offset: 2px; }
+.tools-studio input[type="range"]:disabled { cursor: not-allowed; opacity: 0.5; }
 
 /* --- Mesh-градиент / паттерны стейдж --- */
 .mesh-stage { min-height: 360px; }
