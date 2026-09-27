@@ -52,6 +52,7 @@ const READY_COMPONENTS = {
   pixelizer: lazy(() => import('../components/tools/Pixelizer')),
   'text-3d': lazy(() => import('../components/tools/Text3D')),
   'fire-smoke': lazy(() => import('../components/tools/FireSmoke')),
+  'blob-lab': lazy(() => import('../components/tools/BlobLab')),
   'box-shadow': lazy(() => import('../components/tools/BoxShadow')),
   glassmorphism: lazy(() => import('../components/tools/Glassmorphism')),
   blob: lazy(() => import('../components/tools/BlobGen')),

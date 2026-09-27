@@ -397,6 +397,20 @@
       }
     },
     {
+      "slug": "blob-lab",
+      "categoryId": "generators",
+      "status": "ready",
+      "icon": "🔮",
+      "ru": {
+        "title": "Лаборатория 3D-форм (Blob Lab)",
+        "desc": "Переливающиеся 3D-формы на шейдерах: сфера, кристалл, тор, капсула, лепестки, метаболы. Шум, волна, скрутка, 3 цвета, bloom-свечение, вращение мышью, экспорт PNG."
+      },
+      "en": {
+        "title": "3D Blob Lab",
+        "desc": "Glowing shader-deformed 3D shapes: sphere, crystal, torus, capsule, petals, metaballs. Noise, wave, twist, 3 colors, bloom glow, mouse rotate, PNG export."
+      }
+    },
+    {
       "slug": "icon-scaler",
       "categoryId": "image",
       "status": "ready",

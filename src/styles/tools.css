@@ -1458,3 +1458,8 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
 
 /* Левая группа шапки (кнопка панели + лого) — держит лого у левого края. */
 .tools-header-left { display: flex; align-items: center; gap: 10px; }
+
+/* ── Blob Lab (3D-формы) ───────────────────────────────────────────────── */
+.bl-title { font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-soft); margin-top: 4px; }
+.bl-shapes { flex-wrap: wrap; width: 100%; gap: 2px; }
+.bl-shapes .segmented-btn { flex: 1 1 auto; font-size: 11px; padding: 5px 8px; white-space: nowrap; }
