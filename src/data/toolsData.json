@@ -386,7 +386,7 @@
       "categoryId": "generators",
       "status": "ready",
       "icon": "🔥",
-      "img": "lampochka.png",
+      "img": "plamya.png",
       "ru": {
         "title": "Генератор огня и дыма",
         "desc": "Пламя (свеча, костёр, факел, фаербол) и дым частицами. Свечение, старт/стоп, прозрачный или чёрный фон, экспорт PNG."
@@ -626,6 +626,7 @@
       "categoryId": "audio",
       "status": "ready",
       "icon": "🎙️",
+      "img": "mikrofon.png",
       "ru": {
         "title": "Диктофон",
         "desc": "Запись с микрофона с паузой и уровнем звука, прослушивание и экспорт в WAV или MP3. Локально."
@@ -760,7 +761,7 @@
       "categoryId": "generators",
       "status": "ready",
       "icon": "🌑",
-      "img": "panelupravleniya.png",
+      "img": "ten.png",
       "ru": {
         "title": "Генератор теней (box-shadow)",
         "desc": "Многослойные CSS-тени с живым предпросмотром и готовым кодом в клик. inset, разброс, цвет."
@@ -790,7 +791,7 @@
       "categoryId": "generators",
       "status": "ready",
       "icon": "🫧",
-      "img": "palitra-1.png",
+      "img": "klyaksa.png",
       "ru": {
         "title": "Генератор SVG-блобов",
         "desc": "Плавные органические формы для фонов и украшений. Реролл, цвет или градиент, экспорт SVG."
@@ -820,7 +821,7 @@
       "categoryId": "generators",
       "status": "ready",
       "icon": "⬡",
-      "img": "zvezdy.png",
+      "img": "uzor.png",
       "ru": {
         "title": "Генератор паттернов",
         "desc": "Бесшовные SVG-узоры: точки, сетка, полоски, клетка, волны, треугольники. CSS и SVG в клик."
@@ -850,7 +851,7 @@
       "categoryId": "generators",
       "status": "ready",
       "icon": "📈",
-      "img": "panelupravleniya.png",
+      "img": "krivaya.png",
       "ru": {
         "title": "Cubic-bezier редактор",
         "desc": "Кривая плавности для transition/animation: тяните точки, смотрите живую анимацию, забирайте CSS."
@@ -895,7 +896,7 @@
       "categoryId": "image",
       "status": "ready",
       "icon": "⚫",
-      "img": "palitra-1.png",
+      "img": "tochki.png",
       "ru": {
         "title": "Halftone (полутон)",
         "desc": "Картинка в сетку точек по яркости — газетно-комиксный эффект. Угол, шаг, цвет, экспорт PNG."
