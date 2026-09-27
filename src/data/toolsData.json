@@ -127,38 +127,6 @@
       "img": "foto.png"
     },
     {
-      "slug": "raster-editor",
-      "categoryId": "image",
-      "status": "ready",
-      "beta": true,
-      "icon": "🖼️",
-      "ru": {
-        "title": "Растровый редактор",
-        "desc": "Слои с режимами наложения и непрозрачностью, кисть/ластик/заливка/фигуры/текст, коррекция яркости/контраста/насыщенности, undo/redo, экспорт PNG. В браузере."
-      },
-      "en": {
-        "title": "Raster editor",
-        "desc": "Layers with blend modes and opacity, brush/eraser/fill/shapes/text, brightness/contrast/saturation, undo/redo, PNG export. In the browser."
-      },
-      "img": "foto.png"
-    },
-    {
-      "slug": "vector-editor",
-      "categoryId": "svg",
-      "status": "ready",
-      "beta": true,
-      "icon": "✒️",
-      "ru": {
-        "title": "Векторный редактор",
-        "desc": "Фигуры (прямоугольник/эллипс/линия/звезда/текст) и свободное перо, выделение/перемещение/масштаб, заливка и обводка, порядок слоёв, экспорт SVG и PNG."
-      },
-      "en": {
-        "title": "Vector editor",
-        "desc": "Shapes (rect/ellipse/line/star/text) and freehand pen, select/move/scale, fill and stroke, z-order, export SVG and PNG."
-      },
-      "img": "svg.png"
-    },
-    {
       "slug": "color-converter",
       "categoryId": "color",
       "status": "ready",
