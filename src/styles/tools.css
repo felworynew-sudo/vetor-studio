@@ -628,6 +628,8 @@ a.tool-card:hover {
 }
 .svgc-output { background: var(--surface-strong); }
 .svgc-stats { display: flex; align-items: center; gap: 10px; margin: 14px 0 4px; font-size: 13.5px; color: var(--text-muted); }
+.svgc-modes { margin-bottom: 6px; }
+.svgc-mode-hint { margin: 0 0 14px; }
 
 /* --- Водяные знаки --- */
 .wm-check { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; color: var(--text); cursor: pointer; }

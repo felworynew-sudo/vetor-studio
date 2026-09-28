@@ -1,67 +1,77 @@
 import { useRef, useState } from 'react';
+import { optimize } from 'svgo/browser';
 
-// Очиститель SVG: убирает мусор из экспортов Figma/Illustrator/Inkscape —
-// комментарии, <metadata>, редакторские namespace/атрибуты, лишние пробелы.
-// Локально через DOMParser, без внешних библиотек.
+// Очиститель/оптимизатор SVG на движке SVGO (браузерная сборка — работает
+// полностью локально, ничего не отправляется на сервер). Три режима: от
+// простой чистки мусора до агрессивной оптимизации геометрии.
 
 const TEXT = {
   ru: {
     paste: 'Вставьте код SVG сюда…', upload: 'Загрузить .svg', clean: 'Очистить',
     copy: 'Копировать', copied: 'Скопировано', download: 'Скачать', clear: 'Очистить поле',
     saved: 'Экономия', before: 'Было', after: 'Стало', empty: 'Вставьте SVG или загрузите файл',
-    hint: 'Удаляются комментарии, метаданные, редакторские атрибуты (inkscape, sodipodi, adobe) и лишние пробелы.',
+    hint: 'Работает на SVGO прямо в браузере — комментарии, метаданные, редакторский мусор и (в режимах оптимизации) геометрия path.',
     invalid: 'Не похоже на корректный SVG',
+    modeSafe: 'Безопасная очистка', modeOptimize: 'Оптимизация', modeAggressive: 'Агрессивная',
+    modeSafeHint: 'Только мусор: комментарии, метаданные, редакторские атрибуты. Геометрия не трогается.',
+    modeOptimizeHint: 'Плюс SVGO preset-default: округление чисел, объединение путей, чистка ID — стандартная оптимизация.',
+    modeAggressiveHint: 'Плюс жёсткое округление и удаление width/height (остаётся viewBox) — максимальная экономия.',
   },
   en: {
     paste: 'Paste your SVG code here…', upload: 'Upload .svg', clean: 'Clean',
     copy: 'Copy', copied: 'Copied', download: 'Download', clear: 'Clear field',
     saved: 'Saved', before: 'Before', after: 'After', empty: 'Paste SVG or upload a file',
-    hint: 'Removes comments, metadata, editor attributes (inkscape, sodipodi, adobe) and extra whitespace.',
+    hint: 'Runs on SVGO right in your browser — comments, metadata, editor junk, and (in optimize modes) path geometry.',
     invalid: 'Does not look like valid SVG',
+    modeSafe: 'Safe cleanup', modeOptimize: 'Optimize', modeAggressive: 'Aggressive',
+    modeSafeHint: 'Junk only: comments, metadata, editor attributes. Geometry stays untouched.',
+    modeOptimizeHint: 'Plus SVGO preset-default: number rounding, path merging, ID cleanup — standard optimization.',
+    modeAggressiveHint: 'Plus tighter rounding and dropping width/height (viewBox stays) — maximum savings.',
   },
 };
 
-const EDITOR_PREFIXES = ['inkscape', 'sodipodi', 'adobe', 'illustrator', 'i', 'x', 'graph', 'dc', 'cc', 'rdf'];
-const DROP_ELEMENTS = ['metadata', 'sodipodi:namedview', 'rdf:rdf', 'foreignObject'];
+// Три пресета плагинов SVGO. safe — не трогает геометрию, только мусор
+// редакторов (Figma/Illustrator/Inkscape). optimize — стандартный preset-default.
+// aggressive — preset-default с более жёстким округлением + без width/height.
+function pluginsFor(mode) {
+  if (mode === 'safe') {
+    return [
+      'removeDoctype', 'removeXMLProcInst', 'removeComments', 'removeMetadata',
+      'removeEditorsNSData', 'removeEmptyAttrs', 'removeEmptyContainers', 'removeUselessDefs',
+    ];
+  }
+  if (mode === 'aggressive') {
+    return [
+      {
+        name: 'preset-default',
+        params: {
+          overrides: {
+            cleanupNumericValues: { floatPrecision: 1 },
+            convertPathData: { floatPrecision: 1 },
+          },
+        },
+      },
+      'removeDimensions',
+    ];
+  }
+  return ['preset-default'];
+}
 
-function cleanSvg(input) {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(input, 'image/svg+xml');
-  const svg = doc.querySelector('svg');
-  if (!svg || doc.querySelector('parsererror')) return null;
+// SVGO не считает чужеродные (не-SVG) элементы вроде sodipodi:namedview
+// «пустым контейнером» и не трогает их — досатываем руками для паритета
+// со старым клинером (это всегда мусор редактора, полезной геометрии нет).
+function stripForeignJunk(svg) {
+  return svg.replace(/<sodipodi:namedview\b[^>]*\/>/g, '').replace(/<sodipodi:namedview\b[^>]*>[\s\S]*?<\/sodipodi:namedview>/g, '');
+}
 
-  // Чистим редакторские xmlns:* и на самом корне <svg>.
-  [...svg.attributes].forEach((attr) => {
-    const n = attr.name.toLowerCase();
-    if (n.startsWith('xmlns:') && EDITOR_PREFIXES.includes(n.split(':')[1])) svg.removeAttribute(attr.name);
-    const prefix = n.includes(':') ? n.split(':')[0] : '';
-    if (prefix && prefix !== 'xmlns' && EDITOR_PREFIXES.includes(prefix)) svg.removeAttribute(attr.name);
-  });
-
-  const walk = (node) => {
-    // комментарии
-    [...node.childNodes].forEach((child) => {
-      if (child.nodeType === 8) { child.remove(); return; }
-      if (child.nodeType === 1) {
-        const name = child.nodeName.toLowerCase();
-        if (DROP_ELEMENTS.includes(name)) { child.remove(); return; }
-        // редакторские атрибуты по префиксу
-        [...child.attributes].forEach((attr) => {
-          const n = attr.name.toLowerCase();
-          const prefix = n.includes(':') ? n.split(':')[0] : '';
-          if (prefix && EDITOR_PREFIXES.includes(prefix)) child.removeAttribute(attr.name);
-          if (n.startsWith('xmlns:') && EDITOR_PREFIXES.includes(n.split(':')[1])) child.removeAttribute(attr.name);
-        });
-        walk(child);
-      }
-    });
-  };
-  walk(svg);
-
-  let out = new XMLSerializer().serializeToString(svg);
-  // схлопнуть пробелы между тегами и лишние пустые строки
-  out = out.replace(/>\s+</g, '><').replace(/\s{2,}/g, ' ').trim();
-  return out;
+function cleanSvg(input, mode) {
+  try {
+    const result = optimize(input, { multipass: mode !== 'safe', plugins: pluginsFor(mode) });
+    if (result.error) return null;
+    return stripForeignJunk(result.data);
+  } catch {
+    return null;
+  }
 }
 
 function bytes(str) {
@@ -78,10 +88,11 @@ function SvgCleaner({ language = 'ru' }) {
   const [cleaned, setCleaned] = useState('');
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
+  const [mode, setMode] = useState('optimize');
 
-  function run(value = raw) {
+  function run(value = raw, m = mode) {
     if (!value.trim()) { setCleaned(''); setError(''); return; }
-    const result = cleanSvg(value);
+    const result = cleanSvg(value, m);
     if (!result) { setError(t.invalid); setCleaned(''); return; }
     setError('');
     setCleaned(result);
@@ -118,9 +129,17 @@ function SvgCleaner({ language = 'ru' }) {
   const beforeSize = bytes(raw);
   const afterSize = bytes(cleaned);
   const saved = beforeSize > 0 && afterSize > 0 ? Math.round((1 - afterSize / beforeSize) * 100) : 0;
+  const modeHint = mode === 'safe' ? t.modeSafeHint : mode === 'aggressive' ? t.modeAggressiveHint : t.modeOptimizeHint;
 
   return (
     <div className="tool-panel svg-cleaner">
+      <div className="segmented svgc-modes">
+        <button type="button" className={mode === 'safe' ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => { setMode('safe'); if (raw) run(raw, 'safe'); }}>{t.modeSafe}</button>
+        <button type="button" className={mode === 'optimize' ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => { setMode('optimize'); if (raw) run(raw, 'optimize'); }}>{t.modeOptimize}</button>
+        <button type="button" className={mode === 'aggressive' ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => { setMode('aggressive'); if (raw) run(raw, 'aggressive'); }}>{t.modeAggressive}</button>
+      </div>
+      <p className="tool-local-note svgc-mode-hint">{modeHint}</p>
+
       <div className="tool-actions">
         <button type="button" className="tool-btn" onClick={() => inputRef.current?.click()}>{t.upload}</button>
         <button type="button" className="tool-btn primary" onClick={() => run()}>{t.clean}</button>
