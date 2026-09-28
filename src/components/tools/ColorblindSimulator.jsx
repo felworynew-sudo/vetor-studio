@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 // Симулятор дальтонизма: как макет видят люди с разными типами цветовосприятия.
-// Стандартные матрицы трансформации, применяются к пикселям в <canvas>. Локально.
+// Физиологически точная модель Machado/Oliveira/Fernandes (2009) — те же матрицы,
+// что использует эмуляция цветовых нарушений в Chrome DevTools. Матрицы работают
+// в ЛИНЕЙНОМ RGB (не в sRGB напрямую, как в наивных аппроксимациях), поэтому
+// перед применением идёт гамма-декодирование, после — обратное гамма-кодирование.
 
 const TYPES = [
   { id: 'normal', ru: 'Обычное зрение', en: 'Normal vision' },
@@ -11,13 +14,29 @@ const TYPES = [
   { id: 'achromatopsia', ru: 'Ахроматопсия (ч/б)', en: 'Achromatopsia (grayscale)' },
 ];
 
-// Матрицы (r,g,b коэффициенты) — распространённые аппроксимации.
+// Матрицы Machado et al. 2009, severity = 1.0 (полная форма), применяются к
+// линейному RGB.
 const MATRICES = {
-  protanopia: [0.567, 0.433, 0, 0.558, 0.442, 0, 0, 0.242, 0.758],
-  deuteranopia: [0.625, 0.375, 0, 0.7, 0.3, 0, 0, 0.3, 0.7],
-  tritanopia: [0.95, 0.05, 0, 0, 0.433, 0.567, 0, 0.475, 0.525],
-  achromatopsia: [0.299, 0.587, 0.114, 0.299, 0.587, 0.114, 0.299, 0.587, 0.114],
+  protanopia: [0.152286, 1.052583, -0.204868, 0.114503, 0.786281, 0.099216, -0.003882, -0.048116, 1.051998],
+  deuteranopia: [0.367322, 0.860646, -0.227968, 0.280085, 0.672501, 0.047413, -0.011820, 0.042940, 0.968881],
+  tritanopia: [1.255528, -0.076749, -0.178779, -0.078411, 0.930809, 0.147602, 0.004733, 0.691367, 0.303900],
 };
+
+// Коэффициенты линейной светимости (Rec.709/sRGB) — ахроматопсия воспринимает
+// именно яркость, поэтому ч/б-конверсия тоже идёт через линейное пространство.
+const LUMA = [0.2126, 0.7152, 0.0722];
+
+const GAMMA_DECODE = new Float32Array(256);
+for (let i = 0; i < 256; i += 1) {
+  const c = i / 255;
+  GAMMA_DECODE[i] = c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+}
+
+function linearToSrgbByte(v) {
+  const cv = v < 0 ? 0 : v > 1 ? 1 : v;
+  const c = cv <= 0.0031308 ? cv * 12.92 : 1.055 * cv ** (1 / 2.4) - 0.055;
+  return Math.round(c * 255);
+}
 
 const TEXT = {
   ru: { drop: 'Загрузите изображение макета', hint: 'PNG, JPG, WebP — обрабатывается локально', type: 'Тип зрения', change: 'Другое изображение' },
@@ -43,14 +62,22 @@ function ColorblindSimulator({ language = 'ru' }) {
     const ctx = canvas.getContext('2d');
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
     if (simType === 'normal') return;
-    const m = MATRICES[simType];
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     const d = imageData.data;
-    for (let i = 0; i < d.length; i += 4) {
-      const r = d[i]; const g = d[i + 1]; const b = d[i + 2];
-      d[i] = Math.min(255, r * m[0] + g * m[1] + b * m[2]);
-      d[i + 1] = Math.min(255, r * m[3] + g * m[4] + b * m[5]);
-      d[i + 2] = Math.min(255, r * m[6] + g * m[7] + b * m[8]);
+    if (simType === 'achromatopsia') {
+      for (let i = 0; i < d.length; i += 4) {
+        const r = GAMMA_DECODE[d[i]]; const g = GAMMA_DECODE[d[i + 1]]; const b = GAMMA_DECODE[d[i + 2]];
+        const y = linearToSrgbByte(r * LUMA[0] + g * LUMA[1] + b * LUMA[2]);
+        d[i] = y; d[i + 1] = y; d[i + 2] = y;
+      }
+    } else {
+      const m = MATRICES[simType];
+      for (let i = 0; i < d.length; i += 4) {
+        const r = GAMMA_DECODE[d[i]]; const g = GAMMA_DECODE[d[i + 1]]; const b = GAMMA_DECODE[d[i + 2]];
+        d[i] = linearToSrgbByte(r * m[0] + g * m[1] + b * m[2]);
+        d[i + 1] = linearToSrgbByte(r * m[3] + g * m[4] + b * m[5]);
+        d[i + 2] = linearToSrgbByte(r * m[6] + g * m[7] + b * m[8]);
+      }
     }
     ctx.putImageData(imageData, 0, 0);
   }, []);
