@@ -65,6 +65,8 @@ const READY_COMPONENTS = {
   base64: lazy(() => import('../components/tools/Base64Tool')),
   halftone: lazy(() => import('../components/tools/Halftone')),
   vectorizer: lazy(() => import('../components/tools/Vectorizer')),
+  quantizer: lazy(() => import('../components/tools/Quantizer')),
+  'dithering-lab': lazy(() => import('../components/tools/DitheringLab')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;

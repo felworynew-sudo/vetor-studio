@@ -30,7 +30,7 @@ AGPL/NC-лицензии не тащим.
 ## B. Новые инструменты
 
 - [x] **B1. Векторизатор** PNG/JPG → SVG (VTracer WASM).
-- [ ] **B2. Квантизатор / постеризатор** — 2–64 цвета + дизеринг (image-q).
+- [x] **B2. Квантизатор / постеризатор** — 2–64 цвета + дизеринг (image-q).
 - [ ] **B3. Упрощение SVG-путей** — ползунок tolerance, до/после.
 - [ ] **B4. SVG → React/JSX** (SVGR).
 - [ ] **B5. Сабсеттер шрифтов** → WOFF2 (harfbuzz hb-subset + woff2 WASM).
@@ -42,7 +42,7 @@ AGPL/NC-лицензии не тащим.
 - [ ] **B11. Normal / Height map генератор.**
 - [ ] **B12. Sprite sheet генератор.**
 - [ ] **B13. Contact sheet генератор.**
-- [ ] **B14. Dithering Lab** — Floyd–Steinberg, Atkinson, Bayer, blue-noise.
+- [x] **B14. Dithering Lab** — Floyd–Steinberg, Atkinson, Bayer, blue-noise.
 - [ ] **B15. VHS / Print Lab** — процедурный стек эффектов.
 - [ ] **B16. Перенос палитры** A → B.
 - [ ] **B17. Gradient map из фото.**

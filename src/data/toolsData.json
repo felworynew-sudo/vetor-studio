@@ -97,6 +97,34 @@
       }
     },
     {
+      "slug": "quantizer",
+      "categoryId": "image",
+      "status": "ready",
+      "icon": "🎛️",
+      "ru": {
+        "title": "Квантизатор / постеризатор",
+        "desc": "Сокращает изображение до 2–64 цветов: палитра Wu/NeuQuant/RGBQuant или готовая, дизеринг по желанию. Для печати, шелкографии, пиксель-арта и векторизации."
+      },
+      "en": {
+        "title": "Quantizer / posterizer",
+        "desc": "Reduces an image to 2–64 colors: Wu/NeuQuant/RGBQuant or a preset palette, optional dithering. For print, screen printing, pixel art and vectorizing."
+      }
+    },
+    {
+      "slug": "dithering-lab",
+      "categoryId": "image",
+      "status": "ready",
+      "icon": "🏁",
+      "ru": {
+        "title": "Dithering Lab",
+        "desc": "13 алгоритмов дизеринга: Floyd–Steinberg, Atkinson, Bayer, blue noise и др. Ретро-палитры Game Boy, PICO-8, Mac, C64, e-ink, свои два цвета, размер пикселя."
+      },
+      "en": {
+        "title": "Dithering Lab",
+        "desc": "13 dithering algorithms: Floyd–Steinberg, Atkinson, Bayer, blue noise and more. Retro palettes Game Boy, PICO-8, Mac, C64, e-ink, custom duotone, pixel size."
+      }
+    },
+    {
       "slug": "crop",
       "categoryId": "image",
       "status": "ready",
