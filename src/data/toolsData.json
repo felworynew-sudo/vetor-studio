@@ -568,6 +568,20 @@
       }
     },
     {
+      "slug": "svg-to-jsx",
+      "categoryId": "svg",
+      "status": "ready",
+      "icon": "⚛️",
+      "ru": {
+        "title": "SVG → React (JSX/TSX)",
+        "desc": "Превращает SVG в React-компонент через SVGR: чистка SVGO, иконка 1em, currentColor, TypeScript, memo/forwardRef, React Native. Копировать или скачать .jsx/.tsx."
+      },
+      "en": {
+        "title": "SVG → React (JSX/TSX)",
+        "desc": "Turns SVG into a React component with SVGR: SVGO cleanup, 1em icon, currentColor, TypeScript, memo/forwardRef, React Native. Copy or download .jsx/.tsx."
+      }
+    },
+    {
       "slug": "css-from-svg",
       "categoryId": "svg",
       "status": "ready",

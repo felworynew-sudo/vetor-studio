@@ -87,6 +87,7 @@ const READY_COMPONENTS = {
   'cover-art-extractor': lazy(() => import('../components/tools/CoverExtractor')),
   'silence-remover': lazy(() => import('../components/tools/SilenceRemover')),
   'waveform-image': lazy(() => import('../components/tools/WaveformImage')),
+  'svg-to-jsx': lazy(() => import('../components/tools/SvgToJsx')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;
