@@ -85,6 +85,8 @@ const READY_COMPONENTS = {
   'face-anonymizer': lazy(() => import('../components/tools/FaceAnonymizer')),
   'object-remover': lazy(() => import('../components/tools/ObjectRemover')),
   'cover-art-extractor': lazy(() => import('../components/tools/CoverExtractor')),
+  'silence-remover': lazy(() => import('../components/tools/SilenceRemover')),
+  'waveform-image': lazy(() => import('../components/tools/WaveformImage')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;

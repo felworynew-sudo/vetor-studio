@@ -1771,3 +1771,8 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
 .ce-card span { font-size: 11.5px; color: var(--text-muted); }
 .ce-card.is-empty { cursor: default; }
 .ce-none { display: grid; place-items: center; aspect-ratio: 1; font-size: 40px !important; background: var(--surface); border-radius: 8px; }
+
+/* Silence remover / waveform image */
+.sr-wave { display: block; width: 100%; height: 140px; border-radius: 12px; border: 1px solid var(--stroke); background: var(--bg); }
+.sr-res { font-weight: 600; margin: 8px 0; }
+.wi-canvas { display: block; max-width: 100%; max-height: 60vh; }

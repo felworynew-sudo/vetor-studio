@@ -822,6 +822,34 @@
       "img": "naushniki.png"
     },
     {
+      "slug": "silence-remover",
+      "categoryId": "audio",
+      "status": "ready",
+      "icon": "🤫",
+      "ru": {
+        "title": "Удалить тишину из аудио",
+        "desc": "Вырезает паузы из подкастов, голосовых и лекций или укорачивает их до нужной длины. Автопорог, подсветка пауз на волне, стыки без щелчков, экспорт MP3/WAV."
+      },
+      "en": {
+        "title": "Silence remover",
+        "desc": "Cuts pauses out of podcasts, voice notes and lectures or shortens them to a set length. Auto threshold, pauses highlighted on the waveform, click-free joins, MP3/WAV export."
+      }
+    },
+    {
+      "slug": "waveform-image",
+      "categoryId": "audio",
+      "status": "ready",
+      "icon": "〰️",
+      "ru": {
+        "title": "Картинка волны из аудио",
+        "desc": "Превращает трек или голос в картинку звуковой волны: столбики, зеркало, линия, точки, градиент, прозрачный фон. Экспорт PNG и вектором SVG — для обложек и мерча."
+      },
+      "en": {
+        "title": "Audio waveform image",
+        "desc": "Turns a track or voice into a waveform image: bars, mirror, line, dots, gradient, transparent background. Export PNG and vector SVG — for covers and merch."
+      }
+    },
+    {
       "slug": "multitrack",
       "categoryId": "audio",
       "status": "ready",
