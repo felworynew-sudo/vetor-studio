@@ -46,7 +46,7 @@ AGPL/NC-лицензии не тащим.
 - [ ] **B15. VHS / Print Lab** — процедурный стек эффектов.
 - [ ] **B16. Перенос палитры** A → B.
 - [ ] **B17. Gradient map из фото.**
-- [ ] **B18. Accessible Palette Fixer** — минимальный сдвиг в OKLCH до WCAG.
+- [x] **B18. Accessible Palette Fixer** — минимальный сдвиг в OKLCH до WCAG.
 - [ ] **B19. Social Media Crop Pack** — одна картинка → YouTube / VK / Telegram / Instagram / Stories.
 - [ ] **B20. Мокап с перспективой** — 4 точки → perspective warp.
 
@@ -60,7 +60,7 @@ AGPL/NC-лицензии не тащим.
 - [ ] **C6. ColorGrade** — GPU-пайплайн (WebGL) в linear RGB, full-res.
 - [ ] **C7. ColorHarmony** — OKLCH-повороты + gamut mapping.
 - [x] **C8. ColorWeight** — на OKLab-движке палитры.
-- [ ] **C9. ContrastChecker** — APCA + авто-исправление цвета (общий движок с B18).
+- [x] **C9. ContrastChecker** — APCA + авто-исправление цвета (общий движок с B18).
 - [ ] **C10. CrtGlitch** — WebGL-шейдер, full-res и анимация.
 - [ ] **C11. CssFromSvg** — корректные градиенты (orientation/gradientTransform/opacity), без regex.
 - [ ] **C12. Duotone** — linear-light, gradient-map, 3 тона.

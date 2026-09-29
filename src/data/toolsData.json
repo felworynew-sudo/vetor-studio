@@ -260,6 +260,20 @@
       "img": "kontrast.png"
     },
     {
+      "slug": "palette-fixer",
+      "categoryId": "color",
+      "status": "ready",
+      "icon": "♿",
+      "ru": {
+        "title": "Доступная палитра (WCAG/APCA)",
+        "desc": "Автоматически и минимально исправляет цвета палитры до WCAG AA/AAA или APCA на нужном фоне: двигается только светлота в OKLCH. Матрица контраста всех пар."
+      },
+      "en": {
+        "title": "Accessible palette fixer",
+        "desc": "Automatically and minimally fixes palette colors to WCAG AA/AAA or APCA on a chosen background: only OKLCH lightness moves. Contrast matrix of all pairs."
+      }
+    },
+    {
       "slug": "colorblind-simulator",
       "categoryId": "color",
       "status": "ready",
