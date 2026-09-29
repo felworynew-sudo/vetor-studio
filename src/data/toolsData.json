@@ -161,11 +161,11 @@
       "icon": "🌈",
       "ru": {
         "title": "Конвертер цветов",
-        "desc": "HEX ⇆ RGB, HSL и приблизительный CMYK. Живой предпросмотр и копирование в клик."
+        "desc": "Любой CSS-цвет → HEX, RGB, HSL, HWB, OKLCH, OKLab, Lab, LCH, Display-P3, Rec.2020, CMYK. Проверка гамута и ближайший безопасный цвет."
       },
       "en": {
         "title": "Color converter",
-        "desc": "HEX ⇆ RGB, HSL and approximate CMYK. Live preview and one-click copy."
+        "desc": "Any CSS color → HEX, RGB, HSL, HWB, OKLCH, OKLab, Lab, LCH, Display-P3, Rec.2020, CMYK. Gamut check and the closest safe color."
       },
       "img": "cveta.png"
     },

@@ -56,7 +56,7 @@ AGPL/NC-лицензии не тащим.
 - [ ] **C2. AudioMetadata** — ядро music-metadata (MP3/MP4/FLAC/Ogg/WAV/AIFF, ID3/APE/Vorbis/MP4 теги).
 - [ ] **C3. AudioTrimmer** — экспорт не только WAV (через ffmpeg.wasm / lamejs).
 - [ ] **C4. BlurAnalyzer** — несколько метрик (Laplacian, Tenengrad, FFT high-freq), карта резкости по зонам.
-- [ ] **C5. ColorConverter** — OKLCH / OKLab / Lab / LCH / Display-P3, gamut-проверка.
+- [x] **C5. ColorConverter** — OKLCH / OKLab / Lab / LCH / Display-P3, gamut-проверка.
 - [ ] **C6. ColorGrade** — GPU-пайплайн (WebGL) в linear RGB, full-res.
 - [ ] **C7. ColorHarmony** — OKLCH-повороты + gamut mapping.
 - [x] **C8. ColorWeight** — на OKLab-движке палитры.
