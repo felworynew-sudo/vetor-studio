@@ -72,6 +72,7 @@ const READY_COMPONENTS = {
   'palette-transfer': lazy(() => import('../components/tools/PaletteTransfer')),
   'lut-studio': lazy(() => import('../components/tools/LutStudio')),
   'image-diff': lazy(() => import('../components/tools/ImageDiff')),
+  'social-crop-pack': lazy(() => import('../components/tools/SocialCropPack')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;

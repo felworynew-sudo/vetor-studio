@@ -1669,3 +1669,15 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
 .id-stack { position: relative; display: inline-block; max-width: 100%; }
 .id-stack img { display: block; max-width: 100%; border-radius: 12px; }
 .id-stack .id-top { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+/* Social crop pack */
+.sp-head { display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap; margin-bottom: 14px; }
+.sp-src { width: 220px; max-width: 40%; border-radius: 12px; border: 1px solid var(--stroke); }
+.sp-head-actions { display: flex; flex-direction: column; gap: 12px; flex: 1; min-width: 260px; }
+.sp-nets { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px; }
+.sp-net { border: 1px solid var(--stroke); border-radius: 12px; padding: 10px 12px; background: var(--bg); display: flex; flex-direction: column; gap: 5px; }
+.sp-net-head { display: flex; align-items: center; gap: 8px; margin-bottom: 2px; }
+.sp-net-head b { flex: 1; font-size: 13.5px; }
+.sp-link { background: none; border: 0; color: var(--t-accent-strong); font: inherit; font-size: 11.5px; cursor: pointer; padding: 0; }
+.sp-fmt { font-size: 12.5px; }
+.sp-fmt em { font-style: normal; color: var(--text-muted); font-size: 11px; margin-left: auto; }

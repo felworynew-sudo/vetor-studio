@@ -719,6 +719,20 @@
       "img": "mishen.png"
     },
     {
+      "slug": "social-crop-pack",
+      "categoryId": "ai",
+      "status": "ready",
+      "icon": "📱",
+      "ru": {
+        "title": "Размеры для соцсетей (кроп-пак)",
+        "desc": "Одна картинка → 22 готовых размера для YouTube, VK, Telegram, Instagram, TikTok, X, Facebook, LinkedIn, Pinterest и OG. Умный кроп не режет лица, ZIP одним файлом."
+      },
+      "en": {
+        "title": "Social media crop pack",
+        "desc": "One image → 22 ready sizes for YouTube, VK, Telegram, Instagram, TikTok, X, Facebook, LinkedIn, Pinterest and OG. Smart crop keeps faces, one ZIP."
+      }
+    },
+    {
       "slug": "ai-detector",
       "categoryId": "ai",
       "status": "ready",
