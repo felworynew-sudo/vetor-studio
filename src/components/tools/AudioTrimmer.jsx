@@ -1,20 +1,22 @@
 import { useEffect, useRef, useState } from 'react';
+import { AUDIO_FORMATS, ffmpegRun } from '../../utils/ffmpeg';
+import { encodeMp3 } from '../../utils/wav';
 
-// Обрезка аудио: загрузка → волновая форма → выбор фрагмента ручками → экспорт
-// WAV с фейдами. Локально через Web Audio.
+// Обрезка аудио: загрузка → волновая форма → выбор фрагмента ручками → экспорт с
+// фейдами в WAV/MP3 (локально) или FLAC/AAC/Opus/OGG и рингтон iPhone M4R (FFmpeg).
 
 const TEXT = {
   ru: {
     drop: 'Загрузите аудио', hint: 'MP3, WAV, M4A, OGG — обрабатывается локально',
-    play: 'Прослушать фрагмент', stop: 'Стоп', fade: 'Фейд (сек)', trim: 'Обрезать и скачать WAV',
+    play: 'Прослушать фрагмент', stop: 'Стоп', fade: 'Фейд (сек)', trim: 'Обрезать и скачать', format: 'Формат', saving: 'Кодирую…', ringtone: 'Рингтон iPhone (M4R)', ringNote: 'Рингтон iPhone — не длиннее 40 секунд.',
     change: 'Другой файл', from: 'Начало', to: 'Конец', dur: 'Длина', decoding: 'Читаю аудио…',
-    hint2: 'Тяните ручки по краям выделения. Экспорт — WAV без потерь.',
+    hint2: 'Тяните ручки по краям выделения. WAV и MP3 кодируются сразу, остальные форматы — через FFmpeg (≈30 МБ, один раз).',
   },
   en: {
     drop: 'Upload audio', hint: 'MP3, WAV, M4A, OGG — processed locally',
-    play: 'Preview selection', stop: 'Stop', fade: 'Fade (sec)', trim: 'Trim & download WAV',
+    play: 'Preview selection', stop: 'Stop', fade: 'Fade (sec)', trim: 'Trim & download', format: 'Format', saving: 'Encoding…', ringtone: 'iPhone ringtone (M4R)', ringNote: 'An iPhone ringtone must be 40 seconds or shorter.',
     change: 'Another file', from: 'Start', to: 'End', dur: 'Length', decoding: 'Reading audio…',
-    hint2: 'Drag the handles at the edges. Export is lossless WAV.',
+    hint2: 'Drag the handles at the edges. WAV and MP3 encode instantly, other formats go through FFmpeg (≈30 MB, once).',
   },
 };
 
@@ -51,6 +53,8 @@ function AudioTrimmer({ language = 'ru' }) {
   const [fade, setFade] = useState(0.05);
   const [playing, setPlaying] = useState(false);
   const [decoding, setDecoding] = useState(false);
+  const [outFmt, setOutFmt] = useState('mp3');
+  const [saving, setSaving] = useState(false);
 
   function drawWave() {
     const canvas = canvasRef.current; const buf = bufferRef.current;
@@ -120,7 +124,7 @@ function AudioTrimmer({ language = 'ru' }) {
     srcRef.current = src; setPlaying(true);
   }
 
-  function trim() {
+  async function trim() {
     const buf = bufferRef.current; if (!buf) return;
     const sr = buf.sampleRate;
     const startS = Math.floor(sel.a * buf.length); const endS = Math.floor(sel.b * buf.length);
@@ -136,13 +140,28 @@ function AudioTrimmer({ language = 'ru' }) {
         dst[i] = v;
       }
     }
-    const blob = encodeWAV(out);
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob); a.download = `${name.replace(/\.[^.]+$/, '')}-trim.wav`;
-    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(a.href);
+    const wav = encodeWAV(out);
+    let blob = wav; let ext = 'wav';
+    setSaving(true);
+    try {
+      if (outFmt === 'mp3') { blob = await encodeMp3(out, 192); ext = 'mp3'; }
+      else if (outFmt !== 'wav') {
+        const ring = outFmt === 'm4r';
+        const f = AUDIO_FORMATS[ring ? 'aac' : outFmt];
+        const q = f.bitrates.length ? f.bitrates[Math.min(2, f.bitrates.length - 1)] : 0;
+        ext = ring ? 'm4r' : f.ext;
+        const data = await ffmpegRun(new File([wav], 'trim.wav', { type: 'audio/wav' }), [...f.args(q), ...(ring ? ['-f', 'ipod'] : [])], `out.${ring ? 'm4a' : f.ext}`);
+        blob = new Blob([data], { type: f.mime });
+      }
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob); a.download = `${name.replace(/\.[^.]+$/, '')}-trim.${ext}`;
+      document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 3000);
+    } catch (e) { console.error(e); }
+    setSaving(false);
   }
 
   const startT = sel.a * duration; const endT = sel.b * duration;
+  const FORMATS_UI = [['wav', 'WAV'], ['mp3', 'MP3'], ['flac', 'FLAC'], ['aac', 'AAC'], ['opus', 'Opus'], ['ogg', 'OGG'], ['m4r', t.ringtone]];
 
   return (
     <div className="tool-panel audio-trimmer">
@@ -168,13 +187,18 @@ function AudioTrimmer({ language = 'ru' }) {
           </div>
           <div className="tool-controls">
             <div className="tool-field">
+              <span className="tool-field-label">{t.format}</span>
+              <div className="segmented dm-seg">{FORMATS_UI.map(([id, l]) => <button key={id} type="button" className={outFmt === id ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => setOutFmt(id)}>{l}</button>)}</div>
+            </div>
+            <div className="tool-field">
               <span className="tool-field-label">{t.fade}: {fade.toFixed(2)}</span>
               <input type="range" min="0" max="1" step="0.01" value={fade} onChange={(e) => setFade(Number(e.target.value))} />
             </div>
           </div>
+          {outFmt === 'm4r' && endT - startT > 40 && <p className="color-invalid">{t.ringNote}</p>}
           <div className="tool-actions">
             <button type="button" className="tool-btn" onClick={() => (playing ? stop() : play())}>{playing ? `⏹ ${t.stop}` : `▶ ${t.play}`}</button>
-            <button type="button" className="tool-btn primary" onClick={trim}>{t.trim}</button>
+            <button type="button" className="tool-btn primary" onClick={trim} disabled={saving || (outFmt === 'm4r' && endT - startT > 40)}>{saving ? t.saving : t.trim}</button>
             <button type="button" className="tool-btn ghost" onClick={() => inputRef.current?.click()}>{t.change}</button>
           </div>
         </>
