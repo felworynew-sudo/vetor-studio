@@ -1235,11 +1235,11 @@
       "img": "tochki.png",
       "ru": {
         "title": "Halftone (полутон)",
-        "desc": "Картинка в сетку точек по яркости — газетно-комиксный эффект. Угол, шаг, цвет, экспорт PNG."
+        "desc": "Растр как в печати: монохром или CMYK-розетка (C15° M75° Y0° K45°), точки, квадраты, ромбы, линии. Экспорт PNG и векторный SVG."
       },
       "en": {
         "title": "Halftone",
-        "desc": "An image into a dot grid by luminance — newspaper/comic effect. Angle, step, color, PNG export."
+        "desc": "Print-style screening: mono or a CMYK rosette (C15° M75° Y0° K45°), dots, squares, diamonds, lines. PNG and vector SVG export."
       }
     },
     {
