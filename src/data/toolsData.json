@@ -154,6 +154,20 @@
       }
     },
     {
+      "slug": "object-remover",
+      "categoryId": "image",
+      "status": "ready",
+      "icon": "🩹",
+      "ru": {
+        "title": "Удалить объект с фото",
+        "desc": "Закрасьте лишнее кистью — провода, прохожих, мусор, надписи — и область заполнится фоном («заливка с учётом содержимого», PatchMatch). Без нейросетей и загрузок."
+      },
+      "en": {
+        "title": "Remove objects from photos",
+        "desc": "Paint over wires, passers-by, litter or text — the area is filled with background (content-aware fill, PatchMatch). No neural nets, no uploads."
+      }
+    },
+    {
       "slug": "color-grade",
       "categoryId": "image",
       "status": "ready",

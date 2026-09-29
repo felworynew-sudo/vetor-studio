@@ -83,6 +83,7 @@ const READY_COMPONENTS = {
   'pdf-studio': lazy(() => import('../components/tools/PdfStudio')),
   ocr: lazy(() => import('../components/tools/OcrTool')),
   'face-anonymizer': lazy(() => import('../components/tools/FaceAnonymizer')),
+  'object-remover': lazy(() => import('../components/tools/ObjectRemover')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;

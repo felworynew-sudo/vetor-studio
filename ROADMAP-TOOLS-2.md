@@ -86,7 +86,7 @@ AGPL/NC-лицензии не тащим.
 - [ ] **D3. Font Inspector** — объединено с C16.
 - [x] **D4. PDF Studio** — merge / split / rotate / водяной знак / сжатие (pdf-lib / qpdf-wasm).
 - [x] **D5. Anonymize faces** — автоблюр/пикселизация лиц.
-- [ ] **D6. Heal / удаление объектов** — inpainting кистью.
+- [x] **D6. Heal / удаление объектов** — inpainting кистью.
 - [x] **D7. Heightmap / Terrain генератор** — simplex/fBM, эрозия, 3D-превью, PNG.
 - [ ] **D8. SVG Path Editor** — правка кривых мышкой, сетка, snap.
 - [ ] **D9. Silence Remover** (аудио).
