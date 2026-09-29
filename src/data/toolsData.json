@@ -999,6 +999,20 @@
       }
     },
     {
+      "slug": "pbr-maps",
+      "categoryId": "image",
+      "status": "ready",
+      "icon": "🧊",
+      "ru": {
+        "title": "Normal / Height / AO карты (PBR)",
+        "desc": "Фото поверхности → Normal (OpenGL/DirectX), Height, Ambient Occlusion и Roughness с живым 3D-превью. Для Blender, Unity, Unreal, three.js. ZIP одним файлом."
+      },
+      "en": {
+        "title": "Normal / height / AO maps (PBR)",
+        "desc": "Surface photo → Normal (OpenGL/DirectX), Height, Ambient Occlusion and Roughness with a live 3D preview. For Blender, Unity, Unreal, three.js. One ZIP."
+      }
+    },
+    {
       "slug": "pattern-gen",
       "categoryId": "generators",
       "status": "ready",

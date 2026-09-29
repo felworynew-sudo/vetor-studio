@@ -1699,3 +1699,12 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
 
 /* Seamless texture */
 .st-tiles { width: 100%; aspect-ratio: 1 / 1; max-height: 70vh; border-radius: 12px; border: 1px solid var(--stroke); background-size: 33.333% auto; background-repeat: repeat; margin: 6px 0 12px; image-rendering: auto; }
+
+/* PBR maps */
+.pbr-3d { width: 100%; border-radius: 12px; overflow: hidden; border: 1px solid var(--stroke); background: radial-gradient(circle at 50% 40%, #2a2c38, #0d0e12); margin-bottom: 10px; min-height: 200px; cursor: grab; }
+.pbr-3d canvas { display: block; }
+.pbr-maps-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 10px 0; }
+.pbr-map { padding: 0; border: 1px solid var(--stroke); border-radius: 9px; overflow: hidden; background: var(--bg); color: var(--text); cursor: pointer; font: inherit; font-size: 11px; }
+.pbr-map img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; }
+.pbr-map span { display: block; padding: 4px; }
+.pbr-map:hover { border-color: var(--t-accent); }

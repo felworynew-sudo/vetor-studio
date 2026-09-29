@@ -76,6 +76,7 @@ const READY_COMPONENTS = {
   'mockup-perspective': lazy(() => import('../components/tools/MockupWarp')),
   'device-mockup': lazy(() => import('../components/tools/DeviceMockup')),
   'seamless-texture': lazy(() => import('../components/tools/SeamlessTexture')),
+  'pbr-maps': lazy(() => import('../components/tools/PbrMaps')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;

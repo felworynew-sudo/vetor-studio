@@ -39,7 +39,7 @@ AGPL/NC-лицензии не тащим.
 - [x] **B8. LUT-генератор / конвертер** — .cube, превью, экспорт.
 - [x] **B9. Сравнение изображений** — overlay / difference / SSIM.
 - [x] **B10. Бесшовная текстура** — offset + заделка шва.
-- [ ] **B11. Normal / Height map генератор.**
+- [x] **B11. Normal / Height map генератор.**
 - [ ] **B12. Sprite sheet генератор.**
 - [ ] **B13. Contact sheet генератор.**
 - [x] **B14. Dithering Lab** — Floyd–Steinberg, Atkinson, Bayer, blue-noise.
