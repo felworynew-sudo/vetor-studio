@@ -80,6 +80,7 @@ const READY_COMPONENTS = {
   'terrain-generator': lazy(() => import('../components/tools/TerrainGenerator')),
   'sprite-sheet': lazy(() => import('../components/tools/SpriteSheet')),
   'contact-sheet': lazy(() => import('../components/tools/ContactSheet')),
+  'pdf-studio': lazy(() => import('../components/tools/PdfStudio')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;

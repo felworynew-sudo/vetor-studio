@@ -84,7 +84,7 @@ AGPL/NC-лицензии не тащим.
 - [ ] **D1. OCR — картинка → текст** (tesseract.js).
 - [x] **D2. Мокапы устройств** — скрин → iPhone/Android/ноутбук/браузер + фон + текст.
 - [ ] **D3. Font Inspector** — объединено с C16.
-- [ ] **D4. PDF Studio** — merge / split / rotate / водяной знак / сжатие (pdf-lib / qpdf-wasm).
+- [x] **D4. PDF Studio** — merge / split / rotate / водяной знак / сжатие (pdf-lib / qpdf-wasm).
 - [ ] **D5. Anonymize faces** — автоблюр/пикселизация лиц.
 - [ ] **D6. Heal / удаление объектов** — inpainting кистью.
 - [x] **D7. Heightmap / Terrain генератор** — simplex/fBM, эрозия, 3D-превью, PNG.

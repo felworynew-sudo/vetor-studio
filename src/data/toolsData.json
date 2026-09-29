@@ -1143,6 +1143,20 @@
         "title": "Terrain generator",
         "desc": "Procedural terrain: simplex noise, mountain ridges, island, hydraulic erosion, water level, 3D preview. Export heightmap PNG, color map and RAW 16-bit for Unity/Unreal."
       }
+    },
+    {
+      "slug": "pdf-studio",
+      "categoryId": "utility",
+      "status": "ready",
+      "icon": "📄",
+      "ru": {
+        "title": "PDF-студия",
+        "desc": "Объединить, разбить, переставить, повернуть и удалить страницы PDF, картинки → PDF, водяной знак и нумерация. Всё в браузере, документы никуда не уходят."
+      },
+      "en": {
+        "title": "PDF studio",
+        "desc": "Merge, split, reorder, rotate and delete PDF pages, images → PDF, watermark and page numbers. All in the browser, documents never leave your device."
+      }
     }
   ]
 }
