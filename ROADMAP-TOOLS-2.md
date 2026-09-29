@@ -62,7 +62,7 @@ AGPL/NC-лицензии не тащим.
 - [x] **C8. ColorWeight** — на OKLab-движке палитры.
 - [x] **C9. ContrastChecker** — APCA + авто-исправление цвета (общий движок с B18).
 - [ ] **C10. CrtGlitch** — WebGL-шейдер, full-res и анимация.
-- [ ] **C11. CssFromSvg** — корректные градиенты (orientation/gradientTransform/opacity), без regex.
+- [x] **C11. CssFromSvg** — корректные градиенты (orientation/gradientTransform/opacity), без regex.
 - [x] **C12. Duotone** — linear-light, gradient-map, 3 тона.
 - [x] **C13. EinkSimulator** — Atkinson/Bayer/уровни серого/цветной e-ink (общий движок с B14).
 - [ ] **C14. FaviconGenerator** — ICO (мульти-размер), SVG favicon, maskable, manifest, ZIP.
