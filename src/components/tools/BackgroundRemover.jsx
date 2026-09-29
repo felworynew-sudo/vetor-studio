@@ -1,16 +1,22 @@
 import { useEffect, useRef, useState } from 'react';
 import { aiBrowserHint } from '../../utils/aiSupport';
+import { guidedFilter } from '../../utils/guidedFilter';
 
-// Вырезатель фона: сегментация в браузере через transformers.js (модель MODNet).
-// Модель (~25 МБ) скачивается один раз при первом запуске и работает локально —
-// изображение НЕ уходит на сервер. WebGPU при поддержке, иначе WASM.
+// Вырезатель фона: сегментация в браузере через transformers.js. Модели на выбор:
+// BiRefNet lite (MIT, лучшие края), MODNet (быстрые портреты), RMBG 1.4. Маска
+// уточняется guided filter'ом по оригиналу (волосы, мех), дальше — жёсткость края,
+// замена фона и ручная кисть «стереть/вернуть». Изображение НЕ уходит на сервер.
 
 const TEXT = {
   ru: {
     drop: 'Загрузите фото (лучше с человеком или объектом)', hint: 'PNG, JPG, WebP — обрабатывается локально',
     run: 'Убрать фон', loadingModel: 'Загрузка модели…', processing: 'Обработка…',
-    download: 'Скачать PNG', change: 'Другое фото', modelNote: 'Первый запуск скачает модель (~25 МБ). Дальше — мгновенно и без интернета.',
+    download: 'Скачать PNG', change: 'Другое фото', modelNote: 'Модель скачивается один раз и кешируется браузером. Дальше — без интернета.',
+    refine: 'Уточнить края по оригиналу (волосы, мех)', hardness: 'Жёсткость края', bg: 'Фон',
+    bgT: 'Прозрачный', bgW: 'Белый', bgC: 'Цвет', bgB: 'Размытый оригинал', resetEdits: 'Правки кистью сбросятся',
     error: 'Не удалось обработать. Попробуйте другое изображение или браузер на Chromium.',
+    errorHeavy: 'BiRefNet не поместился в память браузера (нужен WebGPU). Выберите MODNet или откройте страницу в Chrome/Edge с поддержкой WebGPU.',
+    noGpu: 'WebGPU недоступен — BiRefNet будет работать медленно и может не хватить памяти.',
     original: 'Оригинал', result: 'Без фона', model: 'Модель',
     brush: 'Кисть', erase: 'Стереть', restore: 'Вернуть', size: 'Размер',
     editHint: 'Рисуйте по картинке: «Стереть» убирает лишнее, «Вернуть» возвращает случайно срезанное.',
@@ -18,8 +24,12 @@ const TEXT = {
   en: {
     drop: 'Upload a photo (a person or object works best)', hint: 'PNG, JPG, WebP — processed locally',
     run: 'Remove background', loadingModel: 'Loading model…', processing: 'Processing…',
-    download: 'Download PNG', change: 'Another photo', modelNote: 'The first run downloads the model (~25 MB). After that it is instant and offline.',
+    download: 'Download PNG', change: 'Another photo', modelNote: 'The model downloads once and is cached by the browser. After that it works offline.',
+    refine: 'Refine edges from the original (hair, fur)', hardness: 'Edge hardness', bg: 'Background',
+    bgT: 'Transparent', bgW: 'White', bgC: 'Color', bgB: 'Blurred original', resetEdits: 'Brush edits will be reset',
     error: 'Could not process. Try another image or a Chromium browser.',
+    errorHeavy: 'BiRefNet did not fit into browser memory (WebGPU needed). Pick MODNet or open the page in Chrome/Edge with WebGPU.',
+    noGpu: 'WebGPU is unavailable — BiRefNet will be slow and may run out of memory.',
     original: 'Original', result: 'No background', model: 'Model',
     brush: 'Brush', erase: 'Erase', restore: 'Restore', size: 'Size',
     editHint: 'Paint over the image: “Erase” removes leftovers, “Restore” brings back accidentally cut parts.',
@@ -27,27 +37,87 @@ const TEXT = {
 };
 
 export const MODELS = [
-  { id: 'Xenova/modnet', ru: 'MODNet — портреты и люди', en: 'MODNet — portraits & people' },
-  { id: 'briaai/RMBG-1.4', ru: 'RMBG 1.4 — универсальная', en: 'RMBG 1.4 — general purpose' },
+  {
+    id: 'onnx-community/BiRefNet_lite-ONNX', input: 'input_image', output: 'output_image', sigmoid: true, dtype: 'fp32',
+    ru: 'BiRefNet — лучшие края, любые объекты (~220 МБ)', en: 'BiRefNet — best edges, any subject (~220 MB)',
+  },
+  { id: 'Xenova/modnet', input: 'input', ru: 'MODNet — быстро, портреты и люди (~25 МБ)', en: 'MODNet — fast, portraits & people (~25 MB)' },
+  { id: 'briaai/RMBG-1.4', input: 'input', ru: 'RMBG 1.4 — универсальная (некоммерческая лицензия)', en: 'RMBG 1.4 — general (non-commercial license)' },
 ];
 
 // Кэшируем модели между открытиями тула в рамках сессии (по id).
 const modelCache = {};
-async function getModel(modelId, onProgress) {
+async function getModel(spec, onProgress) {
+  const modelId = spec.id;
   if (modelCache[modelId]) return modelCache[modelId];
   modelCache[modelId] = (async () => {
     const lib = await import('@huggingface/transformers');
     const { AutoModel, AutoProcessor, env } = lib;
     env.allowLocalModels = false;
-    let device;
-    try {
-      device = (typeof navigator !== 'undefined' && navigator.gpu) ? 'webgpu' : 'wasm';
-    } catch { device = 'wasm'; }
-    const model = await AutoModel.from_pretrained(modelId, { device, progress_callback: onProgress });
+    let device = 'wasm';
+    try { if (typeof navigator !== 'undefined' && navigator.gpu && await navigator.gpu.requestAdapter()) device = 'webgpu'; } catch { /* wasm */ }
+    const opts = { device, progress_callback: onProgress };
+    if (spec.dtype) opts.dtype = spec.dtype;
+    const model = await AutoModel.from_pretrained(modelId, opts);
     const processor = await AutoProcessor.from_pretrained(modelId);
     return { model, processor, RawImage: lib.RawImage };
-  })();
+  })().catch((e) => { delete modelCache[modelId]; throw e; });
   return modelCache[modelId];
+}
+
+const WORK_MAX = 2048; // guided filter считаем не выше этого разрешения — по памяти/скорости
+
+// Из «сырой» маски модели собираем итоговый вырез: guided filter + жёсткость края.
+function composeCutout(base, { refine, hardness }) {
+  const { origCanvas, mask, w, h } = base;
+  let alpha = mask;
+  if (refine) {
+    const s = Math.min(1, WORK_MAX / Math.max(w, h));
+    const ww = Math.max(1, Math.round(w * s)); const hh = Math.max(1, Math.round(h * s));
+    const c = document.createElement('canvas'); c.width = ww; c.height = hh;
+    const cx = c.getContext('2d', { willReadFrequently: true });
+    cx.drawImage(origCanvas, 0, 0, ww, hh);
+    const g = cx.getImageData(0, 0, ww, hh).data;
+    const guide = new Float32Array(ww * hh);
+    for (let i = 0; i < guide.length; i += 1) guide[i] = (0.299 * g[i * 4] + 0.587 * g[i * 4 + 1] + 0.114 * g[i * 4 + 2]) / 255;
+    // Маску кладём в альфу полноразмерного canvas и масштабируем к рабочему размеру.
+    const mc = document.createElement('canvas'); mc.width = w; mc.height = h;
+    const mctx = mc.getContext('2d', { willReadFrequently: true });
+    const mimg = mctx.createImageData(w, h);
+    for (let i = 0; i < mask.length; i += 1) mimg.data[i * 4 + 3] = mask[i];
+    mctx.putImageData(mimg, 0, 0);
+    cx.clearRect(0, 0, ww, hh); cx.drawImage(mc, 0, 0, ww, hh);
+    const md = cx.getImageData(0, 0, ww, hh).data;
+    const pm = new Float32Array(ww * hh);
+    for (let i = 0; i < pm.length; i += 1) pm[i] = md[i * 4 + 3] / 255;
+    const q = guidedFilter(guide, pm, ww, hh, Math.max(3, Math.round(Math.max(ww, hh) / 320)), 2e-3);
+    const qi = cx.createImageData(ww, hh);
+    for (let i = 0; i < q.length; i += 1) qi.data[i * 4 + 3] = Math.round(q[i] * 255);
+    cx.putImageData(qi, 0, 0);
+    mctx.clearRect(0, 0, w, h); mctx.imageSmoothingQuality = 'high'; mctx.drawImage(c, 0, 0, w, h);
+    const up = mctx.getImageData(0, 0, w, h).data;
+    // Фильтр размазывает по фону «дымку» из почти нулевой альфы — отсекаем её:
+    // уверенный фон/объект исходной маски остаются 0/255, уточняется только кромка.
+    alpha = new Uint8ClampedArray(w * h);
+    for (let i = 0; i < alpha.length; i += 1) {
+      const q = up[i * 4 + 3]; const m = mask[i];
+      if (m < 8 && q < 40) alpha[i] = 0;
+      else if (m > 247 && q > 215) alpha[i] = 255;
+      else alpha[i] = q < 10 ? 0 : q > 245 ? 255 : q;
+    }
+  }
+  const k = 1 + hardness / 12;
+  const out = document.createElement('canvas'); out.width = w; out.height = h;
+  const ctx = out.getContext('2d', { willReadFrequently: true });
+  ctx.drawImage(origCanvas, 0, 0);
+  const px = ctx.getImageData(0, 0, w, h);
+  for (let i = 0; i < alpha.length; i += 1) {
+    px.data[i * 4 + 3] = hardness
+      ? Math.round(Math.max(0, Math.min(1, (alpha[i] / 255 - 0.5) * k + 0.5)) * 255)
+      : alpha[i];
+  }
+  ctx.putImageData(px, 0, 0);
+  return out;
 }
 
 function BackgroundRemover({ language = 'ru' }) {
@@ -57,10 +127,26 @@ function BackgroundRemover({ language = 'ru' }) {
   const [resultUrl, setResultUrl] = useState('');
   const [status, setStatus] = useState('idle'); // idle | loading | processing | done | error
   const [progress, setProgress] = useState(0);
-  const [modelId, setModelId] = useState(MODELS[0].id);
+  // BiRefNet на WASM (без WebGPU) упирается в память вкладки — там по умолчанию MODNet.
+  const [modelId, setModelId] = useState(MODELS[1].id);
+  const [hasGpu, setHasGpu] = useState(false);
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        if (navigator.gpu && await navigator.gpu.requestAdapter() && alive) { setHasGpu(true); setModelId(MODELS[0].id); }
+      } catch { /* нет WebGPU */ }
+    })();
+    return () => { alive = false; };
+  }, []);
   const [brushMode, setBrushMode] = useState('erase'); // erase | restore
   const [brushSize, setBrushSize] = useState(40);
   const [cursor, setCursor] = useState({ x: 0, y: 0, on: false }); // прицел кисти
+  const [refine, setRefine] = useState(true);
+  const [hardness, setHardness] = useState(0);
+  const [bgMode, setBgMode] = useState('transparent');
+  const [bgColor, setBgColor] = useState('#ffffff');
+  const baseRef = useRef(null); // { origCanvas, mask, w, h } — сырая маска модели
 
   const editCanvasRef = useRef(null);
   const origCanvasRef = useRef(null); // офскрин с оригиналом (для «вернуть»)
@@ -85,6 +171,15 @@ function BackgroundRemover({ language = 'ru' }) {
     edit.getContext('2d').drawImage(resultCanvas, 0, 0);
     origCanvasRef.current = origCanvas;
   }, [status]);
+
+  // Смена уточнения/жёсткости — пересобираем вырез из сырой маски (правки кистью сбрасываются).
+  useEffect(() => {
+    if (status !== 'done' || !baseRef.current || !editCanvasRef.current) return;
+    const cut = composeCutout(baseRef.current, { refine, hardness });
+    const ctx = editCanvasRef.current.getContext('2d');
+    ctx.clearRect(0, 0, cut.width, cut.height);
+    ctx.drawImage(cut, 0, 0);
+  }, [refine, hardness]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // --- Кисть ---
   function canvasPoint(e) {
@@ -148,10 +243,11 @@ function BackgroundRemover({ language = 'ru' }) {
 
   async function run() {
     if (!srcUrl) return;
+    const spec = MODELS.find((m) => m.id === modelId) || MODELS[0];
     try {
       setStatus('loading');
       setProgress(0);
-      const { model, processor, RawImage } = await getModel(modelId, (p) => {
+      const { model, processor, RawImage } = await getModel(spec, (p) => {
         if (p && p.status === 'progress' && p.total) {
           setProgress(Math.round((p.loaded / p.total) * 100));
         }
@@ -160,29 +256,25 @@ function BackgroundRemover({ language = 'ru' }) {
       setStatus('processing');
       const image = await RawImage.fromURL(srcUrl);
       const { pixel_values } = await processor(image);
-      const out = await model({ input: pixel_values });
-      // Разные модели возвращают маску под разными ключами — берём первый тензор.
-      const tensor = out.output ?? out.last_hidden_state ?? Object.values(out)[0];
-      const maskData = tensor[0].mul(255).to('uint8');
-      const mask = await RawImage.fromTensor(maskData).resize(image.width, image.height);
+      const out = await model({ [spec.input]: pixel_values });
+      // Разные модели возвращают маску под разными ключами — берём нужный или первый тензор.
+      let tensor = (spec.output && out[spec.output]) || out.output || out.last_hidden_state || Object.values(out)[0];
+      tensor = tensor[0];
+      if (spec.sigmoid) tensor = tensor.sigmoid();
+      const maskImg = await RawImage.fromTensor(tensor.mul(255).to('uint8')).resize(image.width, image.height);
 
       const bmp = await createImageBitmap(await (await fetch(srcUrl)).blob());
-      // Оригинал (для кисти «вернуть»).
       const origCanvas = document.createElement('canvas');
       origCanvas.width = image.width; origCanvas.height = image.height;
       origCanvas.getContext('2d').drawImage(bmp, 0, 0);
-      // Результат: оригинал + альфа из маски.
-      const resultCanvas = document.createElement('canvas');
-      resultCanvas.width = image.width; resultCanvas.height = image.height;
-      const ctx = resultCanvas.getContext('2d');
-      ctx.drawImage(bmp, 0, 0);
-      const pixels = ctx.getImageData(0, 0, image.width, image.height);
-      for (let i = 0; i < mask.data.length; i += 1) {
-        pixels.data[i * 4 + 3] = mask.data[i];
-      }
-      ctx.putImageData(pixels, 0, 0);
+      const mask = new Uint8ClampedArray(image.width * image.height);
+      const ch = maskImg.channels || 1;
+      for (let i = 0; i < mask.length; i += 1) mask[i] = maskImg.data[i * ch];
+      baseRef.current = { origCanvas, mask, w: image.width, h: image.height };
+
+      const resultCanvas = composeCutout(baseRef.current, { refine, hardness });
       pendingRef.current = { resultCanvas, origCanvas };
-      setResultUrl(resultCanvas.toDataURL('image/png'));
+      setResultUrl('ready');
       setStatus('done');
     } catch (e) {
       console.error(e);
@@ -191,11 +283,29 @@ function BackgroundRemover({ language = 'ru' }) {
   }
 
   function download() {
-    const url = editCanvasRef.current ? editCanvasRef.current.toDataURL('image/png') : resultUrl;
-    if (!url) return;
-    const a = document.createElement('a');
-    a.href = url; a.download = 'no-bg.png';
-    document.body.appendChild(a); a.click(); a.remove();
+    const cut = editCanvasRef.current;
+    if (!cut) return;
+    let out = cut;
+    if (bgMode !== 'transparent') {
+      out = document.createElement('canvas'); out.width = cut.width; out.height = cut.height;
+      const ctx = out.getContext('2d');
+      if (bgMode === 'blur' && origCanvasRef.current) {
+        ctx.filter = `blur(${Math.round(Math.max(cut.width, cut.height) / 80)}px)`;
+        ctx.drawImage(origCanvasRef.current, 0, 0);
+        ctx.filter = 'none';
+      } else {
+        ctx.fillStyle = bgMode === 'white' ? '#ffffff' : bgColor;
+        ctx.fillRect(0, 0, out.width, out.height);
+      }
+      ctx.drawImage(cut, 0, 0);
+    }
+    out.toBlob((blob) => {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = bgMode === 'transparent' ? 'no-bg.png' : 'new-bg.png';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    }, 'image/png');
   }
 
   const busy = status === 'loading' || status === 'processing';
@@ -223,7 +333,11 @@ function BackgroundRemover({ language = 'ru' }) {
             {status === 'done' && (
               <div className="bgr-cell">
                 <span className="bgr-cap">{t.result}</span>
-                <div className="bgr-checker bgr-edit">
+                <div
+                  className={bgMode === 'transparent' ? 'bgr-checker bgr-edit' : 'bgr-edit bgr-solid'}
+                  style={bgMode === 'white' ? { background: '#fff' } : bgMode === 'color' ? { background: bgColor } : undefined}
+                >
+                  {bgMode === 'blur' && <img src={srcUrl} alt="" className="bgr-blur-bg" aria-hidden="true" />}
                   <canvas
                     ref={editCanvasRef}
                     className={`bgr-canvas mode-${brushMode}`}
@@ -261,6 +375,27 @@ function BackgroundRemover({ language = 'ru' }) {
             </div>
           )}
 
+          {status === 'done' && (
+            <div className="bgr-brush">
+              <label className="tool-check" title={t.resetEdits}>
+                <input type="checkbox" checked={refine} onChange={(e) => setRefine(e.target.checked)} /> {t.refine}
+              </label>
+              <div className="tool-field">
+                <span className="tool-field-label">{t.hardness}: {hardness}</span>
+                <input type="range" min="0" max="100" value={hardness} onChange={(e) => setHardness(Number(e.target.value))} title={t.resetEdits} />
+              </div>
+              <div className="tool-field">
+                <span className="tool-field-label">{t.bg}</span>
+                <div className="segmented">
+                  {[['transparent', t.bgT], ['white', t.bgW], ['color', t.bgC], ['blur', t.bgB]].map(([id, label]) => (
+                    <button key={id} type="button" className={bgMode === id ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => setBgMode(id)}>{label}</button>
+                  ))}
+                </div>
+                {bgMode === 'color' && <input type="color" value={bgColor} onChange={(e) => setBgColor(e.target.value)} />}
+              </div>
+            </div>
+          )}
+
           {!busy && status !== 'done' && (
             <div className="tool-field bgr-model">
               <span className="tool-field-label">{t.model}</span>
@@ -277,11 +412,12 @@ function BackgroundRemover({ language = 'ru' }) {
             </div>
           )}
 
-          {status === 'error' && <p className="color-invalid">{t.error}</p>}
+          {status === 'error' && <p className="color-invalid">{modelId === MODELS[0].id && !hasGpu ? t.errorHeavy : t.error}</p>}
+          {!busy && status !== 'done' && modelId === MODELS[0].id && !hasGpu && <p className="tool-local-note aid-warn">⚠️ {t.noGpu}</p>}
 
           <div className="tool-actions">
             {status !== 'done' && <button type="button" className="tool-btn primary" onClick={run} disabled={busy}>{busy ? '…' : t.run}</button>}
-            {resultUrl && <button type="button" className="tool-btn primary" onClick={download}>{t.download}</button>}
+            {status === 'done' && <button type="button" className="tool-btn primary" onClick={download}>{t.download}</button>}
             <button type="button" className="tool-btn ghost" onClick={() => inputRef.current?.click()} disabled={busy}>{t.change}</button>
           </div>
         </>
