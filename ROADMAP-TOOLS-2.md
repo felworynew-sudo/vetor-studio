@@ -34,7 +34,7 @@ AGPL/NC-лицензии не тащим.
 - [x] **B3. Упрощение SVG-путей** — ползунок tolerance, до/после.
 - [x] **B4. SVG → React/JSX** (SVGR).
 - [x] **B5. Сабсеттер шрифтов** → WOFF2 (harfbuzz hb-subset + woff2 WASM).
-- [ ] **B6. Variable Font Playground** — чтение осей wght/wdth/slnt/opsz.
+- [x] **B6. Variable Font Playground** — чтение осей wght/wdth/slnt/opsz.
 - [ ] **B7. Подбор пар шрифтов** — по x-height / контрасту / ширине.
 - [x] **B8. LUT-генератор / конвертер** — .cube, превью, экспорт.
 - [x] **B9. Сравнение изображений** — overlay / difference / SSIM.
@@ -67,7 +67,7 @@ AGPL/NC-лицензии не тащим.
 - [x] **C13. EinkSimulator** — Atkinson/Bayer/уровни серого/цветной e-ink (общий движок с B14).
 - [ ] **C14. FaviconGenerator** — ICO (мульти-размер), SVG favicon, maskable, manifest, ZIP.
 - [ ] **C15. FireSmoke** — шейдерная/fluid-симуляция.
-- [ ] **C16. GlyphMap → Font Lab** — fontkit: инфо, OpenType-фичи, кернинг, variable axes, экспорт глифа SVG.
+- [x] **C16. GlyphMap → Font Lab** — fontkit: инфо, OpenType-фичи, кернинг, variable axes, экспорт глифа SVG.
 - [ ] **C17. Halftone** — CMYK с углами растра/розетка, линии, экспорт SVG.
 - [ ] **C18. ImageMetadata** — просмотр всех тегов, выборочное удаление, C2PA-инспектор.
 - [ ] **C19. Isometry** — экспорт GLB/STL/OBJ.
@@ -83,7 +83,7 @@ AGPL/NC-лицензии не тащим.
 
 - [x] **D1. OCR — картинка → текст** (tesseract.js).
 - [x] **D2. Мокапы устройств** — скрин → iPhone/Android/ноутбук/браузер + фон + текст.
-- [ ] **D3. Font Inspector** — объединено с C16.
+- [x] **D3. Font Inspector** — объединено с C16.
 - [x] **D4. PDF Studio** — merge / split / rotate / водяной знак / сжатие (pdf-lib / qpdf-wasm).
 - [x] **D5. Anonymize faces** — автоблюр/пикселизация лиц.
 - [x] **D6. Heal / удаление объектов** — inpainting кистью.

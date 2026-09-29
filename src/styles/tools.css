@@ -1808,3 +1808,37 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
 .fs-head { font-size: 14px; margin-bottom: 10px; }
 .fs-sets { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 6px; }
 .fs-preview { font-size: 34px; line-height: 1.3; padding: 16px; border: 1px solid var(--stroke); border-radius: 12px; background: var(--bg); word-break: break-word; }
+
+/* Font Lab / variable fonts */
+.fl-sample-bar { display: grid; grid-template-columns: 1fr 220px; gap: 12px; align-items: end; }
+.fl-sample { padding: 18px; border: 1px solid var(--stroke); border-radius: 12px; background: var(--bg); line-height: 1.25; word-break: break-word; margin: 10px 0; }
+.fl-css { display: flex; gap: 10px; align-items: center; font-size: 12px; }
+.fl-css code { flex: 1; white-space: pre-wrap; color: var(--text-muted); }
+.fl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 820px) { .fl-grid, .fl-sample-bar { grid-template-columns: 1fr; } }
+.fl-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.fl-table th { text-align: left; color: var(--text-muted); font-weight: 500; padding: 4px 8px 4px 0; width: 38%; vertical-align: top; }
+.fl-table td { padding: 4px 0; word-break: break-word; }
+.fl-cov { display: grid; grid-template-columns: 130px 1fr 60px; gap: 8px; align-items: center; font-size: 13px; margin-bottom: 5px; }
+.fl-cov i { height: 8px; background: var(--surface); border-radius: 4px; overflow: hidden; }
+.fl-cov b { display: block; height: 100%; background: var(--t-accent); }
+.fl-cov em { font-style: normal; color: var(--text-muted); font-size: 12px; text-align: right; }
+.fl-feats { display: flex; flex-wrap: wrap; gap: 6px; }
+.fl-feat { padding: 5px 10px; border-radius: 999px; border: 1px solid var(--stroke); background: var(--bg); color: var(--text); font: inherit; font-size: 12px; cursor: pointer; }
+.fl-feat.is-on { background: var(--t-accent); border-color: var(--t-accent); color: #fff; }
+.fl-feat.is-off { text-decoration: line-through; opacity: 0.6; }
+.fl-glyphs { display: grid; grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); gap: 4px; margin: 10px 0; max-height: 440px; overflow: auto; }
+.fl-g { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 2px; border: 1px solid var(--stroke); border-radius: 8px; background: var(--bg); color: var(--text); cursor: pointer; font: inherit; }
+.fl-g.is-sel, .fl-g:hover { border-color: var(--t-accent); }
+.fl-g svg { fill: currentColor; height: 44px; width: auto; max-width: 56px; }
+.fl-g em { font-style: normal; font-size: 9.5px; color: var(--text-muted); }
+.fl-glyph-card { display: flex; gap: 18px; align-items: center; padding: 12px; border: 1px solid var(--stroke); border-radius: 12px; }
+.fl-big svg { fill: currentColor; height: 220px; width: auto; background: repeating-linear-gradient(0deg, transparent 0 39px, rgba(128,128,128,0.15) 39px 40px); }
+.vf-stage { border-radius: 14px; padding: 30px; min-height: 200px; display: grid; place-items: center; }
+.vf-text { font-size: clamp(48px, 9vw, 120px); line-height: 1.05; text-align: center; outline: none; word-break: break-word; }
+.vf-axes { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin: 14px 0; }
+.vf-axis { padding: 10px; border: 1px solid var(--stroke); border-radius: 12px; }
+.vf-axis .tool-field input[type="range"] { width: 100%; }
+.vf-axis em { font-style: normal; color: var(--text-muted); font-size: 11px; }
+.vf-water div { display: grid; grid-template-columns: 34px 1fr; align-items: baseline; gap: 10px; white-space: nowrap; overflow: hidden; }
+.vf-water em { font-style: normal; font-size: 11px; color: var(--text-muted); font-family: system-ui; }

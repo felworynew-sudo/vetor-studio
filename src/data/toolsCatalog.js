@@ -91,6 +91,8 @@ const READY_COMPONENTS = {
   'svg-path-simplifier': lazy(() => import('../components/tools/PathSimplifier')),
   'svg-path-editor': lazy(() => import('../components/tools/PathEditor')),
   'font-subsetter': lazy(() => import('../components/tools/FontSubsetter')),
+  'font-lab': lazy(() => import('../components/tools/FontLab')),
+  'variable-fonts': lazy(() => import('../components/tools/VariableFonts')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;

@@ -1297,6 +1297,34 @@
         "title": "Font subsetter → WOFF2",
         "desc": "Keeps only the characters you need — Latin, Cyrillic, digits or your site copy — and compresses to WOFF2: 300 KB → 20–40 KB. HarfBuzz, ready @font-face with unicode-range."
       }
+    },
+    {
+      "slug": "font-lab",
+      "categoryId": "utility",
+      "status": "ready",
+      "icon": "🔬",
+      "ru": {
+        "title": "Font Lab — всё о шрифте",
+        "desc": "Имена, лицензия, метрики, покрытие кириллицы и латиницы, OpenType-фичи с живым включением, вариативные оси, все глифы с экспортом в SVG. На fontkit, локально."
+      },
+      "en": {
+        "title": "Font Lab — font inspector",
+        "desc": "Names, license, metrics, script coverage, OpenType features with live toggles, variable axes, every glyph with SVG export. Built on fontkit, local."
+      }
+    },
+    {
+      "slug": "variable-fonts",
+      "categoryId": "utility",
+      "status": "ready",
+      "icon": "🎚️",
+      "ru": {
+        "title": "Вариативные шрифты — песочница",
+        "desc": "Автоматически читает оси wght, wdth, slnt, opsz и собственные, крутит и анимирует их, показывает начертания и водопад кеглей, выдаёт готовый CSS."
+      },
+      "en": {
+        "title": "Variable font playground",
+        "desc": "Reads wght, wdth, slnt, opsz and custom axes automatically, lets you drag and animate them, shows instances and a size waterfall, outputs ready CSS."
+      }
     }
   ]
 }
