@@ -19,7 +19,7 @@ AGPL/NC-лицензии не тащим.
 - [x] **A4. Upscaler** — выбор модели (Фото ×2 / Фото ×4 / Иллюстрация-аниме / Быстрый),
       отмена, прогресс по тайлам, прогрев.
 - [x] **A5. Background Remover** — добавить свежую модель (BiRefNet / BEN2, MIT), оставить свой pipeline.
-- [ ] **A6. Multitrack Editor** — не выкидывать (clips/trim/cut/pan/EQ/fades/mixdown уже есть);
+- [x] **A6. Multitrack Editor** — не выкидывать (clips/trim/cut/pan/EQ/fades/mixdown уже есть);
       взять идеи waveform-playlist / wavesurfer-multitrack: нормальный waveform-рендер, зум, снэп.
 - [x] **A7. Colorblind Simulator** — Machado 2009 (сделано коммитом 488e9e4).
 - [ ] **A8. Mesh Gradient** — сильно расширить (точки, drag, шум, анимация, экспорт PNG/CSS/SVG).

@@ -1546,3 +1546,9 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
 .bgr-solid { border-radius: 12px; overflow: hidden; border: 1px solid var(--stroke); position: relative; }
 .bgr-blur-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; filter: blur(14px); transform: scale(1.04); pointer-events: none; }
 .bgr-solid .bgr-canvas { position: relative; }
+
+/* Multitrack V3 */
+.mt .mt-wave { display: flex; pointer-events: none; }
+.mt .mt-wave canvas { display: block; flex: none; }
+.mt-lane.is-drop { background-color: var(--t-accent-soft); outline: 1px dashed var(--t-accent); outline-offset: -1px; }
+.tool-btn.is-on { border-color: var(--t-accent); color: var(--t-accent-strong); background: var(--t-accent-soft); }

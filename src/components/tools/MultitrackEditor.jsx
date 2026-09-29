@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { decodeAudioFile, encodeWAV, encodeMp3, getAudioCtx, downloadBlob } from '../../utils/wav';
 import { takeAudioHandoff } from '../../utils/audioHandoff';
+import { drawWave } from '../../utils/audioPeaks';
 
 // Многодорожечный аудио-редактор V2. На дорожке может быть НЕСКОЛЬКО клипов;
 // ножницы режут клип в позиции плейхеда; зум таймлинии колёсиком мыши; параметры
@@ -8,8 +9,15 @@ import { takeAudioHandoff } from '../../utils/audioHandoff';
 // воспроизведения (держим ссылки на живые узлы графа); сворачиваемая панель
 // эффектов слева освобождает таймлинию. Сведение в WAV/MP3 через OfflineAudioContext.
 // Скорость меняет и темп, и тон (playbackRate). Всё локально.
+// V3 (идеи waveform-playlist / wavesurfer-multitrack): волны из кеша пиков тайлами
+// (длинные клипы на большом зуме больше не ломают canvas), peak+RMS, адаптивная
+// линейка, снэп к краям клипов/плейхеду/сетке, перенос клипа между дорожками,
+// «вписать в окно», горячие клавиши.
 
 const ROW_H = 96;
+const WAVE_TILE = 2048; // ширина одного canvas-тайла волны (css px)
+const SNAP_PX = 8;
+const TICK_STEPS = [0.1, 0.25, 0.5, 1, 2, 5, 10, 15, 30, 60, 120, 300];
 const RULER_H = 26;
 const CLIP_COLORS = ['#6166ff', '#ff5c63', '#3ec98a', '#f5c84c', '#75d0ff', '#b277ff', '#ff8a3d', '#ff5cb0'];
 
@@ -24,6 +32,8 @@ const TEXT = {
     noSel: 'Выберите клип на таймлинии, чтобы редактировать. Файлы можно бросать прямо на дорожку.',
     dropLane: 'бросьте аудио', addZone: 'Перетащите файлы сюда или нажмите — добавить дорожку',
     note: 'Скорость меняет темп и тон. Всё локально — файлы не уходят на сервер.',
+    snap: 'Магнит', fit: 'Вписать', split: 'Разрезать по плейхеду',
+    keys: 'Пробел — играть/стоп · S — разрезать · Del — удалить клип · Ctrl+D — дублировать · +/− — зум · Alt при перетаскивании — без магнита. Клип можно перетащить на другую дорожку.',
   },
   en: {
     drop: 'Drop audio or click — several files at once', hint: 'WAV, MP3, OGG, FLAC, M4A — all local',
@@ -35,6 +45,8 @@ const TEXT = {
     noSel: 'Select a clip on the timeline to edit. You can drop files right onto a track.',
     dropLane: 'drop audio', addZone: 'Drop files here or click — add a track',
     note: 'Speed changes tempo and pitch. All local — files never leave your device.',
+    snap: 'Snap', fit: 'Fit', split: 'Split at playhead',
+    keys: 'Space — play/stop · S — split · Del — delete clip · Ctrl+D — duplicate · +/− — zoom · hold Alt while dragging — no snap. Drag a clip onto another track to move it.',
   },
 };
 
@@ -56,11 +68,35 @@ function reverseBuffer(ctx, buffer) {
   return out;
 }
 
+// Волна клипа тайлами по WAVE_TILE px: canvas не упирается в лимит ширины браузера.
+function ClipWave({ clip, pxPerSec }) {
+  const wrapRef = useRef(null);
+  const clipLen = clip.trimEnd - clip.trimStart;
+  const w = Math.max(1, Math.round(clipLen * pxPerSec));
+  const n = Math.ceil(w / WAVE_TILE);
+  useEffect(() => {
+    const wrap = wrapRef.current; if (!wrap) return;
+    const h = ROW_H - 26;
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    [...wrap.children].forEach((canvas, i) => {
+      const tw = Math.min(WAVE_TILE, w - i * WAVE_TILE);
+      canvas.width = Math.max(1, Math.round(tw * dpr)); canvas.height = Math.round(h * dpr);
+      canvas.style.width = `${tw}px`; canvas.style.height = `${h}px`;
+      const ctx = canvas.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, tw, h);
+      drawWave(ctx, clip.buffer, { t0: clip.trimStart + (i * WAVE_TILE) / pxPerSec, pxPerSec, w: tw, h, color: `${clip.color}99`, rmsColor: clip.color });
+      ctx.strokeStyle = 'rgba(255,255,255,0.55)'; ctx.lineWidth = 1.5;
+      const x0 = i * WAVE_TILE;
+      if (clip.fadeIn > 0) { const fx = clamp(clip.fadeIn * pxPerSec, 0, w); if (fx > x0) { ctx.beginPath(); ctx.moveTo(-x0, h); ctx.lineTo(fx - x0, 0); ctx.stroke(); } }
+      if (clip.fadeOut > 0) { const fx = w - clamp(clip.fadeOut * pxPerSec, 0, w); if (w > x0 && fx < x0 + tw) { ctx.beginPath(); ctx.moveTo(fx - x0, 0); ctx.lineTo(w - x0, h); ctx.stroke(); } }
+    });
+  }, [clip.buffer, clip.trimStart, clip.trimEnd, clip.fadeIn, clip.fadeOut, clip.color, pxPerSec, w, n]);
+  return <span className="mt-wave" ref={wrapRef}>{Array.from({ length: n }, (_, i) => <canvas key={i} />)}</span>;
+}
+
 function MultitrackEditor({ language = 'ru' }) {
   const t = TEXT[language] || TEXT.ru;
   const inputRef = useRef(null);
   const laneWrapRef = useRef(null);
-  const canvasRefs = useRef({});
   const liveRef = useRef(null); // { master, tracks:{[id]:{low,mid,high,pan,g,srcs}} } во время игры
   const rafRef = useRef(0);
   const dragRef = useRef(null);
@@ -79,6 +115,8 @@ function MultitrackEditor({ language = 'ru' }) {
   const [sel, setSel] = useState(null); // { trackId, clipId }
   const [panelOpen, setPanelOpen] = useState(true);
   const [panelW, setPanelW] = useState(236);
+  const [snap, setSnap] = useState(true);
+  const [dragLane, setDragLane] = useState(null); // индекс дорожки под курсором при переносе клипа
   const panelDragRef = useRef(null);
 
   const soloActive = tracks.some((tk) => tk.solo);
@@ -108,50 +146,78 @@ function MultitrackEditor({ language = 'ru' }) {
 
   const patchTrack = (id, upd) => setTracks((prev) => prev.map((tk) => (tk.id === id ? { ...tk, ...(typeof upd === 'function' ? upd(tk) : upd) } : tk)));
   const patchClip = (trackId, clipId, upd) => setTracks((prev) => prev.map((tk) => (tk.id !== trackId ? tk : { ...tk, clips: tk.clips.map((c) => (c.id === clipId ? { ...c, ...(typeof upd === 'function' ? upd(c) : upd) } : c)) })));
-  const removeTrack = (id) => { setTracks((prev) => prev.filter((tk) => tk.id !== id)); delete canvasRefs.current[id]; if (sel?.trackId === id) setSel(null); };
+  const removeTrack = (id) => { setTracks((prev) => prev.filter((tk) => tk.id !== id)); if (sel?.trackId === id) setSel(null); };
   const removeClip = (trackId, clipId) => { setTracks((prev) => prev.map((tk) => (tk.id !== trackId ? tk : { ...tk, clips: tk.clips.filter((c) => c.id !== clipId) }))); setSel(null); };
-
-  // --- отрисовка волн ---
-  const drawClip = useCallback((clip) => {
-    const canvas = canvasRefs.current[clip.id]; if (!canvas) return;
-    const clipLen = clip.trimEnd - clip.trimStart; const w = Math.max(1, Math.round(clipLen * pxPerSec)); const h = ROW_H - 26;
-    const dpr = Math.min(2, window.devicePixelRatio || 1);
-    canvas.width = w * dpr; canvas.height = h * dpr; canvas.style.width = `${w}px`; canvas.style.height = `${h}px`;
-    const ctx = canvas.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h);
-    const data = clip.buffer.getChannelData(0); const sr = clip.buffer.sampleRate;
-    const startSample = Math.floor(clip.trimStart * sr); const totalSamples = Math.floor(clipLen * sr); const step = Math.max(1, Math.floor(totalSamples / w));
-    ctx.fillStyle = clip.color; const mid = h / 2;
-    for (let x = 0; x < w; x += 1) {
-      let mn = 1; let mx = -1; const s0 = startSample + Math.floor((x / w) * totalSamples);
-      for (let i = 0; i < step; i += 1) { const v = data[s0 + i] || 0; if (v < mn) mn = v; if (v > mx) mx = v; }
-      ctx.fillRect(x, mid + mn * (mid - 2), 1, Math.max(1, (mx - mn) * (mid - 2)));
-    }
-    ctx.strokeStyle = 'rgba(255,255,255,0.5)'; ctx.lineWidth = 1.5;
-    if (clip.fadeIn > 0) { ctx.beginPath(); ctx.moveTo(0, h); ctx.lineTo(clamp(clip.fadeIn * pxPerSec, 0, w), 0); ctx.stroke(); }
-    if (clip.fadeOut > 0) { ctx.beginPath(); ctx.moveTo(w, h); ctx.lineTo(w - clamp(clip.fadeOut * pxPerSec, 0, w), 0); ctx.stroke(); }
-  }, [pxPerSec]);
-
-  useEffect(() => { tracks.forEach((tk) => tk.clips.forEach(drawClip)); }, [tracks, pxPerSec, drawClip]);
 
   // --- перетаскивание / тримминг клипа ---
   function startDrag(e, trackId, clip, mode) {
     if (tool === 'cut') return; // в режиме ножниц — рез, не перетаскивание
     e.preventDefault(); e.stopPropagation();
     setSel({ trackId, clipId: clip.id });
-    dragRef.current = { trackId, clipId: clip.id, mode, startX: e.clientX, offset: clip.offset, trimStart: clip.trimStart, trimEnd: clip.trimEnd };
+    // Точки притяжения: края всех остальных клипов, плейхед, ноль.
+    const targets = [0, playhead];
+    tracks.forEach((tk) => tk.clips.forEach((c) => { if (c.id !== clip.id) targets.push(c.offset, c.offset + (c.trimEnd - c.trimStart)); }));
+    const lanes = [...(laneWrapRef.current?.querySelectorAll('.mt-lane') || [])].map((el) => { const r = el.getBoundingClientRect(); return { top: r.top, bottom: r.bottom }; });
+    dragRef.current = {
+      trackId, clipId: clip.id, mode, startX: e.clientX, offset: clip.offset, trimStart: clip.trimStart, trimEnd: clip.trimEnd,
+      pps: pxPerSec, targets, lanes, laneIdx: tracks.findIndex((tk) => tk.id === trackId), overLane: null,
+    };
     window.addEventListener('pointermove', onDrag); window.addEventListener('pointerup', endDrag);
   }
+  function snapTo(v, d, alt) {
+    if (!snap || alt) return v;
+    const thr = SNAP_PX / d.pps;
+    let best = v; let bd = thr;
+    d.targets.forEach((tg) => { const dd = Math.abs(tg - v); if (dd < bd) { bd = dd; best = tg; } });
+    return best;
+  }
   function onDrag(e) {
-    const d = dragRef.current; if (!d) return; const ds = (e.clientX - d.startX) / pxPerSec;
+    const d = dragRef.current; if (!d) return; const ds = (e.clientX - d.startX) / d.pps;
+    if (d.mode === 'move' && d.lanes.length > 1) {
+      const idx = d.lanes.findIndex((l) => e.clientY >= l.top && e.clientY < l.bottom);
+      d.overLane = idx >= 0 ? idx : d.overLane;
+      setDragLane(idx >= 0 && idx !== d.laneIdx ? idx : null);
+    }
     patchClip(d.trackId, d.clipId, (c) => {
-      const dur = c.buffer.duration;
-      if (d.mode === 'move') return { offset: Math.max(0, d.offset + ds) };
-      if (d.mode === 'trimL') return { trimStart: clamp(d.trimStart + ds, 0, c.trimEnd - 0.05) };
-      if (d.mode === 'trimR') return { trimEnd: clamp(d.trimEnd + ds, c.trimStart + 0.05, dur) };
+      const dur = c.buffer.duration; const len = c.trimEnd - c.trimStart;
+      if (d.mode === 'move') {
+        let off = Math.max(0, d.offset + ds);
+        const s1 = snapTo(off, d, e.altKey); const s2 = snapTo(off + len, d, e.altKey) - len;
+        if (s1 !== off && (s2 === off || Math.abs(s1 - off) <= Math.abs(s2 - off))) off = s1; else if (s2 !== off) off = s2;
+        return { offset: Math.max(0, off) };
+      }
+      if (d.mode === 'trimL') {
+        const edge = snapTo(d.offset + ds, d, e.altKey); const dd = edge - d.offset;
+        const ts = clamp(d.trimStart + dd, 0, c.trimEnd - 0.05);
+        return { trimStart: ts, offset: Math.max(0, d.offset + (ts - d.trimStart)) };
+      }
+      if (d.mode === 'trimR') {
+        const end0 = d.offset + (d.trimEnd - d.trimStart);
+        const edge = snapTo(end0 + ds, d, e.altKey);
+        return { trimEnd: clamp(d.trimEnd + (edge - end0), c.trimStart + 0.05, dur) };
+      }
       return {};
     });
   }
-  function endDrag() { dragRef.current = null; window.removeEventListener('pointermove', onDrag); window.removeEventListener('pointerup', endDrag); }
+  function endDrag() {
+    const d = dragRef.current;
+    dragRef.current = null; setDragLane(null);
+    window.removeEventListener('pointermove', onDrag); window.removeEventListener('pointerup', endDrag);
+    // Перенос клипа на другую дорожку.
+    if (d && d.mode === 'move' && d.overLane != null && d.overLane !== d.laneIdx) {
+      setTracks((prev) => {
+        const from = prev.find((tk) => tk.id === d.trackId); const to = prev[d.overLane];
+        const clip = from && from.clips.find((c) => c.id === d.clipId);
+        if (!from || !to || !clip) return prev;
+        return prev.map((tk) => {
+          if (tk.id === from.id) return { ...tk, clips: tk.clips.filter((c) => c.id !== clip.id) };
+          if (tk.id === to.id) return { ...tk, clips: [...tk.clips, clip] };
+          return tk;
+        });
+      });
+      setSel((cur) => (cur && cur.clipId === d.clipId ? { trackId: tracks[d.overLane]?.id ?? cur.trackId, clipId: d.clipId } : cur));
+    }
+  }
 
   // --- ножницы: режем клип в точке клика ---
   function cutAt(e, trackId, clip) {
@@ -172,6 +238,27 @@ function MultitrackEditor({ language = 'ru' }) {
       }
       return { ...tk, clips };
     }));
+  }
+
+  // Разрезать по плейхеду: выбранный клип, либо все клипы под плейхедом.
+  function splitAtPlayhead() {
+    setTracks((prev) => prev.map((tk) => {
+      const clips = [];
+      for (const c of tk.clips) {
+        const len = c.trimEnd - c.trimStart; const into = playhead - c.offset;
+        const hit = into > 0.05 && into < len - 0.05 && (!sel || sel.clipId === c.id);
+        if (!hit) { clips.push(c); continue; } // eslint-disable-line no-continue
+        uid += 1;
+        clips.push({ ...c, trimEnd: c.trimStart + into, fadeOut: 0 }, { ...c, id: uid, offset: playhead, trimStart: c.trimStart + into, fadeIn: 0 });
+      }
+      return { ...tk, clips };
+    }));
+  }
+
+  function fitToWindow() {
+    const wrap = laneWrapRef.current; if (!wrap || !totalDur) return;
+    setPxPerSec(clamp((wrap.clientWidth - 40) / totalDur, 2, 400));
+    wrap.scrollLeft = 0;
   }
 
   // --- построение графа (общее для live и offline) ---
@@ -243,6 +330,23 @@ function MultitrackEditor({ language = 'ru' }) {
 
   useEffect(() => () => stop(), [stop]);
 
+  // Горячие клавиши (не мешаем вводу в поля).
+  useEffect(() => {
+    const onKey = (e) => {
+      const el = document.activeElement;
+      if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT' || el.isContentEditable)) return;
+      if (!tracks.length) return;
+      if (e.code === 'Space') { e.preventDefault(); if (playing) stop(); else play(); }
+      else if (e.key === 's' || e.key === 'S' || e.key === 'ы' || e.key === 'Ы') { if (!e.ctrlKey && !e.metaKey) { e.preventDefault(); splitAtPlayhead(); } }
+      else if ((e.key === 'Delete' || e.key === 'Backspace') && sel) { e.preventDefault(); removeClip(sel.trackId, sel.clipId); }
+      else if ((e.ctrlKey || e.metaKey) && (e.key === 'd' || e.key === 'в')) { e.preventDefault(); dupSelClip(); }
+      else if (e.key === '+' || e.key === '=') setPxPerSec((v) => clamp(v * 1.25, 2, 400));
+      else if (e.key === '-' || e.key === '_') setPxPerSec((v) => clamp(v / 1.25, 2, 400));
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  });
+
   function seek(e) {
     if (tool === 'cut') return;
     const wrap = laneWrapRef.current; if (!wrap) return; const rect = wrap.getBoundingClientRect();
@@ -257,7 +361,7 @@ function MultitrackEditor({ language = 'ru' }) {
     const wrap = laneWrapRef.current; const rect = wrap.getBoundingClientRect();
     const mouseX = e.clientX - rect.left + wrap.scrollLeft; const secAtMouse = mouseX / pxPerSec;
     const factor = e.deltaY < 0 ? 1.15 : 1 / 1.15;
-    const next = clamp(pxPerSec * factor, 12, 400);
+    const next = clamp(pxPerSec * factor, 2, 400);
     setPxPerSec(next);
     requestAnimationFrame(() => { if (laneWrapRef.current) laneWrapRef.current.scrollLeft = secAtMouse * next - (e.clientX - rect.left); });
   }
@@ -313,6 +417,9 @@ function MultitrackEditor({ language = 'ru' }) {
           <button type="button" title={t.select} className={tool === 'select' ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => setTool('select')}>▯</button>
           <button type="button" title={t.cut} className={tool === 'cut' ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => setTool('cut')}>✂</button>
         </div>
+        <button type="button" className="tool-btn small" title={`${t.split} (S)`} onClick={splitAtPlayhead}>✂|</button>
+        <button type="button" className={snap ? 'tool-btn small is-on' : 'tool-btn small'} onClick={() => setSnap((v) => !v)} title={t.snap}>🧲 {t.snap}</button>
+        <button type="button" className="tool-btn small" onClick={fitToWindow}>↔ {t.fit}</button>
         <label className="mt-knob"><span>{t.master}</span><input type="range" min="0" max="1.5" step="0.01" value={master} onChange={(e) => setMaster(Number(e.target.value))} /></label>
         <label className="mt-knob"><span>{t.speed} ×{rate.toFixed(2)}</span><input type="range" min="0.5" max="2" step="0.05" value={rate} onChange={(e) => setRate(Number(e.target.value))} /></label>
         <div className="mt-transport-spacer" />
@@ -353,10 +460,18 @@ function MultitrackEditor({ language = 'ru' }) {
         <div className="mt-timeline" ref={laneWrapRef} onWheel={onWheel}>
           <div className="mt-inner" style={{ width: innerW }}>
             <div className="mt-ruler" style={{ height: RULER_H }} onPointerDown={seek}>
-              {Array.from({ length: Math.ceil(totalDur) + 1 }).map((_, i) => (<span key={i} className="mt-tick" style={{ left: i * pxPerSec }}>{i % (pxPerSec < 40 ? 5 : 1) === 0 ? fmt(i) : ''}</span>))}
+              {(() => {
+                // Шаг делений подбирается под зум: подписи не реже ~70 px.
+                const step = TICK_STEPS.find((st) => st * pxPerSec >= 70) || 600;
+                const n = Math.ceil((totalDur + 2) / step);
+                return Array.from({ length: n + 1 }).map((_, i) => {
+                  const sec = i * step;
+                  return <span key={i} className="mt-tick" style={{ left: sec * pxPerSec }}>{step < 1 ? `${fmt(sec)}.${Math.round((sec % 1) * 10)}` : fmt(sec)}</span>;
+                });
+              })()}
             </div>
             {tracks.map((tk) => (
-              <div key={tk.id} className="mt-lane" style={{ height: ROW_H }} onPointerDown={seek}
+              <div key={tk.id} className={dragLane === tracks.indexOf(tk) ? 'mt-lane is-drop' : 'mt-lane'} style={{ height: ROW_H }} onPointerDown={seek}
                 onDragOver={(e) => { e.preventDefault(); }}
                 onDrop={(e) => { e.preventDefault(); const rect = e.currentTarget.getBoundingClientRect(); const at = (e.clientX - rect.left) / pxPerSec; addFiles(e.dataTransfer.files, tk.id, Math.max(0, at)); }}>
                 {tk.clips.map((clip) => (
@@ -365,7 +480,7 @@ function MultitrackEditor({ language = 'ru' }) {
                     onPointerDown={(e) => (tool === 'cut' ? cutAt(e, tk.id, clip) : startDrag(e, tk.id, clip, 'move'))}>
                     <span className="mt-clip-name">{clip.name}</span>
                     {tool !== 'cut' && <span className="mt-handle l" onPointerDown={(e) => startDrag(e, tk.id, clip, 'trimL')} />}
-                    <canvas ref={(el) => { if (el) canvasRefs.current[clip.id] = el; }} className="mt-wave" />
+                    <ClipWave clip={clip} pxPerSec={pxPerSec} />
                     {tool !== 'cut' && <span className="mt-handle r" onPointerDown={(e) => startDrag(e, tk.id, clip, 'trimR')} />}
                   </div>
                 ))}
@@ -384,6 +499,7 @@ function MultitrackEditor({ language = 'ru' }) {
       </div>
 
       <input ref={inputRef} type="file" accept="audio/*,.wav,.mp3,.ogg,.flac,.m4a,.aac" multiple hidden onChange={(e) => { addFiles(e.target.files); e.target.value = ''; }} />
+      <p className="tool-local-note">⌨️ {t.keys}</p>
       <p className="tool-local-note">🔒 {t.note}</p>
     </div>
   );
