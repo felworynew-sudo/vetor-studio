@@ -985,6 +985,20 @@
       }
     },
     {
+      "slug": "seamless-texture",
+      "categoryId": "image",
+      "status": "ready",
+      "icon": "🧱",
+      "ru": {
+        "title": "Бесшовная текстура",
+        "desc": "Делает из фото фактуры тайл без швов: растушёвка шва или зеркало 2×2, выравнивание освещения, превью плиткой 3×3, тайлы 512–2048 px."
+      },
+      "en": {
+        "title": "Seamless texture maker",
+        "desc": "Turns a texture photo into a seamless tile: seam feathering or 2×2 mirror, lighting flattening, 3×3 tiled preview, 512–2048 px tiles."
+      }
+    },
+    {
       "slug": "pattern-gen",
       "categoryId": "generators",
       "status": "ready",

@@ -1696,3 +1696,6 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
 .dm-frame { width: 34px; height: 34px; border-radius: 50% !important; border: 2px solid var(--stroke); cursor: pointer; padding: 0; }
 .dm-frame.is-active { outline: 2px solid var(--t-accent); outline-offset: 2px; }
 .dm-input { width: 100%; padding: 8px 10px; border-radius: 9px; border: 1px solid var(--stroke); background: var(--bg); color: var(--text); font: inherit; font-size: 13px; }
+
+/* Seamless texture */
+.st-tiles { width: 100%; aspect-ratio: 1 / 1; max-height: 70vh; border-radius: 12px; border: 1px solid var(--stroke); background-size: 33.333% auto; background-repeat: repeat; margin: 6px 0 12px; image-rendering: auto; }

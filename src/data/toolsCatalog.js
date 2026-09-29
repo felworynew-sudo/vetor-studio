@@ -75,6 +75,7 @@ const READY_COMPONENTS = {
   'social-crop-pack': lazy(() => import('../components/tools/SocialCropPack')),
   'mockup-perspective': lazy(() => import('../components/tools/MockupWarp')),
   'device-mockup': lazy(() => import('../components/tools/DeviceMockup')),
+  'seamless-texture': lazy(() => import('../components/tools/SeamlessTexture')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;
