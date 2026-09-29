@@ -52,7 +52,7 @@ AGPL/NC-лицензии не тащим.
 
 ## C. Улучшение остальных (полный разбор всех 58)
 
-- [ ] **C1. AudioConverter** — ffmpeg.wasm: любые входные форматы, MP3/AAC/OGG/Opus/FLAC на выходе.
+- [x] **C1. AudioConverter** — ffmpeg.wasm: любые входные форматы, MP3/AAC/OGG/Opus/FLAC на выходе.
 - [ ] **C2. AudioMetadata** — ядро music-metadata (MP3/MP4/FLAC/Ogg/WAV/AIFF, ID3/APE/Vorbis/MP4 теги).
 - [ ] **C3. AudioTrimmer** — экспорт не только WAV (через ffmpeg.wasm / lamejs).
 - [ ] **C4. BlurAnalyzer** — несколько метрик (Laplacian, Tenengrad, FFT high-freq), карта резкости по зонам.
