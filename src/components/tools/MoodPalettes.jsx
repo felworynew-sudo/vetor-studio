@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react';
+import { fixColor, wcag } from '../../utils/contrast';
+import { hexToRgb, oklabToOklch, oklchToRgbClamped, rgbToHex, rgbToOklab } from '../../utils/oklab';
 
 // Генератор палитр по настроению: СОЗДАЁТ случайную палитру под выбранное
 // настроение (по правилам тона/насыщенности/светлоты), а не показывает заготовки.
+// Поверх — гарантия пригодности: акценты не слабее 3:1 к фону (подбор светлоты в
+// OKLCH), плюс цвет текста, проходящий WCAG AA на фоне.
 
 const MOODS = {
   cyberpunk: { ru: 'Киберпанк', en: 'Cyberpunk', hues: [250, 270, 290, 315, 190, 220, 300], base: { s: [35, 60], l: [7, 13] }, sec: { s: [45, 70], l: [22, 38] }, acc: { s: [85, 100], l: [50, 64] }, light: { s: [25, 45], l: [80, 90] } },
@@ -15,8 +19,8 @@ const MOODS = {
 };
 
 const TEXT = {
-  ru: { mood: 'Настроение', generate: 'Сгенерировать', copy: 'Копировать', copied: 'Скопировано', hint: 'Каждый раз — новая палитра под настроение. Клик по цвету копирует HEX.' },
-  en: { mood: 'Mood', generate: 'Generate', copy: 'Copy', copied: 'Copied', hint: 'A fresh palette each time. Click a color to copy the HEX.' },
+  ru: { mood: 'Настроение', generate: 'Сгенерировать', copy: 'Копировать', copied: 'Скопировано', hint: 'Каждый раз — новая палитра под настроение. Клик по цвету копирует HEX. Под цветом — контраст к фону.', roles: ['Фон', 'Второй', 'Акцент', 'Акцент 2', 'Светлый', 'Текст'] },
+  en: { mood: 'Mood', generate: 'Generate', copy: 'Copy', copied: 'Copied', hint: 'A fresh palette each time. Click a color to copy the HEX. Below each color — contrast to the background.', roles: ['Background', 'Secondary', 'Accent', 'Accent 2', 'Light', 'Text'] },
 };
 
 const rand = (a, b) => a + Math.random() * (b - a);
@@ -38,13 +42,17 @@ function generate(m) {
   const H = () => pick(m.hues) + rand(-7, 7);
   const S = (r) => rand(r[0], r[1]);
   const L = (r) => rand(r[0], r[1]);
-  return [
-    hslToHex(H(), S(m.base.s), L(m.base.l)),
-    hslToHex(H(), S(m.sec.s), L(m.sec.l)),
-    hslToHex(H(), S(m.acc.s), L(m.acc.l)),
-    hslToHex(H(), S(m.acc.s), L(m.acc.l)),
-    hslToHex(H(), S(m.light.s), L(m.light.l)),
-  ];
+  const base = hslToHex(H(), S(m.base.s), L(m.base.l));
+  const sec = hslToHex(H(), S(m.sec.s), L(m.sec.l));
+  // Акценты должны читаться на фоне (UI-элементы, иконки: ≥ 3:1).
+  const acc1 = fixColor(hslToHex(H(), S(m.acc.s), L(m.acc.l)), base, { target: 3 }).hex;
+  const acc2 = fixColor(hslToHex(H(), S(m.acc.s), L(m.acc.l)), base, { target: 3 }).hex;
+  const light = hslToHex(H(), S(m.light.s), L(m.light.l));
+  // Текст: тон фона, светлота — в противоположный край, затем добиваем до AA.
+  const [bL, bC, bH] = oklabToOklch(...rgbToOklab(...hexToRgb(base)));
+  const draft = rgbToHex(...oklchToRgbClamped(bL > 0.6 ? 0.22 : 0.95, Math.min(bC, 0.04), bH));
+  const text = fixColor(draft, base, { target: 4.5 }).hex;
+  return [base, sec, acc1, acc2, light, text];
 }
 
 function MoodPalettes({ language = 'ru' }) {
@@ -79,6 +87,7 @@ function MoodPalettes({ language = 'ru' }) {
         {palette.map((c, i) => (
           <button key={`${c}-${i}`} type="button" className="mood-swatch" style={{ background: c }} onClick={() => copy(c)} title={c}>
             <span>{copied === c ? '✓' : c.toUpperCase()}</span>
+            <small className="mood-role">{t.roles[i]}{i > 0 ? ` · ${wcag(c, palette[0]).toFixed(1)}:1` : ''}</small>
           </button>
         ))}
       </div>

@@ -1,18 +1,22 @@
 import { useMemo, useState } from 'react';
+import { fixColor, wcag } from '../../utils/contrast';
+import { hexToRgb, oklabToOklch, oklchToRgbClamped, rgbToHex, rgbToOklab } from '../../utils/oklab';
 
-// Калькулятор пастельных/тёмных пар: по базовому цвету подбирает контрастный
-// цвет текста и мягкую/тёмную пару для UI-элементов. Локально.
+// Калькулятор пастельных/тёмных пар: по базовому цвету строит мягкую (пастель) и
+// тёмную пару в OKLCH (тон сохраняется точно) и подбирает к каждой фону цвет текста
+// по реальному контрасту WCAG — не по порогу яркости. Текст на паре — того же тона,
+// затемнённый/осветлённый ровно до AA. Локально.
 
 const TEXT = {
   ru: {
     base: 'Базовый цвет', onLight: 'На светлом фоне', onDark: 'На тёмном фоне',
     text: 'Текст', pastel: 'Пастельная пара', dark: 'Тёмная пара', copied: 'Скопировано',
-    sample: 'Кнопка', hint: 'Цвет текста выбирается по яркости фона для контраста.',
+    sample: 'Кнопка', hint: 'Текст подбирается по контрасту WCAG ≥ 4.5:1. На пастельной и тёмной паре — текст того же тона (как в бейджах и тегах).',
   },
   en: {
     base: 'Base color', onLight: 'On light', onDark: 'On dark',
     text: 'Text', pastel: 'Pastel pair', dark: 'Dark pair', copied: 'Copied',
-    sample: 'Button', hint: 'Text color is picked by background luminance for contrast.',
+    sample: 'Button', hint: 'Text is chosen by WCAG contrast ≥ 4.5:1. On the pastel and dark pair the text keeps the same hue (like badges and tags).',
   },
 };
 
@@ -21,25 +25,9 @@ function normHex(input) {
   if (/^[0-9a-fA-F]{3}$/.test(h)) h = h.split('').map((c) => c + c).join('');
   return /^[0-9a-fA-F]{6}$/.test(h) ? `#${h.toLowerCase()}` : null;
 }
-function toRgb(hex) { const h = hex.replace('#', ''); return { r: parseInt(h.slice(0, 2), 16), g: parseInt(h.slice(2, 4), 16), b: parseInt(h.slice(4, 6), 16) }; }
-function luminance({ r, g, b }) {
-  const a = [r, g, b].map((v) => { const s = v / 255; return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4; });
-  return 0.2126 * a[0] + 0.7152 * a[1] + 0.0722 * a[2];
-}
-function bestText(hex) { return luminance(toRgb(hex)) > 0.4 ? '#0d0d11' : '#ffffff'; }
-function toHsl({ r, g, b }) {
-  const rn = r / 255; const gn = g / 255; const bn = b / 255;
-  const max = Math.max(rn, gn, bn); const min = Math.min(rn, gn, bn); let h = 0; let s = 0; const l = (max + min) / 2; const d = max - min;
-  if (d) { s = l > 0.5 ? d / (2 - max - min) : d / (max + min); if (max === rn) h = (gn - bn) / d + (gn < bn ? 6 : 0); else if (max === gn) h = (bn - rn) / d + 2; else h = (rn - gn) / d + 4; h *= 60; }
-  return { h, s: s * 100, l: l * 100 };
-}
-function hslHex({ h, s, l }) {
-  const sn = s / 100; const ln = l / 100; const c = (1 - Math.abs(2 * ln - 1)) * sn; const x = c * (1 - Math.abs(((h / 60) % 2) - 1)); const m = ln - c / 2;
-  let r = 0; let g = 0; let b = 0; const hh = ((h % 360) + 360) % 360;
-  if (hh < 60) { r = c; g = x; } else if (hh < 120) { r = x; g = c; } else if (hh < 180) { g = c; b = x; } else if (hh < 240) { g = x; b = c; } else if (hh < 300) { r = x; b = c; } else { r = c; b = x; }
-  const to = (v) => Math.round((v + m) * 255).toString(16).padStart(2, '0');
-  return `#${to(r)}${to(g)}${to(b)}`;
-}
+// Чёрный или белый — что реально контрастнее к фону (а не порог яркости 0.4,
+// который ошибается на средних тонах вроде оранжевого и бирюзового).
+function bestText(hex) { return wcag('#0d0d11', hex) >= wcag('#ffffff', hex) ? '#0d0d11' : '#ffffff'; }
 
 function Swatch({ bg, label, sublabel, onCopy, copied }) {
   return (
@@ -59,11 +47,15 @@ function PastelPairs({ language = 'ru' }) {
 
   const pair = useMemo(() => {
     if (!hex) return null;
-    const hsl = toHsl(toRgb(hex));
+    const [, C, h] = oklabToOklch(...rgbToOklab(...hexToRgb(hex)));
+    const pastel = rgbToHex(...oklchToRgbClamped(0.93, Math.min(C * 0.35, 0.06), h));
+    const dark = rgbToHex(...oklchToRgbClamped(0.27, Math.min(C * 0.9, 0.12), h));
     return {
       text: bestText(hex),
-      pastel: hslHex({ h: hsl.h, s: Math.max(25, hsl.s * 0.5), l: 90 }),
-      dark: hslHex({ h: hsl.h, s: Math.min(90, hsl.s * 1.05), l: 20 }),
+      pastel,
+      dark,
+      onPastel: fixColor(hex, pastel, { target: 4.5 }).hex,
+      onDark: fixColor(hex, dark, { target: 4.5 }).hex,
     };
   }, [hex]);
 
@@ -82,9 +74,9 @@ function PastelPairs({ language = 'ru' }) {
       {pair && (
         <>
           <div className="pp-cards">
-            <Swatch bg={hex} label={t.base} sublabel={`${t.text}: ${pair.text === '#0d0d11' ? '⬛' : '⬜'}`} onCopy={() => copy(hex)} copied={copied === hex} />
-            <Swatch bg={pair.pastel} label={t.pastel} sublabel="" onCopy={() => copy(pair.pastel)} copied={copied === pair.pastel} />
-            <Swatch bg={pair.dark} label={t.dark} sublabel="" onCopy={() => copy(pair.dark)} copied={copied === pair.dark} />
+            <Swatch bg={hex} label={t.base} sublabel={`${t.text} ${pair.text.toUpperCase()} · ${wcag(pair.text, hex).toFixed(1)}:1`} onCopy={() => copy(hex)} copied={copied === hex} />
+            <Swatch bg={pair.pastel} label={t.pastel} sublabel={`${t.text} ${pair.onPastel.toUpperCase()} · ${wcag(pair.onPastel, pair.pastel).toFixed(1)}:1`} onCopy={() => copy(pair.pastel)} copied={copied === pair.pastel} />
+            <Swatch bg={pair.dark} label={t.dark} sublabel={`${t.text} ${pair.onDark.toUpperCase()} · ${wcag(pair.onDark, pair.dark).toFixed(1)}:1`} onCopy={() => copy(pair.dark)} copied={copied === pair.dark} />
           </div>
 
           <div className="pp-previews">
@@ -94,7 +86,8 @@ function PastelPairs({ language = 'ru' }) {
             </div>
             <div className="pp-preview" style={{ background: '#0d0d11' }}>
               <span className="pp-preview-cap" style={{ color: '#aaa' }}>{t.onDark}</span>
-              <span className="pp-btn" style={{ background: pair.pastel, color: bestText(pair.pastel) }}>{t.sample}</span>
+              <span className="pp-btn" style={{ background: pair.pastel, color: pair.onPastel }}>{t.sample}</span>
+              <span className="pp-btn" style={{ background: pair.dark, color: pair.onDark, outline: '1px solid rgba(255,255,255,0.15)' }}>{t.sample}</span>
             </div>
           </div>
         </>

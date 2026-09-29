@@ -58,7 +58,7 @@ AGPL/NC-лицензии не тащим.
 - [ ] **C4. BlurAnalyzer** — несколько метрик (Laplacian, Tenengrad, FFT high-freq), карта резкости по зонам.
 - [x] **C5. ColorConverter** — OKLCH / OKLab / Lab / LCH / Display-P3, gamut-проверка.
 - [ ] **C6. ColorGrade** — GPU-пайплайн (WebGL) в linear RGB, full-res.
-- [ ] **C7. ColorHarmony** — OKLCH-повороты + gamut mapping.
+- [x] **C7. ColorHarmony** — OKLCH-повороты + gamut mapping.
 - [x] **C8. ColorWeight** — на OKLab-движке палитры.
 - [x] **C9. ContrastChecker** — APCA + авто-исправление цвета (общий движок с B18).
 - [ ] **C10. CrtGlitch** — WebGL-шейдер, full-res и анимация.
@@ -71,8 +71,8 @@ AGPL/NC-лицензии не тащим.
 - [ ] **C17. Halftone** — CMYK с углами растра/розетка, линии, экспорт SVG.
 - [ ] **C18. ImageMetadata** — просмотр всех тегов, выборочное удаление, C2PA-инспектор.
 - [ ] **C19. Isometry** — экспорт GLB/STL/OBJ.
-- [ ] **C20. MoodPalettes** — OKLCH + контраст + gamut.
-- [ ] **C21. PastelPairs** — реальный целевой контраст вместо порога luminance > 0.4.
+- [x] **C20. MoodPalettes** — OKLCH + контраст + gamut.
+- [x] **C21. PastelPairs** — реальный целевой контраст вместо порога luminance > 0.4.
 - [x] **C22. Pixelizer** — image-q квантизация + дизеринг.
 - [ ] **C23. RuleOfThirds** — настоящая золотая спираль (4 ориентации).
 - [ ] **C24. Text3D** — экспорт GLB, проверка OTF/CFF.

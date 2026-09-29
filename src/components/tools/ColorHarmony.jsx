@@ -1,12 +1,16 @@
 import { useMemo, useState } from 'react';
+import { hexToRgb, oklabToOklch, oklchToRgbClamped, rgbToHex, rgbToOklab } from '../../utils/oklab';
 
 // Цветовые схемы (круг Иттена): по базовому цвету строит гармоничные сочетания
-// вращением тона в HSL. Локально, копирование HEX в клик.
+// вращением тона. По умолчанию — в OKLCH: светлота и насыщенность воспринимаются
+// одинаковыми у всех цветов схемы (в HSL жёлтый «светлее» синего при тех же L/S),
+// выход за sRGB аккуратно сжимается по хроме. HSL оставлен для сравнения.
 
 const TEXT = {
   ru: {
     base: 'Базовый цвет', scheme: 'Схема', copy: 'Копировать все', copied: 'Скопировано',
-    hint: 'Схемы строятся вращением тона по цветовому кругу — как в круге Иттена.',
+    hint: 'Схемы строятся вращением тона по цветовому кругу — как в круге Иттена. В режиме OKLCH все цвета схемы визуально одной светлоты и насыщенности.',
+    space: 'Пространство', oklch: 'OKLCH (перцептивно)', hsl: 'HSL (классика)',
     schemes: {
       complementary: 'Комплементарная', analogous: 'Аналоговая', triadic: 'Триада',
       tetradic: 'Тетрада', split: 'Сплит-комплементарная', mono: 'Монохромная',
@@ -14,7 +18,8 @@ const TEXT = {
   },
   en: {
     base: 'Base color', scheme: 'Scheme', copy: 'Copy all', copied: 'Copied',
-    hint: 'Schemes are built by rotating hue around the color wheel — like Itten’s wheel.',
+    hint: 'Schemes are built by rotating hue around the color wheel — like Itten’s wheel. In OKLCH mode all colors look equally light and saturated.',
+    space: 'Space', oklch: 'OKLCH (perceptual)', hsl: 'HSL (classic)',
     schemes: {
       complementary: 'Complementary', analogous: 'Analogous', triadic: 'Triadic',
       tetradic: 'Tetradic', split: 'Split-complementary', mono: 'Monochromatic',
@@ -57,6 +62,21 @@ function hslToHex({ h, s, l }) {
   return `#${to(r)}${to(g)}${to(b)}`;
 }
 
+// Та же схема в OKLCH: вращаем h, сохраняя L и C; моно — шаги по L.
+function buildSchemeOk(hex, scheme) {
+  const [L, C, h] = oklabToOklch(...rgbToOklab(...hexToRgb(hex)));
+  const at = (dh, l = L, c = C) => rgbToHex(...oklchToRgbClamped(l, c, (((h + dh) % 360) + 360) % 360));
+  switch (scheme) {
+    case 'complementary': return [hex, at(180)];
+    case 'analogous': return [at(-30), hex, at(30)];
+    case 'triadic': return [hex, at(120), at(240)];
+    case 'tetradic': return [hex, at(90), at(180), at(270)];
+    case 'split': return [hex, at(150), at(210)];
+    case 'mono': return [0.28, 0.42, null, 0.8, 0.92].map((l) => (l == null ? hex : at(0, l, C * (l > 0.85 ? 0.45 : 0.9))));
+    default: return [hex];
+  }
+}
+
 function buildScheme(base, scheme) {
   const { h, s, l } = base;
   const rot = (deg) => hslToHex({ h: h + deg, s, l });
@@ -82,9 +102,13 @@ function ColorHarmony({ language = 'ru' }) {
   const [raw, setRaw] = useState('#6166ff');
   const [scheme, setScheme] = useState('complementary');
   const [copied, setCopied] = useState('');
+  const [space, setSpace] = useState('oklch');
 
   const hex = normalizeHex(raw);
-  const colors = useMemo(() => (hex ? buildScheme(hexToHsl(hex), scheme) : []), [hex, scheme]);
+  const colors = useMemo(() => {
+    if (!hex) return [];
+    return space === 'oklch' ? buildSchemeOk(hex, scheme) : buildScheme(hexToHsl(hex), scheme);
+  }, [hex, scheme, space]);
 
   function copyOne(c) {
     if (navigator.clipboard) navigator.clipboard.writeText(c).then(() => { setCopied(c); setTimeout(() => setCopied(''), 1200); }).catch(() => {});
@@ -108,6 +132,13 @@ function ColorHarmony({ language = 'ru' }) {
           <select className="cb-select" value={scheme} onChange={(e) => setScheme(e.target.value)}>
             {Object.entries(t.schemes).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
           </select>
+        </div>
+        <div className="tool-field">
+          <span className="tool-field-label">{t.space}</span>
+          <div className="segmented">
+            <button type="button" className={space === 'oklch' ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => setSpace('oklch')}>{t.oklch}</button>
+            <button type="button" className={space === 'hsl' ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => setSpace('hsl')}>{t.hsl}</button>
+          </div>
         </div>
       </div>
 
