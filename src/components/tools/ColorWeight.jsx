@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { dominantColors, imageToData } from '../../utils/quantize';
+import { extractPalette, imageToData } from '../../utils/paletteEngine';
 
 // Анализатор цветового веса: показывает процентное соотношение доминирующих
 // цветов на макете — для проверки правила 60-30-10. Локально в <canvas>.
@@ -17,8 +17,10 @@ const TEXT = {
   },
 };
 
+// Кластеры считаются в перцептивном OKLab (общий движок с экстрактором палитры),
+// поэтому соседние оттенки фона не дробят «60%» на несколько мелких долей.
 function analyze(img, groups = 6) {
-  return dominantColors(imageToData(img, 220), groups);
+  return extractPalette(imageToData(img, 220), groups).colors.map((c) => ({ hex: c.hex, pct: Math.round(c.pct) }));
 }
 
 function ColorWeight({ language = 'ru' }) {

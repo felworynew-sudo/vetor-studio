@@ -59,7 +59,7 @@ AGPL/NC-лицензии не тащим.
 - [ ] **C5. ColorConverter** — OKLCH / OKLab / Lab / LCH / Display-P3, gamut-проверка.
 - [ ] **C6. ColorGrade** — GPU-пайплайн (WebGL) в linear RGB, full-res.
 - [ ] **C7. ColorHarmony** — OKLCH-повороты + gamut mapping.
-- [ ] **C8. ColorWeight** — на OKLab-движке палитры.
+- [x] **C8. ColorWeight** — на OKLab-движке палитры.
 - [ ] **C9. ContrastChecker** — APCA + авто-исправление цвета (общий движок с B18).
 - [ ] **C10. CrtGlitch** — WebGL-шейдер, full-res и анимация.
 - [ ] **C11. CssFromSvg** — корректные градиенты (orientation/gradientTransform/opacity), без regex.

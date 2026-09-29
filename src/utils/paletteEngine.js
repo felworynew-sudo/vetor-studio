@@ -120,6 +120,16 @@ export function extractPalette(imageData, count = 6) {
     if (colors.length >= Math.min(count, byWeight.length)) break;
   }
 
+  // Доля цвета палитры = все пиксели, которые ближе к нему, чем к остальным цветам
+  // палитры. Так проценты в сумме дают 100% и отражают реальный «вес» на макете.
+  const share = new Map(colors.map((c) => [c, 0]));
+  clusters.forEach((cl) => {
+    let best = colors[0]; let bd = Infinity;
+    colors.forEach((c) => { const d = deltaOK(c.lab, cl.lab); if (d < bd) { bd = d; best = c; } });
+    share.set(best, share.get(best) + cl.n);
+  });
+  colors = colors.map((c) => ({ ...c, pct: (share.get(c) / total) * 100 })).sort((a, b) => b.pct - a.pct);
+
   // Роли. Ищем по всем кластерам, а не только по видимым в палитре.
   const visible = clusters.filter((c) => c.pct >= 0.4);
   const pool = visible.length ? visible : clusters;
