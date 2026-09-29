@@ -78,6 +78,8 @@ const READY_COMPONENTS = {
   'seamless-texture': lazy(() => import('../components/tools/SeamlessTexture')),
   'pbr-maps': lazy(() => import('../components/tools/PbrMaps')),
   'terrain-generator': lazy(() => import('../components/tools/TerrainGenerator')),
+  'sprite-sheet': lazy(() => import('../components/tools/SpriteSheet')),
+  'contact-sheet': lazy(() => import('../components/tools/ContactSheet')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;

@@ -40,8 +40,8 @@ AGPL/NC-лицензии не тащим.
 - [x] **B9. Сравнение изображений** — overlay / difference / SSIM.
 - [x] **B10. Бесшовная текстура** — offset + заделка шва.
 - [x] **B11. Normal / Height map генератор.**
-- [ ] **B12. Sprite sheet генератор.**
-- [ ] **B13. Contact sheet генератор.**
+- [x] **B12. Sprite sheet генератор.**
+- [x] **B13. Contact sheet генератор.**
 - [x] **B14. Dithering Lab** — Floyd–Steinberg, Atkinson, Bayer, blue-noise.
 - [ ] **B15. VHS / Print Lab** — процедурный стек эффектов.
 - [x] **B16. Перенос палитры** A → B.

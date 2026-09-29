@@ -1013,6 +1013,34 @@
       }
     },
     {
+      "slug": "sprite-sheet",
+      "categoryId": "image",
+      "status": "ready",
+      "icon": "🎞️",
+      "ru": {
+        "title": "Спрайт-шит",
+        "desc": "Собирает кадры в атлас + JSON (TexturePacker: Phaser, PixiJS) и CSS-спрайт: обрезка прозрачных полей, отступы, степень двойки, превью анимации. И обратно — нарезка шита на кадры."
+      },
+      "en": {
+        "title": "Sprite sheet",
+        "desc": "Packs frames into an atlas + JSON (TexturePacker: Phaser, PixiJS) and a CSS sprite: trimming, padding, power-of-two, animation preview. And back — split a sheet into frames."
+      }
+    },
+    {
+      "slug": "contact-sheet",
+      "categoryId": "image",
+      "status": "ready",
+      "icon": "🗂️",
+      "ru": {
+        "title": "Контакт-лист",
+        "desc": "Десятки фото → листы-сетки с подписями и нумерацией: A4/A3/Letter, колонки, зазоры, заголовок, тёмный фон. Экспорт PNG и многостраничный PDF."
+      },
+      "en": {
+        "title": "Contact sheet",
+        "desc": "Dozens of photos → grid sheets with captions and numbering: A4/A3/Letter, columns, gaps, title, dark background. Export PNG and multi-page PDF."
+      }
+    },
+    {
       "slug": "pattern-gen",
       "categoryId": "generators",
       "status": "ready",
