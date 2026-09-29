@@ -245,6 +245,20 @@
       "img": "palitra-iz-foto.png"
     },
     {
+      "slug": "palette-transfer",
+      "categoryId": "color",
+      "status": "ready",
+      "icon": "🔀",
+      "ru": {
+        "title": "Перенос палитры A → B",
+        "desc": "Переносит цветовой характер фото-референса на ваше фото: мягкий (Reinhard) или точный (гистограммы) метод в OKLab. Экспорт PNG и LUT .cube."
+      },
+      "en": {
+        "title": "Palette transfer A → B",
+        "desc": "Transfers the color character of a reference photo onto yours: soft (Reinhard) or precise (histogram) method in OKLab. Export PNG and a .cube LUT."
+      }
+    },
+    {
       "slug": "contrast-checker",
       "categoryId": "color",
       "status": "ready",
@@ -879,11 +893,25 @@
       "img": "foto.png",
       "ru": {
         "title": "Дуотон",
-        "desc": "Перекрашивает фото в два цвета по яркости — трендовый эффект для обложек и постеров. Экспорт PNG."
+        "desc": "Перекрашивает фото в два или три цвета по яркости (дуотон/тритон) с чистыми переходами в OKLab. Пресеты, экспорт PNG в полном размере и LUT .cube."
       },
       "en": {
         "title": "Duotone",
-        "desc": "Recolors a photo into two colors by luminance — a trendy cover/poster effect. PNG export."
+        "desc": "Recolors a photo into two or three colors by luminance (duotone/tritone) with clean OKLab transitions. Presets, full-size PNG and a .cube LUT."
+      }
+    },
+    {
+      "slug": "gradient-map",
+      "categoryId": "image",
+      "status": "ready",
+      "icon": "🌈",
+      "ru": {
+        "title": "Gradient Map",
+        "desc": "Перекрашивает фото по яркости через многоцветный градиент: пресеты, свои точки или градиент из другого фото. Экспорт PNG, CSS и LUT .cube."
+      },
+      "en": {
+        "title": "Gradient map",
+        "desc": "Recolors a photo by luminance through a multicolor gradient: presets, custom stops or a gradient from another photo. Export PNG, CSS and a .cube LUT."
       }
     },
     {

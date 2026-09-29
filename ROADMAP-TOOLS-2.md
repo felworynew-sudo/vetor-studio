@@ -44,8 +44,8 @@ AGPL/NC-лицензии не тащим.
 - [ ] **B13. Contact sheet генератор.**
 - [x] **B14. Dithering Lab** — Floyd–Steinberg, Atkinson, Bayer, blue-noise.
 - [ ] **B15. VHS / Print Lab** — процедурный стек эффектов.
-- [ ] **B16. Перенос палитры** A → B.
-- [ ] **B17. Gradient map из фото.**
+- [x] **B16. Перенос палитры** A → B.
+- [x] **B17. Gradient map из фото.**
 - [x] **B18. Accessible Palette Fixer** — минимальный сдвиг в OKLCH до WCAG.
 - [ ] **B19. Social Media Crop Pack** — одна картинка → YouTube / VK / Telegram / Instagram / Stories.
 - [ ] **B20. Мокап с перспективой** — 4 точки → perspective warp.
@@ -63,7 +63,7 @@ AGPL/NC-лицензии не тащим.
 - [x] **C9. ContrastChecker** — APCA + авто-исправление цвета (общий движок с B18).
 - [ ] **C10. CrtGlitch** — WebGL-шейдер, full-res и анимация.
 - [ ] **C11. CssFromSvg** — корректные градиенты (orientation/gradientTransform/opacity), без regex.
-- [ ] **C12. Duotone** — linear-light, gradient-map, 3 тона.
+- [x] **C12. Duotone** — linear-light, gradient-map, 3 тона.
 - [x] **C13. EinkSimulator** — Atkinson/Bayer/уровни серого/цветной e-ink (общий движок с B14).
 - [ ] **C14. FaviconGenerator** — ICO (мульти-размер), SVG favicon, maskable, manifest, ZIP.
 - [ ] **C15. FireSmoke** — шейдерная/fluid-симуляция.

@@ -68,6 +68,8 @@ const READY_COMPONENTS = {
   quantizer: lazy(() => import('../components/tools/Quantizer')),
   'dithering-lab': lazy(() => import('../components/tools/DitheringLab')),
   'palette-fixer': lazy(() => import('../components/tools/PaletteFixer')),
+  'gradient-map': lazy(() => import('../components/tools/GradientMap')),
+  'palette-transfer': lazy(() => import('../components/tools/PaletteTransfer')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;
