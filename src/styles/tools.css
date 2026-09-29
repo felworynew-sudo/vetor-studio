@@ -1729,3 +1729,13 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
 .pdf-bar span { flex: 1; color: var(--text-muted); }
 .pdf-bar button { border: 0; background: none; color: var(--text); cursor: pointer; font: inherit; padding: 2px 5px; border-radius: 5px; }
 .pdf-bar button:hover { background: var(--surface); }
+
+/* OCR */
+.mg-chip.is-active { background: var(--t-accent); border-color: var(--t-accent); color: #fff; }
+.ocr-img { position: relative; display: inline-block; max-width: 100%; border-radius: 10px; overflow: hidden; border: 1px solid var(--stroke); }
+.ocr-img img { display: block; max-width: 100%; max-height: 70vh; }
+.ocr-box { position: absolute; border: 1.5px solid rgba(62, 201, 138, 0.9); background: rgba(62, 201, 138, 0.12); }
+.ocr-box.is-mid { border-color: rgba(255, 200, 43, 0.9); background: rgba(255, 200, 43, 0.12); }
+.ocr-box.is-low { border-color: rgba(255, 92, 99, 0.9); background: rgba(255, 92, 99, 0.14); }
+.ocr-text { font-family: system-ui, sans-serif; font-size: 14px; line-height: 1.5; min-height: 260px; }
+.ocr-meta { font-size: 13px; color: var(--text-muted); }

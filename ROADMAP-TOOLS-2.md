@@ -81,7 +81,7 @@ AGPL/NC-лицензии не тащим.
 
 ## D. Новые инструменты (второй список)
 
-- [ ] **D1. OCR — картинка → текст** (tesseract.js).
+- [x] **D1. OCR — картинка → текст** (tesseract.js).
 - [x] **D2. Мокапы устройств** — скрин → iPhone/Android/ноутбук/браузер + фон + текст.
 - [ ] **D3. Font Inspector** — объединено с C16.
 - [x] **D4. PDF Studio** — merge / split / rotate / водяной знак / сжатие (pdf-lib / qpdf-wasm).

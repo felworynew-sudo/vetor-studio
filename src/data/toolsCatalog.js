@@ -81,6 +81,7 @@ const READY_COMPONENTS = {
   'sprite-sheet': lazy(() => import('../components/tools/SpriteSheet')),
   'contact-sheet': lazy(() => import('../components/tools/ContactSheet')),
   'pdf-studio': lazy(() => import('../components/tools/PdfStudio')),
+  ocr: lazy(() => import('../components/tools/OcrTool')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;

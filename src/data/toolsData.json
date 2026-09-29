@@ -1157,6 +1157,20 @@
         "title": "PDF studio",
         "desc": "Merge, split, reorder, rotate and delete PDF pages, images → PDF, watermark and page numbers. All in the browser, documents never leave your device."
       }
+    },
+    {
+      "slug": "ocr",
+      "categoryId": "ai",
+      "status": "ready",
+      "icon": "🔤",
+      "ru": {
+        "title": "OCR — текст с картинки",
+        "desc": "Распознаёт текст на сканах, фото документов и скриншотах: 100+ языков, включая русский, рамки слов с уверенностью, копирование, .txt и PDF с текстовым слоем."
+      },
+      "en": {
+        "title": "OCR — image to text",
+        "desc": "Recognizes text on scans, document photos and screenshots: 100+ languages, word boxes with confidence, copy, .txt and a PDF with a text layer."
+      }
     }
   ]
 }
