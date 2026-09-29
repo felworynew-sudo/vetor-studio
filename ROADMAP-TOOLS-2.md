@@ -87,7 +87,7 @@ AGPL/NC-лицензии не тащим.
 - [ ] **D4. PDF Studio** — merge / split / rotate / водяной знак / сжатие (pdf-lib / qpdf-wasm).
 - [ ] **D5. Anonymize faces** — автоблюр/пикселизация лиц.
 - [ ] **D6. Heal / удаление объектов** — inpainting кистью.
-- [ ] **D7. Heightmap / Terrain генератор** — simplex/fBM, эрозия, 3D-превью, PNG.
+- [x] **D7. Heightmap / Terrain генератор** — simplex/fBM, эрозия, 3D-превью, PNG.
 - [ ] **D8. SVG Path Editor** — правка кривых мышкой, сетка, snap.
 - [ ] **D9. Silence Remover** (аудио).
 - [ ] **D10. Waveform-картинка** из аудио (PNG/SVG).

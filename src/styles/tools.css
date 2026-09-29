@@ -1708,3 +1708,5 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
 .pbr-map img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; }
 .pbr-map span { display: block; padding: 4px; }
 .pbr-map:hover { border-color: var(--t-accent); }
+.tg-3d { margin-top: 10px; }
+.tg-map { display: block; width: 100%; max-width: 640px; margin-top: 10px; border-radius: 12px; border: 1px solid var(--stroke); image-rendering: auto; }

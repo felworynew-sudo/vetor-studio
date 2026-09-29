@@ -77,6 +77,7 @@ const READY_COMPONENTS = {
   'device-mockup': lazy(() => import('../components/tools/DeviceMockup')),
   'seamless-texture': lazy(() => import('../components/tools/SeamlessTexture')),
   'pbr-maps': lazy(() => import('../components/tools/PbrMaps')),
+  'terrain-generator': lazy(() => import('../components/tools/TerrainGenerator')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;

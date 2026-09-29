@@ -1101,6 +1101,20 @@
         "title": "Halftone",
         "desc": "An image into a dot grid by luminance — newspaper/comic effect. Angle, step, color, PNG export."
       }
+    },
+    {
+      "slug": "terrain-generator",
+      "categoryId": "generators",
+      "status": "ready",
+      "icon": "🏔️",
+      "ru": {
+        "title": "Генератор ландшафта",
+        "desc": "Процедурный рельеф: simplex-шум, горные хребты, остров, гидравлическая эрозия, уровень воды, 3D-превью. Экспорт heightmap PNG, цветной карты и RAW 16-bit для Unity/Unreal."
+      },
+      "en": {
+        "title": "Terrain generator",
+        "desc": "Procedural terrain: simplex noise, mountain ridges, island, hydraulic erosion, water level, 3D preview. Export heightmap PNG, color map and RAW 16-bit for Unity/Unreal."
+      }
     }
   ]
 }
