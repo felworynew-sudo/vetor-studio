@@ -43,7 +43,7 @@ AGPL/NC-лицензии не тащим.
 - [x] **B12. Sprite sheet генератор.**
 - [x] **B13. Contact sheet генератор.**
 - [x] **B14. Dithering Lab** — Floyd–Steinberg, Atkinson, Bayer, blue-noise.
-- [ ] **B15. VHS / Print Lab** — процедурный стек эффектов.
+- [x] **B15. VHS / Print Lab** — процедурный стек эффектов.
 - [x] **B16. Перенос палитры** A → B.
 - [x] **B17. Gradient map из фото.**
 - [x] **B18. Accessible Palette Fixer** — минимальный сдвиг в OKLCH до WCAG.
@@ -61,7 +61,7 @@ AGPL/NC-лицензии не тащим.
 - [x] **C7. ColorHarmony** — OKLCH-повороты + gamut mapping.
 - [x] **C8. ColorWeight** — на OKLab-движке палитры.
 - [x] **C9. ContrastChecker** — APCA + авто-исправление цвета (общий движок с B18).
-- [ ] **C10. CrtGlitch** — WebGL-шейдер, full-res и анимация.
+- [x] **C10. CrtGlitch** — WebGL-шейдер, full-res и анимация.
 - [x] **C11. CssFromSvg** — корректные градиенты (orientation/gradientTransform/opacity), без regex.
 - [x] **C12. Duotone** — linear-light, gradient-map, 3 тона.
 - [x] **C13. EinkSimulator** — Atkinson/Bayer/уровни серого/цветной e-ink (общий движок с B14).

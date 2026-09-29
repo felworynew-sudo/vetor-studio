@@ -1191,11 +1191,25 @@
       "img": "monitor.png",
       "ru": {
         "title": "CRT / глитч эффект",
-        "desc": "Ретро-эффекты на картинку: скан-линии, RGB-сдвиг, шум, глитч-полосы, виньетка. Экспорт PNG."
+        "desc": "CRT и глитч на видеокарте: кривизна кинескопа, скан-линии, RGB-маска, свечение, RGB-сдвиг, глитч-блоки. Полное разрешение, анимация, PNG и видео WebM."
       },
       "en": {
         "title": "CRT / glitch effect",
-        "desc": "Retro effects on an image: scanlines, RGB shift, noise, glitch bands, vignette. PNG export."
+        "desc": "CRT and glitch on the GPU: tube curvature, scanlines, RGB mask, glow, RGB shift, glitch blocks. Full resolution, animation, PNG and WebM video."
+      }
+    },
+    {
+      "slug": "retro-lab",
+      "categoryId": "image",
+      "status": "ready",
+      "icon": "📼",
+      "ru": {
+        "title": "VHS / Print Lab",
+        "desc": "Стек ретро-эффектов на видеокарте: VHS с таймкодом, CRT, глитч, ризограф и несовмещение CMY, старая плёнка. Пресеты, живая анимация, PNG и видео WebM."
+      },
+      "en": {
+        "title": "VHS / Print Lab",
+        "desc": "A GPU stack of retro effects: VHS with timestamp, CRT, glitch, riso and CMY misregistration, old film. Presets, live animation, PNG and WebM video."
       }
     },
     {

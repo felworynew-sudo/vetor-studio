@@ -94,6 +94,7 @@ const READY_COMPONENTS = {
   'font-lab': lazy(() => import('../components/tools/FontLab')),
   'variable-fonts': lazy(() => import('../components/tools/VariableFonts')),
   'font-pairs': lazy(() => import('../components/tools/FontPairs')),
+  'retro-lab': lazy(() => import('../components/tools/RetroLab')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;

@@ -1853,3 +1853,7 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
 .fp-meta em { font-style: normal; color: var(--text-muted); font-size: 12px; }
 .fp-why { color: #3ec98a; font-size: 12.5px; }
 .fp-num { color: var(--text-muted); font-size: 11.5px; }
+
+/* FX studio */
+.fx-out { display: block; max-width: 100%; max-height: 70vh; border-radius: 12px; border: 1px solid var(--stroke); margin-bottom: 10px; }
+.fx-studio .vz-controls { max-height: 78vh; overflow: auto; padding-right: 4px; }
