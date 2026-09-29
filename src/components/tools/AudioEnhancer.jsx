@@ -1,24 +1,35 @@
 import { useCallback, useRef, useState } from 'react';
+import { integratedLufs } from '../../utils/loudness';
+import { denoiseBuffer } from '../../utils/rnnoise';
 
 // Улучшение аудио — цепочка профессиональных фильтров, как у аудио-энхансеров:
-// эквализация (тепло/чёткость/воздух) → шумовой гейт → динамическая компрессия
-// → де-эссер → нормализация громкости → лимитер (защита от клиппинга).
-// Авто-пресеты и ручной режим. Пакетно, локально (Web Audio), выход WAV.
+// нейро-шумоподавление RNNoise → эквализация (тепло/чёткость/воздух) → шумовой
+// гейт → динамическая компрессия → де-эссер → нормализация громкости по LUFS
+// (ITU BS.1770 / EBU R128) → лимитер. Авто-пресеты и ручной режим. Пакетно,
+// локально (Web Audio + WASM), выход WAV.
 
 const PRESETS = {
   voice: {
     ru: 'Голос / подкаст', en: 'Voice / podcast',
-    hp: 90, warmth: 2, clarity: 3.5, air: 2, compThresh: -24, compRatio: 3.5, gate: 0.6, deess: 0.35, targetRms: -16, ceiling: 0.95,
+    hp: 90, warmth: 2, clarity: 3.5, air: 2, compThresh: -24, compRatio: 3.5, gate: 0.6, deess: 0.35, denoise: 0.9, ceiling: 0.89,
   },
   clarity: {
     ru: 'Голос — макс. чистота', en: 'Voice — max clarity',
-    hp: 110, warmth: 1, clarity: 5, air: 3, compThresh: -28, compRatio: 4.5, gate: 0.8, deess: 0.5, targetRms: -15, ceiling: 0.95,
+    hp: 110, warmth: 1, clarity: 5, air: 3, compThresh: -28, compRatio: 4.5, gate: 0.8, deess: 0.5, denoise: 1, ceiling: 0.89,
   },
   music: {
     ru: 'Музыка (бережно)', en: 'Music (gentle)',
-    hp: 30, warmth: 1, clarity: 1.5, air: 1, compThresh: -18, compRatio: 2, gate: 0, deess: 0, targetRms: -15, ceiling: 0.98,
+    hp: 30, warmth: 1, clarity: 1.5, air: 1, compThresh: -18, compRatio: 2, gate: 0, deess: 0, denoise: 0, ceiling: 0.89,
   },
 };
+
+// Целевая интегральная громкость (LUFS).
+const TARGETS = [
+  { v: -14, ru: '−14 · стриминг', en: '−14 · streaming' },
+  { v: -16, ru: '−16 · подкаст', en: '−16 · podcast' },
+  { v: -19, ru: '−19 · тихо', en: '−19 · quiet' },
+  { v: -23, ru: '−23 · ТВ (EBU R128)', en: '−23 · TV (EBU R128)' },
+];
 
 const TEXT = {
   ru: {
@@ -31,7 +42,9 @@ const TEXT = {
     process: 'Улучшить всё', processing: 'Обработка…', download: 'Скачать', downloadAll: 'Скачать всё',
     clear: 'Очистить', empty: 'Пока нет файлов',
     local: 'Всё считается в браузере, файлы никуда не передаются. Выход — WAV без потерь.',
-    chain: 'Эквализация → шумовой гейт → компрессор → де-эссер → нормализация → лимитер.',
+    chain: 'RNNoise → эквализация → шумовой гейт → компрессор → де-эссер → нормализация по LUFS → лимитер (−1 dB).',
+    denoise: 'Нейро-шумоподавление (RNNoise)', target: 'Целевая громкость, LUFS', denoiseNote: 'RNNoise убирает шум, гул и фон улицы из речи. Для музыки лучше выключить — модель обучена на голосе.',
+    denoising: 'Шумоподавление…', loudness: 'Громкость',
   },
   en: {
     drop: 'Drop audio here or click', hint: 'MP3, WAV, M4A, OGG — several files are fine',
@@ -43,7 +56,9 @@ const TEXT = {
     process: 'Enhance all', processing: 'Processing…', download: 'Download', downloadAll: 'Download all',
     clear: 'Clear', empty: 'No files yet',
     local: 'Everything runs in your browser, files are never uploaded. Output is lossless WAV.',
-    chain: 'EQ → noise gate → compressor → de-esser → normalize → limiter.',
+    chain: 'RNNoise → EQ → noise gate → compressor → de-esser → LUFS normalization → limiter (−1 dB).',
+    denoise: 'Neural noise suppression (RNNoise)', target: 'Target loudness, LUFS', denoiseNote: 'RNNoise removes noise, hum and street background from speech. Turn it off for music — the model is trained on voice.',
+    denoising: 'Denoising…', loudness: 'Loudness',
   },
 };
 
@@ -128,20 +143,10 @@ async function renderChain(buffer, p) {
   return ctx.startRendering();
 }
 
-function rmsOf(buffer) {
-  let s = 0; let n = 0;
-  for (let c = 0; c < buffer.numberOfChannels; c += 1) {
-    const d = buffer.getChannelData(c);
-    for (let i = 0; i < d.length; i += 1) s += d[i] * d[i];
-    n += d.length;
-  }
-  return Math.sqrt(s / (n || 1));
-}
-
-// Нормализация к целевой громкости + линкованный лимитер (защита от клиппинга).
-function normalizeAndLimit(buffer, targetRms, ceiling) {
-  const measured = rmsOf(buffer);
-  const gain = measured > 0 ? Math.min(16, (10 ** (targetRms / 20)) / measured) : 1;
+// Нормализация к целевой громкости по LUFS + линкованный лимитер (защита от клиппинга).
+function normalizeAndLimit(buffer, targetLufs, ceiling) {
+  const measured = integratedLufs(buffer);
+  const gain = Number.isFinite(measured) ? Math.min(16, 10 ** ((targetLufs - measured) / 20)) : 1;
   const sr = buffer.sampleRate;
   const aC = Math.exp(-1 / (sr * 0.001)); const rC = Math.exp(-1 / (sr * 0.05));
   const chans = [];
@@ -191,6 +196,9 @@ function AudioEnhancer({ language = 'ru' }) {
   const [items, setItems] = useState([]);
   const [mode, setMode] = useState('auto');
   const [manual, setManual] = useState({ ...PRESETS.voice });
+  const [targetLufs, setTargetLufs] = useState(-16);
+  const [denoiseOn, setDenoiseOn] = useState(true);
+  const [stage, setStage] = useState('');
   const [busy, setBusy] = useState(false);
   const [ab, setAb] = useState({ id: '', which: '' });
   const abRef = useRef(null);
@@ -206,19 +214,29 @@ function AudioEnhancer({ language = 'ru' }) {
   async function processOne(item, autoDetect, manualP) {
     const arrayBuf = await item.file.arrayBuffer();
     const decoded = await getCtx().decodeAudioData(arrayBuf.slice(0));
-    const work = getCtx().createBuffer(decoded.numberOfChannels, decoded.length, decoded.sampleRate);
+    let work = getCtx().createBuffer(decoded.numberOfChannels, decoded.length, decoded.sampleRate);
     for (let c = 0; c < decoded.numberOfChannels; c += 1) work.copyToChannel(decoded.getChannelData(c).slice(), c);
+    const lufsIn = integratedLufs(work);
     // В авто-режиме определяем тип записи по самому звуку и берём его пресет.
     const detected = autoDetect ? detectKind(work) : null;
     const p = autoDetect ? PRESETS[detected] : manualP;
-    if (p.gate > 0) applyGate(work, estimateFloor(work), p.gate);
+    const denoiseAmt = denoiseOn ? (autoDetect ? p.denoise : 1) : 0;
+    if (denoiseAmt > 0) {
+      setStage(t.denoising);
+      ({ buffer: work } = await denoiseBuffer(work, { mix: denoiseAmt }));
+    }
+    setStage(t.processing);
+    // После RNNoise фон уже вычищен — гейт только слегка добивает паузы.
+    const gate = denoiseAmt > 0 ? p.gate * 0.3 : p.gate;
+    if (gate > 0) applyGate(work, estimateFloor(work), gate);
     const rendered = await renderChain(work, p);
-    normalizeAndLimit(rendered, p.targetRms, p.ceiling);
+    normalizeAndLimit(rendered, targetLufs, p.ceiling);
+    const lufsOut = integratedLufs(rendered);
     const blob = encodeWAV(rendered);
     const base = item.name.replace(/\.[^.]+$/, '');
     return {
       outUrl: URL.createObjectURL(blob), outSize: blob.size, outName: `${base}-enhanced.wav`,
-      detected, beforeUrl: URL.createObjectURL(item.file),
+      detected, beforeUrl: URL.createObjectURL(item.file), lufsIn, lufsOut, denoised: denoiseAmt > 0,
     };
   }
 
@@ -234,7 +252,7 @@ function AudioEnhancer({ language = 'ru' }) {
         setItems((prev) => prev.map((it) => (it.id === item.id ? { ...it, status: 'error' } : it)));
       }
     }
-    setBusy(false);
+    setBusy(false); setStage('');
   }
 
   // A/B прослушивание: один общий <audio>, переключаем до/после.
@@ -270,8 +288,18 @@ function AudioEnhancer({ language = 'ru' }) {
             <button type="button" className={mode === 'manual' ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => setMode('manual')}>{t.manual}</button>
           </div>
         </div>
+        <div className="tool-field">
+          <span className="tool-field-label">{t.target}</span>
+          <div className="segmented">
+            {TARGETS.map((x) => <button key={x.v} type="button" className={targetLufs === x.v ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => setTargetLufs(x.v)}>{x[language] || x.ru}</button>)}
+          </div>
+        </div>
+        <label className="tool-check" title={t.denoiseNote}>
+          <input type="checkbox" checked={denoiseOn} onChange={(e) => setDenoiseOn(e.target.checked)} /> {t.denoise}
+        </label>
         {mode === 'auto' && <p className="ae-auto-note">✨ {t.autoNote}</p>}
       </div>
+      <p className="tool-local-note">🎙 {t.denoiseNote}</p>
 
       {mode === 'manual' && (
         <div className="ae-manual">
@@ -298,7 +326,7 @@ function AudioEnhancer({ language = 'ru' }) {
 
       {items.length > 0 && (
         <div className="tool-actions">
-          <button type="button" className="tool-btn primary" onClick={processAll} disabled={busy}>{busy ? t.processing : t.process}</button>
+          <button type="button" className="tool-btn primary" onClick={processAll} disabled={busy}>{busy ? (stage || t.processing) : t.process}</button>
           {doneCount > 0 && <button type="button" className="tool-btn" onClick={() => items.filter((it) => it.outUrl).forEach((it, i) => setTimeout(() => download(it), i * 250))}>{t.downloadAll} ({doneCount})</button>}
           <button type="button" className="tool-btn ghost" onClick={() => setItems([])} disabled={busy}>{t.clear}</button>
         </div>
@@ -312,6 +340,9 @@ function AudioEnhancer({ language = 'ru' }) {
               {item.name}
               {item.status === 'done' && item.detected && (
                 <span className="ae-detected">{t.detected}: {PRESETS[item.detected][language] || PRESETS[item.detected].ru}</span>
+              )}
+              {item.status === 'done' && Number.isFinite(item.lufsIn) && (
+                <span className="ae-detected">{t.loudness}: {item.lufsIn.toFixed(1)} → {item.lufsOut.toFixed(1)} LUFS{item.denoised ? ' · RNNoise' : ''}</span>
               )}
             </span>
             {item.status === 'done' && (

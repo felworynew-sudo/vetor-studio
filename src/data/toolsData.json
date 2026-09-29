@@ -672,11 +672,11 @@
       "icon": "🎚️",
       "ru": {
         "title": "Улучшение аудио",
-        "desc": "Эквализация, компрессия, де-эссер, шумовой гейт, нормализация и лимитер. Авто и ручной режим, пакетно, локально."
+        "desc": "Нейро-шумоподавление RNNoise, эквализация, компрессия, де-эссер и громкость по LUFS (−14 стриминг, −16 подкаст, −23 ТВ). Пакетно, локально."
       },
       "en": {
         "title": "Audio enhancer",
-        "desc": "EQ, compression, de-esser, noise gate, normalization and limiter. Auto and manual modes, batch, local."
+        "desc": "RNNoise neural denoising, EQ, compression, de-esser and LUFS loudness (−14 streaming, −16 podcast, −23 TV). Batch, local."
       },
       "img": "zvukplyus.png"
     },
