@@ -395,7 +395,11 @@ export default defineConfig(({ command }) => ({
   },
   // Emscripten-glue ImageMagick ломается при esbuild-пребандле (WebAssembly
   // LinkError) — отдаём пакет как есть, wasm грузится по same-origin URL.
+  // Воркеры (кодеки jSquash) делят чанки с основным бандлом — нужен ES-формат.
+  worker: {
+    format: 'es',
+  },
   optimizeDeps: {
-    exclude: ['@imagemagick/magick-wasm'],
+    exclude: ['@imagemagick/magick-wasm', '@jsquash/jpeg', '@jsquash/webp', '@jsquash/avif', '@jsquash/oxipng'],
   },
 }));

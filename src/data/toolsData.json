@@ -74,11 +74,11 @@
       "img": "masshtab.png",
       "ru": {
         "title": "Компрессор изображений",
-        "desc": "Ужимает фото под целевой размер («до N КБ») или качество. Бинарный поиск + даунскейл. WebP/JPG, пакетно."
+        "desc": "Сжимает фото кодеками Squoosh (AVIF, WebP, MozJPEG, OxiPNG) до нужного размера в КБ или по качеству. Пакетно, ZIP, сравнение до/после."
       },
       "en": {
         "title": "Image compressor",
-        "desc": "Shrinks photos to a target size (\"under N KB\") or quality. Binary search + downscale. WebP/JPG, batch."
+        "desc": "Compresses photos with Squoosh codecs (AVIF, WebP, MozJPEG, OxiPNG) to a target KB size or by quality. Batch, ZIP, before/after compare."
       }
     },
     {

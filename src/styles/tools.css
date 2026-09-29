@@ -1574,3 +1574,8 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
 .mg-favs { display: flex; flex-wrap: wrap; gap: 8px; }
 .mg-fav { width: 72px; height: 48px; border-radius: 10px; border: 1px solid var(--stroke); cursor: pointer; padding: 0; }
 .mg-fav:hover { outline: 2px solid var(--t-accent); }
+
+/* Compressor (jSquash) */
+.convert-btns { display: inline-flex; gap: 6px; }
+.convert-row.is-current { border-color: var(--t-accent); }
+.compressor .tool-controls .segmented { flex-wrap: wrap; }

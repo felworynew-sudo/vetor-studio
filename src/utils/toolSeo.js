@@ -43,11 +43,11 @@ const SPECIFIC_FAQS = {
   compressor: {
     ru: [
       { q: 'Как сжать фото до определённого размера в КБ?', a: 'Укажите целевой вес, например 200 КБ — инструмент подбирает качество бинарным поиском и при необходимости уменьшает разрешение, чтобы попасть в лимит.' },
-      { q: 'В каком формате сохраняется сжатое фото?', a: 'WebP или JPG на выбор. WebP обычно даёт меньший вес при том же качестве.' },
+      { q: 'В каком формате сохраняется сжатое фото?', a: 'AVIF, WebP, MozJPEG или PNG (OxiPNG, без потерь) — это кодеки Squoosh. Режим «Авто» пробует форматы и выбирает лучший по объективной метрике PSNR.' },
     ],
     en: [
       { q: 'How do I compress a photo to a specific KB size?', a: 'Set a target size, e.g. 200 KB — the tool tunes quality with a binary search and downscales if needed to hit the limit.' },
-      { q: 'What format is the compressed photo saved in?', a: 'WebP or JPG, your choice. WebP is usually smaller at the same quality.' },
+      { q: 'What format is the compressed photo saved in?', a: 'AVIF, WebP, MozJPEG or PNG (lossless OxiPNG) — the Squoosh codecs. “Auto” tries the formats and picks the best one by the objective PSNR metric.' },
     ],
   },
   'background-remover': {
