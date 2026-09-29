@@ -73,6 +73,7 @@ const READY_COMPONENTS = {
   'lut-studio': lazy(() => import('../components/tools/LutStudio')),
   'image-diff': lazy(() => import('../components/tools/ImageDiff')),
   'social-crop-pack': lazy(() => import('../components/tools/SocialCropPack')),
+  'mockup-perspective': lazy(() => import('../components/tools/MockupWarp')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;

@@ -1681,3 +1681,9 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
 .sp-link { background: none; border: 0; color: var(--t-accent-strong); font: inherit; font-size: 11.5px; cursor: pointer; padding: 0; }
 .sp-fmt { font-size: 12.5px; }
 .sp-fmt em { font-style: normal; color: var(--text-muted); font-size: 11px; margin-left: auto; }
+
+/* Mockup warp */
+.mw-stage { position: relative; display: inline-block; max-width: 100%; margin: 8px 0 12px; user-select: none; touch-action: none; }
+.mw-canvas { display: block; max-width: 100%; max-height: 72vh; border-radius: 10px; }
+.mw-svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.mw-handle { position: absolute; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50% !important; background: var(--t-accent); color: #fff; border: 2px solid #fff; font-size: 12px; font-weight: 700; display: grid; place-items: center; cursor: grab; box-shadow: 0 2px 8px rgba(0,0,0,0.4); touch-action: none; }

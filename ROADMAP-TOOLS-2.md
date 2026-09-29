@@ -48,7 +48,7 @@ AGPL/NC-лицензии не тащим.
 - [x] **B17. Gradient map из фото.**
 - [x] **B18. Accessible Palette Fixer** — минимальный сдвиг в OKLCH до WCAG.
 - [x] **B19. Social Media Crop Pack** — одна картинка → YouTube / VK / Telegram / Instagram / Stories.
-- [ ] **B20. Мокап с перспективой** — 4 точки → perspective warp.
+- [x] **B20. Мокап с перспективой** — 4 точки → perspective warp.
 
 ## C. Улучшение остальных (полный разбор всех 58)
 

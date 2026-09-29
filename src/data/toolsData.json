@@ -957,6 +957,20 @@
       }
     },
     {
+      "slug": "mockup-perspective",
+      "categoryId": "image",
+      "status": "ready",
+      "icon": "🖼️",
+      "ru": {
+        "title": "Мокап с перспективой",
+        "desc": "Вставляет дизайн в фото сцены по 4 углам: билборд, экран, плакат, стена. Перспектива по гомографии, сглаженные края, режим «сохранить свет» для теней и фактуры."
+      },
+      "en": {
+        "title": "Perspective mockup",
+        "desc": "Places a design into a scene photo by 4 corners: billboard, screen, poster, wall. Homography perspective, smooth edges, a “keep light” mode for shadows and texture."
+      }
+    },
+    {
       "slug": "pattern-gen",
       "categoryId": "generators",
       "status": "ready",
