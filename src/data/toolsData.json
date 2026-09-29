@@ -456,6 +456,20 @@
       "img": "pipidastr.png"
     },
     {
+      "slug": "vectorizer",
+      "categoryId": "svg",
+      "status": "ready",
+      "icon": "🖋️",
+      "ru": {
+        "title": "Векторизатор PNG → SVG",
+        "desc": "Переводит логотипы, иконки, иллюстрации и фото в SVG: цветная трассировка VTracer (аналог Image Trace), сплайны или полигоны, пиксель-арт, Ч/Б."
+      },
+      "en": {
+        "title": "Vectorizer PNG → SVG",
+        "desc": "Turns logos, icons, illustrations and photos into SVG: color tracing with VTracer (an Image Trace alternative), splines or polygons, pixel art, B/W."
+      }
+    },
+    {
       "slug": "css-from-svg",
       "categoryId": "svg",
       "status": "ready",

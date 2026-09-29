@@ -271,7 +271,8 @@ function AudioEnhancer({ language = 'ru' }) {
 
   const doneCount = items.filter((it) => it.status === 'done').length;
 
-  const Slider = ({ k, label, min, max, step, unit = '' }) => (
+  // Функция, а не компонент: иначе ползунок пересоздаётся на каждый рендер и срывается при перетаскивании.
+  const slider = ({ k, label, min, max, step, unit = '' }) => (
     <div className="tool-field">
       <span className="tool-field-label">{label}: {manual[k]}{unit}</span>
       <input type="range" min={min} max={max} step={step} value={manual[k]} onChange={(e) => setM(k, Number(e.target.value))} />
@@ -303,13 +304,13 @@ function AudioEnhancer({ language = 'ru' }) {
 
       {mode === 'manual' && (
         <div className="ae-manual">
-          <Slider k="warmth" label={t.warmth} min={-6} max={8} step={0.5} unit=" dB" />
-          <Slider k="clarity" label={t.clarity} min={-3} max={9} step={0.5} unit=" dB" />
-          <Slider k="air" label={t.air} min={-3} max={8} step={0.5} unit=" dB" />
-          <Slider k="compThresh" label={t.compThresh} min={-50} max={0} step={1} unit=" dB" />
-          <Slider k="compRatio" label={t.compRatio} min={1} max={12} step={0.5} unit=":1" />
-          <Slider k="gate" label={t.gate} min={0} max={1} step={0.05} />
-          <Slider k="deess" label={t.deess} min={0} max={1} step={0.05} />
+          {slider({ k: 'warmth', label: t.warmth, min: -6, max: 8, step: 0.5, unit: ' dB' })}
+          {slider({ k: 'clarity', label: t.clarity, min: -3, max: 9, step: 0.5, unit: ' dB' })}
+          {slider({ k: 'air', label: t.air, min: -3, max: 8, step: 0.5, unit: ' dB' })}
+          {slider({ k: 'compThresh', label: t.compThresh, min: -50, max: 0, step: 1, unit: ' dB' })}
+          {slider({ k: 'compRatio', label: t.compRatio, min: 1, max: 12, step: 0.5, unit: ':1' })}
+          {slider({ k: 'gate', label: t.gate, min: 0, max: 1, step: 0.05 })}
+          {slider({ k: 'deess', label: t.deess, min: 0, max: 1, step: 0.05 })}
         </div>
       )}
 

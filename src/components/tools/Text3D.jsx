@@ -30,6 +30,17 @@ const TEXT = {
 
 const BUILTIN_FONT = '/tools/fonts/PixelOperator.ttf';
 
+// Вынесен на уровень модуля: объявленный внутри компонента, он пересоздавался на каждый
+// рендер, и ползунок «срывался» при перетаскивании.
+function Slider({ label, val, set, min, max, step }) {
+  return (
+    <div className="tool-field">
+      <span className="tool-field-label">{label}: {val}</span>
+      <input type="range" min={min} max={max} step={step} value={val} onChange={(e) => set(Number(e.target.value))} />
+    </div>
+  );
+}
+
 function Text3D({ language = 'ru' }) {
   const t = TEXT[language] || TEXT.ru;
   const mountRef = useRef(null);
@@ -125,12 +136,6 @@ function Text3D({ language = 'ru' }) {
     document.body.appendChild(a); a.click(); a.remove();
   }
 
-  const Slider = ({ label, val, set, min, max, step }) => (
-    <div className="tool-field">
-      <span className="tool-field-label">{label}: {val}</span>
-      <input type="range" min={min} max={max} step={step} value={val} onChange={(e) => set(Number(e.target.value))} />
-    </div>
-  );
 
   return (
     <div className="tool-panel text3d">

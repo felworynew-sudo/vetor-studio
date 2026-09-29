@@ -64,6 +64,7 @@ const READY_COMPONENTS = {
   'crt-glitch': lazy(() => import('../components/tools/CrtGlitch')),
   base64: lazy(() => import('../components/tools/Base64Tool')),
   halftone: lazy(() => import('../components/tools/Halftone')),
+  vectorizer: lazy(() => import('../components/tools/Vectorizer')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;
