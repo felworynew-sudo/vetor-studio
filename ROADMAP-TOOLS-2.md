@@ -8,7 +8,7 @@ AGPL/NC-лицензии не тащим.
 
 ## A. Переделка существующих
 
-- [ ] **A1. Palette Extractor 2.0** — OKLab-квантизация + node-vibrant, семантические роли
+- [x] **A1. Palette Extractor 2.0** — OKLab-квантизация + node-vibrant, семантические роли
       (Dominant / Background / Accent / Highlight / Dark / Muted / Vibrant), экспорт CSS/JSON.
 - [ ] **A2. Smart Crop** — smartcrop.js (saliency/edges/skin) + DETR-объекты + лица как boost-регионы,
       штраф за отрезанные лица/людей; превью рамки.
@@ -19,11 +19,12 @@ AGPL/NC-лицензии не тащим.
 - [ ] **A4. Upscaler** — выбор модели (Фото ×2 / Фото ×4 / Иллюстрация-аниме / Быстрый),
       отмена, прогресс по тайлам, прогрев.
 - [ ] **A5. Background Remover** — добавить свежую модель (BiRefNet / BEN2, MIT), оставить свой pipeline.
-- [ ] **A6. Multitrack Editor** — waveform/timeline на wavesurfer.js.
+- [ ] **A6. Multitrack Editor** — не выкидывать (clips/trim/cut/pan/EQ/fades/mixdown уже есть);
+      взять идеи waveform-playlist / wavesurfer-multitrack: нормальный waveform-рендер, зум, снэп.
 - [x] **A7. Colorblind Simulator** — Machado 2009 (сделано коммитом 488e9e4).
 - [ ] **A8. Mesh Gradient** — сильно расширить (точки, drag, шум, анимация, экспорт PNG/CSS/SVG).
 - [ ] **A9. Image Compressor** — кодеки Squoosh через jSquash: MozJPEG, OxiPNG, WebP, AVIF.
-- [ ] **A10. Audio Enhancer** — шумоподавление RNNoise (WASM).
+- [ ] **A10. Audio Enhancer** — нейро-шумоподавление RNNoise (WASM) + громкость по LUFS (EBU R128).
 - [x] SVG Cleaner (SVGO), QR, Barcode, Image Converter — оставить как есть.
 
 ## B. Новые инструменты
@@ -48,3 +49,52 @@ AGPL/NC-лицензии не тащим.
 - [ ] **B18. Accessible Palette Fixer** — минимальный сдвиг в OKLCH до WCAG.
 - [ ] **B19. Social Media Crop Pack** — одна картинка → YouTube / VK / Telegram / Instagram / Stories.
 - [ ] **B20. Мокап с перспективой** — 4 точки → perspective warp.
+
+## C. Улучшение остальных (полный разбор всех 58)
+
+- [ ] **C1. AudioConverter** — ffmpeg.wasm: любые входные форматы, MP3/AAC/OGG/Opus/FLAC на выходе.
+- [ ] **C2. AudioMetadata** — ядро music-metadata (MP3/MP4/FLAC/Ogg/WAV/AIFF, ID3/APE/Vorbis/MP4 теги).
+- [ ] **C3. AudioTrimmer** — экспорт не только WAV (через ffmpeg.wasm / lamejs).
+- [ ] **C4. BlurAnalyzer** — несколько метрик (Laplacian, Tenengrad, FFT high-freq), карта резкости по зонам.
+- [ ] **C5. ColorConverter** — OKLCH / OKLab / Lab / LCH / Display-P3, gamut-проверка.
+- [ ] **C6. ColorGrade** — GPU-пайплайн (WebGL) в linear RGB, full-res.
+- [ ] **C7. ColorHarmony** — OKLCH-повороты + gamut mapping.
+- [ ] **C8. ColorWeight** — на OKLab-движке палитры.
+- [ ] **C9. ContrastChecker** — APCA + авто-исправление цвета (общий движок с B18).
+- [ ] **C10. CrtGlitch** — WebGL-шейдер, full-res и анимация.
+- [ ] **C11. CssFromSvg** — корректные градиенты (orientation/gradientTransform/opacity), без regex.
+- [ ] **C12. Duotone** — linear-light, gradient-map, 3 тона.
+- [ ] **C13. EinkSimulator** — Atkinson/Bayer/уровни серого/цветной e-ink (общий движок с B14).
+- [ ] **C14. FaviconGenerator** — ICO (мульти-размер), SVG favicon, maskable, manifest, ZIP.
+- [ ] **C15. FireSmoke** — шейдерная/fluid-симуляция.
+- [ ] **C16. GlyphMap → Font Lab** — fontkit: инфо, OpenType-фичи, кернинг, variable axes, экспорт глифа SVG.
+- [ ] **C17. Halftone** — CMYK с углами растра/розетка, линии, экспорт SVG.
+- [ ] **C18. ImageMetadata** — просмотр всех тегов, выборочное удаление, C2PA-инспектор.
+- [ ] **C19. Isometry** — экспорт GLB/STL/OBJ.
+- [ ] **C20. MoodPalettes** — OKLCH + контраст + gamut.
+- [ ] **C21. PastelPairs** — реальный целевой контраст вместо порога luminance > 0.4.
+- [ ] **C22. Pixelizer** — image-q квантизация + дизеринг.
+- [ ] **C23. RuleOfThirds** — настоящая золотая спираль (4 ориентации).
+- [ ] **C24. Text3D** — экспорт GLB, проверка OTF/CFF.
+- [ ] **C25. VoiceRecorder** — выбор микрофона, шумоподавление после записи.
+- [ ] **C26. Watermark** — сохранять исходный формат/качество, ZIP.
+
+## D. Новые инструменты (второй список)
+
+- [ ] **D1. OCR — картинка → текст** (tesseract.js).
+- [ ] **D2. Мокапы устройств** — скрин → iPhone/Android/ноутбук/браузер + фон + текст.
+- [ ] **D3. Font Inspector** — объединено с C16.
+- [ ] **D4. PDF Studio** — merge / split / rotate / водяной знак / сжатие (pdf-lib / qpdf-wasm).
+- [ ] **D5. Anonymize faces** — автоблюр/пикселизация лиц.
+- [ ] **D6. Heal / удаление объектов** — inpainting кистью.
+- [ ] **D7. Heightmap / Terrain генератор** — simplex/fBM, эрозия, 3D-превью, PNG.
+- [ ] **D8. SVG Path Editor** — правка кривых мышкой, сетка, snap.
+- [ ] **D9. Silence Remover** (аудио).
+- [ ] **D10. Waveform-картинка** из аудио (PNG/SVG).
+- [ ] **D11. Cover Art Extractor** (обложка из MP3/FLAC/M4A).
+- [ ] **D12. Audio Tag Editor** — редактирование ID3 (объединить с C2).
+- [ ] **D13. Subtitle Editor** — видео + waveform + SRT/VTT.
+- [ ] **D14. Stem Splitter** — вокал/барабаны/бас (Demucs WebGPU) — сначала проверить вес модели и скорость.
+- [ ] **D15. Relight / Time of Day** — depth-aware relight фото.
+- [ ] **D16. Procedural Lab** — объединение генераторов в единый стек (долгосрочно, после C10/C15).
+- [ ] **D17. Audio Super-Resolution** — исследовать (AudioSR тяжёлый для браузера), делать только если реально запускается.

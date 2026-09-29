@@ -208,11 +208,11 @@
       "icon": "💧",
       "ru": {
         "title": "Экстрактор палитры",
-        "desc": "Достаёт основные цвета из загруженного изображения."
+        "desc": "Достаёт палитру из фото в перцептивном OKLab и раскладывает цвета по ролям: фон, акцент, светлый, тёмный."
       },
       "en": {
         "title": "Palette extractor",
-        "desc": "Pulls the key colors out of an uploaded image."
+        "desc": "Pulls a palette from a photo in perceptual OKLab and sorts colors into roles: background, accent, highlight, dark."
       },
       "img": "palitra-iz-foto.png"
     },
