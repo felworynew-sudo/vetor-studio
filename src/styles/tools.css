@@ -1842,3 +1842,14 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
 .vf-axis em { font-style: normal; color: var(--text-muted); font-size: 11px; }
 .vf-water div { display: grid; grid-template-columns: 34px 1fr; align-items: baseline; gap: 10px; white-space: nowrap; overflow: hidden; }
 .vf-water em { font-style: normal; font-size: 11px; color: var(--text-muted); font-family: system-ui; }
+
+/* Font pairs */
+.fp-list { display: flex; flex-direction: column; gap: 12px; }
+.fp-card { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(220px, 1fr); gap: 16px; padding: 16px; border: 1px solid var(--stroke); border-radius: 14px; background: var(--bg); }
+@media (max-width: 760px) { .fp-card { grid-template-columns: 1fr; } }
+.fp-h { font-size: 28px; line-height: 1.15; margin-bottom: 8px; }
+.fp-p { font-size: 16px; line-height: 1.55; color: var(--text-muted); }
+.fp-meta { display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
+.fp-meta em { font-style: normal; color: var(--text-muted); font-size: 12px; }
+.fp-why { color: #3ec98a; font-size: 12.5px; }
+.fp-num { color: var(--text-muted); font-size: 11.5px; }

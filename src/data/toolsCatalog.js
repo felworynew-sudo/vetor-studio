@@ -93,6 +93,7 @@ const READY_COMPONENTS = {
   'font-subsetter': lazy(() => import('../components/tools/FontSubsetter')),
   'font-lab': lazy(() => import('../components/tools/FontLab')),
   'variable-fonts': lazy(() => import('../components/tools/VariableFonts')),
+  'font-pairs': lazy(() => import('../components/tools/FontPairs')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;

@@ -1325,6 +1325,20 @@
         "title": "Variable font playground",
         "desc": "Reads wght, wdth, slnt, opsz and custom axes automatically, lets you drag and animate them, shows instances and a size waterfall, outputs ready CSS."
       }
+    },
+    {
+      "slug": "font-pairs",
+      "categoryId": "utility",
+      "status": "ready",
+      "icon": "🅰️",
+      "ru": {
+        "title": "Подбор пар шрифтов",
+        "desc": "Подбирает пары шрифтов для заголовков и текста по метрикам: высота строчных, ширина, контраст штрихов, сочетание классов. 50 шрифтов Google Fonts с кириллицей, готовый CSS."
+      },
+      "en": {
+        "title": "Font pair finder",
+        "desc": "Finds heading/body font pairs by metrics: x-height, width, stroke contrast and class pairing. 50 Google Fonts with Cyrillic, ready CSS."
+      }
     }
   ]
 }

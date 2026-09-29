@@ -35,7 +35,7 @@ AGPL/NC-лицензии не тащим.
 - [x] **B4. SVG → React/JSX** (SVGR).
 - [x] **B5. Сабсеттер шрифтов** → WOFF2 (harfbuzz hb-subset + woff2 WASM).
 - [x] **B6. Variable Font Playground** — чтение осей wght/wdth/slnt/opsz.
-- [ ] **B7. Подбор пар шрифтов** — по x-height / контрасту / ширине.
+- [x] **B7. Подбор пар шрифтов** — по x-height / контрасту / ширине.
 - [x] **B8. LUT-генератор / конвертер** — .cube, превью, экспорт.
 - [x] **B9. Сравнение изображений** — overlay / difference / SSIM.
 - [x] **B10. Бесшовная текстура** — offset + заделка шва.
