@@ -596,12 +596,12 @@
       "status": "ready",
       "icon": "🔍",
       "ru": {
-        "title": "AI-апскейлер (×2)",
-        "desc": "Увеличивает разрешение изображения нейросетью Swin2SR прямо в браузере, без потери деталей."
+        "title": "AI-апскейлер ×2 / ×4",
+        "desc": "Увеличивает фото, иллюстрации и пиксель-арт в 2–4 раза: модели Swin2SR и APISR прямо в браузере, без швов и загрузки на сервер."
       },
       "en": {
-        "title": "AI upscaler (×2)",
-        "desc": "Upscales image resolution with the Swin2SR neural network right in your browser, keeping details."
+        "title": "AI upscaler ×2 / ×4",
+        "desc": "Upscales photos, illustrations and pixel art 2–4×: Swin2SR and APISR models right in your browser, seamless and without uploads."
       },
       "img": "apskeyl.png"
     },
