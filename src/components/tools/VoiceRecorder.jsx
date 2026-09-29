@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { encodeWAV, encodeMp3, getAudioCtx, downloadBlob } from '../../utils/wav';
+import { denoiseBuffer } from '../../utils/rnnoise';
+import { integratedLufs } from '../../utils/loudness';
 import { setAudioHandoff } from '../../utils/audioHandoff';
 import { buildToolPath } from '../../utils/routing';
 
@@ -13,7 +15,7 @@ const TEXT = {
     again: 'Записать заново', denied: 'Нет доступа к микрофону. Разрешите доступ в браузере и попробуйте снова.',
     nomic: 'Микрофон недоступен в этом браузере.', preview: 'Прослушать', encoding: 'Кодирование…',
     ns: 'Шумоподавление', ec: 'Эхоподавление', dl: 'Скачать', level: 'Уровень',
-    toEditor: 'В аудио-редактор',
+    toEditor: 'В аудио-редактор', mic: 'Микрофон', micDefault: 'По умолчанию', rn: 'Нейро-шумодав после записи (RNNoise)', loud: 'Выровнять громкость (−16 LUFS)', processing: 'Обработка…',
     note: 'Запись идёт локально в браузере и не загружается на сервер. Для MP3 звук кодируется на вашем устройстве.',
   },
   en: {
@@ -21,7 +23,7 @@ const TEXT = {
     again: 'Record again', denied: 'No microphone access. Allow it in the browser and try again.',
     nomic: 'Microphone is not available in this browser.', preview: 'Play back', encoding: 'Encoding…',
     ns: 'Noise suppression', ec: 'Echo cancellation', dl: 'Download', level: 'Level',
-    toEditor: 'To audio editor',
+    toEditor: 'To audio editor', mic: 'Microphone', micDefault: 'Default', rn: 'Neural denoise after recording (RNNoise)', loud: 'Normalize loudness (−16 LUFS)', processing: 'Processing…',
     note: 'Recording runs locally in the browser and is never uploaded. MP3 is encoded on your device.',
   },
 };
@@ -41,6 +43,16 @@ function VoiceRecorder({ language = 'ru', go }) {
   const [url, setUrl] = useState('');
   const [ns, setNs] = useState(true);
   const [ec, setEc] = useState(true);
+  const [devices, setDevices] = useState([]);
+  const [deviceId, setDeviceId] = useState('');
+  const [rn, setRn] = useState(true);
+  const [loud, setLoud] = useState(true);
+
+  // Список микрофонов (названия браузер отдаёт после первого разрешения доступа).
+  const refreshDevices = useCallback(async () => {
+    try { setDevices((await navigator.mediaDevices.enumerateDevices()).filter((d) => d.kind === 'audioinput')); } catch { /* */ }
+  }, []);
+  useEffect(() => { if (supported) refreshDevices(); }, [supported, refreshDevices]);
 
   const recRef = useRef(null);
   const streamRef = useRef(null);
@@ -74,9 +86,10 @@ function VoiceRecorder({ language = 'ru', go }) {
     try {
       if (url) { URL.revokeObjectURL(url); setUrl(''); }
       const stream = await navigator.mediaDevices.getUserMedia({
-        audio: { noiseSuppression: ns, echoCancellation: ec, autoGainControl: true },
+        audio: { noiseSuppression: ns, echoCancellation: ec, autoGainControl: true, ...(deviceId ? { deviceId: { exact: deviceId } } : {}) },
       });
       streamRef.current = stream;
+      refreshDevices();
       const ctx = getAudioCtx();
       const source = ctx.createMediaStreamSource(stream);
       const analyser = ctx.createAnalyser(); analyser.fftSize = 1024;
@@ -115,11 +128,26 @@ function VoiceRecorder({ language = 'ru', go }) {
   function pause() { if (recRef.current?.state === 'recording') { recRef.current.pause(); accRef.current += Date.now() - startAtRef.current; clearInterval(timerRef.current); cancelAnimationFrame(rafRef.current); setStatus('paused'); } }
   function resume() { if (recRef.current?.state === 'paused') { recRef.current.resume(); startAtRef.current = Date.now(); timerRef.current = setInterval(() => setSeconds((accRef.current + (Date.now() - startAtRef.current)) / 1000), 200); meter(); setStatus('recording'); } }
 
+  // Постобработка: RNNoise и громкость по LUFS с защитой от клиппинга.
+  async function processed() {
+    let buf = bufferRef.current;
+    if (rn) buf = (await denoiseBuffer(buf, { mix: 0.95 })).buffer;
+    if (loud) {
+      const l = integratedLufs(buf);
+      if (Number.isFinite(l)) {
+        let peak = 0; for (let c = 0; c < buf.numberOfChannels; c += 1) { const d = buf.getChannelData(c); for (let i = 0; i < d.length; i += 1) peak = Math.max(peak, Math.abs(d[i])); }
+        const g = Math.min(10 ** ((-16 - l) / 20), 0.89 / (peak || 1));
+        for (let c = 0; c < buf.numberOfChannels; c += 1) { const d = buf.getChannelData(c); for (let i = 0; i < d.length; i += 1) d[i] *= g; }
+      }
+    }
+    return buf;
+  }
+
   async function exportAs(kind) {
-    const buffer = bufferRef.current;
-    if (!buffer) return;
+    if (!bufferRef.current) return;
     setStatus('encoding');
     try {
+      const buffer = await processed();
       const blob = kind === 'mp3' ? await encodeMp3(buffer, 192) : encodeWAV(buffer);
       const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-');
       downloadBlob(blob, `recording-${stamp}.${kind}`);
@@ -193,6 +221,16 @@ function VoiceRecorder({ language = 'ru', go }) {
         <div className="rec-opts">
           <label className="rec-opt"><input type="checkbox" checked={ns} onChange={(e) => setNs(e.target.checked)} /> {t.ns}</label>
           <label className="rec-opt"><input type="checkbox" checked={ec} onChange={(e) => setEc(e.target.checked)} /> {t.ec}</label>
+          <label className="rec-opt"><input type="checkbox" checked={rn} onChange={(e) => setRn(e.target.checked)} /> {t.rn}</label>
+          <label className="rec-opt"><input type="checkbox" checked={loud} onChange={(e) => setLoud(e.target.checked)} /> {t.loud}</label>
+          {devices.length > 1 && (
+            <label className="rec-opt">{t.mic}:{' '}
+              <select className="cb-select" value={deviceId} onChange={(e) => setDeviceId(e.target.value)}>
+                <option value="">{t.micDefault}</option>
+                {devices.map((d, i) => <option key={d.deviceId || i} value={d.deviceId}>{d.label || `${t.mic} ${i + 1}`}</option>)}
+              </select>
+            </label>
+          )}
         </div>
       )}
 
