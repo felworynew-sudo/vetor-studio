@@ -74,6 +74,7 @@ const READY_COMPONENTS = {
   'image-diff': lazy(() => import('../components/tools/ImageDiff')),
   'social-crop-pack': lazy(() => import('../components/tools/SocialCropPack')),
   'mockup-perspective': lazy(() => import('../components/tools/MockupWarp')),
+  'device-mockup': lazy(() => import('../components/tools/DeviceMockup')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;

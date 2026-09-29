@@ -30,7 +30,8 @@ void main(){
     col = d.rgb * mix(1.0, clamp(l * 1.6, 0.0, 1.35), uLight);
   }
   float a = d.a * cover * uOpacity;
-  gl_FragColor = vec4(mix(scene.rgb, clamp(col, 0.0, 1.0), a), 1.0);
+  // Альфа: прозрачный фон сцены остаётся прозрачным (для мокапов на прозрачном фоне).
+  gl_FragColor = vec4(mix(scene.rgb, clamp(col, 0.0, 1.0), a), max(scene.a, a));
 }`;
 
 export function createWarp(canvas) {

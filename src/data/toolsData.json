@@ -971,6 +971,20 @@
       }
     },
     {
+      "slug": "device-mockup",
+      "categoryId": "image",
+      "status": "ready",
+      "icon": "📲",
+      "ru": {
+        "title": "Мокапы устройств",
+        "desc": "Скриншот → смартфон, Android, планшет, ноутбук, окно браузера или монитор. Фон, тень, 3D-наклон, заголовок и подпись. Размеры для App Store, Google Play и соцсетей."
+      },
+      "en": {
+        "title": "Device mockups",
+        "desc": "Screenshot → phone, Android, tablet, laptop, browser window or monitor. Background, shadow, 3D tilt, title and subtitle. Sizes for App Store, Google Play and social."
+      }
+    },
+    {
       "slug": "pattern-gen",
       "categoryId": "generators",
       "status": "ready",
