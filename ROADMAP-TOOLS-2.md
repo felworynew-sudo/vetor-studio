@@ -10,7 +10,7 @@ AGPL/NC-лицензии не тащим.
 
 - [x] **A1. Palette Extractor 2.0** — OKLab-квантизация + node-vibrant, семантические роли
       (Dominant / Background / Accent / Highlight / Dark / Muted / Vibrant), экспорт CSS/JSON.
-- [ ] **A2. Smart Crop** — smartcrop.js (saliency/edges/skin) + DETR-объекты + лица как boost-регионы,
+- [x] **A2. Smart Crop** — smartcrop.js (saliency/edges/skin) + DETR-объекты + лица как boost-регионы,
       штраф за отрезанные лица/людей; превью рамки.
 - [ ] **A3. AI Detector → Image Forensics** — отдельные улики: классификатор (честно подписан как
       SDXL-модель), C2PA, EXIF, софт-редактор, JPEG-таблицы/качество, повторное сжатие (ELA),

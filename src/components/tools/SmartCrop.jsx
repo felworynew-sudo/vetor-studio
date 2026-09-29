@@ -1,119 +1,110 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { aiBrowserHint, aiErrorHint } from '../../utils/aiSupport';
+import { analyzeImage, computeCrop, loadImageFile, preloadModels, renderCrop } from '../../utils/smartCropEngine';
 
-// Smart Crop: ИИ находит главный объект/лицо и кадрирует под нужный формат
-// (квадрат, сторис, широкий, аватар-круг) без обрезки важного. Пакетно, локально
-// (transformers.js object-detection). Модель скачивается один раз.
+// Smart Crop: saliency (smartcrop.js) + лица (MediaPipe) + объекты (DETR) → рамка
+// нужной пропорции, в которой не режутся лица. Пакетно; каждую рамку можно
+// подвинуть и масштабировать вручную. Всё локально в браузере.
 
 const ASPECTS = [
-  { id: 'square', ru: 'Квадрат 1:1', en: 'Square 1:1', w: 1, h: 1 },
+  { id: 'square', ru: '1:1', en: '1:1', w: 1, h: 1 },
+  { id: 'portrait', ru: '4:5', en: '4:5', w: 4, h: 5 },
+  { id: 'photo', ru: '3:2', en: '3:2', w: 3, h: 2 },
+  { id: 'wide', ru: '16:9', en: '16:9', w: 16, h: 9 },
   { id: 'story', ru: 'Сторис 9:16', en: 'Story 9:16', w: 9, h: 16 },
-  { id: 'wide', ru: 'Широкий 16:9', en: 'Wide 16:9', w: 16, h: 9 },
   { id: 'avatar', ru: 'Аватар (круг)', en: 'Avatar (circle)', w: 1, h: 1, circle: true },
 ];
 
 const TEXT = {
   ru: {
     drop: 'Перетащите фото сюда или нажмите', hint: 'Можно несколько файлов — обрабатываются локально',
-    aspect: 'Формат', process: 'Кадрировать всё', loadingModel: 'Загрузка модели…', processing: 'Обработка…',
+    aspect: 'Формат', process: 'Кадрировать', loadingModel: 'Загрузка моделей…', processing: 'Анализ',
     download: 'Скачать', downloadAll: 'Скачать всё', clear: 'Очистить', empty: 'Пока нет файлов',
-    note: 'ИИ определяет главный объект (лицо/человека) и центрирует кадр. Первый запуск скачает модель (~40 МБ).',
-    error: 'Не удалось обработать. Попробуйте другой файл или браузер на Chromium.',
+    edit: 'Подправить', done: 'Готово', zoom: 'Масштаб рамки', reset: 'Сбросить', faces: 'Лица', noFaces: 'Лиц нет',
+    objects: 'Искать объекты (DETR, ~40 МБ)', showBoxes: 'Показать найденное',
+    editHint: 'Перетаскивайте рамку мышью или пальцем.',
+    note: 'Рамка выбирается по «интересности» областей (детали, контраст, цвет — smartcrop.js), а лица и объекты получают приоритет: лицо не будет обрезано, если оно помещается в кадр. Модели скачиваются один раз.',
   },
   en: {
     drop: 'Drop photos here or click', hint: 'Several files are fine — processed locally',
-    aspect: 'Aspect', process: 'Crop all', loadingModel: 'Loading model…', processing: 'Processing…',
+    aspect: 'Aspect', process: 'Crop', loadingModel: 'Loading models…', processing: 'Analyzing',
     download: 'Download', downloadAll: 'Download all', clear: 'Clear', empty: 'No files yet',
-    note: 'The AI finds the main subject (face/person) and centers the crop. The first run downloads the model (~40 MB).',
-    error: 'Could not process. Try another file or a Chromium browser.',
+    edit: 'Adjust', done: 'Done', zoom: 'Frame size', reset: 'Reset', faces: 'Faces', noFaces: 'No faces',
+    objects: 'Detect objects (DETR, ~40 MB)', showBoxes: 'Show detections',
+    editHint: 'Drag the frame with the mouse or a finger.',
+    note: 'The frame is chosen by how “interesting” regions are (detail, contrast, color — smartcrop.js), while faces and objects get priority: a face is never cut if it fits the frame. Models download once.',
   },
 };
 
-let detectorPromise = null;
-async function getDetector(onProgress) {
-  if (detectorPromise) return detectorPromise;
-  detectorPromise = (async () => {
-    const lib = await import('@huggingface/transformers');
-    lib.env.allowLocalModels = false;
-    let device;
-    try { device = (typeof navigator !== 'undefined' && navigator.gpu) ? 'webgpu' : 'wasm'; } catch { device = 'wasm'; }
-    return lib.pipeline('object-detection', 'Xenova/detr-resnet-50', { device, progress_callback: onProgress });
-  })();
-  return detectorPromise;
+// Превью кропа без canvas: фон-картинка, масштабированная и сдвинутая под рамку.
+function CropThumb({ item, crop, circle, size = 160 }) {
+  const W = item.img.naturalWidth; const H = item.img.naturalHeight;
+  const tw = crop.w >= crop.h ? size : size * (crop.w / crop.h);
+  const th = tw * (crop.h / crop.w);
+  return (
+    <span
+      className={circle ? 'sc-thumb circle' : 'sc-thumb'}
+      style={{
+        width: tw, height: th,
+        backgroundImage: `url(${item.url})`,
+        backgroundSize: `${(W / crop.w) * tw}px ${(H / crop.h) * th}px`,
+        backgroundPosition: `${-(crop.x / crop.w) * tw}px ${-(crop.y / crop.h) * th}px`,
+      }}
+    />
+  );
 }
 
-// Все значимые объекты: приоритет person, иначе самый уверенный.
-function pickSubjects(dets, W, H) {
-  if (!dets || !dets.length) return [{ xmin: W * 0.2, ymin: H * 0.2, xmax: W * 0.8, ymax: H * 0.8 }];
-  const persons = dets.filter((d) => d.label === 'person' && d.score > 0.5);
-  const pool = persons.length ? persons : [dets.reduce((a, b) => (b.score > a.score ? b : a))];
-  return pool.map((d) => d.box || d);
-}
-function unionBox(boxes) {
-  return {
-    xmin: Math.min(...boxes.map((b) => b.xmin)), ymin: Math.min(...boxes.map((b) => b.ymin)),
-    xmax: Math.max(...boxes.map((b) => b.xmax)), ymax: Math.max(...boxes.map((b) => b.ymax)),
-  };
-}
-function largestBox(boxes) {
-  return boxes.reduce((a, b) => (((b.xmax - b.xmin) * (b.ymax - b.ymin)) > ((a.xmax - a.xmin) * (a.ymax - a.ymin)) ? b : a));
-}
-
-function cropToAspect(img, subjects, aspect) {
-  const W = img.naturalWidth; const H = img.naturalHeight;
-  // Для аватара фокус на самом крупном лице; для рамок — объединяем всех, чтобы
-  // при 2+ людях никого не обрезать.
-  const box = aspect.circle ? largestBox(subjects) : unionBox(subjects);
-  const cx = (box.xmin + box.xmax) / 2;
-  let cy = (box.ymin + box.ymax) / 2;
-  const boxW = box.xmax - box.xmin; const boxH = box.ymax - box.ymin;
+function CropEditor({ item, aspect, onChange, showBoxes }) {
+  const boxRef = useRef(null);
+  const W = item.img.naturalWidth; const H = item.img.naturalHeight;
+  const { crop } = item;
   const ar = aspect.w / aspect.h;
+  const maxW = W / H > ar ? H * ar : W;
 
-  if (aspect.circle) {
-    // Аватар: фокус на верхней части (лицо), квадрат вокруг головы.
-    cy = box.ymin + boxH * 0.32;
-    let size = Math.max(boxW, boxH * 0.55) * 1.7;
-    size = Math.min(size, W, H);
-    let x = cx - size / 2; let y = cy - size / 2;
-    x = Math.max(0, Math.min(W - size, x)); y = Math.max(0, Math.min(H - size, y));
-    return { x, y, w: size, h: size, circle: true };
+  function startDrag(e) {
+    e.preventDefault();
+    const rect = boxRef.current.getBoundingClientRect();
+    const k = W / rect.width;
+    const sx = e.clientX; const sy = e.clientY; const start = { ...crop };
+    const move = (ev) => {
+      const x = Math.max(0, Math.min(W - start.w, start.x + (ev.clientX - sx) * k));
+      const y = Math.max(0, Math.min(H - start.h, start.y + (ev.clientY - sy) * k));
+      onChange({ ...start, x, y });
+    };
+    const up = () => { window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); };
+    window.addEventListener('pointermove', move); window.addEventListener('pointerup', up);
   }
 
-  // Прямоугольник нужного соотношения, вмещающий объект с запасом.
-  let cw = boxW * 1.5; let ch = cw / ar;
-  if (ch < boxH * 1.3) { ch = boxH * 1.3; cw = ch * ar; }
-  cw = Math.min(cw, W); ch = Math.min(ch, H);
-  if (cw / ch > ar) cw = ch * ar; else ch = cw / ar;
-  let x = cx - cw / 2; let y = cy - ch / 2;
-  x = Math.max(0, Math.min(W - cw, x)); y = Math.max(0, Math.min(H - ch, y));
-  return { x, y, w: cw, h: ch, circle: false };
-}
-
-function render(img, crop) {
-  const out = document.createElement('canvas');
-  const size = Math.round(Math.min(1600, crop.w));
-  out.width = crop.circle ? size : Math.round(size);
-  out.height = crop.circle ? size : Math.round(size * (crop.h / crop.w));
-  const ctx = out.getContext('2d');
-  if (crop.circle) {
-    ctx.save();
-    ctx.beginPath(); ctx.arc(out.width / 2, out.height / 2, out.width / 2, 0, Math.PI * 2); ctx.clip();
-    ctx.drawImage(img, crop.x, crop.y, crop.w, crop.h, 0, 0, out.width, out.height);
-    ctx.restore();
-  } else {
-    ctx.drawImage(img, crop.x, crop.y, crop.w, crop.h, 0, 0, out.width, out.height);
+  function setZoom(v) {
+    const w = maxW * v; const h = w / ar;
+    const cx = crop.x + crop.w / 2; const cy = crop.y + crop.h / 2;
+    onChange({
+      w, h,
+      x: Math.max(0, Math.min(W - w, cx - w / 2)),
+      y: Math.max(0, Math.min(H - h, cy - h / 2)),
+    });
   }
-  return out;
-}
 
-function loadImage(file) {
-  return new Promise((resolve, reject) => {
-    const url = URL.createObjectURL(file);
-    const img = new Image();
-    img.onload = () => resolve({ img, revoke: () => URL.revokeObjectURL(url) });
-    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('load')); };
-    img.src = url;
-  });
+  const pct = (v, d) => `${(v / d) * 100}%`;
+  return (
+    <>
+      <div className="sc-editor" ref={boxRef}>
+        <img src={item.url} alt="" draggable="false" />
+        {showBoxes && item.subjects?.faces.map((f, i) => (
+          <span key={`f${i}`} className="sc-det is-face" style={{ left: pct(f.x, W), top: pct(f.y, H), width: pct(f.w, W), height: pct(f.h, H) }} />
+        ))}
+        {showBoxes && item.subjects?.objects.map((o, i) => (
+          <span key={`o${i}`} className="sc-det" style={{ left: pct(o.x, W), top: pct(o.y, H), width: pct(o.w, W), height: pct(o.h, H) }}><em>{o.label}</em></span>
+        ))}
+        <span
+          className={aspect.circle ? 'sc-frame circle' : 'sc-frame'}
+          style={{ left: pct(crop.x, W), top: pct(crop.y, H), width: pct(crop.w, W), height: pct(crop.h, H) }}
+          onPointerDown={startDrag}
+        />
+      </div>
+      <input type="range" min="0.2" max="1" step="0.01" value={Math.min(1, crop.w / maxW)} onChange={(e) => setZoom(Number(e.target.value))} />
+    </>
+  );
 }
 
 function SmartCrop({ language = 'ru' }) {
@@ -123,36 +114,62 @@ function SmartCrop({ language = 'ru' }) {
   const [aspectId, setAspectId] = useState('square');
   const [status, setStatus] = useState('idle');
   const [progress, setProgress] = useState(0);
+  const [editing, setEditing] = useState('');
+  const [useObjects, setUseObjects] = useState(true);
+  const [showBoxes, setShowBoxes] = useState(false);
+  const itemsRef = useRef(items);
+  itemsRef.current = items;
+  const aspect = ASPECTS.find((a) => a.id === aspectId);
 
-  const addFiles = useCallback((fileList) => {
+  const patch = (id, p) => setItems((prev) => prev.map((it) => (it.id === id ? { ...it, ...p } : it)));
+
+  const addFiles = useCallback(async (fileList) => {
     const files = Array.from(fileList || []).filter((f) => f.type.startsWith('image/'));
-    if (!files.length) return;
-    setItems((prev) => [...prev, ...files.map((file, i) => ({ id: `${Date.now()}-${i}`, file, name: file.name, outUrl: '', outName: '', status: 'idle' }))]);
+    const loaded = await Promise.all(files.map(async (file, i) => {
+      try {
+        const { img, url } = await loadImageFile(file);
+        return { id: `${Date.now()}-${i}-${file.name}`, file, name: file.name, img, url, subjects: null, crop: null, auto: null, status: 'idle' };
+      } catch { return null; }
+    }));
+    setItems((prev) => [...prev, ...loaded.filter(Boolean)]);
   }, []);
 
+  useEffect(() => () => itemsRef.current.forEach((it) => URL.revokeObjectURL(it.url)), []);
+
+  // Смена формата: пересчитываем рамки уже проанализированных фото (без повторной детекции).
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      for (const it of itemsRef.current) {
+        if (!it.subjects) continue; // eslint-disable-line no-continue
+        const crop = await computeCrop(it.img, it.subjects, aspect); // eslint-disable-line no-await-in-loop
+        if (cancelled) return;
+        patch(it.id, { crop, auto: crop });
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [aspectId]); // eslint-disable-line react-hooks/exhaustive-deps
+
   async function processAll() {
-    const aspect = ASPECTS.find((a) => a.id === aspectId);
     try {
       setStatus('loading'); setProgress(0);
-      const detector = await getDetector((p) => { if (p && p.status === 'progress' && p.total) setProgress(Math.round((p.loaded / p.total) * 100)); });
+      await preloadModels({
+        objects: useObjects,
+        onProgress: (p) => { if (p && p.status === 'progress' && p.total) setProgress(Math.round((p.loaded / p.total) * 100)); },
+      });
       setStatus('processing');
-      for (const item of items) {
+      const todo = itemsRef.current.filter((it) => !it.subjects);
+      for (let i = 0; i < todo.length; i += 1) {
+        const it = todo[i];
+        setProgress(Math.round((i / todo.length) * 100));
         try {
-          // eslint-disable-next-line no-await-in-loop
-          const { img, revoke } = await loadImage(item.file);
-          // eslint-disable-next-line no-await-in-loop
-          const dets = await detector(item.file ? URL.createObjectURL(item.file) : img.src, { threshold: 0.5 });
-          const subjects = pickSubjects(dets, img.naturalWidth, img.naturalHeight);
-          const crop = cropToAspect(img, subjects, aspect);
-          const canvas = render(img, crop);
-          revoke();
-          // eslint-disable-next-line no-await-in-loop
-          const blob = await new Promise((res) => canvas.toBlob(res, 'image/png'));
-          const base = item.name.replace(/\.[^.]+$/, '');
-          const outUrl = URL.createObjectURL(blob);
-          setItems((prev) => prev.map((it) => (it.id === item.id ? { ...it, outUrl, outName: `${base}-${aspect.id}.png`, status: 'done' } : it)));
-        } catch {
-          setItems((prev) => prev.map((it) => (it.id === item.id ? { ...it, status: 'error' } : it)));
+          patch(it.id, { status: 'working' });
+          const subjects = await analyzeImage(it.img, it.url, { objects: useObjects }); // eslint-disable-line no-await-in-loop
+          const crop = await computeCrop(it.img, subjects, aspect); // eslint-disable-line no-await-in-loop
+          patch(it.id, { subjects, crop, auto: crop, status: 'done' });
+        } catch (e) {
+          console.error(e);
+          patch(it.id, { status: 'error' });
         }
       }
       setStatus('done');
@@ -161,20 +178,28 @@ function SmartCrop({ language = 'ru' }) {
     }
   }
 
-  function download(item) {
+  async function download(item) {
+    const canvas = renderCrop(item.img, item.crop, { circle: aspect.circle });
+    const type = aspect.circle || item.file.type === 'image/png' ? 'image/png' : (item.file.type === 'image/webp' ? 'image/webp' : 'image/jpeg');
+    const blob = await new Promise((res) => canvas.toBlob(res, type, 0.93));
+    const ext = type.split('/')[1].replace('jpeg', 'jpg');
     const a = document.createElement('a');
-    a.href = item.outUrl; a.download = item.outName;
+    a.href = URL.createObjectURL(blob);
+    a.download = `${item.name.replace(/\.[^.]+$/, '')}-${aspect.id}.${ext}`;
     document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
   }
 
   const busy = status === 'loading' || status === 'processing';
-  const doneItems = items.filter((it) => it.status === 'done');
+  const doneItems = items.filter((it) => it.crop);
+  const pending = items.filter((it) => !it.subjects);
+  const editItem = items.find((it) => it.id === editing && it.crop);
 
   return (
     <div className="tool-panel smart-crop">
       <div className="tool-field">
         <span className="tool-field-label">{t.aspect}</span>
-        <div className="segmented">
+        <div className="segmented sc-aspects">
           {ASPECTS.map((a) => (
             <button key={a.id} type="button" className={a.id === aspectId ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => setAspectId(a.id)}>{a[language] || a.ru}</button>
           ))}
@@ -192,40 +217,66 @@ function SmartCrop({ language = 'ru' }) {
         <span className="tool-dropzone-hint">{t.hint}</span>
       </button>
 
+      <label className="tool-check">
+        <input type="checkbox" checked={useObjects} onChange={(e) => setUseObjects(e.target.checked)} disabled={busy} /> {t.objects}
+      </label>
+
       {busy && (
         <div className="bgr-progress">
-          <span>{status === 'loading' ? `${t.loadingModel} ${progress ? `${progress}%` : ''}` : t.processing}</span>
-          <div className="bgr-bar"><div className="bgr-bar-fill" style={{ width: `${status === 'loading' ? progress : 100}%` }} /></div>
+          <span>{status === 'loading' ? `${t.loadingModel} ${progress ? `${progress}%` : ''}` : `${t.processing} ${progress}%`}</span>
+          <div className="bgr-bar"><div className="bgr-bar-fill" style={{ width: `${progress}%` }} /></div>
         </div>
       )}
       {(status === 'error' || items.some((it) => it.status === 'error')) && <p className="color-invalid">{aiErrorHint(language)}</p>}
 
       {items.length > 0 && (
         <div className="tool-actions">
-          <button type="button" className="tool-btn primary" onClick={processAll} disabled={busy}>{busy ? '…' : t.process}</button>
-          {doneItems.length > 0 && <button type="button" className="tool-btn" onClick={() => doneItems.forEach((it, i) => setTimeout(() => download(it), i * 250))}>{t.downloadAll} ({doneItems.length})</button>}
-          <button type="button" className="tool-btn ghost" onClick={() => setItems([])} disabled={busy}>{t.clear}</button>
+          {pending.length > 0 && <button type="button" className="tool-btn primary" onClick={processAll} disabled={busy}>{busy ? '…' : `${t.process} (${pending.length})`}</button>}
+          {doneItems.length > 0 && <button type="button" className="tool-btn" onClick={() => doneItems.forEach((it, i) => setTimeout(() => download(it), i * 300))}>{t.downloadAll} ({doneItems.length})</button>}
+          {doneItems.length > 0 && (
+            <label className="tool-check"><input type="checkbox" checked={showBoxes} onChange={(e) => setShowBoxes(e.target.checked)} /> {t.showBoxes}</label>
+          )}
+          <button type="button" className="tool-btn ghost" onClick={() => { items.forEach((it) => URL.revokeObjectURL(it.url)); setItems([]); setEditing(''); }} disabled={busy}>{t.clear}</button>
+        </div>
+      )}
+
+      {editItem && (
+        <div className="sc-edit-wrap">
+          <CropEditor item={editItem} aspect={aspect} showBoxes={showBoxes} onChange={(crop) => patch(editItem.id, { crop })} />
+          <p className="tool-local-note">{t.editHint}</p>
+          <div className="tool-actions">
+            <button type="button" className="tool-btn primary" onClick={() => setEditing('')}>{t.done}</button>
+            <button type="button" className="tool-btn" onClick={() => patch(editItem.id, { crop: editItem.auto })}>{t.reset}</button>
+            <button type="button" className="tool-btn" onClick={() => download(editItem)}>{t.download}</button>
+          </div>
         </div>
       )}
 
       <div className="sc-grid">
         {doneItems.map((it) => (
-          <button key={it.id} type="button" className="sc-item" onClick={() => download(it)} title={t.download}>
-            <img src={it.outUrl} alt={it.name} className={aspectId === 'avatar' ? 'sc-thumb circle' : 'sc-thumb'} />
-          </button>
+          <div key={it.id} className={it.id === editing ? 'sc-card is-editing' : 'sc-card'}>
+            <CropThumb item={it} crop={it.crop} circle={aspect.circle} />
+            <span className="sc-meta">{it.subjects?.faces.length ? `${t.faces}: ${it.subjects.faces.length}` : t.noFaces}</span>
+            <div className="sc-card-actions">
+              <button type="button" className="tool-btn small" onClick={() => setEditing(it.id)}>{t.edit}</button>
+              <button type="button" className="tool-btn small" onClick={() => download(it)}>↓</button>
+            </div>
+          </div>
         ))}
       </div>
 
-      <ul className="convert-list">
-        {items.length === 0 && <li className="convert-empty">{t.empty}</li>}
-        {items.filter((it) => it.status !== 'done').map((item) => (
-          <li key={item.id} className={`convert-row status-${item.status}`}>
-            <span className="convert-name">{item.name}</span>
-            <span />
-            {item.status === 'error' ? <span className="convert-error">⚠</span> : <span className="convert-pending">•</span>}
-          </li>
-        ))}
-      </ul>
+      {pending.length > 0 && (
+        <ul className="convert-list">
+          {pending.map((item) => (
+            <li key={item.id} className={`convert-row status-${item.status}`}>
+              <span className="convert-name">{item.name}</span>
+              <span />
+              {item.status === 'error' ? <span className="convert-error">⚠</span> : <span className="convert-pending">{item.status === 'working' ? '…' : '•'}</span>}
+            </li>
+          ))}
+        </ul>
+      )}
+      {items.length === 0 && <p className="convert-empty">{t.empty}</p>}
 
       <input ref={inputRef} type="file" accept="image/*" multiple hidden onChange={(e) => { addFiles(e.target.files); e.target.value = ''; }} />
       {aiBrowserHint(language) && <p className="tool-local-note aid-warn">⚠️ {aiBrowserHint(language)}</p>}
