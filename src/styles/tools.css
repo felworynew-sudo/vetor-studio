@@ -1552,3 +1552,25 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
 .mt .mt-wave canvas { display: block; flex: none; }
 .mt-lane.is-drop { background-color: var(--t-accent-soft); outline: 1px dashed var(--t-accent); outline-offset: -1px; }
 .tool-btn.is-on { border-color: var(--t-accent); color: var(--t-accent-strong); background: var(--t-accent-soft); }
+
+/* Mesh Gradient 2.0 */
+.mg-layout { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(260px, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 860px) { .mg-layout { grid-template-columns: 1fr; } }
+.mg-stage { position: relative; width: 100%; max-height: 70vh; border-radius: 14px; overflow: hidden; border: 1px solid var(--stroke); background: #111; touch-action: none; }
+.mg-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.mg-nogl { position: absolute; inset: 0; display: grid; place-items: center; color: #fff; }
+.mg-pt { position: absolute; width: 22px; height: 22px; margin: -11px 0 0 -11px; border-radius: 50% !important; border: 2px solid #fff; box-shadow: 0 1px 6px rgba(0,0,0,0.45); cursor: grab; padding: 0; touch-action: none; }
+.mg-pt.is-sel { outline: 2px solid #111; outline-offset: 2px; width: 26px; height: 26px; margin: -13px 0 0 -13px; }
+.mg-controls { display: flex; flex-direction: column; gap: 12px; }
+.mg-controls .tool-field input[type="range"] { width: 100%; }
+.mg-row { display: flex; gap: 14px; align-items: flex-end; flex-wrap: wrap; }
+.mg-row .tool-field { flex: 1; min-width: 120px; }
+.mg-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.mg-chip { padding: 5px 11px; border-radius: 999px; border: 1px solid var(--stroke); background: var(--bg); color: var(--text); font: inherit; font-size: 12.5px; cursor: pointer; }
+.mg-chip.is-active { background: var(--t-accent); border-color: var(--t-accent); color: #fff; }
+.mg-color-row { display: flex; gap: 8px; align-items: center; }
+.mg-export { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; margin: 18px 0 10px; }
+.mg-sizes { flex-wrap: wrap; }
+.mg-favs { display: flex; flex-wrap: wrap; gap: 8px; }
+.mg-fav { width: 72px; height: 48px; border-radius: 10px; border: 1px solid var(--stroke); cursor: pointer; padding: 0; }
+.mg-fav:hover { outline: 2px solid var(--t-accent); }

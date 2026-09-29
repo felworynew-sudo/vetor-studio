@@ -22,7 +22,7 @@ AGPL/NC-лицензии не тащим.
 - [x] **A6. Multitrack Editor** — не выкидывать (clips/trim/cut/pan/EQ/fades/mixdown уже есть);
       взять идеи waveform-playlist / wavesurfer-multitrack: нормальный waveform-рендер, зум, снэп.
 - [x] **A7. Colorblind Simulator** — Machado 2009 (сделано коммитом 488e9e4).
-- [ ] **A8. Mesh Gradient** — сильно расширить (точки, drag, шум, анимация, экспорт PNG/CSS/SVG).
+- [x] **A8. Mesh Gradient** — сильно расширить (точки, drag, шум, анимация, экспорт PNG/CSS/SVG).
 - [ ] **A9. Image Compressor** — кодеки Squoosh через jSquash: MozJPEG, OxiPNG, WebP, AVIF.
 - [ ] **A10. Audio Enhancer** — нейро-шумоподавление RNNoise (WASM) + громкость по LUFS (EBU R128).
 - [x] SVG Cleaner (SVGO), QR, Barcode, Image Converter — оставить как есть.

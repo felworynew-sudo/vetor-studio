@@ -853,11 +853,11 @@
       "img": "cveta.png",
       "ru": {
         "title": "Mesh-градиент",
-        "desc": "Модный многоцветный фон из цветовых точек. Реролл, экспорт CSS и PNG."
+        "desc": "Настоящий меш-градиент на WebGL: точки тянутся мышью, смешивание в OKLab, искажение, зерно, анимация, гармонии. Экспорт до 4K, CSS и SVG."
       },
       "en": {
         "title": "Mesh gradient",
-        "desc": "A trendy multicolor background from color points. Reroll, CSS and PNG export."
+        "desc": "A real WebGL mesh gradient: draggable points, OKLab blending, warp, grain, animation, harmonies. Export up to 4K, CSS and SVG."
       }
     },
     {
