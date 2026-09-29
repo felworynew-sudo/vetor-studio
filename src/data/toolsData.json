@@ -1171,6 +1171,20 @@
         "title": "OCR — image to text",
         "desc": "Recognizes text on scans, document photos and screenshots: 100+ languages, word boxes with confidence, copy, .txt and a PDF with a text layer."
       }
+    },
+    {
+      "slug": "face-anonymizer",
+      "categoryId": "ai",
+      "status": "ready",
+      "icon": "🙈",
+      "ru": {
+        "title": "Скрыть лица на фото",
+        "desc": "Автоматически находит лица и размывает, пикселизует или закрывает их. Ручные области для номеров и бейджей, пакетная обработка, EXIF и GPS удаляются."
+      },
+      "en": {
+        "title": "Blur faces in photos",
+        "desc": "Automatically finds faces and blurs, pixelates or covers them. Manual areas for plates and badges, batch processing, EXIF and GPS are removed."
+      }
     }
   ]
 }

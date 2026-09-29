@@ -57,7 +57,7 @@ function canvasOf(img, sx, sy, sw, sh, maxSide) {
 // BlazeFace short-range видит лица, занимающие заметную часть кадра. Чтобы ловить и
 // мелкие лица на групповых фото, прогоняем ещё сетку перекрывающихся тайлов и
 // склеиваем результаты через NMS.
-async function detectFaces(img) {
+export async function detectFaces(img) {
   const det = await getFaceDetector();
   const W = img.naturalWidth; const H = img.naturalHeight;
   const regions = [[0, 0, W, H]];

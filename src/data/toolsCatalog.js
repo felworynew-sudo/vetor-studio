@@ -82,6 +82,7 @@ const READY_COMPONENTS = {
   'contact-sheet': lazy(() => import('../components/tools/ContactSheet')),
   'pdf-studio': lazy(() => import('../components/tools/PdfStudio')),
   ocr: lazy(() => import('../components/tools/OcrTool')),
+  'face-anonymizer': lazy(() => import('../components/tools/FaceAnonymizer')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;
