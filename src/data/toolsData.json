@@ -441,11 +441,11 @@
       "icon": "📐",
       "ru": {
         "title": "Правило третей",
-        "desc": "Композиционная сетка (трети, золотое сечение, диагонали) поверх изображения."
+        "desc": "Композиционные сетки поверх изображения: трети, фи-сетка, диагонали, золотые треугольники и настоящая золотая спираль (4 ориентации). Экспорт PNG с сеткой."
       },
       "en": {
         "title": "Rule of thirds",
-        "desc": "A composition grid (thirds, golden ratio, diagonals) over your image."
+        "desc": "Composition overlays: thirds, phi grid, diagonals, golden triangles and a true golden spiral (4 orientations). PNG export with the grid."
       },
       "img": "pravilo-tretey.png"
     },

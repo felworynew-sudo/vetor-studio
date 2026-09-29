@@ -761,7 +761,6 @@ a.tool-card:hover {
 .rot-canvas { position: relative; display: inline-block; max-width: 100%; margin-top: 14px; border-radius: 12px; overflow: hidden; border: 1px solid var(--stroke); }
 .rot-img { display: block; max-width: 100%; height: auto; }
 .rot-grid { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-.rot-grid line { stroke: rgba(255, 255, 255, 0.75); stroke-width: 0.4; }
 .rot-point { fill: var(--accent); }
 
 /* --- Масштабатор иконок --- */
