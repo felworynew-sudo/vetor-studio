@@ -1283,6 +1283,20 @@
         "title": "Blur faces in photos",
         "desc": "Automatically finds faces and blurs, pixelates or covers them. Manual areas for plates and badges, batch processing, EXIF and GPS are removed."
       }
+    },
+    {
+      "slug": "font-subsetter",
+      "categoryId": "utility",
+      "status": "ready",
+      "icon": "🔡",
+      "ru": {
+        "title": "Сабсеттер шрифтов → WOFF2",
+        "desc": "Оставляет в шрифте только нужные символы — кириллицу, латиницу, цифры или текст сайта — и сжимает в WOFF2: 300 КБ → 20–40 КБ. HarfBuzz, готовый @font-face с unicode-range."
+      },
+      "en": {
+        "title": "Font subsetter → WOFF2",
+        "desc": "Keeps only the characters you need — Latin, Cyrillic, digits or your site copy — and compresses to WOFF2: 300 KB → 20–40 KB. HarfBuzz, ready @font-face with unicode-range."
+      }
     }
   ]
 }

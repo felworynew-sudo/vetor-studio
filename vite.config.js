@@ -400,6 +400,6 @@ export default defineConfig(({ command }) => ({
     format: 'es',
   },
   optimizeDeps: {
-    exclude: ['@imagemagick/magick-wasm', '@jsquash/jpeg', '@jsquash/webp', '@jsquash/avif', '@jsquash/oxipng', '@ffmpeg/ffmpeg', '@ffmpeg/util'],
+    exclude: ['@imagemagick/magick-wasm', '@jsquash/jpeg', '@jsquash/webp', '@jsquash/avif', '@jsquash/oxipng', '@ffmpeg/ffmpeg', '@ffmpeg/util', 'woff2-encoder'],
   },
 }));

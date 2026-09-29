@@ -33,7 +33,7 @@ AGPL/NC-лицензии не тащим.
 - [x] **B2. Квантизатор / постеризатор** — 2–64 цвета + дизеринг (image-q).
 - [x] **B3. Упрощение SVG-путей** — ползунок tolerance, до/после.
 - [x] **B4. SVG → React/JSX** (SVGR).
-- [ ] **B5. Сабсеттер шрифтов** → WOFF2 (harfbuzz hb-subset + woff2 WASM).
+- [x] **B5. Сабсеттер шрифтов** → WOFF2 (harfbuzz hb-subset + woff2 WASM).
 - [ ] **B6. Variable Font Playground** — чтение осей wght/wdth/slnt/opsz.
 - [ ] **B7. Подбор пар шрифтов** — по x-height / контрасту / ширине.
 - [x] **B8. LUT-генератор / конвертер** — .cube, превью, экспорт.

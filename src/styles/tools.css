@@ -1803,3 +1803,8 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
 .cfs-grad span { height: 56px; border-radius: 8px; border: 1px solid var(--stroke); }
 .cfs-grad code { font-size: 12px; word-break: break-all; }
 .cfs-long { white-space: pre-wrap; word-break: break-all; max-height: 180px; overflow: auto; }
+
+/* Font subsetter */
+.fs-head { font-size: 14px; margin-bottom: 10px; }
+.fs-sets { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 6px; }
+.fs-preview { font-size: 34px; line-height: 1.3; padding: 16px; border: 1px solid var(--stroke); border-radius: 12px; background: var(--bg); word-break: break-word; }

@@ -90,6 +90,7 @@ const READY_COMPONENTS = {
   'svg-to-jsx': lazy(() => import('../components/tools/SvgToJsx')),
   'svg-path-simplifier': lazy(() => import('../components/tools/PathSimplifier')),
   'svg-path-editor': lazy(() => import('../components/tools/PathEditor')),
+  'font-subsetter': lazy(() => import('../components/tools/FontSubsetter')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;
