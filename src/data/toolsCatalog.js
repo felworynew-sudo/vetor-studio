@@ -70,6 +70,7 @@ const READY_COMPONENTS = {
   'palette-fixer': lazy(() => import('../components/tools/PaletteFixer')),
   'gradient-map': lazy(() => import('../components/tools/GradientMap')),
   'palette-transfer': lazy(() => import('../components/tools/PaletteTransfer')),
+  'lut-studio': lazy(() => import('../components/tools/LutStudio')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;

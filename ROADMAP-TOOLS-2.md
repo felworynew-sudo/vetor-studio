@@ -36,7 +36,7 @@ AGPL/NC-лицензии не тащим.
 - [ ] **B5. Сабсеттер шрифтов** → WOFF2 (harfbuzz hb-subset + woff2 WASM).
 - [ ] **B6. Variable Font Playground** — чтение осей wght/wdth/slnt/opsz.
 - [ ] **B7. Подбор пар шрифтов** — по x-height / контрасту / ширине.
-- [ ] **B8. LUT-генератор / конвертер** — .cube, превью, экспорт.
+- [x] **B8. LUT-генератор / конвертер** — .cube, превью, экспорт.
 - [ ] **B9. Сравнение изображений** — overlay / difference / SSIM.
 - [ ] **B10. Бесшовная текстура** — offset + заделка шва.
 - [ ] **B11. Normal / Height map генератор.**
@@ -57,7 +57,7 @@ AGPL/NC-лицензии не тащим.
 - [ ] **C3. AudioTrimmer** — экспорт не только WAV (через ffmpeg.wasm / lamejs).
 - [ ] **C4. BlurAnalyzer** — несколько метрик (Laplacian, Tenengrad, FFT high-freq), карта резкости по зонам.
 - [x] **C5. ColorConverter** — OKLCH / OKLab / Lab / LCH / Display-P3, gamut-проверка.
-- [ ] **C6. ColorGrade** — GPU-пайплайн (WebGL) в linear RGB, full-res.
+- [x] **C6. ColorGrade** — GPU-пайплайн (WebGL) в linear RGB, full-res.
 - [x] **C7. ColorHarmony** — OKLCH-повороты + gamut mapping.
 - [x] **C8. ColorWeight** — на OKLab-движке палитры.
 - [x] **C9. ContrastChecker** — APCA + авто-исправление цвета (общий движок с B18).

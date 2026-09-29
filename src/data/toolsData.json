@@ -146,11 +146,11 @@
       "icon": "🎚️",
       "ru": {
         "title": "Цветокоррекция фото",
-        "desc": "Экспозиция, контраст, света и тени, температура, резкость, шумоподавление — как в Lightroom, но в браузере."
+        "desc": "Цветокоррекция на видеокарте: экспозиция и баланс белого в линейном свете, тени/света, clarity, вибранс, шумодав, резкость, виньетка, зерно. Пресеты и экспорт LUT .cube."
       },
       "en": {
         "title": "Photo color grading",
-        "desc": "Exposure, contrast, highlights & shadows, temperature, sharpness, noise reduction — Lightroom-style, in your browser."
+        "desc": "GPU color grading: exposure and white balance in linear light, shadows/highlights, clarity, vibrance, denoise, sharpening, vignette, grain. Presets and .cube LUT export."
       },
       "img": "foto.png"
     },
@@ -256,6 +256,20 @@
       "en": {
         "title": "Palette transfer A → B",
         "desc": "Transfers the color character of a reference photo onto yours: soft (Reinhard) or precise (histogram) method in OKLab. Export PNG and a .cube LUT."
+      }
+    },
+    {
+      "slug": "lut-studio",
+      "categoryId": "color",
+      "status": "ready",
+      "icon": "🎬",
+      "ru": {
+        "title": "LUT-студия (.cube)",
+        "desc": "Открывает, генерирует и конвертирует LUT: .cube, .3dl, Hald CLUT PNG. Кинолуки (teal & orange, bleach bypass, плёнка), превью на фото, сила, размер 17/33/65."
+      },
+      "en": {
+        "title": "LUT studio (.cube)",
+        "desc": "Opens, generates and converts LUTs: .cube, .3dl, Hald CLUT PNG. Film looks (teal & orange, bleach bypass, film), photo preview, strength, 17/33/65 sizes."
       }
     },
     {

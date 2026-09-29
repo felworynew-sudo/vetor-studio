@@ -97,3 +97,45 @@ export function downloadText(text, name, type = 'text/plain') {
   a.download = name; document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(a.href), 3000);
 }
+
+// .3dl: строка шейпера + n³ строк целых; B меняется быстрее всех. Разрядность — по максимуму.
+export function parse3dl(text) {
+  const rows = text.split(/\r?\n/).map((l) => l.trim()).filter((l) => l && !l.startsWith('#') && !/^[A-Za-z]/.test(l));
+  const triples = rows.map((l) => l.split(/\s+/).map(Number)).filter((p) => p.length === 3 && p.every(Number.isFinite));
+  const n = Math.round(Math.cbrt(triples.length));
+  if (n < 2 || n * n * n !== triples.length) throw new Error('Неверный .3dl');
+  const max = 2 ** Math.ceil(Math.log2(Math.max(...triples.flat()) + 1)) - 1;
+  const data = new Float32Array(n * n * n * 3);
+  let k = 0;
+  for (let r = 0; r < n; r += 1) {
+    for (let g = 0; g < n; g += 1) {
+      for (let b = 0; b < n; b += 1) {
+        const i = ((b * n + g) * n + r) * 3; const p = triples[k]; k += 1;
+        data[i] = p[0] / max; data[i + 1] = p[1] / max; data[i + 2] = p[2] / max;
+      }
+    }
+  }
+  return { size: n, data, title: '3DL' };
+}
+
+// Hald CLUT: уровень L → куб N = L² на картинке L³×L³; порядок пикселей совпадает с .cube (R быстрее всех).
+export function haldImage(lut, level = 8) {
+  const N = level * level; const S = level * level * level;
+  const img = new ImageData(S, S);
+  for (let i = 0; i < N * N * N; i += 1) {
+    const r = i % N; const g = Math.floor(i / N) % N; const b = Math.floor(i / (N * N));
+    const v = lut ? sampleLut(lut, r / (N - 1), g / (N - 1), b / (N - 1)) : [r / (N - 1), g / (N - 1), b / (N - 1)];
+    img.data[i * 4] = Math.round(v[0] * 255); img.data[i * 4 + 1] = Math.round(v[1] * 255); img.data[i * 4 + 2] = Math.round(v[2] * 255); img.data[i * 4 + 3] = 255;
+  }
+  return img;
+}
+
+export function lutFromHald(imageData) {
+  const S = imageData.width; const level = Math.round(Math.cbrt(S));
+  if (level ** 3 !== S || imageData.height !== S) throw new Error('Это не Hald CLUT (нужен квадрат со стороной L³, например 512×512)');
+  const N = level * level; const data = new Float32Array(N * N * N * 3);
+  for (let i = 0; i < N * N * N; i += 1) { data[i * 3] = imageData.data[i * 4] / 255; data[i * 3 + 1] = imageData.data[i * 4 + 1] / 255; data[i * 3 + 2] = imageData.data[i * 4 + 2] / 255; }
+  return { size: N, data, title: 'Hald CLUT' };
+}
+
+export const resizeLut = (lut, size) => buildLut(([r, g, b]) => sampleLut(lut, r, g, b), size);
