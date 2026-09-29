@@ -71,6 +71,7 @@ const READY_COMPONENTS = {
   'gradient-map': lazy(() => import('../components/tools/GradientMap')),
   'palette-transfer': lazy(() => import('../components/tools/PaletteTransfer')),
   'lut-studio': lazy(() => import('../components/tools/LutStudio')),
+  'image-diff': lazy(() => import('../components/tools/ImageDiff')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;

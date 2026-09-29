@@ -140,6 +140,20 @@
       "img": "nozhnicy.png"
     },
     {
+      "slug": "image-diff",
+      "categoryId": "image",
+      "status": "ready",
+      "icon": "🔍",
+      "ru": {
+        "title": "Сравнение изображений",
+        "desc": "Два макета или скриншота: подсветка отличий (pixelmatch) с процентом изменённых пикселей, SSIM и карта, шторка, наложение и разностное смешивание."
+      },
+      "en": {
+        "title": "Image diff",
+        "desc": "Two designs or screenshots: highlighted differences (pixelmatch) with the percentage of changed pixels, SSIM and a map, slider, onion skin and difference blend."
+      }
+    },
+    {
       "slug": "color-grade",
       "categoryId": "image",
       "status": "ready",

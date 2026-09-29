@@ -37,7 +37,7 @@ AGPL/NC-лицензии не тащим.
 - [ ] **B6. Variable Font Playground** — чтение осей wght/wdth/slnt/opsz.
 - [ ] **B7. Подбор пар шрифтов** — по x-height / контрасту / ширине.
 - [x] **B8. LUT-генератор / конвертер** — .cube, превью, экспорт.
-- [ ] **B9. Сравнение изображений** — overlay / difference / SSIM.
+- [x] **B9. Сравнение изображений** — overlay / difference / SSIM.
 - [ ] **B10. Бесшовная текстура** — offset + заделка шва.
 - [ ] **B11. Normal / Height map генератор.**
 - [ ] **B12. Sprite sheet генератор.**
