@@ -1783,3 +1783,10 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
 .sj-code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12.5px; line-height: 1.5; min-height: 280px; white-space: pre; }
 .sj-preview { width: 120px; height: 120px; display: grid; place-items: center; border: 1px solid var(--stroke); border-radius: 12px; background: #fff; color: #6166ff; margin-top: 8px; }
 .sj-preview svg { max-width: 90px; max-height: 90px; width: 90px; height: 90px; }
+
+/* Path simplifier */
+.ps-stage { position: relative; background: #fff; border: 1px solid var(--stroke); border-radius: 12px; padding: 14px; margin: 8px 0 12px; min-height: 160px; display: grid; }
+.ps-stage svg { width: 100%; height: auto; max-height: 55vh; display: block; }
+.ps-layer { grid-area: 1 / 1; }
+.ps-top { pointer-events: none; }
+.ps-top svg * { fill: none !important; stroke: #ff2d55 !important; stroke-width: 0.6px !important; vector-effect: non-scaling-stroke; opacity: 0.9; }

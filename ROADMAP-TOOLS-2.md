@@ -31,7 +31,7 @@ AGPL/NC-лицензии не тащим.
 
 - [x] **B1. Векторизатор** PNG/JPG → SVG (VTracer WASM).
 - [x] **B2. Квантизатор / постеризатор** — 2–64 цвета + дизеринг (image-q).
-- [ ] **B3. Упрощение SVG-путей** — ползунок tolerance, до/после.
+- [x] **B3. Упрощение SVG-путей** — ползунок tolerance, до/после.
 - [x] **B4. SVG → React/JSX** (SVGR).
 - [ ] **B5. Сабсеттер шрифтов** → WOFF2 (harfbuzz hb-subset + woff2 WASM).
 - [ ] **B6. Variable Font Playground** — чтение осей wght/wdth/slnt/opsz.

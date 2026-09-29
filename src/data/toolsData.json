@@ -582,6 +582,20 @@
       }
     },
     {
+      "slug": "svg-path-simplifier",
+      "categoryId": "svg",
+      "status": "ready",
+      "icon": "〽️",
+      "ru": {
+        "title": "Упрощение SVG-путей",
+        "desc": "Сокращает число узлов в контурах SVG по допуску в пикселях (Рамер–Дуглас–Пекер) и сглаживает кривыми Безье, сохраняя углы. Наложение до/после, счётчики узлов и веса."
+      },
+      "en": {
+        "title": "SVG path simplifier",
+        "desc": "Reduces nodes in SVG outlines by a pixel tolerance (Ramer–Douglas–Peucker) and smooths with Bézier curves while keeping corners. Before/after overlay, node and size counters."
+      }
+    },
+    {
       "slug": "css-from-svg",
       "categoryId": "svg",
       "status": "ready",

@@ -88,6 +88,7 @@ const READY_COMPONENTS = {
   'silence-remover': lazy(() => import('../components/tools/SilenceRemover')),
   'waveform-image': lazy(() => import('../components/tools/WaveformImage')),
   'svg-to-jsx': lazy(() => import('../components/tools/SvgToJsx')),
+  'svg-path-simplifier': lazy(() => import('../components/tools/PathSimplifier')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;
