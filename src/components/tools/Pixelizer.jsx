@@ -1,10 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { METHODS, PALETTES, buildPalette, ditherImage, paletteFromHex } from '../../utils/dither';
 
 // Пикселизатор: превращает картинку в пиксель-арт даунскейлом ПО СОСЕДНИМ
 // пикселям (nearest-neighbor, без бикубического размытия) + опциональная
 // квантизация палитры (median-cut). Экспорт в PNG (растровый пиксель) и в SVG
 // (вектор: каждый пиксель = квадрат того же цвета). Тем же тулом векторизуем
 // готовый пиксель-арт: ставим ширину = исходной, палитра «как есть».
+// Палитра: слияние оттенков, N цветов (image-q) или ретро-палитра + дизеринг
+// общего движка utils/dither.
 
 const TEXT = {
   ru: {
@@ -15,6 +18,7 @@ const TEXT = {
     heavy: 'Много квадратов — SVG будет тяжёлым. Уменьшите ширину или число цветов.',
     crisp: 'Чёткие края', smooth: 'Усреднять цвета',
     crispHint: 'Без полупрозрачной бахромы по контуру', smoothHint: 'Ровный цвет вместо шума (выкл. — для готового пиксель-арта)',
+    palette: 'Палитра', pMerge: 'Слияние оттенков', pAuto: 'N цветов', pPreset: 'Ретро', colors: 'Цветов', dither: 'Дизеринг',
   },
   en: {
     drop: 'Drop an image or click', hint: 'PNG, JPG, WebP — processed locally',
@@ -24,6 +28,7 @@ const TEXT = {
     heavy: 'Many rects — the SVG will be heavy. Lower the width or color count.',
     crisp: 'Crisp edges', smooth: 'Average colors',
     crispHint: 'No semi-transparent fringe on the outline', smoothHint: 'Clean color instead of noise (off — for ready pixel-art)',
+    palette: 'Palette', pMerge: 'Merge shades', pAuto: 'N colors', pPreset: 'Retro', colors: 'Colors', dither: 'Dithering',
   },
 };
 
@@ -94,6 +99,11 @@ function Pixelizer({ language = 'ru' }) {
   const [crisp, setCrisp] = useState(true); // порог альфы: чёткий силуэт без полупрозрачной бахромы
   const [dims, setDims] = useState({ w: 0, h: 0 });
   const [rectCount, setRectCount] = useState(0);
+  const [palMode, setPalMode] = useState('merge');
+  const [palColors, setPalColors] = useState(16);
+  const [palPreset, setPalPreset] = useState('pico8');
+  const [method, setMethod] = useState('none');
+  const runRef = useRef(0);
 
   function loadFile(file) {
     if (!file || !file.type.startsWith('image/')) return;
@@ -104,8 +114,9 @@ function Pixelizer({ language = 'ru' }) {
     img.src = url;
   }
 
-  const render = useCallback(() => {
+  const render = useCallback(async () => {
     const img = imgRef.current; if (!img) return;
+    const run = ++runRef.current; // eslint-disable-line no-plusplus
     const w = Math.max(2, Math.min(400, pxW));
     const h = Math.max(1, Math.round(w * img.naturalHeight / img.naturalWidth));
     // 1) даунскейл. smooth=усреднение блока (ровный цвет, без шума nearest на
@@ -119,11 +130,16 @@ function Pixelizer({ language = 'ru' }) {
     sctx.drawImage(img, 0, 0, w, h);
     // 2) один проход: порог альфы (чёткий силуэт, гарантированно без полупрозрачных)
     // + слияние близких оттенков к базовым цветам (redmean-кластеризация)
-    if (crisp || tol > 0) {
-      const id = sctx.getImageData(0, 0, w, h);
+    if (crisp || (palMode === 'merge' && tol > 0) || palMode !== 'merge') {
+      let id = sctx.getImageData(0, 0, w, h);
       const d = id.data;
       if (crisp) { for (let i = 0; i < d.length; i += 4) d[i + 3] = d[i + 3] >= 128 ? 255 : 0; }
-      quantizeByTolerance(d, tol);
+      if (palMode === 'merge') quantizeByTolerance(d, tol);
+      else {
+        const pal = palMode === 'auto' ? await buildPalette(id, palColors) : paletteFromHex(PALETTES[palPreset].c);
+        if (run !== runRef.current) return;
+        id = ditherImage(id, pal, { method });
+      }
       sctx.putImageData(id, 0, 0);
     }
     setDims({ w, h });
@@ -134,7 +150,7 @@ function Pixelizer({ language = 'ru' }) {
     pctx.imageSmoothingEnabled = false;
     pctx.clearRect(0, 0, pv.width, pv.height);
     pctx.drawImage(small, 0, 0, pv.width, pv.height);
-  }, [pxW, tol, scale, smooth, crisp]);
+  }, [pxW, tol, scale, smooth, crisp, palMode, palColors, palPreset, method]);
 
   useEffect(() => { if (src) render(); }, [src, render]);
 
@@ -220,9 +236,37 @@ function Pixelizer({ language = 'ru' }) {
               <input type="range" min="8" max="256" value={pxW} onChange={(e) => setPxW(Number(e.target.value))} />
             </div>
             <div className="tool-field">
-              <span className="tool-field-label">{t.merge}: {tol === 0 ? t.mergeOff : tol}</span>
-              <input type="range" min="0" max="80" value={tol} onChange={(e) => setTol(Number(e.target.value))} />
+              <span className="tool-field-label">{t.palette}</span>
+              <div className="segmented">
+                {[['merge', t.pMerge], ['auto', t.pAuto], ['preset', t.pPreset]].map(([id, label]) => (
+                  <button key={id} type="button" className={palMode === id ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => setPalMode(id)}>{label}</button>
+                ))}
+              </div>
             </div>
+            {palMode === 'merge' && (
+              <div className="tool-field">
+                <span className="tool-field-label">{t.merge}: {tol === 0 ? t.mergeOff : tol}</span>
+                <input type="range" min="0" max="80" value={tol} onChange={(e) => setTol(Number(e.target.value))} />
+              </div>
+            )}
+            {palMode === 'auto' && (
+              <div className="tool-field">
+                <span className="tool-field-label">{t.colors}: {palColors}</span>
+                <input type="range" min="2" max="64" value={palColors} onChange={(e) => setPalColors(Number(e.target.value))} />
+              </div>
+            )}
+            {palMode === 'preset' && (
+              <select className="cb-select" value={palPreset} onChange={(e) => setPalPreset(e.target.value)}>
+                {Object.entries(PALETTES).map(([id, p]) => <option key={id} value={id}>{p[language] || p.ru}</option>)}
+              </select>
+            )}
+            {palMode !== 'merge' && (
+              <label className="tool-field"><span className="tool-field-label">{t.dither}</span>
+                <select className="cb-select" value={method} onChange={(e) => setMethod(e.target.value)}>
+                  {METHODS.map((m) => <option key={m.id} value={m.id}>{m[language] || m.ru}</option>)}
+                </select>
+              </label>
+            )}
             <div className="tool-field">
               <span className="tool-field-label">{t.scale}: ×{scale}</span>
               <input type="range" min="1" max="16" value={scale} onChange={(e) => setScale(Number(e.target.value))} />

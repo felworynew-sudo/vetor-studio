@@ -64,7 +64,7 @@ AGPL/NC-лицензии не тащим.
 - [ ] **C10. CrtGlitch** — WebGL-шейдер, full-res и анимация.
 - [ ] **C11. CssFromSvg** — корректные градиенты (orientation/gradientTransform/opacity), без regex.
 - [ ] **C12. Duotone** — linear-light, gradient-map, 3 тона.
-- [ ] **C13. EinkSimulator** — Atkinson/Bayer/уровни серого/цветной e-ink (общий движок с B14).
+- [x] **C13. EinkSimulator** — Atkinson/Bayer/уровни серого/цветной e-ink (общий движок с B14).
 - [ ] **C14. FaviconGenerator** — ICO (мульти-размер), SVG favicon, maskable, manifest, ZIP.
 - [ ] **C15. FireSmoke** — шейдерная/fluid-симуляция.
 - [ ] **C16. GlyphMap → Font Lab** — fontkit: инфо, OpenType-фичи, кернинг, variable axes, экспорт глифа SVG.
@@ -73,7 +73,7 @@ AGPL/NC-лицензии не тащим.
 - [ ] **C19. Isometry** — экспорт GLB/STL/OBJ.
 - [ ] **C20. MoodPalettes** — OKLCH + контраст + gamut.
 - [ ] **C21. PastelPairs** — реальный целевой контраст вместо порога luminance > 0.4.
-- [ ] **C22. Pixelizer** — image-q квантизация + дизеринг.
+- [x] **C22. Pixelizer** — image-q квантизация + дизеринг.
 - [ ] **C23. RuleOfThirds** — настоящая золотая спираль (4 ориентации).
 - [ ] **C24. Text3D** — экспорт GLB, проверка OTF/CFF.
 - [ ] **C25. VoiceRecorder** — выбор микрофона, шумоподавление после записи.
