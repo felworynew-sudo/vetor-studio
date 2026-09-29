@@ -84,6 +84,7 @@ const READY_COMPONENTS = {
   ocr: lazy(() => import('../components/tools/OcrTool')),
   'face-anonymizer': lazy(() => import('../components/tools/FaceAnonymizer')),
   'object-remover': lazy(() => import('../components/tools/ObjectRemover')),
+  'cover-art-extractor': lazy(() => import('../components/tools/CoverExtractor')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;

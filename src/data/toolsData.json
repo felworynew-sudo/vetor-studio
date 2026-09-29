@@ -857,14 +857,28 @@
       "status": "ready",
       "icon": "🏷️",
       "ru": {
-        "title": "Редактор ID3-тегов",
-        "desc": "Просмотр, правка и полная очистка тегов MP3 (в т.ч. сторонних/ИИ-меток), без перекодирования."
+        "title": "Редактор тегов аудио",
+        "desc": "Теги MP3, FLAC, M4A, OGG, Opus, WAV: название, исполнитель, альбом, трек, жанр, текст песни, обложка. Тех. информация о файле и полная очистка тегов — без перекодирования."
       },
       "en": {
-        "title": "ID3 tag editor",
-        "desc": "View, edit and fully clean MP3 tags (incl. foreign/AI markers), without re-encoding."
+        "title": "Audio tag editor",
+        "desc": "Tags for MP3, FLAC, M4A, OGG, Opus, WAV: title, artist, album, track, genre, lyrics, cover art. Technical file info and full tag cleanup — no re-encoding."
       },
       "img": "birka.png"
+    },
+    {
+      "slug": "cover-art-extractor",
+      "categoryId": "audio",
+      "status": "ready",
+      "icon": "💿",
+      "ru": {
+        "title": "Обложка из аудиофайла",
+        "desc": "Достаёт вшитые обложки и буклеты из MP3, FLAC, M4A, OGG, Opus, WMA в исходном качестве. Пакетно — хоть весь альбом, ZIP одним файлом."
+      },
+      "en": {
+        "title": "Cover art extractor",
+        "desc": "Extracts embedded covers and booklets from MP3, FLAC, M4A, OGG, Opus, WMA in original quality. Batch — a whole album at once, one ZIP."
+      }
     },
     {
       "slug": "yt-thumbnail",

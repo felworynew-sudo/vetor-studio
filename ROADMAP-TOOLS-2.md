@@ -53,7 +53,7 @@ AGPL/NC-лицензии не тащим.
 ## C. Улучшение остальных (полный разбор всех 58)
 
 - [x] **C1. AudioConverter** — ffmpeg.wasm: любые входные форматы, MP3/AAC/OGG/Opus/FLAC на выходе.
-- [ ] **C2. AudioMetadata** — ядро music-metadata (MP3/MP4/FLAC/Ogg/WAV/AIFF, ID3/APE/Vorbis/MP4 теги).
+- [x] **C2. AudioMetadata** — ядро music-metadata (MP3/MP4/FLAC/Ogg/WAV/AIFF, ID3/APE/Vorbis/MP4 теги).
 - [ ] **C3. AudioTrimmer** — экспорт не только WAV (через ffmpeg.wasm / lamejs).
 - [ ] **C4. BlurAnalyzer** — несколько метрик (Laplacian, Tenengrad, FFT high-freq), карта резкости по зонам.
 - [x] **C5. ColorConverter** — OKLCH / OKLab / Lab / LCH / Display-P3, gamut-проверка.
@@ -91,8 +91,8 @@ AGPL/NC-лицензии не тащим.
 - [ ] **D8. SVG Path Editor** — правка кривых мышкой, сетка, snap.
 - [ ] **D9. Silence Remover** (аудио).
 - [ ] **D10. Waveform-картинка** из аудио (PNG/SVG).
-- [ ] **D11. Cover Art Extractor** (обложка из MP3/FLAC/M4A).
-- [ ] **D12. Audio Tag Editor** — редактирование ID3 (объединить с C2).
+- [x] **D11. Cover Art Extractor** (обложка из MP3/FLAC/M4A).
+- [x] **D12. Audio Tag Editor** — редактирование ID3 (объединить с C2).
 - [ ] **D13. Subtitle Editor** — видео + waveform + SRT/VTT.
 - [ ] **D14. Stem Splitter** — вокал/барабаны/бас (Demucs WebGPU) — сначала проверить вес модели и скорость.
 - [ ] **D15. Relight / Time of Day** — depth-aware relight фото.
