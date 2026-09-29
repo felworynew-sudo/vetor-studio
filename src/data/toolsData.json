@@ -596,6 +596,20 @@
       }
     },
     {
+      "slug": "svg-path-editor",
+      "categoryId": "svg",
+      "status": "ready",
+      "icon": "✏️",
+      "ru": {
+        "title": "Редактор SVG-путей",
+        "desc": "Правьте кривые SVG мышью: узлы и рычаги Безье, сетка с привязкой, добавление и удаление точек, прямая ↔ кривая, отмена. Живой код d и экспорт SVG."
+      },
+      "en": {
+        "title": "SVG path editor",
+        "desc": "Edit SVG curves with the mouse: nodes and Bézier handles, snapping grid, add and delete points, straight ↔ curve, undo. Live d code and SVG export."
+      }
+    },
+    {
       "slug": "css-from-svg",
       "categoryId": "svg",
       "status": "ready",

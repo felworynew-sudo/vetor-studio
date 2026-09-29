@@ -1790,3 +1790,8 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
 .ps-layer { grid-area: 1 / 1; }
 .ps-top { pointer-events: none; }
 .ps-top svg * { fill: none !important; stroke: #ff2d55 !important; stroke-width: 0.6px !important; vector-effect: non-scaling-stroke; opacity: 0.9; }
+
+/* Path editor */
+.pe2-stage { border: 1px solid var(--stroke); border-radius: 12px; background: #fff; overflow: hidden; }
+.pe2-svg { display: block; width: 100%; height: min(62vh, 560px); touch-action: none; user-select: none; }
+.pe2-h { cursor: grab; }

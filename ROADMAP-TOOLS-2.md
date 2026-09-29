@@ -88,7 +88,7 @@ AGPL/NC-лицензии не тащим.
 - [x] **D5. Anonymize faces** — автоблюр/пикселизация лиц.
 - [x] **D6. Heal / удаление объектов** — inpainting кистью.
 - [x] **D7. Heightmap / Terrain генератор** — simplex/fBM, эрозия, 3D-превью, PNG.
-- [ ] **D8. SVG Path Editor** — правка кривых мышкой, сетка, snap.
+- [x] **D8. SVG Path Editor** — правка кривых мышкой, сетка, snap.
 - [x] **D9. Silence Remover** (аудио).
 - [x] **D10. Waveform-картинка** из аудио (PNG/SVG).
 - [x] **D11. Cover Art Extractor** (обложка из MP3/FLAC/M4A).

@@ -89,6 +89,7 @@ const READY_COMPONENTS = {
   'waveform-image': lazy(() => import('../components/tools/WaveformImage')),
   'svg-to-jsx': lazy(() => import('../components/tools/SvgToJsx')),
   'svg-path-simplifier': lazy(() => import('../components/tools/PathSimplifier')),
+  'svg-path-editor': lazy(() => import('../components/tools/PathEditor')),
 };
 
 export const TOOL_CATEGORIES = toolsData.categories;
