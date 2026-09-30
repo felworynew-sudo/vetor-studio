@@ -380,12 +380,12 @@
       "status": "ready",
       "icon": "🧾",
       "ru": {
-        "title": "Очистка метаданных (EXIF/C2PA)",
-        "desc": "Удаляет EXIF, XMP, GPS, IPTC и C2PA/ИИ-метки из JPEG/PNG без потери качества. Показывает найденное. Пакетно."
+        "title": "Метаданные: просмотр и очистка (EXIF/C2PA)",
+        "desc": "Все теги EXIF/GPS/XMP/IPTC и промпты PNG, инспектор C2PA (кто подписал, помечено ли как ИИ). Выборочное удаление без потери качества — можно убрать только GPS. JPEG/PNG/WebP, ZIP."
       },
       "en": {
-        "title": "Metadata cleaner (EXIF/C2PA)",
-        "desc": "Strips EXIF, XMP, GPS, IPTC and C2PA/AI markers from JPEG/PNG losslessly. Shows what was found. Batch."
+        "title": "Metadata viewer & cleaner (EXIF/C2PA)",
+        "desc": "All EXIF/GPS/XMP/IPTC tags and PNG prompts, a C2PA inspector (signer, AI labels). Selective lossless removal — even GPS only. JPEG/PNG/WebP, ZIP."
       },
       "img": "pipidastr.png"
     },

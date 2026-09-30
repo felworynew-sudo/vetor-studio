@@ -69,7 +69,7 @@ AGPL/NC-лицензии не тащим.
 - [ ] **C15. FireSmoke** — шейдерная/fluid-симуляция.
 - [x] **C16. GlyphMap → Font Lab** — fontkit: инфо, OpenType-фичи, кернинг, variable axes, экспорт глифа SVG.
 - [x] **C17. Halftone** — CMYK с углами растра/розетка, линии, экспорт SVG.
-- [ ] **C18. ImageMetadata** — просмотр всех тегов, выборочное удаление, C2PA-инспектор.
+- [x] **C18. ImageMetadata** — просмотр всех тегов, выборочное удаление, C2PA-инспектор.
 - [ ] **C19. Isometry** — экспорт GLB/STL/OBJ.
 - [x] **C20. MoodPalettes** — OKLCH + контраст + gamut.
 - [x] **C21. PastelPairs** — реальный целевой контраст вместо порога luminance > 0.4.
