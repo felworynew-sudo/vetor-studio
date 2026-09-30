@@ -366,11 +366,11 @@
       "icon": "🔖",
       "ru": {
         "title": "Водяные знаки",
-        "desc": "Пакетное наложение логотипа/текста на концепты."
+        "desc": "Пакетное наложение логотипа или текста: плитка под углом или 9 позиций, формат как у исходника (JPEG/WebP/PNG), скачивание ZIP."
       },
       "en": {
         "title": "Watermark",
-        "desc": "Batch-stamp a logo or text onto your concepts."
+        "desc": "Batch-stamp a logo or text: angled tiling or 9 positions, keeps the source format (JPEG/WebP/PNG), ZIP download."
       },
       "img": "birka.png"
     },

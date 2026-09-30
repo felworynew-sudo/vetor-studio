@@ -1856,3 +1856,6 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
 /* FX studio */
 .fx-out { display: block; max-width: 100%; max-height: 70vh; border-radius: 12px; border: 1px solid var(--stroke); margin-bottom: 10px; }
 .fx-studio .vz-controls { max-height: 78vh; overflow: auto; padding-right: 4px; }
+.wm-pos { display: grid; grid-template-columns: repeat(3, 22px); gap: 4px; }
+.wm-pos-cell { width: 22px; height: 22px; border-radius: 5px; border: 1px solid var(--stroke); background: var(--surface-strong); cursor: pointer; padding: 0; }
+.wm-pos-cell.is-active { background: var(--accent); border-color: var(--accent); }
