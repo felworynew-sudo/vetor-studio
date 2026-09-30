@@ -396,11 +396,11 @@
       "icon": "📷",
       "ru": {
         "title": "Анализатор размытия",
-        "desc": "Отсеивает смазанные кадры из пакета фото и сортирует от размытых к резким."
+        "desc": "Отсеивает смазанные кадры: Лапласиан, Tenengrad, высокие частоты FFT и карта резкости по зонам. Портрет с боке не считается браком. CSV-отчёт."
       },
       "en": {
         "title": "Blur analyzer",
-        "desc": "Filters out blurry shots from a batch and sorts them blurry → sharp."
+        "desc": "Weeds out blurry shots: Laplacian, Tenengrad, FFT high frequencies and a zone sharpness map. Bokeh portraits are not flagged. CSV report."
       },
       "img": "glaz.png"
     },

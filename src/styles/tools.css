@@ -1859,3 +1859,14 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
 .wm-pos { display: grid; grid-template-columns: repeat(3, 22px); gap: 4px; }
 .wm-pos-cell { width: 22px; height: 22px; border-radius: 5px; border: 1px solid var(--stroke); background: var(--surface-strong); cursor: pointer; padding: 0; }
 .wm-pos-cell.is-active { background: var(--accent); border-color: var(--accent); }
+.ba-row { grid-template-columns: 44px minmax(0, 1fr) auto 150px; cursor: pointer; }
+.ba-row.is-open { background: var(--surface-strong); }
+.ba-thumb { width: 44px; height: 32px; object-fit: cover; border-radius: 5px; }
+.ba-metrics { display: flex; align-items: center; gap: 8px; }
+.ba-bar { flex: 1; height: 6px; border-radius: 3px; background: var(--stroke); overflow: hidden; }
+.ba-bar span { display: block; height: 100%; border-radius: 3px; }
+.ba-detail { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 16px; padding-top: 10px; cursor: default; }
+.ba-map { max-width: min(100%, 640px); height: auto; border-radius: 8px; }
+.ba-dl { display: grid; grid-template-columns: auto auto; gap: 4px 14px; margin: 0; font-size: 13px; align-content: start; }
+.ba-dl dt { color: var(--muted); }
+.ba-dl dd { margin: 0; font-variant-numeric: tabular-nums; }

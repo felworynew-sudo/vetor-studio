@@ -55,7 +55,7 @@ AGPL/NC-лицензии не тащим.
 - [x] **C1. AudioConverter** — ffmpeg.wasm: любые входные форматы, MP3/AAC/OGG/Opus/FLAC на выходе.
 - [x] **C2. AudioMetadata** — ядро music-metadata (MP3/MP4/FLAC/Ogg/WAV/AIFF, ID3/APE/Vorbis/MP4 теги).
 - [x] **C3. AudioTrimmer** — экспорт не только WAV (через ffmpeg.wasm / lamejs).
-- [ ] **C4. BlurAnalyzer** — несколько метрик (Laplacian, Tenengrad, FFT high-freq), карта резкости по зонам.
+- [x] **C4. BlurAnalyzer** — несколько метрик (Laplacian, Tenengrad, FFT high-freq), карта резкости по зонам.
 - [x] **C5. ColorConverter** — OKLCH / OKLab / Lab / LCH / Display-P3, gamut-проверка.
 - [x] **C6. ColorGrade** — GPU-пайплайн (WebGL) в linear RGB, full-res.
 - [x] **C7. ColorHarmony** — OKLCH-повороты + gamut mapping.
