@@ -351,11 +351,11 @@
       "icon": "⭐",
       "ru": {
         "title": "Генератор фавиконок",
-        "desc": "Полный набор иконок + manifest.json из одной картинки."
+        "desc": "Современный набор иконок из картинки, SVG или эмодзи: favicon.ico (16/32/48), icon.svg, apple-touch, maskable, manifest и HTML — одним ZIP."
       },
       "en": {
         "title": "Favicon generator",
-        "desc": "A full icon set + manifest.json from a single image."
+        "desc": "A modern icon set from an image, SVG or emoji: favicon.ico (16/32/48), icon.svg, apple-touch, maskable, manifest and HTML — in one ZIP."
       },
       "img": "favikon.png"
     },

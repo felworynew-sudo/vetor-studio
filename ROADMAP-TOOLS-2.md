@@ -65,7 +65,7 @@ AGPL/NC-лицензии не тащим.
 - [x] **C11. CssFromSvg** — корректные градиенты (orientation/gradientTransform/opacity), без regex.
 - [x] **C12. Duotone** — linear-light, gradient-map, 3 тона.
 - [x] **C13. EinkSimulator** — Atkinson/Bayer/уровни серого/цветной e-ink (общий движок с B14).
-- [ ] **C14. FaviconGenerator** — ICO (мульти-размер), SVG favicon, maskable, manifest, ZIP.
+- [x] **C14. FaviconGenerator** — ICO (мульти-размер), SVG favicon, maskable, manifest, ZIP.
 - [ ] **C15. FireSmoke** — шейдерная/fluid-симуляция.
 - [x] **C16. GlyphMap → Font Lab** — fontkit: инфо, OpenType-фичи, кернинг, variable axes, экспорт глифа SVG.
 - [x] **C17. Halftone** — CMYK с углами растра/розетка, линии, экспорт SVG.
