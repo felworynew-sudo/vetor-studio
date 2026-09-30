@@ -1,29 +1,53 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { TTFLoader } from 'three/examples/jsm/loaders/TTFLoader.js';
-import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
-import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
+import Export3DPanel from './shared/Export3DPanel';
 
 // Создатель 3D-текста: объёмные буквы с экструзией, фаской и скруглением,
-// материал (цвет/металл/шероховатость), поворот ракурса мышью и угол обзора,
-// свой шрифт (TTF/OTF). Экспорт PNG. Всё локально через three.js.
+// материал (цвет/металл/шероховатость), поворот ракурса мышью и угол обзора.
+// Шрифт разбирает fontkit: TTF, OTF с CFF-контурами, WOFF/WOFF2, кернинг и
+// лигатуры (GPOS/GSUB), несколько строк. Экспорт PNG и GLB/STL/OBJ.
+
+// Строки текста → THREE.Shape[] в единицах «1 = кегль». Контуры собираются по
+// правилу nonzero, поэтому направление обхода (TrueType vs CFF) неважно.
+function textShapes(font, text, lineHeight = 1.2) {
+  const upm = font.unitsPerEm; const k = 1 / upm; const shapes = [];
+  const lines = text.split('\n');
+  lines.forEach((line, li) => {
+    const run = font.layout(line); let x = 0; const y0 = -li * lineHeight;
+    run.glyphs.forEach((g, i) => {
+      const pos = run.positions[i]; const ox = (x + pos.xOffset) * k; const oy = y0 + pos.yOffset * k;
+      const sp = new THREE.ShapePath(); let open = false;
+      g.path.commands.forEach(({ command, args }) => {
+        const a = args.map((v, j) => (j % 2 === 0 ? v * k + ox : v * k + oy));
+        if (command === 'moveTo') { sp.moveTo(a[0], a[1]); open = true; }
+        else if (command === 'lineTo') sp.lineTo(a[0], a[1]);
+        else if (command === 'quadraticCurveTo') sp.quadraticCurveTo(a[0], a[1], a[2], a[3]);
+        else if (command === 'bezierCurveTo') sp.bezierCurveTo(a[0], a[1], a[2], a[3], a[4], a[5]);
+        else if (command === 'closePath' && open && sp.currentPath) { sp.currentPath.autoClose = true; }
+      });
+      if (sp.subPaths.length) shapes.push(...sp.toShapes());
+      x += pos.xAdvance;
+    });
+  });
+  return shapes;
+}
 
 const TEXT = {
   ru: {
-    text: 'Текст', font: 'Свой шрифт (TTF/OTF)', builtin: 'Встроенный',
+    text: 'Текст', font: 'Свой шрифт (TTF/OTF/WOFF2)', builtin: 'Встроенный',
     depth: 'Толщина', bevel: 'Фаска', curve: 'Скругление', size: 'Размер',
     color: 'Цвет', metal: 'Металл', rough: 'Шероховатость', bg: 'Фон', fov: 'Угол обзора',
     save: 'Скачать PNG', drag: '🖱 Тяните — вращать, колесо — зум', building: 'Строю…',
-    note: 'Объёмный текст рендерится локально в браузере (three.js). Загрузите свой шрифт или используйте встроенный.',
+    note: 'Объёмный текст рендерится локально в браузере (three.js). Свой шрифт: TTF, OTF (в т.ч. CFF), WOFF, WOFF2. Enter — новая строка.',
     err: 'Не удалось прочитать шрифт',
   },
   en: {
-    text: 'Text', font: 'Custom font (TTF/OTF)', builtin: 'Built-in',
+    text: 'Text', font: 'Custom font (TTF/OTF/WOFF2)', builtin: 'Built-in',
     depth: 'Depth', bevel: 'Bevel', curve: 'Smoothness', size: 'Size',
     color: 'Color', metal: 'Metal', rough: 'Roughness', bg: 'Background', fov: 'Field of view',
     save: 'Download PNG', drag: '🖱 Drag to rotate, wheel to zoom', building: 'Building…',
-    note: 'Volumetric text renders locally in your browser (three.js). Upload your font or use the built-in one.',
+    note: 'Volumetric text renders locally in your browser (three.js). Custom fonts: TTF, OTF (incl. CFF), WOFF, WOFF2. Enter adds a line.',
     err: 'Could not read the font',
   },
 };
@@ -87,38 +111,43 @@ function Text3D({ language = 'ru' }) {
     if (st.mesh) { st.scene.remove(st.mesh); st.mesh.geometry.dispose(); st.mesh.material.dispose(); st.mesh = null; }
     let geo;
     try {
-      geo = new TextGeometry(text, {
-        font, size: 1, depth, curveSegments: Math.max(1, curve),
+      const shapes = textShapes(font, text);
+      if (!shapes.length) return;
+      geo = new THREE.ExtrudeGeometry(shapes, {
+        depth, curveSegments: Math.max(1, curve),
         bevelEnabled: bevel > 0, bevelThickness: bevel, bevelSize: bevel * 0.8, bevelSegments: 3,
       });
-    } catch { return; }
+    } catch (e) { console.error(e); return; }
     geo.computeBoundingBox();
     const bb = geo.boundingBox; const cx = -(bb.max.x + bb.min.x) / 2; const cy = -(bb.max.y + bb.min.y) / 2; const cz = -(bb.max.z + bb.min.z) / 2;
     geo.translate(cx, cy, cz);
     const mat = new THREE.MeshStandardMaterial({ color: new THREE.Color(color), metalness: metal, roughness: rough });
-    const mesh = new THREE.Mesh(geo, mat); st.scene.add(mesh); st.mesh = mesh;
+    const mesh = new THREE.Mesh(geo, mat); mesh.name = 'text'; st.scene.add(mesh); st.mesh = mesh;
     // подгон камеры под ширину текста
     const width = (bb.max.x - bb.min.x) || 2;
     st.camera.position.set(0, 0.3, width * 0.9 + 2); st.controls.target.set(0, 0, 0); st.controls.update();
   }, [text, depth, bevel, curve, color, metal, rough]);
 
-  function loadFontArrayBuffer(ab, name) {
+  async function loadFontArrayBuffer(ab) {
     try {
-      const json = new TTFLoader().parse(ab);
-      fontRef.current = new FontLoader().parse(json);
+      const fontkit = await import('fontkit');
+      let font = (fontkit.create || fontkit.default.create)(new Uint8Array(ab));
+      if (font.fonts) [font] = font.fonts; // TTC — первый шрифт коллекции
+      if (!font.layout) throw new Error('no layout');
+      fontRef.current = font;
       setErr(''); initScene(); build();
-    } catch { setErr(t.err); }
+    } catch (e) { console.error(e); setErr(t.err); }
     setBusy(false);
   }
   function loadFontFile(file) {
     if (!file) return; setBusy(true);
-    const r = new FileReader(); r.onload = () => loadFontArrayBuffer(r.result, file.name); r.readAsArrayBuffer(file);
+    const r = new FileReader(); r.onload = () => loadFontArrayBuffer(r.result); r.readAsArrayBuffer(file);
   }
 
   // Стартовый встроенный шрифт.
   useEffect(() => {
     let alive = true; setBusy(true);
-    fetch(BUILTIN_FONT).then((res) => res.arrayBuffer()).then((ab) => { if (alive) loadFontArrayBuffer(ab, 'builtin'); }).catch(() => { if (alive) setBusy(false); });
+    fetch(BUILTIN_FONT).then((res) => res.arrayBuffer()).then((ab) => { if (alive) loadFontArrayBuffer(ab); }).catch(() => { if (alive) setBusy(false); });
     return () => { alive = false; };
   }, []);
 
@@ -147,7 +176,7 @@ function Text3D({ language = 'ru' }) {
         <div className="iso-controls">
           <div className="tool-field">
             <span className="tool-field-label">{t.text}</span>
-            <input type="text" className="yt-input" value={text} onChange={(e) => setText(e.target.value)} />
+            <textarea className="yt-input" rows={2} value={text} onChange={(e) => setText(e.target.value)} />
           </div>
           <Slider label={t.depth} val={depth} set={setDepth} min={0.05} max={1.2} step={0.05} />
           <Slider label={t.bevel} val={bevel} set={setBevel} min={0} max={0.15} step={0.01} />
@@ -164,9 +193,10 @@ function Text3D({ language = 'ru' }) {
             <button type="button" className="tool-btn" onClick={() => fontInputRef.current?.click()}>{t.font}</button>
           </div>
           {err && <p className="color-invalid">{err}</p>}
+          <Export3DPanel language={language} getMesh={() => S.current.mesh} baseName="3d-text" />
         </div>
       </div>
-      <input ref={fontInputRef} type="file" accept=".ttf,.otf,font/*" hidden onChange={(e) => { loadFontFile(e.target.files[0]); e.target.value = ''; }} />
+      <input ref={fontInputRef} type="file" accept=".ttf,.otf,.woff,.woff2,.ttc,font/*" hidden onChange={(e) => { loadFontFile(e.target.files[0]); e.target.value = ''; }} />
       <p className="tool-local-note">🔒 {t.note}</p>
     </div>
   );

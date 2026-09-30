@@ -456,11 +456,11 @@
       "icon": "🧊",
       "ru": {
         "title": "3D-экструзия",
-        "desc": "Выдавливает картинку или SVG в объём: каждый пиксель — 3D-кубик. Крутите мышью, сохраняйте PNG."
+        "desc": "Выдавливает картинку или SVG в объём: каждый пиксель — 3D-кубик. Крутите мышью, сохраняйте PNG или модель GLB/STL/OBJ с цветами — для Blender, веба и 3D-печати."
       },
       "en": {
         "title": "3D extrude",
-        "desc": "Extrudes an image or SVG into 3D: each pixel becomes a cube. Rotate with the mouse, save PNG."
+        "desc": "Extrudes an image or SVG into 3D: each pixel becomes a cube. Rotate, save PNG or a colored GLB/STL/OBJ model — for Blender, the web and 3D printing."
       },
       "img": "t-izometriya.png"
     },
@@ -472,11 +472,11 @@
       "img": "abv.png",
       "ru": {
         "title": "3D-текст",
-        "desc": "Объёмные буквы с экструзией, фаской и скруглением. Материал, поворот ракурса, свой шрифт, экспорт PNG."
+        "desc": "Объёмные буквы с экструзией, фаской и скруглением. Свой шрифт (TTF, OTF/CFF, WOFF2) с кернингом и лигатурами, несколько строк. PNG и модель GLB/STL/OBJ."
       },
       "en": {
         "title": "3D text",
-        "desc": "Volumetric letters with extrusion, bevel and rounding. Material, orbit view, custom font, PNG export."
+        "desc": "Volumetric letters with extrusion, bevel and rounding. Custom fonts (TTF, OTF/CFF, WOFF2) with kerning and ligatures, multi-line. PNG and GLB/STL/OBJ export."
       }
     },
     {

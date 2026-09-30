@@ -70,12 +70,12 @@ AGPL/NC-лицензии не тащим.
 - [x] **C16. GlyphMap → Font Lab** — fontkit: инфо, OpenType-фичи, кернинг, variable axes, экспорт глифа SVG.
 - [x] **C17. Halftone** — CMYK с углами растра/розетка, линии, экспорт SVG.
 - [x] **C18. ImageMetadata** — просмотр всех тегов, выборочное удаление, C2PA-инспектор.
-- [ ] **C19. Isometry** — экспорт GLB/STL/OBJ.
+- [x] **C19. Isometry** — экспорт GLB/STL/OBJ.
 - [x] **C20. MoodPalettes** — OKLCH + контраст + gamut.
 - [x] **C21. PastelPairs** — реальный целевой контраст вместо порога luminance > 0.4.
 - [x] **C22. Pixelizer** — image-q квантизация + дизеринг.
 - [x] **C23. RuleOfThirds** — настоящая золотая спираль (4 ориентации).
-- [ ] **C24. Text3D** — экспорт GLB, проверка OTF/CFF.
+- [x] **C24. Text3D** — экспорт GLB, проверка OTF/CFF.
 - [x] **C25. VoiceRecorder** — выбор микрофона, шумоподавление после записи.
 - [x] **C26. Watermark** — сохранять исходный формат/качество, ZIP.
 
