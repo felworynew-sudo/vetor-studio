@@ -487,11 +487,11 @@
       "img": "plamya.png",
       "ru": {
         "title": "Генератор огня и дыма",
-        "desc": "Пламя (свеча, костёр, факел, фаербол) и дым частицами. Свечение, старт/стоп, прозрачный или чёрный фон, экспорт PNG."
+        "desc": "Настоящая симуляция огня и дыма на видеокарте: плавучесть, вихри, остывание в дым. Пресеты, палитры, ветер, раздувать мышью. PNG с альфой, видео WebM, спрайт-лист для игр."
       },
       "en": {
         "title": "Fire & smoke generator",
-        "desc": "Flame (candle, campfire, torch, fireball) and smoke via particles. Glow, play/stop, transparent or black background, PNG export."
+        "desc": "A real GPU fire and smoke simulation: buoyancy, vortices, cooling into smoke. Presets, palettes, wind, fan it with the mouse. PNG with alpha, WebM video, game sprite sheet."
       }
     },
     {

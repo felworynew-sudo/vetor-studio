@@ -1254,7 +1254,10 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
     linear-gradient(45deg, #1b1d27 25%, transparent 25%, transparent 75%, #1b1d27 75%) 10px 10px / 20px 20px,
     var(--surface-strong);
 }
-.fs-stage[data-bg="black"] { background: #000; }
+.fs-stage[data-bg="#000000"] { background: #000; }
+.fs-stage { position: relative; flex-direction: column; }
+.fs-canvas { touch-action: none; cursor: crosshair; }
+.fs-stage .iso-drag { position: static; transform: none; margin-top: 8px; }
 .fs-canvas { max-width: 100%; height: auto; display: block; }
 
 /* --- Генераторы CSS: box-shadow / glassmorphism / blob --- */
