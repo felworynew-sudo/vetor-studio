@@ -72,6 +72,8 @@ const TEXT = {
     neuralLoading: 'Загружаю DeepFilterNet3 (~16 МБ, один раз — дальше из кеша)…',
     neuralReady: 'DeepFilterNet3 готов', neuralFailed: 'DeepFilterNet3 недоступен в этом браузере — использую RNNoise',
     chain: 'Цепочка', error: 'Не удалось обработать этот файл',
+    play: 'Слушать', pause: 'Пауза', seek: 'Позиция в треке', abHint: 'Переключение мгновенное, в той же точке трека',
+    changes: 'Что изменилось', explainHint: 'ⓘ Наведите или нажмите на показатель или шаг цепочки — расскажу, что он значит.',
     local: 'Всё считается в вашем браузере, файлы никуда не отправляются.',
     honest: 'Восстановление верха — SBR-реконструкция (как в HE-AAC), а не нейросеть: «воздух» правдоподобный, но это не возврат утерянного оригинала.',
   },
@@ -94,6 +96,8 @@ const TEXT = {
     neuralLoading: 'Loading DeepFilterNet3 (~16 MB, once — cached afterwards)…',
     neuralReady: 'DeepFilterNet3 ready', neuralFailed: 'DeepFilterNet3 is unavailable in this browser — using RNNoise',
     chain: 'Chain', error: 'Could not process this file',
+    play: 'Play', pause: 'Pause', seek: 'Track position', abHint: 'Switches instantly, at the same point in the track',
+    changes: 'What changed', explainHint: 'ⓘ Hover or tap a value or a chain step to see what it means.',
     local: 'Everything runs in your browser, files are never uploaded.',
     honest: 'High-end restoration is SBR reconstruction (as in HE-AAC), not a neural net: the “air” is plausible, but it is not the lost original.',
   },
@@ -138,36 +142,47 @@ async function decode(file) {
 const fmt = (v, d = 1) => (Number.isFinite(v) ? v.toFixed(d) : '—');
 function fmtBytes(b) { return b < 1048576 ? `${(b / 1024).toFixed(0)} KB` : `${(b / 1048576).toFixed(1)} MB`; }
 
-function Diagnostics({ a, t }) {
+function Diagnostics({ a, t, language, onTip }) {
   const chips = [];
-  const push = (label, value, warn) => chips.push({ label, value, warn });
-  push(a.content.kind === 'speech' ? t.diag.speech : t.diag.music, `${Math.round(a.content.confidence * 100)}%`);
-  push(t.diag.lufs, `${fmt(a.lufs)} LUFS`);
-  push(t.diag.tp, `${fmt(a.truePeakDb)} dBTP`, a.truePeakDb > -1);
-  push(t.diag.lra, `${fmt(a.lra)} LU`);
-  if (a.clipping.ratio > 0.00005) push(t.diag.clip, `${fmt(a.clipping.ratio * 100, 2)}%`, a.clipping.ratio > 0.0003);
-  if (a.bandLimited) push(t.diag.cut, `${fmt(a.cutoffHz / 1000)} kHz`, true);
+  const push = (key, label, value, warn) => chips.push({ key, label, value, warn });
+  push('kind', a.content.kind === 'speech' ? t.diag.speech : t.diag.music, `${Math.round(a.content.confidence * 100)}%`);
+  push('lufs', t.diag.lufs, `${fmt(a.lufs)} LUFS`);
+  push('tp', t.diag.tp, `${fmt(a.truePeakDb)} dBTP`, a.truePeakDb > -1);
+  push('lra', t.diag.lra, `${fmt(a.lra)} LU`);
+  if (a.clipping.ratio > 0.00005) push('clip', t.diag.clip, `${fmt(a.clipping.ratio * 100, 2)}%`, a.clipping.ratio > 0.0003);
+  if (a.bandLimited) push('cut', t.diag.cut, `${fmt(a.cutoffHz / 1000)} kHz`, true);
   // у непрерывной музыки без пауз шум не оценить — «пол» там просто тихие места
   const noiseKnown = a.content.kind === 'speech' || a.snrDb > 25;
-  if (noiseKnown) push(t.diag.noise, `${fmt(a.noiseFloorDb, 0)} dBFS`, a.noiseFloorDb > -60);
-  if (a.rt60 != null) push(t.diag.reverb, `~${fmt(a.rt60, 2)} s`, a.rt60 > 0.5);
-  if (a.hum) push(t.diag.hum, `${a.hum.hz} Hz`, true);
-  push(t.diag.stereo, a.channels > 1 ? `r = ${fmt(a.stereo.correlation, 2)}` : t.diag.mono);
+  if (noiseKnown) push('noise', t.diag.noise, `${fmt(a.noiseFloorDb, 0)} dBFS`, a.noiseFloorDb > -60);
+  if (a.rt60 != null) push('reverb', t.diag.reverb, `~${fmt(a.rt60, 2)} s`, a.rt60 > 0.5);
+  if (a.hum) push('hum', t.diag.hum, `${a.hum.hz} Hz`, true);
+  push('stereo', t.diag.stereo, a.channels > 1 ? `r = ${fmt(a.stereo.correlation, 2)}` : t.diag.mono);
   return (
     <div className="ae2-diag">
-      {chips.map((c) => (
-        <span key={c.label} className={c.warn ? 'ae2-chip is-warn' : 'ae2-chip'}><b>{c.label}</b> {c.value}</span>
-      ))}
+      {chips.map((c) => {
+        const tipText = pick(diagHelp(c.key, a), language);
+        const show = () => onTip(tipText);
+        return (
+          <button key={c.key} type="button" className={c.warn ? 'ae2-chip is-warn' : 'ae2-chip'} onMouseEnter={show} onFocus={show} onClick={show} aria-label={`${c.label} ${c.value}. ${tipText}`}>
+            <b>{c.label}</b> {c.value}
+          </button>
+        );
+      })}
     </div>
   );
 }
 
-function Chain({ steps, language, current, done }) {
+function Chain({ steps, language, current, done, onTip }) {
   return (
     <ol className="ae2-chain">
       {steps.map((s, i) => {
         const state = done ? 'is-done' : current == null ? '' : i < current ? 'is-done' : i === current ? 'is-active' : '';
-        return <li key={`${s.id}-${i}`} className={`ae2-step ${state}`}>{(STEP_LABEL[s.id] || { ru: s.id })[language] || STEP_LABEL[s.id]?.ru}</li>;
+        const label = (STEP_LABEL[s.id] || { ru: s.id })[language] || STEP_LABEL[s.id]?.ru;
+        const what = STEP_HELP[s.id] ? pick(STEP_HELP[s.id], language) : '';
+        const did = done && s.ms != null ? changeText(s, language) : null;
+        const tipText = did ? `${label}: ${what} → ${did}` : `${label}: ${what}`;
+        const show = () => onTip(tipText);
+        return <li key={`${s.id}-${i}`} className={`ae2-step ${state}`} tabIndex={0} onMouseEnter={show} onFocus={show} onClick={show}>{label}</li>;
       })}
     </ol>
   );
@@ -236,7 +251,7 @@ const INITIAL = {
   items: [], refs: [], mode: 'auto', targetLufs: -14, ceilingDb: -1, format: 'wav24', intensity: 0.6,
   opts: Object.fromEntries(OPT_KEYS.map((k) => [k, 'auto'])), neuralEngine: 'dfn',
   tone: { warmth: 0, presence: 0, air: 0 }, monoBass: false, album: false, busy: false, neural: '',
-  matchLevel: true, showAdv: false,
+  matchLevel: true, showAdv: false, player: { id: '', which: 'after', playing: false },
 };
 let store = INITIAL;
 const subs = new Set();
@@ -332,6 +347,7 @@ async function processAll() {
           if (m.p != null) patchItem(it.id, { p: m.p });
         });
         const blob = new Blob([res.bytes], { type: res.mime });
+        forgetItemAudio(it.id);
         patchItem(it.id, (prev) => {
           if (prev.outUrl) URL.revokeObjectURL(prev.outUrl);
           return {
@@ -349,6 +365,7 @@ async function processAll() {
 }
 
 function revokeItem(it) {
+  forgetItemAudio(it.id);
   if (it.beforeUrl) URL.revokeObjectURL(it.beforeUrl);
   if (it.outUrl) URL.revokeObjectURL(it.outUrl);
   audioData.delete(it.id);
@@ -377,37 +394,257 @@ const setNeuralEngine = setter('neuralEngine'); const setTone = setter('tone'); 
 const setAlbum = setter('album'); const setMatchLevel = setter('matchLevel'); const setShowAdv = setter('showAdv');
 const setRefs = setter('refs');
 
+// ---------- Подсказки: что значит показатель и что сделал шаг ----------
+const L = (ru, en) => ({ ru, en });
+const pick = (o, lang) => o[lang] || o.ru;
+
+function diagHelp(key, a) {
+  switch (key) {
+    case 'kind': return a.content.kind === 'speech'
+      ? L(`Запись похожа на речь (уверенность ${Math.round(a.content.confidence * 100)}%): слоговый ритм, паузы, почти нет баса. В авто-режиме пойдёт голосовая цепочка с нейро-шумодавом.`,
+        `Looks like speech (${Math.round(a.content.confidence * 100)}% sure): syllable rhythm, pauses, little bass. Auto mode uses the voice chain with neural denoising.`)
+      : L(`Запись похожа на музыку (уверенность ${Math.round(a.content.confidence * 100)}%): сплошной звук, бас, стерео. Речевая нейросеть не включится — она ест тарелки и пэды.`,
+        `Looks like music (${Math.round(a.content.confidence * 100)}% sure): continuous sound, bass, stereo. The speech network stays off — it eats cymbals and pads.`);
+    case 'lufs': return L(`Средняя громкость, как её слышит человек (LUFS по EBU R128). Стриминг выравнивает треки к −14, подкасты обычно −16, ТВ −23. Сейчас ${fmt(a.lufs)} LUFS${a.lufs < -20 ? ' — тихо, будет поднято.' : a.lufs > -12 ? ' — очень громко, возможна пережатость.' : '.'}`,
+      `Average perceived loudness (LUFS, EBU R128). Streaming normalises to −14, podcasts −16, TV −23. Now ${fmt(a.lufs)} LUFS${a.lufs < -20 ? ' — quiet, will be raised.' : a.lufs > -12 ? ' — very loud, may be over-compressed.' : '.'}`);
+    case 'tp': return L(`Настоящий пик с учётом точек между сэмплами (true peak). Выше −1 dBTP после сжатия в MP3/AAC появляются хрипы. Сейчас ${fmt(a.truePeakDb)} dBTP${a.truePeakDb > -1 ? ' — опасно, лимитер это исправит.' : ' — запас есть.'}`,
+      `Real peak including points between samples (true peak). Above −1 dBTP, MP3/AAC encoding starts to distort. Now ${fmt(a.truePeakDb)} dBTP${a.truePeakDb > -1 ? ' — risky, the limiter will fix it.' : ' — safe headroom.'}`);
+    case 'lra': return L(`Разброс громкости между тихими и громкими местами (LRA). Для речи комфортно 3–8 LU, у музыки 4–10. Сейчас ${fmt(a.lra)} LU${a.lra > 10 ? ' — сильные перепады, выровняю.' : '.'}`,
+      `Loudness range between quiet and loud parts (LRA). Speech is comfortable at 3–8 LU, music 4–10. Now ${fmt(a.lra)} LU${a.lra > 10 ? ' — big swings, will be evened out.' : '.'}`);
+    case 'clip': return L(`Доля срезанных пиков: звук упёрся в потолок и «сплющился» — слышно как треск/хрип. ${fmt(a.clipping.ratio * 100, 2)}% сэмплов. Пики будут восстановлены по форме волны (LSAR).`,
+      `Share of clipped peaks: the waveform hit the ceiling and flattened — heard as crackle. ${fmt(a.clipping.ratio * 100, 2)}% of samples. Peaks are rebuilt from the waveform (LSAR).`);
+    case 'cut': return L(`Выше ${fmt(a.cutoffHz / 1000)} кГц почти ничего нет — так режет MP3/AAC или экспорт нейросети. Звук теряет «воздух». В музыкальных режимах верх достраивается (SBR).`,
+      `Almost nothing above ${fmt(a.cutoffHz / 1000)} kHz — typical MP3/AAC or AI-export cutoff. The sound loses “air”. Music modes rebuild the top end (SBR).`);
+    case 'noise': return L(`Уровень фона в паузах: шум, гул, улица. Тише −60 dBFS — почти неслышно, громче −45 — заметно. Сейчас ${fmt(a.noiseFloorDb, 0)} dBFS.`,
+      `Background level in pauses: hiss, hum, street. Below −60 dBFS is near-silent, above −45 is clearly audible. Now ${fmt(a.noiseFloorDb, 0)} dBFS.`);
+    case 'reverb': return L(`Эхо комнаты: за сколько секунд хвост звука затухает на 60 дБ (RT60). До 0.3 с — сухо, 0.5–0.8 — «пустая комната», больше 1 — зал. Сейчас ~${fmt(a.rt60, 2)} с${a.rt60 > 0.5 ? ' — хвост будет приглушён.' : '.'}`,
+      `Room echo: how many seconds the tail takes to decay by 60 dB (RT60). Under 0.3 s is dry, 0.5–0.8 an empty room, over 1 a hall. Now ~${fmt(a.rt60, 2)} s${a.rt60 > 0.5 ? ' — the tail will be reduced.' : '.'}`);
+    case 'hum': return L(`Сетевой гул ${a.hum?.hz} Гц и его гармоники (от электросети, земли, кабеля). Будет вырезан узкими фильтрами — сам голос/музыку это не задевает.`,
+      `Mains hum at ${a.hum?.hz} Hz and harmonics (power line, ground loop, cable). Removed with narrow notches — voice and music stay intact.`);
+    case 'stereo': return a.channels > 1
+      ? L(`Насколько каналы похожи (корреляция): 1 — почти моно, 0 — независимые, ниже 0 — проблемы с фазой, в моно звук провалится. Сейчас ${fmt(a.stereo.correlation, 2)}.`,
+        `How similar the channels are (correlation): 1 is near-mono, 0 independent, below 0 phase problems — it collapses in mono. Now ${fmt(a.stereo.correlation, 2)}.`)
+      : L('Моно-запись: один канал.', 'Mono recording: a single channel.');
+    default: return L('', '');
+  }
+}
+
+const STEP_HELP = {
+  dc: L('Убирает постоянное смещение — оно съедает запас громкости и щёлкает на склейках.', 'Removes DC offset — it eats headroom and clicks at edits.'),
+  hum: L('Узкие фильтры на частоте сети и гармониках вырезают гул.', 'Narrow notches at mains frequency and harmonics remove hum.'),
+  declip: L('Восстанавливает срезанные пики по форме соседней волны (авторегрессия LSAR).', 'Rebuilds clipped peaks from the surrounding waveform (LSAR autoregression).'),
+  declick: L('Находит короткие щелчки и треск и заполняет их по форме сигнала.', 'Finds short clicks and crackle and fills them from the signal shape.'),
+  dereverb: L('Глушит поздний хвост эха комнаты, оставляя сам голос (по измеренному RT60).', 'Suppresses the late room-echo tail, keeping the voice (uses the measured RT60).'),
+  denoise: L('Нейросеть DeepFilterNet3 отделяет голос от шума и фона.', 'DeepFilterNet3 network separates voice from noise and background.'),
+  expander: L('Прижимает остаток шума в паузах между фразами.', 'Pushes down leftover noise in pauses between phrases.'),
+  'spectral-denoise': L('Бережно убирает шипение по профилю шума, не трогая тон.', 'Gently removes hiss using a noise profile, leaving tonal content.'),
+  resonance: L('Динамически прижимает узкие резонансы и «металлический» звон.', 'Dynamically tames narrow resonances and metallic ringing.'),
+  bwe: L('Достраивает срезанный верх продолжением спектра (SBR) — возвращает «воздух».', 'Rebuilds the cut-off top end by extending the spectrum (SBR) — brings back “air”.'),
+  match: L('Подгоняет тональный баланс под ваши референсы.', 'Matches tonal balance to your references.'),
+  dyneq: L('Динамический EQ: прижимает бубнение, резкость и сибилянты только в моменты, когда они выпирают.', 'Dynamic EQ: tames boom, harshness and sibilance only when they stick out.'),
+  drift: L('Выравнивает тембр по ходу трека, если он «плывёт».', 'Evens out tone that drifts over the track.'),
+  tone: L('Лёгкая коррекция тембра: срез низа, разборчивость, воздух.', 'Gentle tone shaping: low cut, presence, air.'),
+  stereo: L('Ширина стерео и моно-бас.', 'Stereo width and mono bass.'),
+  leveler: L('Выравнивает громкость фраз: тихие поднимает, громкие опускает.', 'Evens out phrase loudness: lifts quiet, lowers loud.'),
+  compressor: L('Уплотняет звук, уменьшая разницу между тихим и громким.', 'Adds density by narrowing the gap between quiet and loud.'),
+  loudness: L('Доводит среднюю громкость до цели в LUFS.', 'Brings average loudness to the LUFS target.'),
+  limiter: L('Не даёт пикам (включая межсэмпловые) выйти за потолок.', 'Keeps peaks (including inter-sample) under the ceiling.'),
+};
+
+// Что фактически сделал шаг — по цифрам из лога обработки.
+function changeText(l, lang) {
+  const r = (ru, en) => (lang === 'en' ? en : ru);
+  switch (l.id) {
+    case 'hum': return r(`Гул ${l.f0} Гц вырезан (${l.notches} фильтров).`, `${l.f0} Hz hum removed (${l.notches} notches).`);
+    case 'declip': return l.repairedSamples ? r(`Восстановлено ${l.repairedSamples.toLocaleString('ru')} срезанных сэмплов.`, `${l.repairedSamples.toLocaleString('en')} clipped samples rebuilt.`) : r('Клиппинга не нашлось.', 'No clipping found.');
+    case 'declick': return l.clicks ? r(`Убрано щелчков: ${l.clicks}.`, `Clicks removed: ${l.clicks}.`) : r('Щелчков не нашлось.', 'No clicks found.');
+    case 'dereverb': return r(`Приглушён хвост эха (RT60 ≈ ${l.rt60} с).`, `Echo tail reduced (RT60 ≈ ${l.rt60} s).`);
+    case 'denoise': return l.engine === 'dfn' ? r(`Шум убран нейросетью DeepFilterNet3 (до −${l.attenLimDb} дБ).`, `Noise removed by DeepFilterNet3 (up to −${l.attenLimDb} dB).`)
+      : l.engine === 'rnnoise' ? r('Шум убран лёгкой нейросетью RNNoise.', 'Noise removed by the light RNNoise network.') : r('Шум убран спектральным методом.', 'Noise removed spectrally.');
+    case 'expander': return r('Паузы между фразами стали чище.', 'Pauses between phrases are cleaner.');
+    case 'spectral-denoise': return l.label === 'fizz' ? r(`Прижат «физ» выше ${l.fMin / 1000} кГц (до −${l.reductionDb} дБ).`, `Fizz above ${l.fMin / 1000} kHz reduced (up to −${l.reductionDb} dB).`) : r(`Шипение снижено до −${l.reductionDb} дБ.`, `Hiss reduced by up to ${l.reductionDb} dB.`);
+    case 'resonance': return r('Прижаты резонансы и металлический звон.', 'Resonances and metallic ringing tamed.');
+    case 'bwe': return r(`Достроен верх выше ${(l.cutoffHz / 1000).toFixed(1)} кГц.`, `Top end rebuilt above ${(l.cutoffHz / 1000).toFixed(1)} kHz.`);
+    case 'match': return r(`Баланс подогнан под референс (подъём до +${l.maxBoostDb} дБ, срез до ${l.maxCutDb} дБ).`, `Balance matched to reference (boost up to +${l.maxBoostDb} dB, cut down to ${l.maxCutDb} dB).`);
+    case 'dyneq': {
+      const names = { mud: r('Бубнение', 'Mud'), boom: r('Гул низа', 'Boom'), harsh: r('Резкость', 'Harshness'), sibilance: r('Сибилянты', 'Sibilance') };
+      const act = (l.bands || []).filter((b) => b.maxCutDb < -0.5);
+      return act.length ? act.map((b) => r(`${names[b.id]}: до ${b.maxCutDb} дБ, ${b.activePct}% времени`, `${names[b.id]}: down to ${b.maxCutDb} dB, ${b.activePct}% of the time`)).join('; ') + '.' : r('Ничего не выпирало — EQ не вмешивался.', 'Nothing stuck out — EQ stayed idle.');
+    }
+    case 'drift': return (l.bands || []).length ? r(`Выровнен дрейф тембра (до ±${Math.max(...l.bands.map((b) => b.maxDb))} дБ).`, `Tone drift evened out (up to ±${Math.max(...l.bands.map((b) => b.maxDb))} dB).`) : r('Тембр стабильный — правок не понадобилось.', 'Tone is stable — no correction needed.');
+    case 'stereo': return r(`Ширина стерео ×${l.width}${l.monoBassHz ? `, бас ниже ${l.monoBassHz} Гц в моно` : ''}.`, `Stereo width ×${l.width}${l.monoBassHz ? `, bass below ${l.monoBassHz} Hz in mono` : ''}.`);
+    case 'leveler': return l?.maxDb ? r(`Громкость фраз выровнена (до ±${l.maxDb} дБ).`, `Phrase loudness evened out (up to ±${l.maxDb} dB).`) : null;
+    case 'compressor': return r(`Сжатие пиков до ${l.maxGainReductionDb} дБ.`, `Peaks compressed by up to ${-l.maxGainReductionDb} dB.`);
+    case 'loudness': return Number.isFinite(l.gainDb) ? r(`Громкость изменена на ${l.gainDb > 0 ? '+' : ''}${l.gainDb} дБ.`, `Loudness changed by ${l.gainDb > 0 ? '+' : ''}${l.gainDb} dB.`) : null;
+    case 'limiter': return r(`Пики удержаны под потолком (сжатие до ${l.maxGainReductionDb} дБ).`, `Peaks held under the ceiling (up to ${-l.maxGainReductionDb} dB of limiting).`);
+    default: return null;
+  }
+}
+
+// ---------- A/B-плеер ----------
+// «До» и «После» играют ОДНОВРЕМЕННО и синхронно (два AudioBufferSourceNode со
+// стартом в одну и ту же точку времени), переключение — кроссфейд громкостей
+// за 25 мс: без перезагрузки, паузы и сдвига позиции. Перемотка — перезапуск
+// обоих источников с нового места.
+const afterBuffers = new Map(); // id → AudioBuffer результата
+const beforeBuffers = new Map(); // id → AudioBuffer исходника
+const player = { id: '', which: 'after', playing: false, offset: 0, startedAt: 0, srcs: [], gains: null, duration: 0 };
+const XFADE = 0.025;
+
+function setPlayer(p) { Object.assign(player, p); setStore({ player: { id: player.id, which: player.which, playing: player.playing } }); }
+function playerPos() {
+  if (!player.playing) return player.offset;
+  return Math.min(player.duration, player.offset + (getAudioCtx().currentTime - player.startedAt));
+}
+
+async function buffersFor(item) {
+  const ctx = getAudioCtx();
+  if (!beforeBuffers.has(item.id)) {
+    const d = audioData.get(item.id);
+    const b = ctx.createBuffer(d.chans.length, d.chans[0].length, d.sr);
+    d.chans.forEach((c, i) => b.copyToChannel(c, i));
+    beforeBuffers.set(item.id, b);
+  }
+  if (!afterBuffers.has(item.id)) {
+    const ab = await (await fetch(item.outUrl)).arrayBuffer();
+    afterBuffers.set(item.id, await ctx.decodeAudioData(ab));
+  }
+  return [beforeBuffers.get(item.id), afterBuffers.get(item.id)];
+}
+
+// Громкость «до»/«после» на равной громкости: тише делаем более громкий вариант.
+function levelGains(item) {
+  if (!store.matchLevel || !item.after || !Number.isFinite(item.analysis?.lufs) || !Number.isFinite(item.after.lufs)) return [1, 1];
+  const diff = item.after.lufs - item.analysis.lufs;
+  return diff > 0 ? [1, 10 ** (-diff / 20)] : [10 ** (diff / 20), 1];
+}
+
+function stopSources() {
+  player.srcs.forEach((s) => { try { s.onended = null; s.stop(); } catch { /* уже остановлен */ } s.disconnect(); });
+  player.srcs = [];
+}
+
+async function playerStart(item, offset = player.id === item.id ? playerPos() : 0) {
+  const ctx = getAudioCtx();
+  if (ctx.state === 'suspended') await ctx.resume();
+  const cold = !afterBuffers.has(item.id) || !beforeBuffers.has(item.id);
+  if (cold) setStore({ playerLoading: item.id });
+  let bufs;
+  try { bufs = await buffersFor(item); } finally { if (cold) setStore({ playerLoading: '' }); }
+  stopSources();
+  const which = player.id === item.id ? player.which : 'after';
+  const lv = levelGains(item);
+  const gains = bufs.map((_, i) => { const g = ctx.createGain(); g.gain.value = (i === 0) === (which === 'before') ? lv[i] : 0; g.connect(ctx.destination); return g; });
+  const duration = Math.min(bufs[0].duration, bufs[1].duration);
+  const off = Math.max(0, Math.min(offset, duration - 0.05));
+  const t0 = ctx.currentTime + 0.03;
+  const srcs = bufs.map((b, i) => { const s = ctx.createBufferSource(); s.buffer = b; s.connect(gains[i]); s.start(t0, off); return s; });
+  srcs[1].onended = () => { if (player.srcs === srcs) { stopSources(); setPlayer({ playing: false, offset: 0 }); } };
+  player.srcs = srcs; player.gains = gains; player.duration = duration;
+  setPlayer({ id: item.id, which, playing: true, offset: off, startedAt: t0 });
+}
+
+function playerPause() {
+  if (!player.playing) return;
+  const pos = playerPos();
+  stopSources();
+  setPlayer({ playing: false, offset: pos });
+}
+
+function playerToggle(item) {
+  if (player.id === item.id && player.playing) playerPause(); else playerStart(item);
+}
+
+function playerSwitch(item, which) {
+  if (player.id !== item.id) { player.id = item.id; player.which = which; player.offset = 0; playerStart(item, 0); return; }
+  if (player.playing && player.gains) {
+    const ctx = getAudioCtx(); const lv = levelGains(item); const now = ctx.currentTime;
+    player.gains.forEach((g, i) => {
+      const target = (i === 0) === (which === 'before') ? lv[i] : 0;
+      g.gain.cancelScheduledValues(now); g.gain.setValueAtTime(g.gain.value, now); g.gain.linearRampToValueAtTime(target, now + XFADE);
+    });
+  }
+  setPlayer({ which });
+}
+
+function playerSeek(item, t) {
+  if (player.id === item.id && player.playing) playerStart(item, t);
+  else setPlayer({ id: item.id, offset: t, playing: false });
+}
+
+function forgetItemAudio(id) {
+  if (player.id === id) { stopSources(); setPlayer({ id: '', playing: false, offset: 0 }); }
+  afterBuffers.delete(id); beforeBuffers.delete(id);
+}
+
+const fmtTime = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+
+function ABPlayer({ item, t }) {
+  const st = useSyncExternalStore(subscribe, getStore);
+  const mine = st.player?.id === item.id;
+  const playing = mine && st.player.playing;
+  const loading = st.playerLoading === item.id;
+  const which = mine ? st.player.which : 'after';
+  const duration = item.analysis?.duration || 0;
+  const [pos, setPos] = useState(mine ? playerPos() : 0);
+  const barRef = useRef(null);
+  const dragging = useRef(false);
+  useEffect(() => {
+    if (!playing) { setPos(mine ? player.offset : 0); return undefined; }
+    // таймер, а не rAF: rAF замирает в фоновой вкладке, а звук-то продолжает играть
+    const id = setInterval(() => { if (!dragging.current) setPos(playerPos()); }, 100);
+    return () => clearInterval(id);
+  }, [playing, mine]);
+
+  const timeAt = (clientX) => {
+    const r = barRef.current.getBoundingClientRect();
+    return Math.max(0, Math.min(1, (clientX - r.left) / r.width)) * duration;
+  };
+  const onDown = (e) => {
+    dragging.current = true; barRef.current.setPointerCapture(e.pointerId); setPos(timeAt(e.clientX));
+  };
+  const onMove = (e) => { if (dragging.current) setPos(timeAt(e.clientX)); };
+  const onUp = (e) => {
+    if (!dragging.current) return;
+    dragging.current = false; const tt = timeAt(e.clientX); setPos(tt); playerSeek(item, tt);
+  };
+  const onKey = (e) => {
+    const step = e.shiftKey ? 10 : 5;
+    if (e.key === 'ArrowRight') { e.preventDefault(); playerSeek(item, Math.min(duration, pos + step)); setPos(Math.min(duration, pos + step)); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); playerSeek(item, Math.max(0, pos - step)); setPos(Math.max(0, pos - step)); }
+  };
+  const pct = duration ? (pos / duration) * 100 : 0;
+  return (
+    <div className="ae2-player">
+      <button type="button" className="ae2-play" onClick={() => playerToggle(item)} disabled={loading} aria-label={playing ? t.pause : t.play}>{loading ? '…' : playing ? '❚❚' : '▶'}</button>
+      <div className="segmented ae2-ab-seg" role="group" aria-label="A/B">
+        <button type="button" className={which === 'before' ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => playerSwitch(item, 'before')} title={t.abHint}>{t.before}</button>
+        <button type="button" className={which === 'after' ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => playerSwitch(item, 'after')} title={t.abHint}>{t.after}</button>
+      </div>
+      <div
+        ref={barRef} className="ae2-seek" role="slider" tabIndex={0} aria-label={t.seek}
+        aria-valuemin={0} aria-valuemax={Math.round(duration)} aria-valuenow={Math.round(pos)} aria-valuetext={fmtTime(pos)}
+        onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp} onKeyDown={onKey}
+      >
+        <div className="ae2-seek-fill" style={{ width: `${pct}%` }} />
+        <div className="ae2-seek-knob" style={{ left: `${pct}%` }} />
+      </div>
+      <span className="ae2-time">{fmtTime(pos)} / {fmtTime(duration)}</span>
+    </div>
+  );
+}
+
 function AudioEnhancer({ language = 'ru' }) {
   const t = TEXT[language] || TEXT.ru;
   const inputRef = useRef(null);
   const refInputRef = useRef(null);
-  const abRef = useRef(null);
   const st = useSyncExternalStore(subscribe, getStore);
   const {
     items, refs, mode, targetLufs, ceilingDb, format, intensity, opts, neuralEngine, tone, monoBass, album,
     busy, neural, matchLevel, showAdv,
   } = st;
-  const [ab, setAb] = useState({ id: '', which: '' });
-
-  // Плеер A/B — свой на каждое открытие инструмента; при уходе останавливаем звук.
-  useEffect(() => () => { abRef.current?.pause(); }, []);
-
-  function playAB(item, which) {
-    const el = abRef.current; if (!el) return;
-    if (ab.id === item.id && ab.which === which && !el.paused) { el.pause(); setAb({ id: '', which: '' }); return; }
-    const pos = ab.id === item.id ? el.currentTime : 0;
-    el.src = which === 'before' ? item.beforeUrl : item.outUrl;
-    let vol = 1;
-    if (matchLevel && item.after && Number.isFinite(item.analysis.lufs) && Number.isFinite(item.after.lufs)) {
-      const diff = item.after.lufs - item.analysis.lufs; // > 0 — результат громче
-      if (which === 'after' && diff > 0) vol = 10 ** (-diff / 20);
-      if (which === 'before' && diff < 0) vol = 10 ** (diff / 20);
-    }
-    el.volume = Math.max(0, Math.min(1, vol));
-    el.onloadedmetadata = () => { try { el.currentTime = Math.min(pos, el.duration || pos); } catch { /* ignore */ } };
-    el.play().catch(() => {});
-    setAb({ id: item.id, which });
-  }
+  const [tip, setTip] = useState({ id: '', text: '' });
+  const showTip = (id, text) => setTip({ id, text });
 
   // Предпросмотр цепочки — тот же роутер, что в воркере, но без тяжёлых данных.
   const [previews, setPreviews] = useState({});
@@ -569,23 +806,18 @@ function AudioEnhancer({ language = 'ru' }) {
                 <span className="convert-sizes">
                   {fmtBytes(it.size)}{it.outSize ? <> → <strong>{fmtBytes(it.outSize)}</strong></> : null}
                 </span>
-                {it.status === 'done' && (
-                  <span className="ae-ab">
-                    <button type="button" className={ab.id === it.id && ab.which === 'before' ? 'ae-ab-btn is-on' : 'ae-ab-btn'} onClick={() => playAB(it, 'before')}>▶ {t.before}</button>
-                    <button type="button" className={ab.id === it.id && ab.which === 'after' ? 'ae-ab-btn is-on' : 'ae-ab-btn'} onClick={() => playAB(it, 'after')}>▶ {t.after}</button>
-                  </span>
-                )}
                 {it.status === 'done' && <button type="button" className="tool-btn small" onClick={() => download(it)}>{t.download}</button>}
                 {!busy && it.status !== 'processing' && <button type="button" className="ae-ab-btn ae2-remove" onClick={() => removeItem(it.id)} aria-label={t.remove}>✕</button>}
               </div>
               {it.status === 'analyzing' && <p className="ae2-status">{t.analyzing}</p>}
               {it.warnings?.length > 0 && <p className="ae2-warn">⚠ {it.warnings.join(' · ')}</p>}
               {it.status === 'error' && <p className="ae2-warn">⚠ {t.error}{it.error ? `: ${it.error}` : ''}</p>}
-              {it.analysis && <Diagnostics a={it.analysis} t={t} />}
+              {it.analysis && <Diagnostics a={it.analysis} t={t} language={language} onTip={(text) => showTip(it.id, text)} />}
+              {it.analysis && <p className="ae2-explain" aria-live="polite">{tip.id === it.id && tip.text ? tip.text : t.explainHint}</p>}
               {steps.length > 0 && (
                 <div className="ae2-chain-wrap">
                   <span className="ae2-chain-label">{t.chain}</span>
-                  <Chain steps={steps} language={language} current={it.status === 'processing' ? it.stepIndex : null} done={it.status === 'done' && fresh} />
+                  <Chain steps={steps} language={language} current={it.status === 'processing' ? it.stepIndex : null} done={it.status === 'done' && fresh} onTip={(text) => showTip(it.id, text)} />
                 </div>
               )}
               {it.status === 'processing' && (
@@ -600,6 +832,18 @@ function AudioEnhancer({ language = 'ru' }) {
                   {it.log?.find((l) => l.id === 'denoise') ? ` · ${it.log.find((l) => l.id === 'denoise').engine === 'dfn' ? 'DeepFilterNet3' : it.log.find((l) => l.id === 'denoise').engine === 'rnnoise' ? 'RNNoise' : 'spectral'}` : ''}
                 </p>
               )}
+              {it.status === 'done' && it.after && <ABPlayer item={it} t={t} />}
+              {it.status === 'done' && it.log && (
+                <details className="ae2-changes" open>
+                  <summary>{t.changes}</summary>
+                  <ul>
+                    {it.log.map((l, i) => {
+                      const text = changeText(l, language);
+                      return text ? <li key={`${l.id}-${i}`}><b>{(STEP_LABEL[l.id] || { ru: l.id })[language] || STEP_LABEL[l.id]?.ru}.</b> {text}</li> : null;
+                    })}
+                  </ul>
+                </details>
+              )}
               {it.analysis && (it.status === 'done' || it.status === 'ready') && (
                 <Spectrum before={it.analysis.spectrum} after={it.after?.spectrum} sr={it.sr} t={t} />
               )}
@@ -608,7 +852,6 @@ function AudioEnhancer({ language = 'ru' }) {
         })}
       </ul>
 
-      <audio ref={abRef} hidden onEnded={() => setAb({ id: '', which: '' })} />
       <input ref={inputRef} type="file" accept="audio/*" multiple hidden onChange={(e) => { addFiles(e.target.files); e.target.value = ''; }} />
       <p className="tool-local-note">🔒 {t.local}</p>
       <p className="tool-local-note">ℹ️ {t.honest}</p>
