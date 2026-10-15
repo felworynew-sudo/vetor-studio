@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { getAudioCtx } from '../../utils/wav';
 
 // Улучшение аудио 2.0 — локальный движок в Web Worker (src/audio-engine):
@@ -227,105 +227,112 @@ function TriState({ value, onChange, t }) {
   );
 }
 
-function AudioEnhancer({ language = 'ru' }) {
-  const t = TEXT[language] || TEXT.ru;
-  const inputRef = useRef(null);
-  const refInputRef = useRef(null);
-  const abRef = useRef(null);
-  const [items, setItems] = useState([]);
-  const [refs, setRefs] = useState([]);
-  const [mode, setMode] = useState('auto');
-  const [targetLufs, setTargetLufs] = useState(-14);
-  const [ceilingDb, setCeilingDb] = useState(-1);
-  const [format, setFormat] = useState('wav24');
-  const [intensity, setIntensity] = useState(0.6);
-  const [opts, setOpts] = useState(() => Object.fromEntries(OPT_KEYS.map((k) => [k, 'auto'])));
-  const [neuralEngine, setNeuralEngine] = useState('dfn');
-  const [tone, setTone] = useState({ warmth: 0, presence: 0, air: 0 });
-  const [monoBass, setMonoBass] = useState(false);
-  const [album, setAlbum] = useState(false);
-  const [busy, setBusy] = useState(false);
-  const [neural, setNeural] = useState('');
-  const [ab, setAb] = useState({ id: '', which: '' });
-  const [matchLevel, setMatchLevel] = useState(true);
-  const [showAdv, setShowAdv] = useState(false);
-  const dataRef = useRef(new Map()); // id → { chans, sr }
+// ---------- Состояние вне компонента ----------
+// Файлы, анализ, результаты и настройки живут в модуле, а не в компоненте:
+// уход на другой инструмент и возврат ничего не сбрасывает, а начатая обработка
+// продолжается в фоне (воркер тоже модульный). Теряется только при перезагрузке
+// вкладки — и об этом браузер спросит заранее (beforeunload).
+const INITIAL = {
+  items: [], refs: [], mode: 'auto', targetLufs: -14, ceilingDb: -1, format: 'wav24', intensity: 0.6,
+  opts: Object.fromEntries(OPT_KEYS.map((k) => [k, 'auto'])), neuralEngine: 'dfn',
+  tone: { warmth: 0, presence: 0, air: 0 }, monoBass: false, album: false, busy: false, neural: '',
+  matchLevel: true, showAdv: false,
+};
+let store = INITIAL;
+const subs = new Set();
+const audioData = new Map(); // id → { chans, sr } — декодированный звук для обработки
+function getStore() { return store; }
+function subscribe(fn) { subs.add(fn); return () => subs.delete(fn); }
+function setStore(patch) {
+  store = { ...store, ...(typeof patch === 'function' ? patch(store) : patch) };
+  subs.forEach((fn) => fn());
+}
+function patchItem(id, p) {
+  setStore((s) => ({ items: s.items.map((it) => (it.id === id ? { ...it, ...(typeof p === 'function' ? p(it) : p) } : it)) }));
+}
+const planKeyOf = (s) => JSON.stringify([s.mode, s.targetLufs, s.ceilingDb, s.intensity, s.opts, s.neuralEngine, s.tone, s.monoBass, s.refs.length]);
+const hasWork = () => store.busy || store.items.length > 0 || store.refs.length > 0;
 
-  useEffect(() => {
-    const fn = (m) => { if (m.type === 'neural') setNeural(m.state); };
-    listeners.add(fn);
-    return () => listeners.delete(fn);
-  }, []);
+listeners.add((m) => { if (m.type === 'neural') setStore({ neural: m.state }); });
+if (typeof window !== 'undefined') {
+  window.addEventListener('beforeunload', (e) => {
+    if (!hasWork()) return;
+    e.preventDefault();
+    e.returnValue = ''; // браузер покажет стандартное «Покинуть страницу? Изменения не сохранятся»
+  });
+}
 
-  const patch = (id, p) => setItems((prev) => prev.map((it) => (it.id === id ? { ...it, ...(typeof p === 'function' ? p(it) : p) } : it)));
-
-  const addFiles = useCallback(async (fileList) => {
-    const files = Array.from(fileList || []).filter((f) => f.type.startsWith('audio/') || /\.(mp3|wav|m4a|ogg|aac|flac|opus|aiff?)$/i.test(f.name));
-    for (const file of files) {
-      const id = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
-      setItems((prev) => [...prev, { id, file, name: file.name, size: file.size, status: 'analyzing' }]);
-      try {
-        // eslint-disable-next-line no-await-in-loop
-        const { chans, sr } = await decode(file);
-        dataRef.current.set(id, { chans, sr });
-        // eslint-disable-next-line no-await-in-loop
-        const { analysis } = await call({ type: 'analyze', chans, sr });
-        patch(id, { status: 'ready', analysis, sr, beforeUrl: URL.createObjectURL(file) });
-      } catch {
-        patch(id, { status: 'error' });
-      }
+async function addFiles(fileList) {
+  const files = Array.from(fileList || []).filter((f) => f.type.startsWith('audio/') || /\.(mp3|wav|m4a|ogg|aac|flac|opus|aiff?)$/i.test(f.name));
+  for (const file of files) {
+    const id = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+    setStore((s) => ({ items: [...s.items, { id, name: file.name, size: file.size, status: 'analyzing', beforeUrl: URL.createObjectURL(file) }] }));
+    try {
+      // eslint-disable-next-line no-await-in-loop
+      const { chans, sr } = await decode(file);
+      if (!store.items.some((it) => it.id === id)) continue; // убрали, пока декодировали
+      audioData.set(id, { chans, sr });
+      // eslint-disable-next-line no-await-in-loop
+      const { analysis } = await call({ type: 'analyze', chans, sr });
+      patchItem(id, { status: 'ready', analysis, sr });
+    } catch {
+      patchItem(id, { status: 'error' });
     }
-  }, []);
+  }
+}
 
-  const addRefs = useCallback(async (fileList) => {
-    const files = Array.from(fileList || []).slice(0, 5);
-    for (const file of files) {
-      const id = `r${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
-      setRefs((prev) => [...prev, { id, name: file.name, status: 'analyzing' }].slice(0, 5));
-      try {
-        // eslint-disable-next-line no-await-in-loop
-        const { chans, sr } = await decode(file);
-        // eslint-disable-next-line no-await-in-loop
-        const { profile } = await call({ type: 'profile', chans, sr });
-        setRefs((prev) => prev.map((r) => (r.id === id ? { ...r, status: 'ready', profile } : r)));
-      } catch {
-        setRefs((prev) => prev.map((r) => (r.id === id ? { ...r, status: 'error' } : r)));
-      }
+async function addRefs(fileList) {
+  const files = Array.from(fileList || []).slice(0, 5);
+  for (const file of files) {
+    const id = `r${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+    setStore((s) => ({ refs: [...s.refs, { id, name: file.name, status: 'analyzing' }].slice(0, 5) }));
+    try {
+      // eslint-disable-next-line no-await-in-loop
+      const { chans, sr } = await decode(file);
+      // eslint-disable-next-line no-await-in-loop
+      const { profile } = await call({ type: 'profile', chans, sr });
+      setStore((s) => ({ refs: s.refs.map((r) => (r.id === id ? { ...r, status: 'ready', profile } : r)) }));
+    } catch {
+      setStore((s) => ({ refs: s.refs.map((r) => (r.id === id ? { ...r, status: 'error' } : r)) }));
     }
-  }, []);
+  }
+}
 
-  async function processAll() {
-    const readyRefs = refs.filter((r) => r.profile).map((r) => r.profile);
-    if (mode === 'master' && !readyRefs.length) return;
-    setBusy(true);
+async function processAll() {
+  const s0 = store;
+  const readyRefs = s0.refs.filter((r) => r.profile).map((r) => r.profile);
+  if (s0.busy || (s0.mode === 'master' && !readyRefs.length)) return;
+  setStore({ busy: true });
+  try {
     let reference = null;
     if (readyRefs.length) reference = (await call({ type: 'combine', profiles: readyRefs })).profile;
     let albumProfile = null;
-    if (album && mode !== 'voice' && mode !== 'restore') {
+    if (s0.album && s0.mode !== 'voice' && s0.mode !== 'restore') {
       const profs = [];
-      for (const it of items) {
-        const d = dataRef.current.get(it.id); if (!d) continue;
+      for (const it of s0.items) {
+        const d = audioData.get(it.id); if (!d) continue;
         // eslint-disable-next-line no-await-in-loop
         profs.push((await call({ type: 'profile', chans: d.chans, sr: d.sr })).profile);
       }
       if (profs.length > 1) albumProfile = (await call({ type: 'combine', profiles: profs })).profile;
     }
     const engineOpts = {
-      targetLufs: targetLufs === 'ref' ? 'ref' : targetLufs, ceilingDb, intensity, ...opts, neural: neuralEngine,
-      tone, monoBass, reference, albumProfile,
+      targetLufs: s0.targetLufs, ceilingDb: s0.ceilingDb, intensity: s0.intensity, ...s0.opts, neural: s0.neuralEngine,
+      tone: s0.tone, monoBass: s0.monoBass, reference, albumProfile,
     };
-    for (const it of items) {
-      const d = dataRef.current.get(it.id);
-      if (!d || it.status === 'analyzing') continue;
-      patch(it.id, { status: 'processing', step: null, stepIndex: null, p: 0, after: null, error: '', warnings: [], planKey: previewKey });
+    const planKey = planKeyOf(s0);
+    for (const it of s0.items) {
+      const d = audioData.get(it.id);
+      if (!d || it.status === 'analyzing' || !store.items.some((x) => x.id === it.id)) continue;
+      patchItem(it.id, { status: 'processing', step: null, stepIndex: null, p: 0, after: null, error: '', warnings: [], planKey });
       try {
         // eslint-disable-next-line no-await-in-loop
-        const res = await call({ type: 'process', chans: d.chans, sr: d.sr, mode, opts: engineOpts, format, analysis: it.analysis }, (m) => {
-          if (m.step && m.i != null) patch(it.id, { step: m.step, stepIndex: m.i });
-          if (m.p != null) patch(it.id, { p: m.p });
+        const res = await call({ type: 'process', chans: d.chans, sr: d.sr, mode: s0.mode, opts: engineOpts, format: s0.format, analysis: it.analysis }, (m) => {
+          if (m.step && m.i != null) patchItem(it.id, { step: m.step, stepIndex: m.i });
+          if (m.p != null) patchItem(it.id, { p: m.p });
         });
         const blob = new Blob([res.bytes], { type: res.mime });
-        patch(it.id, (prev) => {
+        patchItem(it.id, (prev) => {
           if (prev.outUrl) URL.revokeObjectURL(prev.outUrl);
           return {
             status: 'done', outUrl: URL.createObjectURL(blob), outSize: blob.size,
@@ -333,11 +340,57 @@ function AudioEnhancer({ language = 'ru' }) {
           };
         });
       } catch (e) {
-        patch(it.id, { status: 'error', error: e.message });
+        patchItem(it.id, { status: 'error', error: e.message });
       }
     }
-    setBusy(false);
+  } finally {
+    setStore({ busy: false });
   }
+}
+
+function revokeItem(it) {
+  if (it.beforeUrl) URL.revokeObjectURL(it.beforeUrl);
+  if (it.outUrl) URL.revokeObjectURL(it.outUrl);
+  audioData.delete(it.id);
+}
+function removeItem(id) {
+  const it = store.items.find((x) => x.id === id);
+  if (it) revokeItem(it);
+  setStore((s) => ({ items: s.items.filter((x) => x.id !== id) }));
+}
+function clearItems() {
+  store.items.forEach(revokeItem);
+  setStore({ items: [] });
+}
+
+function download(item) {
+  const a = document.createElement('a');
+  a.href = item.outUrl; a.download = item.outName;
+  document.body.appendChild(a); a.click(); a.remove();
+}
+
+// Сеттер поля хранилища, совместимый с useState: значение или функция от прежнего.
+const setter = (key) => (v) => setStore((s) => ({ [key]: typeof v === 'function' ? v(s[key]) : v }));
+const setMode = setter('mode'); const setTargetLufs = setter('targetLufs'); const setCeilingDb = setter('ceilingDb');
+const setFormat = setter('format'); const setIntensity = setter('intensity'); const setOpts = setter('opts');
+const setNeuralEngine = setter('neuralEngine'); const setTone = setter('tone'); const setMonoBass = setter('monoBass');
+const setAlbum = setter('album'); const setMatchLevel = setter('matchLevel'); const setShowAdv = setter('showAdv');
+const setRefs = setter('refs');
+
+function AudioEnhancer({ language = 'ru' }) {
+  const t = TEXT[language] || TEXT.ru;
+  const inputRef = useRef(null);
+  const refInputRef = useRef(null);
+  const abRef = useRef(null);
+  const st = useSyncExternalStore(subscribe, getStore);
+  const {
+    items, refs, mode, targetLufs, ceilingDb, format, intensity, opts, neuralEngine, tone, monoBass, album,
+    busy, neural, matchLevel, showAdv,
+  } = st;
+  const [ab, setAb] = useState({ id: '', which: '' });
+
+  // Плеер A/B — свой на каждое открытие инструмента; при уходе останавливаем звук.
+  useEffect(() => () => { abRef.current?.pause(); }, []);
 
   function playAB(item, which) {
     const el = abRef.current; if (!el) return;
@@ -356,20 +409,9 @@ function AudioEnhancer({ language = 'ru' }) {
     setAb({ id: item.id, which });
   }
 
-  function download(item) {
-    const a = document.createElement('a');
-    a.href = item.outUrl; a.download = item.outName;
-    document.body.appendChild(a); a.click(); a.remove();
-  }
-
-  function removeItem(id) {
-    dataRef.current.delete(id);
-    setItems((prev) => prev.filter((it) => it.id !== id));
-  }
-
   // Предпросмотр цепочки — тот же роутер, что в воркере, но без тяжёлых данных.
   const [previews, setPreviews] = useState({});
-  const previewKey = JSON.stringify([mode, targetLufs, ceilingDb, intensity, opts, neuralEngine, tone, monoBass, refs.length]);
+  const previewKey = planKeyOf(st);
   useEffect(() => {
     let cancelled = false;
     import('../../audio-engine/pipeline.js').then(({ plan }) => {
@@ -506,7 +548,7 @@ function AudioEnhancer({ language = 'ru' }) {
         <div className="tool-actions">
           <button type="button" className="tool-btn primary" onClick={processAll} disabled={busy || !readyCount || needRefs}>{busy ? t.processing : t.process}</button>
           {doneCount > 0 && <button type="button" className="tool-btn" onClick={() => items.filter((it) => it.outUrl).forEach((it, i) => setTimeout(() => download(it), i * 300))}>{t.downloadAll} ({doneCount})</button>}
-          <button type="button" className="tool-btn ghost" onClick={() => { dataRef.current.clear(); setItems([]); }} disabled={busy}>{t.clear}</button>
+          <button type="button" className="tool-btn ghost" onClick={clearItems} disabled={busy}>{t.clear}</button>
           {doneCount > 0 && <label className="tool-check"><input type="checkbox" checked={matchLevel} onChange={(e) => setMatchLevel(e.target.checked)} /> {t.matchLevel}</label>}
         </div>
       )}
