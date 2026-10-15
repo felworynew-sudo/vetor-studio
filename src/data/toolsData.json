@@ -840,11 +840,11 @@
       "icon": "🎚️",
       "ru": {
         "title": "Улучшение аудио",
-        "desc": "Нейро-шумоподавление RNNoise, эквализация, компрессия, де-эссер и громкость по LUFS (−14 стриминг, −16 подкаст, −23 ТВ). Пакетно, локально."
+        "desc": "DeepFilterNet3, удаление эха комнаты, восстановление клиппинга и щелчков, режимы для музыки и AI-треков (Suno/Udio), мастеринг по референсу, true-peak лимитер. Диагностика файла, A/B, локально."
       },
       "en": {
         "title": "Audio enhancer",
-        "desc": "RNNoise neural denoising, EQ, compression, de-esser and LUFS loudness (−14 streaming, −16 podcast, −23 TV). Batch, local."
+        "desc": "DeepFilterNet3, room-echo removal, clipping and click repair, music and AI-track modes (Suno/Udio), reference mastering, true-peak limiter. File diagnostics, A/B, local."
       },
       "img": "zvukplyus.png"
     },

@@ -1,266 +1,359 @@
-import { useCallback, useRef, useState } from 'react';
-import { integratedLufs } from '../../utils/loudness';
-import { denoiseBuffer } from '../../utils/rnnoise';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { getAudioCtx } from '../../utils/wav';
 
-// Улучшение аудио — цепочка профессиональных фильтров, как у аудио-энхансеров:
-// нейро-шумоподавление RNNoise → эквализация (тепло/чёткость/воздух) → шумовой
-// гейт → динамическая компрессия → де-эссер → нормализация громкости по LUFS
-// (ITU BS.1770 / EBU R128) → лимитер. Авто-пресеты и ручной режим. Пакетно,
-// локально (Web Audio + WASM), выход WAV.
+// Улучшение аудио 2.0 — локальный движок в Web Worker (src/audio-engine):
+// диагностика → роутер → специализированные стадии. Речь: declip → подавление эха комнаты →
+// DeepFilterNet3 → динамический EQ → лэвелер → компрессор → LUFS → true-peak.
+// Музыка: без речевой нейросети; гул/клиппинг/шипение, резонансы, восстановление
+// среза MP3 (SBR), динамический EQ, дрейф тембра, мастеринг по референсу.
 
-const PRESETS = {
-  voice: {
-    ru: 'Голос / подкаст', en: 'Voice / podcast',
-    hp: 90, warmth: 2, clarity: 3.5, air: 2, compThresh: -24, compRatio: 3.5, gate: 0.6, deess: 0.35, denoise: 0.9, ceiling: 0.89,
-  },
-  clarity: {
-    ru: 'Голос — макс. чистота', en: 'Voice — max clarity',
-    hp: 110, warmth: 1, clarity: 5, air: 3, compThresh: -28, compRatio: 4.5, gate: 0.8, deess: 0.5, denoise: 1, ceiling: 0.89,
-  },
-  music: {
-    ru: 'Музыка (бережно)', en: 'Music (gentle)',
-    hp: 30, warmth: 1, clarity: 1.5, air: 1, compThresh: -18, compRatio: 2, gate: 0, deess: 0, denoise: 0, ceiling: 0.89,
-  },
-};
+const MODES = [
+  { id: 'auto', ru: 'Авто', en: 'Auto', hint: { ru: 'Сам определит речь или музыку и соберёт цепочку под найденные дефекты.', en: 'Detects speech or music and builds a chain for the defects it finds.' } },
+  { id: 'voice', ru: 'Голос', en: 'Voice', hint: { ru: 'Подкаст, видео, войс: DeepFilterNet3, динамический EQ, ровная громкость.', en: 'Podcast, video, voice-over: DeepFilterNet3, dynamic EQ, even loudness.' } },
+  { id: 'restore', ru: 'Реставрация речи', en: 'Speech restore', hint: { ru: 'Тяжёлые записи: клиппинг, эхо комнаты, щелчки, сильный шум — всё агрессивнее.', en: 'Rough recordings: clipping, room echo, clicks, heavy noise — everything stronger.' } },
+  { id: 'music', ru: 'Музыка', en: 'Music', hint: { ru: 'Бережно: без речевой нейросети, которая ест тарелки и пэды. Шипение, резкость, срез MP3, финал.', en: 'Gentle: no speech network that eats cymbals and pads. Hiss, harshness, MP3 cutoff, finish.' } },
+  { id: 'ai', ru: 'AI-музыка', en: 'AI music', hint: { ru: 'Suno / Udio: металлический звон, «физ» на верху, сибилянты, плывущий тембр, срез экспорта.', en: 'Suno / Udio: metallic ringing, top-end fizz, sibilance, drifting tone, export cutoff.' } },
+  { id: 'master', ru: 'Мастеринг по референсу', en: 'Reference master', hint: { ru: 'Загрузите 1–5 треков-ориентиров: подгоню тональный баланс, ширину стерео и громкость.', en: 'Add 1–5 reference tracks: tonal balance, stereo width and loudness are matched.' } },
+];
 
-// Целевая интегральная громкость (LUFS).
 const TARGETS = [
   { v: -14, ru: '−14 · стриминг', en: '−14 · streaming' },
   { v: -16, ru: '−16 · подкаст', en: '−16 · podcast' },
   { v: -19, ru: '−19 · тихо', en: '−19 · quiet' },
-  { v: -23, ru: '−23 · ТВ (EBU R128)', en: '−23 · TV (EBU R128)' },
+  { v: -23, ru: '−23 · ТВ', en: '−23 · TV' },
 ];
+
+const FORMATS = [
+  { v: 'wav24', ru: 'WAV 24 бит', en: 'WAV 24-bit' },
+  { v: 'wav16', ru: 'WAV 16 бит', en: 'WAV 16-bit' },
+  { v: 'mp3', ru: 'MP3 320', en: 'MP3 320' },
+];
+
+const STEP_LABEL = {
+  dc: { ru: 'DC', en: 'DC' },
+  hum: { ru: 'Гул', en: 'Hum' },
+  declip: { ru: 'Клиппинг', en: 'Declip' },
+  declick: { ru: 'Щелчки', en: 'Declick' },
+  dereverb: { ru: 'Эхо комнаты', en: 'Room echo' },
+  denoise: { ru: 'Нейро-шумодав', en: 'Neural denoise' },
+  expander: { ru: 'Паузы', en: 'Expander' },
+  'spectral-denoise': { ru: 'Шипение', en: 'Hiss' },
+  resonance: { ru: 'Резонансы', en: 'Resonances' },
+  bwe: { ru: 'Верх (SBR)', en: 'Highs (SBR)' },
+  match: { ru: 'Референс', en: 'Reference' },
+  dyneq: { ru: 'Динам. EQ', en: 'Dynamic EQ' },
+  drift: { ru: 'Дрейф тембра', en: 'Tone drift' },
+  tone: { ru: 'Тон', en: 'Tone' },
+  stereo: { ru: 'Стерео', en: 'Stereo' },
+  leveler: { ru: 'Лэвелер', en: 'Leveler' },
+  compressor: { ru: 'Компрессор', en: 'Compressor' },
+  loudness: { ru: 'LUFS', en: 'LUFS' },
+  limiter: { ru: 'True peak', en: 'True peak' },
+  encode: { ru: 'Экспорт', en: 'Export' },
+};
 
 const TEXT = {
   ru: {
-    drop: 'Перетащите аудио сюда или нажмите', hint: 'MP3, WAV, M4A, OGG — можно несколько файлов',
-    mode: 'Режим', auto: 'Авто', manual: 'Ручной', preset: 'Пресет',
-    autoNote: 'Авто-режим сам определит тип каждого файла (голос / музыка) и подберёт обработку.',
-    detected: 'Определено', before: 'До', after: 'После',
-    warmth: 'Тепло (низ)', clarity: 'Чёткость (голос)', air: 'Воздух (верх)',
-    compThresh: 'Порог компрессии', compRatio: 'Степень сжатия', gate: 'Шумовой порог', deess: 'Де-эссер', loud: 'Громкость',
-    process: 'Улучшить всё', processing: 'Обработка…', download: 'Скачать', downloadAll: 'Скачать всё',
-    clear: 'Очистить', empty: 'Пока нет файлов',
-    local: 'Всё считается в браузере, файлы никуда не передаются. Выход — WAV без потерь.',
-    chain: 'RNNoise → эквализация → шумовой гейт → компрессор → де-эссер → нормализация по LUFS → лимитер (−1 dB).',
-    denoise: 'Нейро-шумоподавление (RNNoise)', target: 'Целевая громкость, LUFS', denoiseNote: 'RNNoise убирает шум, гул и фон улицы из речи. Для музыки лучше выключить — модель обучена на голосе.',
-    denoising: 'Шумоподавление…', loudness: 'Громкость',
+    mode: 'Режим', target: 'Целевая громкость, LUFS', asRef: 'как у референса', ceiling: 'Потолок', format: 'Формат',
+    intensity: 'Интенсивность', soft: 'мягко', strong: 'сильно',
+    advanced: 'Тонкая настройка', auto: 'авто', on: 'вкл', off: 'выкл',
+    opt: { denoise: 'Шумоподавление', dereverb: 'Удаление эха комнаты', declip: 'Восстановление клиппинга', declick: 'Удаление щелчков', bwe: 'Восстановление верха (SBR)', leveler: 'Лэвелер голоса', dehum: 'Подавление гула' },
+    neural: 'Нейросеть для речи', dfn: 'DeepFilterNet3 · качество', rnn: 'RNNoise · лёгкая',
+    monoBass: 'Моно-бас ниже 120 Гц', album: 'Единый профиль для всех файлов (альбом)',
+    warmth: 'Тепло', presence: 'Разборчивость', air: 'Воздух',
+    refs: 'Референсы', refsDrop: 'Перетащите 1–5 треков-ориентиров', refsHint: 'Готовые мастера в жанре, на которые хотите быть похожи',
+    refsNeed: 'Для мастеринга по референсу загрузите хотя бы один трек-ориентир.',
+    drop: 'Перетащите аудио сюда или нажмите', hint: 'WAV, MP3, FLAC, M4A, OGG — можно несколько файлов',
+    analyzing: 'Анализ…', ready: 'Готов к обработке', process: 'Улучшить всё', processing: 'Обработка…',
+    download: 'Скачать', downloadAll: 'Скачать всё', clear: 'Очистить', remove: 'Убрать',
+    before: 'До', after: 'После', matchLevel: 'Сравнивать на равной громкости',
+    diag: { speech: 'речь', music: 'музыка', lufs: 'Громкость', tp: 'Пик', lra: 'Динамика', clip: 'Клиппинг', cut: 'Срез', noise: 'Шумовой пол', reverb: 'Эхо комнаты', hum: 'Гул', stereo: 'Стерео', mono: 'моно' },
+    spectrum: 'Спектр: до и после (форма, выровнено по середине)',
+    neuralLoading: 'Загружаю DeepFilterNet3 (~16 МБ, один раз — дальше из кеша)…',
+    neuralReady: 'DeepFilterNet3 готов', neuralFailed: 'DeepFilterNet3 недоступен в этом браузере — использую RNNoise',
+    chain: 'Цепочка', error: 'Не удалось обработать этот файл',
+    local: 'Всё считается в вашем браузере, файлы никуда не отправляются.',
+    honest: 'Восстановление верха — SBR-реконструкция (как в HE-AAC), а не нейросеть: «воздух» правдоподобный, но это не возврат утерянного оригинала.',
   },
   en: {
-    drop: 'Drop audio here or click', hint: 'MP3, WAV, M4A, OGG — several files are fine',
-    mode: 'Mode', auto: 'Auto', manual: 'Manual', preset: 'Preset',
-    autoNote: 'Auto mode detects each file’s type (voice / music) and picks the processing itself.',
-    detected: 'Detected', before: 'Before', after: 'After',
-    warmth: 'Warmth (low)', clarity: 'Clarity (voice)', air: 'Air (high)',
-    compThresh: 'Compression threshold', compRatio: 'Compression ratio', gate: 'Noise gate', deess: 'De-esser', loud: 'Loudness',
-    process: 'Enhance all', processing: 'Processing…', download: 'Download', downloadAll: 'Download all',
-    clear: 'Clear', empty: 'No files yet',
-    local: 'Everything runs in your browser, files are never uploaded. Output is lossless WAV.',
-    chain: 'RNNoise → EQ → noise gate → compressor → de-esser → LUFS normalization → limiter (−1 dB).',
-    denoise: 'Neural noise suppression (RNNoise)', target: 'Target loudness, LUFS', denoiseNote: 'RNNoise removes noise, hum and street background from speech. Turn it off for music — the model is trained on voice.',
-    denoising: 'Denoising…', loudness: 'Loudness',
+    mode: 'Mode', target: 'Target loudness, LUFS', asRef: 'match reference', ceiling: 'Ceiling', format: 'Format',
+    intensity: 'Intensity', soft: 'gentle', strong: 'strong',
+    advanced: 'Fine tuning', auto: 'auto', on: 'on', off: 'off',
+    opt: { denoise: 'Noise reduction', dereverb: 'Room echo removal', declip: 'Clipping repair', declick: 'Click removal', bwe: 'High-end restoration (SBR)', leveler: 'Voice leveler', dehum: 'Hum removal' },
+    neural: 'Speech network', dfn: 'DeepFilterNet3 · quality', rnn: 'RNNoise · light',
+    monoBass: 'Mono bass below 120 Hz', album: 'Shared profile for all files (album)',
+    warmth: 'Warmth', presence: 'Presence', air: 'Air',
+    refs: 'References', refsDrop: 'Drop 1–5 reference tracks', refsHint: 'Finished masters in the genre you want to sound like',
+    refsNeed: 'Reference mastering needs at least one reference track.',
+    drop: 'Drop audio here or click', hint: 'WAV, MP3, FLAC, M4A, OGG — several files are fine',
+    analyzing: 'Analysing…', ready: 'Ready', process: 'Enhance all', processing: 'Processing…',
+    download: 'Download', downloadAll: 'Download all', clear: 'Clear', remove: 'Remove',
+    before: 'Before', after: 'After', matchLevel: 'Compare at equal loudness',
+    diag: { speech: 'speech', music: 'music', lufs: 'Loudness', tp: 'Peak', lra: 'Range', clip: 'Clipping', cut: 'Cutoff', noise: 'Noise floor', reverb: 'Room echo', hum: 'Hum', stereo: 'Stereo', mono: 'mono' },
+    spectrum: 'Spectrum: before and after (shape, aligned at mids)',
+    neuralLoading: 'Loading DeepFilterNet3 (~16 MB, once — cached afterwards)…',
+    neuralReady: 'DeepFilterNet3 ready', neuralFailed: 'DeepFilterNet3 is unavailable in this browser — using RNNoise',
+    chain: 'Chain', error: 'Could not process this file',
+    local: 'Everything runs in your browser, files are never uploaded.',
+    honest: 'High-end restoration is SBR reconstruction (as in HE-AAC), not a neural net: the “air” is plausible, but it is not the lost original.',
   },
 };
 
-function fmtBytes(b) {
-  if (b < 1024) return `${b} B`;
-  if (b < 1048576) return `${(b / 1024).toFixed(1)} KB`;
-  return `${(b / 1048576).toFixed(1)} MB`;
+const OPT_KEYS = ['denoise', 'dereverb', 'declip', 'declick', 'bwe', 'leveler', 'dehum'];
+
+let engine = null;
+let msgSeq = 0;
+const pending = new Map();
+const listeners = new Set();
+function getEngine() {
+  if (engine) return engine;
+  engine = new Worker(new URL('../../audio-engine/engine.worker.js', import.meta.url), { type: 'module' });
+  engine.postMessage({ type: 'init', neuralBase: new URL(`${import.meta.env.BASE_URL}models/dfn3/`, window.location.href).href });
+  engine.onmessage = (ev) => {
+    const m = ev.data;
+    listeners.forEach((fn) => fn(m));
+    const p = pending.get(m.id);
+    if (!p) return;
+    if (m.type === 'progress') { p.onProgress?.(m); return; }
+    pending.delete(m.id);
+    if (m.type === 'error') p.reject(new Error(m.error)); else p.resolve(m);
+  };
+  return engine;
+}
+function call(msg, onProgress) {
+  const id = `m${msgSeq += 1}`;
+  return new Promise((resolve, reject) => {
+    pending.set(id, { resolve, reject, onProgress });
+    getEngine().postMessage({ ...msg, id });
+  });
 }
 
-function estimateFloor(buffer) {
-  const d = buffer.getChannelData(0);
-  const frame = 1024; const rms = [];
-  for (let i = 0; i + frame < d.length; i += frame) {
-    let s = 0;
-    for (let j = 0; j < frame; j += 1) s += d[i + j] * d[i + j];
-    rms.push(Math.sqrt(s / frame));
-  }
-  if (!rms.length) return 0;
-  rms.sort((a, b) => a - b);
-  return rms[Math.floor(rms.length * 0.15)] || 0;
-}
-
-// Авто-определение типа записи: стереоширина (музыка шире), доля пауз (у речи
-// больше), zero-crossing rate (шипящие/ВЧ). Возвращает ключ пресета.
-function detectKind(buffer) {
-  const sr = buffer.sampleRate;
-  const L = buffer.getChannelData(0);
-  const R = buffer.numberOfChannels > 1 ? buffer.getChannelData(1) : null;
-  const n = L.length;
-  let width = 0;
-  if (R) {
-    let sLR = 0; let sLL = 0; let sRR = 0; const step = Math.max(1, Math.floor(n / 200000));
-    for (let i = 0; i < n; i += step) { sLR += L[i] * R[i]; sLL += L[i] * L[i]; sRR += R[i] * R[i]; }
-    const corr = sLR / (Math.sqrt(sLL * sRR) || 1);
-    width = 1 - Math.max(0, Math.min(1, corr));
-  }
-  const frame = Math.floor(sr * 0.05); const rms = [];
-  for (let i = 0; i + frame < n; i += frame) { let s = 0; for (let j = 0; j < frame; j += 1) s += L[i + j] * L[i + j]; rms.push(Math.sqrt(s / frame)); }
-  const peak = rms.reduce((m, r) => (r > m ? r : m), 1e-6);
-  const silenceRatio = rms.length ? rms.filter((r) => r < peak * 0.06).length / rms.length : 0;
-  let zc = 0; let cnt = 0; const step = Math.max(1, Math.floor(n / 300000));
-  for (let i = step; i < n; i += step) { if ((L[i] >= 0) !== (L[i - step] >= 0)) zc += 1; cnt += 1; }
-  const zcr = zc / (cnt || 1);
-  if (width > 0.28) return 'music';
-  if (silenceRatio > 0.18) return 'voice';
-  if (zcr > 0.09) return 'clarity';
-  return 'voice';
-}
-
-function applyGate(buffer, floor, amount) {
-  const threshold = floor * (1 + amount * 2.5);
-  if (threshold <= 0 || amount <= 0) return;
-  const sr = buffer.sampleRate;
-  const aC = Math.exp(-1 / (sr * 0.005)); const rC = Math.exp(-1 / (sr * 0.08));
-  const reduction = 1 - amount * 0.9;
-  for (let c = 0; c < buffer.numberOfChannels; c += 1) {
-    const d = buffer.getChannelData(c);
-    let env = 0; let gain = 1;
-    for (let i = 0; i < d.length; i += 1) {
-      const a = Math.abs(d[i]);
-      env = a > env ? aC * env + (1 - aC) * a : rC * env + (1 - rC) * a;
-      const target = env < threshold ? reduction : 1;
-      gain = target < gain ? aC * gain + (1 - aC) * target : rC * gain + (1 - rC) * target;
-      d[i] *= gain;
-    }
-  }
-}
-
-async function renderChain(buffer, p) {
-  const ctx = new OfflineAudioContext(buffer.numberOfChannels, buffer.length, buffer.sampleRate);
-  const src = ctx.createBufferSource(); src.buffer = buffer;
-  const hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = p.hp;
-  const warm = ctx.createBiquadFilter(); warm.type = 'lowshelf'; warm.frequency.value = 160; warm.gain.value = p.warmth;
-  const clar = ctx.createBiquadFilter(); clar.type = 'peaking'; clar.frequency.value = 3000; clar.Q.value = 1; clar.gain.value = p.clarity;
-  const air = ctx.createBiquadFilter(); air.type = 'highshelf'; air.frequency.value = 10000; air.gain.value = p.air;
-  const deess = ctx.createBiquadFilter(); deess.type = 'peaking'; deess.frequency.value = 6800; deess.Q.value = 3.2; deess.gain.value = -p.deess * 11;
-  const comp = ctx.createDynamicsCompressor();
-  comp.threshold.value = p.compThresh; comp.ratio.value = p.compRatio;
-  comp.attack.value = 0.003; comp.release.value = 0.25; comp.knee.value = 6;
-  src.connect(hp); hp.connect(warm); warm.connect(clar); clar.connect(air); air.connect(deess); deess.connect(comp); comp.connect(ctx.destination);
-  src.start();
-  return ctx.startRendering();
-}
-
-// Нормализация к целевой громкости по LUFS + линкованный лимитер (защита от клиппинга).
-function normalizeAndLimit(buffer, targetLufs, ceiling) {
-  const measured = integratedLufs(buffer);
-  const gain = Number.isFinite(measured) ? Math.min(16, 10 ** ((targetLufs - measured) / 20)) : 1;
-  const sr = buffer.sampleRate;
-  const aC = Math.exp(-1 / (sr * 0.001)); const rC = Math.exp(-1 / (sr * 0.05));
+async function decode(file) {
+  const buf = await getAudioCtx().decodeAudioData((await file.arrayBuffer()).slice(0));
   const chans = [];
-  for (let c = 0; c < buffer.numberOfChannels; c += 1) chans.push(buffer.getChannelData(c));
-  let g = 1;
-  for (let i = 0; i < buffer.length; i += 1) {
-    let peak = 0;
-    for (let c = 0; c < chans.length; c += 1) { const a = Math.abs(chans[c][i] * gain); if (a > peak) peak = a; }
-    const need = peak > ceiling ? ceiling / peak : 1;
-    g = need < g ? aC * g + (1 - aC) * need : rC * g + (1 - rC) * need;
-    for (let c = 0; c < chans.length; c += 1) {
-      chans[c][i] = Math.max(-1, Math.min(1, chans[c][i] * gain * g));
-    }
-  }
+  for (let c = 0; c < Math.min(2, buf.numberOfChannels); c += 1) chans.push(buf.getChannelData(c).slice());
+  return { chans, sr: buf.sampleRate };
 }
 
-function encodeWAV(buffer) {
-  const numCh = buffer.numberOfChannels; const sr = buffer.sampleRate; const len = buffer.length;
-  const dataSize = len * numCh * 2;
-  const ab = new ArrayBuffer(44 + dataSize); const dv = new DataView(ab);
-  let p = 0;
-  const wStr = (s) => { for (let i = 0; i < s.length; i += 1) { dv.setUint8(p, s.charCodeAt(i)); p += 1; } };
-  const w32 = (v) => { dv.setUint32(p, v, true); p += 4; };
-  const w16 = (v) => { dv.setUint16(p, v, true); p += 2; };
-  wStr('RIFF'); w32(36 + dataSize); wStr('WAVE'); wStr('fmt '); w32(16); w16(1); w16(numCh);
-  w32(sr); w32(sr * numCh * 2); w16(numCh * 2); w16(16); wStr('data'); w32(dataSize);
-  const chans = [];
-  for (let c = 0; c < numCh; c += 1) chans.push(buffer.getChannelData(c));
-  for (let i = 0; i < len; i += 1) {
-    for (let c = 0; c < numCh; c += 1) {
-      const s = Math.max(-1, Math.min(1, chans[c][i]));
-      dv.setInt16(p, s < 0 ? s * 0x8000 : s * 0x7fff, true); p += 2;
-    }
-  }
-  return new Blob([ab], { type: 'audio/wav' });
+const fmt = (v, d = 1) => (Number.isFinite(v) ? v.toFixed(d) : '—');
+function fmtBytes(b) { return b < 1048576 ? `${(b / 1024).toFixed(0)} KB` : `${(b / 1048576).toFixed(1)} MB`; }
+
+function Diagnostics({ a, t }) {
+  const chips = [];
+  const push = (label, value, warn) => chips.push({ label, value, warn });
+  push(a.content.kind === 'speech' ? t.diag.speech : t.diag.music, `${Math.round(a.content.confidence * 100)}%`);
+  push(t.diag.lufs, `${fmt(a.lufs)} LUFS`);
+  push(t.diag.tp, `${fmt(a.truePeakDb)} dBTP`, a.truePeakDb > -1);
+  push(t.diag.lra, `${fmt(a.lra)} LU`);
+  if (a.clipping.ratio > 0.00005) push(t.diag.clip, `${fmt(a.clipping.ratio * 100, 2)}%`, a.clipping.ratio > 0.0003);
+  if (a.bandLimited) push(t.diag.cut, `${fmt(a.cutoffHz / 1000)} kHz`, true);
+  // у непрерывной музыки без пауз шум не оценить — «пол» там просто тихие места
+  const noiseKnown = a.content.kind === 'speech' || a.snrDb > 25;
+  if (noiseKnown) push(t.diag.noise, `${fmt(a.noiseFloorDb, 0)} dBFS`, a.noiseFloorDb > -60);
+  if (a.rt60 != null) push(t.diag.reverb, `~${fmt(a.rt60, 2)} s`, a.rt60 > 0.5);
+  if (a.hum) push(t.diag.hum, `${a.hum.hz} Hz`, true);
+  push(t.diag.stereo, a.channels > 1 ? `r = ${fmt(a.stereo.correlation, 2)}` : t.diag.mono);
+  return (
+    <div className="ae2-diag">
+      {chips.map((c) => (
+        <span key={c.label} className={c.warn ? 'ae2-chip is-warn' : 'ae2-chip'}><b>{c.label}</b> {c.value}</span>
+      ))}
+    </div>
+  );
 }
 
-let sharedCtx = null;
-function getCtx() {
-  if (!sharedCtx) { const C = window.AudioContext || window.webkitAudioContext; sharedCtx = new C(); }
-  return sharedCtx;
+function Chain({ steps, language, current, done }) {
+  return (
+    <ol className="ae2-chain">
+      {steps.map((s, i) => {
+        const state = done ? 'is-done' : current == null ? '' : i < current ? 'is-done' : i === current ? 'is-active' : '';
+        return <li key={`${s.id}-${i}`} className={`ae2-step ${state}`}>{(STEP_LABEL[s.id] || { ru: s.id })[language] || STEP_LABEL[s.id]?.ru}</li>;
+      })}
+    </ol>
+  );
+}
+
+function Spectrum({ before, after, sr, t }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const cv = ref.current; if (!cv || !before) return;
+    const dpr = window.devicePixelRatio || 1;
+    const w = cv.clientWidth; const h = cv.clientHeight;
+    cv.width = w * dpr; cv.height = h * dpr;
+    const g = cv.getContext('2d'); g.scale(dpr, dpr);
+    const css = getComputedStyle(cv);
+    const cLine = css.getPropertyValue('--stroke').trim() || '#444';
+    const cSoft = css.getPropertyValue('--text-soft').trim() || '#888';
+    const cAcc = css.getPropertyValue('--t-accent').trim() || '#f55';
+    g.clearRect(0, 0, w, h);
+    const N = before.N; const binHz = sr / N;
+    const fx = (f) => (Math.log10(f / 20) / Math.log10((sr / 2) / 20)) * w;
+    const norm = (db) => { const k0 = Math.round(300 / binHz); const k1 = Math.round(3000 / binHz); let m = 0; for (let k = k0; k <= k1; k += 1) m += db[k]; return m / (k1 - k0 + 1); };
+    const top = 30; const range = 90;
+    const yOf = (v) => ((top - v) / range) * h;
+    g.strokeStyle = cLine; g.lineWidth = 1; g.fillStyle = cSoft; g.font = '10px monospace';
+    for (const f of [50, 100, 500, 1000, 5000, 10000, 20000]) {
+      if (f > sr / 2) continue;
+      const x = Math.round(fx(f)) + 0.5; g.beginPath(); g.moveTo(x, 0); g.lineTo(x, h); g.stroke();
+      g.fillText(f >= 1000 ? `${f / 1000}k` : `${f}`, x + 3, h - 4);
+    }
+    const draw = (db, color, width) => {
+      const m = norm(db); g.strokeStyle = color; g.lineWidth = width; g.beginPath();
+      let started = false;
+      for (let k = Math.max(1, Math.round(20 / binHz)); k < db.length; k += 1) {
+        const x = fx(k * binHz); const y = yOf(db[k] - m);
+        if (!started) { g.moveTo(x, y); started = true; } else g.lineTo(x, y);
+      }
+      g.stroke();
+    };
+    draw(before.db, cSoft, 1.5);
+    if (after) draw(after.db, cAcc, 2);
+  }, [before, after, sr]);
+  return (
+    <figure className="ae2-spectrum">
+      <canvas ref={ref} aria-label={t.spectrum} />
+      <figcaption><span className="ae2-key is-before" /> {t.before} <span className="ae2-key is-after" /> {t.after} · {t.spectrum}</figcaption>
+    </figure>
+  );
+}
+
+function TriState({ value, onChange, t }) {
+  return (
+    <div className="segmented ae2-tri">
+      {['auto', 'on', 'off'].map((v) => (
+        <button key={v} type="button" className={value === v ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => onChange(v)}>{t[v]}</button>
+      ))}
+    </div>
+  );
 }
 
 function AudioEnhancer({ language = 'ru' }) {
   const t = TEXT[language] || TEXT.ru;
   const inputRef = useRef(null);
-  const [items, setItems] = useState([]);
-  const [mode, setMode] = useState('auto');
-  const [manual, setManual] = useState({ ...PRESETS.voice });
-  const [targetLufs, setTargetLufs] = useState(-16);
-  const [denoiseOn, setDenoiseOn] = useState(true);
-  const [stage, setStage] = useState('');
-  const [busy, setBusy] = useState(false);
-  const [ab, setAb] = useState({ id: '', which: '' });
+  const refInputRef = useRef(null);
   const abRef = useRef(null);
+  const [items, setItems] = useState([]);
+  const [refs, setRefs] = useState([]);
+  const [mode, setMode] = useState('auto');
+  const [targetLufs, setTargetLufs] = useState(-14);
+  const [ceilingDb, setCeilingDb] = useState(-1);
+  const [format, setFormat] = useState('wav24');
+  const [intensity, setIntensity] = useState(0.6);
+  const [opts, setOpts] = useState(() => Object.fromEntries(OPT_KEYS.map((k) => [k, 'auto'])));
+  const [neuralEngine, setNeuralEngine] = useState('dfn');
+  const [tone, setTone] = useState({ warmth: 0, presence: 0, air: 0 });
+  const [monoBass, setMonoBass] = useState(false);
+  const [album, setAlbum] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [neural, setNeural] = useState('');
+  const [ab, setAb] = useState({ id: '', which: '' });
+  const [matchLevel, setMatchLevel] = useState(true);
+  const [showAdv, setShowAdv] = useState(false);
+  const dataRef = useRef(new Map()); // id → { chans, sr }
 
-  const setM = (k, v) => setManual((m) => ({ ...m, [k]: v }));
-
-  const addFiles = useCallback((fileList) => {
-    const files = Array.from(fileList || []).filter((f) => f.type.startsWith('audio/') || /\.(mp3|wav|m4a|ogg|aac|flac)$/i.test(f.name));
-    if (!files.length) return;
-    setItems((prev) => [...prev, ...files.map((file, i) => ({ id: `${Date.now()}-${i}`, file, name: file.name, inSize: file.size, outUrl: '', outSize: 0, outName: '', status: 'idle' }))]);
+  useEffect(() => {
+    const fn = (m) => { if (m.type === 'neural') setNeural(m.state); };
+    listeners.add(fn);
+    return () => listeners.delete(fn);
   }, []);
 
-  async function processOne(item, autoDetect, manualP) {
-    const arrayBuf = await item.file.arrayBuffer();
-    const decoded = await getCtx().decodeAudioData(arrayBuf.slice(0));
-    let work = getCtx().createBuffer(decoded.numberOfChannels, decoded.length, decoded.sampleRate);
-    for (let c = 0; c < decoded.numberOfChannels; c += 1) work.copyToChannel(decoded.getChannelData(c).slice(), c);
-    const lufsIn = integratedLufs(work);
-    // В авто-режиме определяем тип записи по самому звуку и берём его пресет.
-    const detected = autoDetect ? detectKind(work) : null;
-    const p = autoDetect ? PRESETS[detected] : manualP;
-    const denoiseAmt = denoiseOn ? (autoDetect ? p.denoise : 1) : 0;
-    if (denoiseAmt > 0) {
-      setStage(t.denoising);
-      ({ buffer: work } = await denoiseBuffer(work, { mix: denoiseAmt }));
-    }
-    setStage(t.processing);
-    // После RNNoise фон уже вычищен — гейт только слегка добивает паузы.
-    const gate = denoiseAmt > 0 ? p.gate * 0.3 : p.gate;
-    if (gate > 0) applyGate(work, estimateFloor(work), gate);
-    const rendered = await renderChain(work, p);
-    normalizeAndLimit(rendered, targetLufs, p.ceiling);
-    const lufsOut = integratedLufs(rendered);
-    const blob = encodeWAV(rendered);
-    const base = item.name.replace(/\.[^.]+$/, '');
-    return {
-      outUrl: URL.createObjectURL(blob), outSize: blob.size, outName: `${base}-enhanced.wav`,
-      detected, beforeUrl: URL.createObjectURL(item.file), lufsIn, lufsOut, denoised: denoiseAmt > 0,
-    };
-  }
+  const patch = (id, p) => setItems((prev) => prev.map((it) => (it.id === id ? { ...it, ...(typeof p === 'function' ? p(it) : p) } : it)));
 
-  async function processAll() {
-    setBusy(true);
-    const autoDetect = mode === 'auto';
-    for (const item of items) {
+  const addFiles = useCallback(async (fileList) => {
+    const files = Array.from(fileList || []).filter((f) => f.type.startsWith('audio/') || /\.(mp3|wav|m4a|ogg|aac|flac|opus|aiff?)$/i.test(f.name));
+    for (const file of files) {
+      const id = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+      setItems((prev) => [...prev, { id, file, name: file.name, size: file.size, status: 'analyzing' }]);
       try {
         // eslint-disable-next-line no-await-in-loop
-        const r = await processOne(item, autoDetect, manual);
-        setItems((prev) => prev.map((it) => (it.id === item.id ? { ...it, ...r, status: 'done' } : it)));
+        const { chans, sr } = await decode(file);
+        dataRef.current.set(id, { chans, sr });
+        // eslint-disable-next-line no-await-in-loop
+        const { analysis } = await call({ type: 'analyze', chans, sr });
+        patch(id, { status: 'ready', analysis, sr, beforeUrl: URL.createObjectURL(file) });
       } catch {
-        setItems((prev) => prev.map((it) => (it.id === item.id ? { ...it, status: 'error' } : it)));
+        patch(id, { status: 'error' });
       }
     }
-    setBusy(false); setStage('');
+  }, []);
+
+  const addRefs = useCallback(async (fileList) => {
+    const files = Array.from(fileList || []).slice(0, 5);
+    for (const file of files) {
+      const id = `r${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+      setRefs((prev) => [...prev, { id, name: file.name, status: 'analyzing' }].slice(0, 5));
+      try {
+        // eslint-disable-next-line no-await-in-loop
+        const { chans, sr } = await decode(file);
+        // eslint-disable-next-line no-await-in-loop
+        const { profile } = await call({ type: 'profile', chans, sr });
+        setRefs((prev) => prev.map((r) => (r.id === id ? { ...r, status: 'ready', profile } : r)));
+      } catch {
+        setRefs((prev) => prev.map((r) => (r.id === id ? { ...r, status: 'error' } : r)));
+      }
+    }
+  }, []);
+
+  async function processAll() {
+    const readyRefs = refs.filter((r) => r.profile).map((r) => r.profile);
+    if (mode === 'master' && !readyRefs.length) return;
+    setBusy(true);
+    let reference = null;
+    if (readyRefs.length) reference = (await call({ type: 'combine', profiles: readyRefs })).profile;
+    let albumProfile = null;
+    if (album && mode !== 'voice' && mode !== 'restore') {
+      const profs = [];
+      for (const it of items) {
+        const d = dataRef.current.get(it.id); if (!d) continue;
+        // eslint-disable-next-line no-await-in-loop
+        profs.push((await call({ type: 'profile', chans: d.chans, sr: d.sr })).profile);
+      }
+      if (profs.length > 1) albumProfile = (await call({ type: 'combine', profiles: profs })).profile;
+    }
+    const engineOpts = {
+      targetLufs: targetLufs === 'ref' ? 'ref' : targetLufs, ceilingDb, intensity, ...opts, neural: neuralEngine,
+      tone, monoBass, reference, albumProfile,
+    };
+    for (const it of items) {
+      const d = dataRef.current.get(it.id);
+      if (!d || it.status === 'analyzing') continue;
+      patch(it.id, { status: 'processing', step: null, stepIndex: null, p: 0, after: null, error: '', warnings: [], planKey: previewKey });
+      try {
+        // eslint-disable-next-line no-await-in-loop
+        const res = await call({ type: 'process', chans: d.chans, sr: d.sr, mode, opts: engineOpts, format, analysis: it.analysis }, (m) => {
+          if (m.step && m.i != null) patch(it.id, { step: m.step, stepIndex: m.i });
+          if (m.p != null) patch(it.id, { p: m.p });
+        });
+        const blob = new Blob([res.bytes], { type: res.mime });
+        patch(it.id, (prev) => {
+          if (prev.outUrl) URL.revokeObjectURL(prev.outUrl);
+          return {
+            status: 'done', outUrl: URL.createObjectURL(blob), outSize: blob.size,
+            outName: `${it.name.replace(/\.[^.]+$/, '')}-enhanced.${res.ext}`, after: res.after, log: res.log, kind: res.kind, warnings: res.warnings || [],
+          };
+        });
+      } catch (e) {
+        patch(it.id, { status: 'error', error: e.message });
+      }
+    }
+    setBusy(false);
   }
 
-  // A/B прослушивание: один общий <audio>, переключаем до/после.
   function playAB(item, which) {
     const el = abRef.current; if (!el) return;
-    const url = which === 'before' ? item.beforeUrl : item.outUrl;
     if (ab.id === item.id && ab.which === which && !el.paused) { el.pause(); setAb({ id: '', which: '' }); return; }
-    el.src = url; el.play().catch(() => {}); setAb({ id: item.id, which });
+    const pos = ab.id === item.id ? el.currentTime : 0;
+    el.src = which === 'before' ? item.beforeUrl : item.outUrl;
+    let vol = 1;
+    if (matchLevel && item.after && Number.isFinite(item.analysis.lufs) && Number.isFinite(item.after.lufs)) {
+      const diff = item.after.lufs - item.analysis.lufs; // > 0 — результат громче
+      if (which === 'after' && diff > 0) vol = 10 ** (-diff / 20);
+      if (which === 'before' && diff < 0) vol = 10 ** (diff / 20);
+    }
+    el.volume = Math.max(0, Math.min(1, vol));
+    el.onloadedmetadata = () => { try { el.currentTime = Math.min(pos, el.duration || pos); } catch { /* ignore */ } };
+    el.play().catch(() => {});
+    setAb({ id: item.id, which });
   }
 
   function download(item) {
@@ -269,54 +362,138 @@ function AudioEnhancer({ language = 'ru' }) {
     document.body.appendChild(a); a.click(); a.remove();
   }
 
-  const doneCount = items.filter((it) => it.status === 'done').length;
+  function removeItem(id) {
+    dataRef.current.delete(id);
+    setItems((prev) => prev.filter((it) => it.id !== id));
+  }
 
-  // Функция, а не компонент: иначе ползунок пересоздаётся на каждый рендер и срывается при перетаскивании.
-  const slider = ({ k, label, min, max, step, unit = '' }) => (
-    <div className="tool-field">
-      <span className="tool-field-label">{label}: {manual[k]}{unit}</span>
-      <input type="range" min={min} max={max} step={step} value={manual[k]} onChange={(e) => setM(k, Number(e.target.value))} />
-    </div>
-  );
+  // Предпросмотр цепочки — тот же роутер, что в воркере, но без тяжёлых данных.
+  const [previews, setPreviews] = useState({});
+  const previewKey = JSON.stringify([mode, targetLufs, ceilingDb, intensity, opts, neuralEngine, tone, monoBass, refs.length]);
+  useEffect(() => {
+    let cancelled = false;
+    import('../../audio-engine/pipeline.js').then(({ plan }) => {
+      if (cancelled) return;
+      const next = {};
+      for (const it of items) {
+        if (!it.analysis) continue;
+        const fakeRef = refs.some((r) => r.profile) ? { sideToMid: 0, db: [] } : null;
+        next[it.id] = plan(it.analysis, mode, { targetLufs, ceilingDb, intensity, ...opts, neural: neuralEngine, tone, monoBass, reference: fakeRef });
+      }
+      setPreviews(next);
+    });
+    return () => { cancelled = true; };
+  }, [items, previewKey]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const modeInfo = MODES.find((m) => m.id === mode);
+  const readyCount = items.filter((it) => it.status === 'ready' || it.status === 'done').length;
+  const doneCount = items.filter((it) => it.status === 'done').length;
+  const needRefs = mode === 'master' && !refs.some((r) => r.profile);
+  const speechMode = mode === 'voice' || mode === 'restore';
 
   return (
-    <div className="tool-panel audio-enhancer">
-      <div className="tool-controls">
-        <div className="tool-field">
-          <span className="tool-field-label">{t.mode}</span>
-          <div className="segmented">
-            <button type="button" className={mode === 'auto' ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => setMode('auto')}>{t.auto}</button>
-            <button type="button" className={mode === 'manual' ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => setMode('manual')}>{t.manual}</button>
-          </div>
+    <div className="tool-panel audio-enhancer ae2">
+      <div className="tool-field ae2-modes">
+        <span className="tool-field-label">{t.mode}</span>
+        <div className="segmented ae2-mode-seg">
+          {MODES.map((m) => (
+            <button key={m.id} type="button" className={mode === m.id ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => setMode(m.id)}>{m[language] || m.ru}</button>
+          ))}
         </div>
+        <p className="ae2-mode-hint">{modeInfo.hint[language] || modeInfo.hint.ru}</p>
+      </div>
+
+      <div className="tool-controls ae2-controls">
         <div className="tool-field">
           <span className="tool-field-label">{t.target}</span>
           <div className="segmented">
             {TARGETS.map((x) => <button key={x.v} type="button" className={targetLufs === x.v ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => setTargetLufs(x.v)}>{x[language] || x.ru}</button>)}
+            {mode === 'master' && <button type="button" className={targetLufs === 'ref' ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => setTargetLufs('ref')}>{t.asRef}</button>}
           </div>
         </div>
-        <label className="tool-check" title={t.denoiseNote}>
-          <input type="checkbox" checked={denoiseOn} onChange={(e) => setDenoiseOn(e.target.checked)} /> {t.denoise}
-        </label>
-        {mode === 'auto' && <p className="ae-auto-note">✨ {t.autoNote}</p>}
+        <div className="tool-field">
+          <span className="tool-field-label">{t.ceiling}</span>
+          <div className="segmented">
+            {[-1, -2].map((v) => <button key={v} type="button" className={ceilingDb === v ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => setCeilingDb(v)}>{`${v === -1 ? '−1' : '−2'} dBTP`}</button>)}
+          </div>
+        </div>
+        <div className="tool-field">
+          <span className="tool-field-label">{t.format}</span>
+          <div className="segmented">
+            {FORMATS.map((f) => <button key={f.v} type="button" className={format === f.v ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => setFormat(f.v)}>{f[language] || f.ru}</button>)}
+          </div>
+        </div>
+        <div className="tool-field ae2-intensity">
+          <span className="tool-field-label">{t.intensity}: {Math.round(intensity * 100)}%</span>
+          <input type="range" min="0" max="1" step="0.05" value={intensity} onChange={(e) => setIntensity(Number(e.target.value))} aria-label={t.intensity} />
+          <span className="ae2-range-ends"><span>{t.soft}</span><span>{t.strong}</span></span>
+        </div>
       </div>
-      <p className="tool-local-note">🎙 {t.denoiseNote}</p>
 
-      {mode === 'manual' && (
-        <div className="ae-manual">
-          {slider({ k: 'warmth', label: t.warmth, min: -6, max: 8, step: 0.5, unit: ' dB' })}
-          {slider({ k: 'clarity', label: t.clarity, min: -3, max: 9, step: 0.5, unit: ' dB' })}
-          {slider({ k: 'air', label: t.air, min: -3, max: 8, step: 0.5, unit: ' dB' })}
-          {slider({ k: 'compThresh', label: t.compThresh, min: -50, max: 0, step: 1, unit: ' dB' })}
-          {slider({ k: 'compRatio', label: t.compRatio, min: 1, max: 12, step: 0.5, unit: ':1' })}
-          {slider({ k: 'gate', label: t.gate, min: 0, max: 1, step: 0.05 })}
-          {slider({ k: 'deess', label: t.deess, min: 0, max: 1, step: 0.05 })}
+      <button type="button" className="ae2-adv-toggle" aria-expanded={showAdv} onClick={() => setShowAdv((v) => !v)}>{showAdv ? '▾' : '▸'} {t.advanced}</button>
+      {showAdv && (
+        <div className="ae2-adv">
+          <div className="ae2-opts">
+            {OPT_KEYS.map((k) => (
+              <div key={k} className="ae2-opt">
+                <span>{t.opt[k]}</span>
+                <TriState value={opts[k]} onChange={(v) => setOpts((o) => ({ ...o, [k]: v }))} t={t} />
+              </div>
+            ))}
+          </div>
+          <div className="ae2-adv-row">
+            <div className="tool-field">
+              <span className="tool-field-label">{t.neural}</span>
+              <div className="segmented">
+                <button type="button" className={neuralEngine === 'dfn' ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => setNeuralEngine('dfn')}>{t.dfn}</button>
+                <button type="button" className={neuralEngine === 'rnnoise' ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => setNeuralEngine('rnnoise')}>{t.rnn}</button>
+              </div>
+            </div>
+            {['warmth', 'presence', 'air'].map((k) => (
+              <div key={k} className="tool-field">
+                <span className="tool-field-label">{t[k]}: {tone[k] > 0 ? '+' : ''}{tone[k]} dB</span>
+                <input type="range" min="-6" max="6" step="0.5" value={tone[k]} onChange={(e) => setTone((o) => ({ ...o, [k]: Number(e.target.value) }))} />
+              </div>
+            ))}
+          </div>
+          {!speechMode && (
+            <div className="ae2-adv-row">
+              <label className="tool-check"><input type="checkbox" checked={monoBass} onChange={(e) => setMonoBass(e.target.checked)} /> {t.monoBass}</label>
+              <label className="tool-check"><input type="checkbox" checked={album} onChange={(e) => setAlbum(e.target.checked)} /> {t.album}</label>
+            </div>
+          )}
+        </div>
+      )}
+
+      {mode === 'master' && (
+        <div className="ae2-refs">
+          <span className="tool-field-label">{t.refs}</span>
+          <button
+            type="button" className="tool-dropzone ae2-ref-drop"
+            onClick={() => refInputRef.current?.click()}
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={(e) => { e.preventDefault(); addRefs(e.dataTransfer.files); }}
+          >
+            <span className="tool-dropzone-title">{t.refsDrop}</span>
+            <span className="tool-dropzone-hint">{t.refsHint}</span>
+          </button>
+          {refs.length > 0 && (
+            <ul className="ae2-ref-list">
+              {refs.map((r) => (
+                <li key={r.id}>
+                  <span className="convert-name">{r.name}</span>
+                  <span className="convert-sizes">{r.status === 'ready' ? `${fmt(r.profile.lufs)} LUFS` : r.status === 'error' ? '⚠' : t.analyzing}</span>
+                  <button type="button" className="ae-ab-btn" onClick={() => setRefs((p) => p.filter((x) => x.id !== r.id))}>{t.remove}</button>
+                </li>
+              ))}
+            </ul>
+          )}
+          <input ref={refInputRef} type="file" accept="audio/*" multiple hidden onChange={(e) => { addRefs(e.target.files); e.target.value = ''; }} />
         </div>
       )}
 
       <button
-        type="button"
-        className="tool-dropzone"
+        type="button" className="tool-dropzone"
         onClick={() => inputRef.current?.click()}
         onDragOver={(e) => e.preventDefault()}
         onDrop={(e) => { e.preventDefault(); addFiles(e.dataTransfer.files); }}
@@ -327,46 +504,72 @@ function AudioEnhancer({ language = 'ru' }) {
 
       {items.length > 0 && (
         <div className="tool-actions">
-          <button type="button" className="tool-btn primary" onClick={processAll} disabled={busy}>{busy ? (stage || t.processing) : t.process}</button>
-          {doneCount > 0 && <button type="button" className="tool-btn" onClick={() => items.filter((it) => it.outUrl).forEach((it, i) => setTimeout(() => download(it), i * 250))}>{t.downloadAll} ({doneCount})</button>}
-          <button type="button" className="tool-btn ghost" onClick={() => setItems([])} disabled={busy}>{t.clear}</button>
+          <button type="button" className="tool-btn primary" onClick={processAll} disabled={busy || !readyCount || needRefs}>{busy ? t.processing : t.process}</button>
+          {doneCount > 0 && <button type="button" className="tool-btn" onClick={() => items.filter((it) => it.outUrl).forEach((it, i) => setTimeout(() => download(it), i * 300))}>{t.downloadAll} ({doneCount})</button>}
+          <button type="button" className="tool-btn ghost" onClick={() => { dataRef.current.clear(); setItems([]); }} disabled={busy}>{t.clear}</button>
+          {doneCount > 0 && <label className="tool-check"><input type="checkbox" checked={matchLevel} onChange={(e) => setMatchLevel(e.target.checked)} /> {t.matchLevel}</label>}
         </div>
       )}
+      {needRefs && items.length > 0 && <p className="ae2-warn">{t.refsNeed}</p>}
+      {neural === 'loading' && busy && <p className="ae2-neural">⏳ {t.neuralLoading}</p>}
+      {neural === 'failed' && <p className="ae2-neural is-warn">⚠ {t.neuralFailed}</p>}
 
-      <ul className="convert-list">
-        {items.length === 0 && <li className="convert-empty">{t.empty}</li>}
-        {items.map((item) => (
-          <li key={item.id} className={`convert-row status-${item.status}`}>
-            <span className="convert-name" title={item.name}>
-              {item.name}
-              {item.status === 'done' && item.detected && (
-                <span className="ae-detected">{t.detected}: {PRESETS[item.detected][language] || PRESETS[item.detected].ru}</span>
+      <ul className="ae2-list">
+        {items.map((it) => {
+          const pv = previews[it.id];
+          // после смены настроек показываем новый план, а не цепочку прошлого прогона
+          const fresh = it.log && it.planKey === previewKey;
+          const steps = (fresh ? it.log : pv?.steps) || it.log || [];
+          return (
+            <li key={it.id} className={`ae2-item status-${it.status}`}>
+              <div className="ae2-item-head">
+                <span className="ae2-item-name" title={it.name}>{it.name}</span>
+                <span className="convert-sizes">
+                  {fmtBytes(it.size)}{it.outSize ? <> → <strong>{fmtBytes(it.outSize)}</strong></> : null}
+                </span>
+                {it.status === 'done' && (
+                  <span className="ae-ab">
+                    <button type="button" className={ab.id === it.id && ab.which === 'before' ? 'ae-ab-btn is-on' : 'ae-ab-btn'} onClick={() => playAB(it, 'before')}>▶ {t.before}</button>
+                    <button type="button" className={ab.id === it.id && ab.which === 'after' ? 'ae-ab-btn is-on' : 'ae-ab-btn'} onClick={() => playAB(it, 'after')}>▶ {t.after}</button>
+                  </span>
+                )}
+                {it.status === 'done' && <button type="button" className="tool-btn small" onClick={() => download(it)}>{t.download}</button>}
+                {!busy && it.status !== 'processing' && <button type="button" className="ae-ab-btn ae2-remove" onClick={() => removeItem(it.id)} aria-label={t.remove}>✕</button>}
+              </div>
+              {it.status === 'analyzing' && <p className="ae2-status">{t.analyzing}</p>}
+              {it.warnings?.length > 0 && <p className="ae2-warn">⚠ {it.warnings.join(' · ')}</p>}
+              {it.status === 'error' && <p className="ae2-warn">⚠ {t.error}{it.error ? `: ${it.error}` : ''}</p>}
+              {it.analysis && <Diagnostics a={it.analysis} t={t} />}
+              {steps.length > 0 && (
+                <div className="ae2-chain-wrap">
+                  <span className="ae2-chain-label">{t.chain}</span>
+                  <Chain steps={steps} language={language} current={it.status === 'processing' ? it.stepIndex : null} done={it.status === 'done' && fresh} />
+                </div>
               )}
-              {item.status === 'done' && Number.isFinite(item.lufsIn) && (
-                <span className="ae-detected">{t.loudness}: {item.lufsIn.toFixed(1)} → {item.lufsOut.toFixed(1)} LUFS{item.denoised ? ' · RNNoise' : ''}</span>
+              {it.status === 'processing' && (
+                <div className="bgr-progress ae2-progress">
+                  <span>{t.processing} {it.step && STEP_LABEL[it.step] ? `· ${STEP_LABEL[it.step][language] || STEP_LABEL[it.step].ru}` : ''}</span>
+                  <div className="bgr-bar"><div className="bgr-bar-fill" style={{ width: `${Math.round((it.p || 0) * 100)}%` }} /></div>
+                </div>
               )}
-            </span>
-            {item.status === 'done' && (
-              <span className="ae-ab">
-                <button type="button" className={ab.id === item.id && ab.which === 'before' ? 'ae-ab-btn is-on' : 'ae-ab-btn'} onClick={() => playAB(item, 'before')}>▶ {t.before}</button>
-                <button type="button" className={ab.id === item.id && ab.which === 'after' ? 'ae-ab-btn is-on' : 'ae-ab-btn'} onClick={() => playAB(item, 'after')}>▶ {t.after}</button>
-              </span>
-            )}
-            <span className="convert-sizes">
-              {fmtBytes(item.inSize)}
-              {item.status === 'done' && <> <span className="convert-arrow">→</span> <strong>{fmtBytes(item.outSize)}</strong></>}
-            </span>
-            {item.status === 'done' ? (
-              <button type="button" className="tool-btn small" onClick={() => download(item)}>{t.download}</button>
-            ) : item.status === 'error' ? <span className="convert-error">⚠</span> : <span className="convert-pending">•</span>}
-          </li>
-        ))}
+              {it.status === 'done' && it.after && (
+                <p className="ae2-result">
+                  {fmt(it.analysis.lufs)} → <b>{fmt(it.after.lufs)} LUFS</b> · {fmt(it.analysis.truePeakDb)} → <b>{fmt(it.after.truePeakDb)} dBTP</b> · LRA {fmt(it.analysis.lra)} → <b>{fmt(it.after.lra)} LU</b>
+                  {it.log?.find((l) => l.id === 'denoise') ? ` · ${it.log.find((l) => l.id === 'denoise').engine === 'dfn' ? 'DeepFilterNet3' : it.log.find((l) => l.id === 'denoise').engine === 'rnnoise' ? 'RNNoise' : 'spectral'}` : ''}
+                </p>
+              )}
+              {it.analysis && (it.status === 'done' || it.status === 'ready') && (
+                <Spectrum before={it.analysis.spectrum} after={it.after?.spectrum} sr={it.sr} t={t} />
+              )}
+            </li>
+          );
+        })}
       </ul>
 
       <audio ref={abRef} hidden onEnded={() => setAb({ id: '', which: '' })} />
       <input ref={inputRef} type="file" accept="audio/*" multiple hidden onChange={(e) => { addFiles(e.target.files); e.target.value = ''; }} />
-      <p className="tool-local-note">🎚️ {t.chain}</p>
       <p className="tool-local-note">🔒 {t.local}</p>
+      <p className="tool-local-note">ℹ️ {t.honest}</p>
     </div>
   );
 }
