@@ -41,7 +41,8 @@ function normalizeDb(db, sr) {
 }
 
 // Кривая коррекции (дБ на бин SPEC_N) от профиля трека к профилю референса.
-export function correctionCurve(target, reference, { strength = 0.8, maxDb = 9, cutoffHz } = {}) {
+// Подъём/срез ограничены ±6 дБ: как Match EQ в Ozone — мягкая подгонка, а не перекраска.
+export function correctionCurve(target, reference, { strength = 0.8, maxDb = 6, cutoffHz } = {}) {
   const sr = target.sr; const binHz = sr / SPEC_N;
   const t = normalizeDb(target.db, sr);
   const r = reference.normalized ? reference.db : normalizeDb(reference.db, reference.sr);

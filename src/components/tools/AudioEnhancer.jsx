@@ -60,6 +60,8 @@ const TEXT = {
     advanced: 'Тонкая настройка', auto: 'авто', on: 'вкл', off: 'выкл',
     opt: { denoise: 'Шумоподавление', dereverb: 'Удаление эха комнаты', declip: 'Восстановление клиппинга', declick: 'Удаление щелчков', apollo: 'Нейро-реставрация музыки (Apollo)', bwe: 'Восстановление верха без нейросети (SBR)', leveler: 'Лэвелер голоса', dehum: 'Подавление гула' },
     neural: 'Нейросеть для речи', dfn: 'DeepFilterNet3 · качество', rnn: 'RNNoise · лёгкая',
+    apolloDevice: 'Нейро-реставрация считается на', devAuto: 'авто', devGpu: 'видеокарте', devCpu: 'процессоре',
+    onGpu: 'на видеокарте', onCpu: 'на процессоре — это долго', left: 'осталось', skip: 'Пропустить (достроить верх через SBR)', min: 'мин', sec: 'с',
     monoBass: 'Моно-бас ниже 120 Гц', album: 'Единый профиль для всех файлов (альбом)',
     warmth: 'Тепло', presence: 'Разборчивость', air: 'Воздух',
     refs: 'Референсы', refsDrop: 'Перетащите 1–5 треков-ориентиров', refsHint: 'Готовые мастера в жанре, на которые хотите быть похожи',
@@ -76,8 +78,8 @@ const TEXT = {
     play: 'Слушать', pause: 'Пауза', seek: 'Позиция в треке', abHint: 'Переключение мгновенное, в той же точке трека',
     changes: 'Что изменилось', explainHint: 'ⓘ Наведите или нажмите на показатель или шаг цепочки — расскажу, что он значит.',
     local: 'Всё считается в вашем браузере, файлы никуда не отправляются.',
-    honest: 'Музыку после MP3/AAC восстанавливает нейросеть Apollo (на видеокарте через WebGPU, модель ~33 МБ скачивается один раз). Без WebGPU верх достраивается SBR — правдоподобно, но без нейросети.',
-    apolloLoading: 'Загружаю нейросеть Apollo (~33 МБ, один раз — дальше из кеша)…', apolloFailed: 'Нейросеть Apollo не запустилась — верх восстановлен через SBR',
+    honest: 'Музыку после MP3/AAC восстанавливает нейросеть Apollo (модель ~38 МБ скачивается один раз). Есть видеокарта — считает на ней, нет — на процессоре: работает везде, но заметно дольше, и долгий счёт можно пропустить — тогда верх достроится SBR без нейросети.',
+    apolloLoading: 'Загружаю нейросеть Apollo (~38 МБ, один раз — дальше из кеша)…', apolloFailed: 'Нейросеть Apollo не запустилась — верх восстановлен через SBR',
   },
   en: {
     mode: 'Mode', target: 'Target loudness, LUFS', asRef: 'match reference', ceiling: 'Ceiling', format: 'Format',
@@ -85,6 +87,8 @@ const TEXT = {
     advanced: 'Fine tuning', auto: 'auto', on: 'on', off: 'off',
     opt: { denoise: 'Noise reduction', dereverb: 'Room echo removal', declip: 'Clipping repair', declick: 'Click removal', apollo: 'Neural music restoration (Apollo)', bwe: 'High-end restoration without AI (SBR)', leveler: 'Voice leveler', dehum: 'Hum removal' },
     neural: 'Speech network', dfn: 'DeepFilterNet3 · quality', rnn: 'RNNoise · light',
+    apolloDevice: 'Neural restoration runs on', devAuto: 'auto', devGpu: 'GPU', devCpu: 'CPU',
+    onGpu: 'on the GPU', onCpu: 'on the CPU — this is slow', left: 'left', skip: 'Skip (rebuild the top end with SBR)', min: 'min', sec: 's',
     monoBass: 'Mono bass below 120 Hz', album: 'Shared profile for all files (album)',
     warmth: 'Warmth', presence: 'Presence', air: 'Air',
     refs: 'References', refsDrop: 'Drop 1–5 reference tracks', refsHint: 'Finished masters in the genre you want to sound like',
@@ -101,8 +105,8 @@ const TEXT = {
     play: 'Play', pause: 'Pause', seek: 'Track position', abHint: 'Switches instantly, at the same point in the track',
     changes: 'What changed', explainHint: 'ⓘ Hover or tap a value or a chain step to see what it means.',
     local: 'Everything runs in your browser, files are never uploaded.',
-    honest: 'Music damaged by MP3/AAC is restored by the Apollo neural net (on the GPU via WebGPU, ~33 MB model downloaded once). Without WebGPU the top end is rebuilt with SBR — plausible, but not a neural net.',
-    apolloLoading: 'Loading the Apollo neural net (~33 MB, once — cached afterwards)…', apolloFailed: 'Apollo could not start — the top end was rebuilt with SBR',
+    honest: 'Music damaged by MP3/AAC is restored by the Apollo neural net (~38 MB model, downloaded once). With a GPU it runs there, otherwise on the CPU: it works everywhere but is much slower, and a long run can be skipped — then the top end is rebuilt with SBR, without AI.',
+    apolloLoading: 'Loading the Apollo neural net (~38 MB, once — cached afterwards)…', apolloFailed: 'Apollo could not start — the top end was rebuilt with SBR',
   },
 };
 
@@ -135,8 +139,23 @@ function call(msg, onProgress) {
   });
 }
 
+// Исходная частота из заголовка: decodeAudioData пересэмплирует в частоту
+// контекста, поэтому декодируем в контексте ровно с частотой файла.
+async function sourceRate(file) {
+  try {
+    const mm = await import('music-metadata');
+    const sr = (await mm.parseBlob(file, { duration: false, skipCovers: true })).format.sampleRate;
+    return sr >= 8000 && sr <= 192000 ? sr : null;
+  } catch {
+    return null;
+  }
+}
+
 async function decode(file) {
-  const buf = await getAudioCtx().decodeAudioData((await file.arrayBuffer()).slice(0));
+  const data = await file.arrayBuffer();
+  const sr = await sourceRate(file);
+  const ctx = sr ? new OfflineAudioContext(1, 1, sr) : getAudioCtx();
+  const buf = await ctx.decodeAudioData(data.slice(0));
   const chans = [];
   for (let c = 0; c < Math.min(2, buf.numberOfChannels); c += 1) chans.push(buf.getChannelData(c).slice());
   return { chans, sr: buf.sampleRate };
@@ -252,7 +271,7 @@ function TriState({ value, onChange, t }) {
 // вкладки — и об этом браузер спросит заранее (beforeunload).
 const INITIAL = {
   items: [], refs: [], mode: 'auto', targetLufs: -14, ceilingDb: -1, format: 'wav24', intensity: 0.6,
-  opts: Object.fromEntries(OPT_KEYS.map((k) => [k, 'auto'])), neuralEngine: 'dfn',
+  opts: Object.fromEntries(OPT_KEYS.map((k) => [k, 'auto'])), neuralEngine: 'dfn', apolloDevice: 'auto',
   tone: { warmth: 0, presence: 0, air: 0 }, monoBass: false, album: false, busy: false, neural: '',
   matchLevel: true, showAdv: false, player: { id: '', which: 'after', playing: false },
 };
@@ -273,7 +292,7 @@ const hasWork = () => store.busy || store.items.length > 0 || store.refs.length 
 
 listeners.add((m) => {
   if (m.type !== 'neural') return;
-  if (m.model === 'apollo') setStore({ apolloState: m.state }); else setStore({ neural: m.state });
+  if (m.model === 'apollo') setStore({ apolloState: m.state, apolloOn: m.device || store.apolloOn }); else setStore({ neural: m.state });
 });
 if (typeof window !== 'undefined') {
   window.addEventListener('beforeunload', (e) => {
@@ -326,7 +345,7 @@ async function processAll() {
   setStore({ busy: true });
   try {
     let reference = null;
-    if (readyRefs.length) reference = (await call({ type: 'combine', profiles: readyRefs })).profile;
+    if (readyRefs.length && s0.mode === 'master') reference = (await call({ type: 'combine', profiles: readyRefs })).profile;
     let albumProfile = null;
     if (s0.album && s0.mode !== 'voice' && s0.mode !== 'restore') {
       const profs = [];
@@ -339,7 +358,7 @@ async function processAll() {
     }
     const engineOpts = {
       targetLufs: s0.targetLufs, ceilingDb: s0.ceilingDb, intensity: s0.intensity, ...s0.opts, neural: s0.neuralEngine,
-      tone: s0.tone, monoBass: s0.monoBass, reference, albumProfile,
+      tone: s0.tone, monoBass: s0.monoBass, apolloDevice: s0.apolloDevice, reference, albumProfile,
     };
     const planKey = planKeyOf(s0);
     for (const it of s0.items) {
@@ -349,7 +368,7 @@ async function processAll() {
       try {
         // eslint-disable-next-line no-await-in-loop
         const res = await call({ type: 'process', chans: d.chans, sr: d.sr, mode: s0.mode, opts: engineOpts, format: s0.format, analysis: it.analysis, lang: s0.lang }, (m) => {
-          if (m.step && m.i != null) patchItem(it.id, { step: m.step, stepIndex: m.i });
+          if (m.step && m.i != null) patchItem(it.id, (prev) => (prev.step === m.step ? {} : { step: m.step, stepIndex: m.i, stepN: m.n, stepT0: Date.now() }));
           if (m.p != null) patchItem(it.id, { p: m.p });
         });
         const blob = new Blob([res.bytes], { type: res.mime });
@@ -394,9 +413,9 @@ function download(item) {
 
 // Сеттер поля хранилища, совместимый с useState: значение или функция от прежнего.
 const setter = (key) => (v) => setStore((s) => ({ [key]: typeof v === 'function' ? v(s[key]) : v }));
-const setMode = setter('mode'); const setTargetLufs = setter('targetLufs'); const setCeilingDb = setter('ceilingDb');
+const setMode = (v) => setStore((s) => ({ mode: v, targetLufs: v !== 'master' && s.targetLufs === 'ref' ? -14 : s.targetLufs })); const setTargetLufs = setter('targetLufs'); const setCeilingDb = setter('ceilingDb');
 const setFormat = setter('format'); const setIntensity = setter('intensity'); const setOpts = setter('opts');
-const setNeuralEngine = setter('neuralEngine'); const setTone = setter('tone'); const setMonoBass = setter('monoBass');
+const setNeuralEngine = setter('neuralEngine'); const setApolloDevice = setter('apolloDevice'); const setTone = setter('tone'); const setMonoBass = setter('monoBass');
 const setAlbum = setter('album'); const setMatchLevel = setter('matchLevel'); const setShowAdv = setter('showAdv');
 const setRefs = setter('refs');
 
@@ -486,7 +505,9 @@ function changeText(l, lang) {
     case 'leveler': return l?.maxDb ? r(`Громкость фраз выровнена (до ±${l.maxDb} дБ).`, `Phrase loudness evened out (up to ±${l.maxDb} dB).`) : null;
     case 'compressor': return r(`Сжатие пиков до ${l.maxGainReductionDb} дБ.`, `Peaks compressed by up to ${-l.maxGainReductionDb} dB.`);
     case 'loudness': return Number.isFinite(l.gainDb) ? r(`Громкость изменена на ${l.gainDb > 0 ? '+' : ''}${l.gainDb} дБ.`, `Loudness changed by ${l.gainDb > 0 ? '+' : ''}${l.gainDb} dB.`) : null;
-    case 'limiter': return r(`Пики удержаны под потолком (сжатие до ${l.maxGainReductionDb} дБ).`, `Peaks held under the ceiling (up to ${-l.maxGainReductionDb} dB of limiting).`);
+    case 'limiter': return l.maxGainReductionDb > -0.2
+      ? r('Лимитер не понадобился — пики и так ниже потолка.', 'No limiting needed — peaks were already under the ceiling.')
+      : r(`Пики удержаны под потолком (сжатие до ${l.maxGainReductionDb} дБ).`, `Peaks held under the ceiling (up to ${-l.maxGainReductionDb} dB of limiting).`);
     default: return null;
   }
 }
@@ -644,11 +665,28 @@ function ABPlayer({ item, t }) {
   );
 }
 
+function ApolloStatus({ item, t, device }) {
+  const [, tick] = useState(0);
+  useEffect(() => { const id = setInterval(() => tick((x) => x + 1), 1000); return () => clearInterval(id); }, []);
+  const n = item.stepN || 1;
+  const stepP = Math.max(0, Math.min(1, (item.p || 0) * n - (item.stepIndex || 0)));
+  const elapsed = (Date.now() - (item.stepT0 || Date.now())) / 1000;
+  const eta = stepP > 0.02 ? (elapsed * (1 - stepP)) / stepP : null;
+  const fmtEta = (sec) => (sec >= 90 ? `~${Math.round(sec / 60)} ${t.min}` : `~${Math.max(1, Math.round(sec))} ${t.sec}`);
+  return (
+    <div className="ae2-apollo-status">
+      <span>Apollo {device === 'wasm' ? t.onCpu : t.onGpu}{eta != null ? ` · ${t.left} ${fmtEta(eta)}` : ''}</span>
+      <button type="button" className="ae-ab-btn" onClick={() => getEngine().postMessage({ type: 'skip-apollo' })}>{t.skip}</button>
+    </div>
+  );
+}
+
 function AudioEnhancer({ language = 'ru' }) {
   const t = TEXT[language] || TEXT.ru;
   const inputRef = useRef(null);
   const refInputRef = useRef(null);
   const st = useSyncExternalStore(subscribe, getStore);
+  const { apolloDevice } = st;
   const {
     items, refs, mode, targetLufs, ceilingDb, format, intensity, opts, neuralEngine, tone, monoBass, album,
     busy, neural, matchLevel, showAdv,
@@ -667,7 +705,10 @@ function AudioEnhancer({ language = 'ru' }) {
       const next = {};
       for (const it of items) {
         if (!it.analysis) continue;
-        const fakeRef = refs.some((r) => r.profile) ? { sideToMid: 0, db: [] } : null;
+        // предпросмотр знает ширину и динамику референсов — шаги совпадают с реальной обработкой
+        const ready = refs.filter((r) => r.profile).map((r) => r.profile);
+        const avg = (k) => { const v = ready.map((p) => p[k]).filter(Number.isFinite); return v.length ? v.reduce((x, y) => x + y, 0) / v.length : undefined; };
+        const fakeRef = mode === 'master' && ready.length ? { sideToMid: avg('sideToMid'), lra: avg('lra'), plr: avg('plr'), lufs: avg('lufs'), db: [] } : null;
         next[it.id] = plan(it.analysis, mode, { targetLufs, ceilingDb, intensity, ...opts, neural: neuralEngine, tone, monoBass, reference: fakeRef });
       }
       setPreviews(next);
@@ -737,6 +778,14 @@ function AudioEnhancer({ language = 'ru' }) {
               <div className="segmented">
                 <button type="button" className={neuralEngine === 'dfn' ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => setNeuralEngine('dfn')}>{t.dfn}</button>
                 <button type="button" className={neuralEngine === 'rnnoise' ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => setNeuralEngine('rnnoise')}>{t.rnn}</button>
+              </div>
+            </div>
+            <div className="tool-field">
+              <span className="tool-field-label">{t.apolloDevice}</span>
+              <div className="segmented">
+                {[['auto', t.devAuto], ['gpu', t.devGpu], ['cpu', t.devCpu]].map(([v, label]) => (
+                  <button key={v} type="button" className={apolloDevice === v ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => setApolloDevice(v)}>{label}</button>
+                ))}
               </div>
             </div>
             {['warmth', 'presence', 'air'].map((k) => (
@@ -837,6 +886,7 @@ function AudioEnhancer({ language = 'ru' }) {
                 <div className="bgr-progress ae2-progress">
                   <span>{t.processing} {it.step && STEP_LABEL[it.step] ? `· ${STEP_LABEL[it.step][language] || STEP_LABEL[it.step].ru}` : ''}</span>
                   <div className="bgr-bar"><div className="bgr-bar-fill" style={{ width: `${Math.round((it.p || 0) * 100)}%` }} /></div>
+                  {it.step === 'apollo' && <ApolloStatus item={it} t={t} device={st.apolloOn} />}
                 </div>
               )}
               {it.status === 'done' && it.after && (

@@ -92,7 +92,7 @@ export function plan(a, mode, opts = {}) {
     if (a.channels > 1) {
       let width = 1;
       if (kind === 'master' && ref && ref.sideToMid > 0 && a.stereo.sideToMidDb > -40) {
-        width = clamp(ref.sideToMid / (10 ** (a.stereo.sideToMidDb / 20)), 0.75, 1.35);
+        width = clamp(ref.sideToMid / (10 ** (a.stereo.sideToMidDb / 20)), 0.85, 1.2);
       }
       if (width !== 1 || opts.monoBass) steps.push({ id: 'stereo', width, monoBassHz: opts.monoBass ? 120 : 0 });
     }
@@ -106,7 +106,9 @@ export function plan(a, mode, opts = {}) {
     }
     steps.push({ id: 'compressor', kind: 'music', ratio });
   }
-  const target = opts.targetLufs === 'ref' && opts.reference?.lufs ? opts.reference.lufs : Number(opts.targetLufs ?? (speechLike ? -16 : -14));
+  // «как у референса» без референса (или мусор в настройке) → безопасная цель, а не NaN
+  let target = opts.targetLufs === 'ref' ? opts.reference?.lufs : Number(opts.targetLufs);
+  if (!Number.isFinite(target)) target = speechLike ? -16 : -14;
   steps.push({ id: 'loudness', targetLufs: target });
   steps.push({ id: 'limiter', ceilingDb: opts.ceilingDb ?? -1, releaseMs: speechLike ? 60 : 120, targetLufs: target });
   return { kind, steps };

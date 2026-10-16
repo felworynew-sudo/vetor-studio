@@ -2003,3 +2003,4 @@ button.ae2-chip:hover, button.ae2-chip:focus-visible { border-color: var(--t-acc
 @media (max-width: 640px) {
   .ae2-seek { flex-basis: 100%; order: 3; }
 }
+.ae2-apollo-status { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; font-size: 12.5px; color: var(--text-muted); }
