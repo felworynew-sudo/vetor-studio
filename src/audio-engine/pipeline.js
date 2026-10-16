@@ -68,6 +68,11 @@ export function plan(a, mode, opts = {}) {
     // экспандер после компрессора: гасит в паузах то, что компрессия и лэвелер подняли
     steps.push({ id: 'expander', rangeDb: restore ? 18 : 12 });
   } else {
+    // Срез MP3/AAC → нейро-реставрация Apollo первой, на сырой сигнал (так её учили).
+    // Без WebGPU или при ошибке загрузки воркер подменит шаг на SBR.
+    const codecCut = a.bandLimited && a.cutoffHz > 5000 && a.cutoffHz <= 19000 && a.cutoffHz < nyq - 1200;
+    const useApollo = on(opts.apollo, codecCut) && a.cutoffHz < nyq - 1200;
+    if (useApollo) steps.push({ id: 'apollo', cutoffHz: a.cutoffHz, amount: clamp(0.55 * k, 0.2, 1) });
     // шум у музыки оцениваем только по настоящим паузам/затуханиям: без них «пол»
     // огибающей — это просто тихие места трека
     const hiss = a.snrDb > 25 && a.noiseFloorDb > -62 && a.snrDb < 48;
@@ -76,7 +81,7 @@ export function plan(a, mode, opts = {}) {
     const resDepth = kind === 'ai' ? 0.55 * k : a.resonances > 6 ? 0.22 * k : 0;
     if (resDepth > 0) steps.push({ id: 'resonance', depth: resDepth });
     const bweAuto = a.bandLimited && a.cutoffHz > 7000 && a.cutoffHz <= 16500 && a.cutoffHz < nyq - 1200;
-    if (on(opts.bwe, bweAuto) && a.cutoffHz < nyq - 1200) steps.push({ id: 'bwe', cutoffHz: a.cutoffHz, amount: clamp(0.55 * k, 0.2, 1) });
+    if (!useApollo && on(opts.bwe, bweAuto) && a.cutoffHz < nyq - 1200) steps.push({ id: 'bwe', cutoffHz: a.cutoffHz, amount: clamp(0.55 * k, 0.2, 1) });
     const ref = opts.reference || (opts.albumProfile ? opts.albumProfile : null);
     if (kind === 'master' && ref) steps.push({ id: 'match', strength: clamp(0.8 * k, 0.3, 1), reference: ref, cutoffHz: a.bandLimited ? a.cutoffHz : 0 });
     else if (opts.albumProfile) steps.push({ id: 'match', strength: 0.45, reference: opts.albumProfile, cutoffHz: a.bandLimited ? a.cutoffHz : 0 });
@@ -91,7 +96,15 @@ export function plan(a, mode, opts = {}) {
       }
       if (width !== 1 || opts.monoBass) steps.push({ id: 'stereo', width, monoBassHz: opts.monoBass ? 120 : 0 });
     }
-    steps.push({ id: 'compressor', kind: 'music', ratio: 1.3 + 0.4 * k });
+    // Мастеринг по референсу переносит и динамику: если трек «шире» референса по
+    // разбросу громкости (LRA) или пикам над громкостью (PLR) — сжимаем сильнее.
+    let ratio = 1.3 + 0.4 * k;
+    if (kind === 'master' && ref && Number.isFinite(ref.lra)) {
+      const plrTrack = a.truePeakDb - a.lufs;
+      const over = Math.max(a.lra - ref.lra, Number.isFinite(ref.plr) ? (plrTrack - ref.plr) / 2 : 0);
+      ratio = clamp(1.2 + over * 0.35, 1.1, 4);
+    }
+    steps.push({ id: 'compressor', kind: 'music', ratio });
   }
   const target = opts.targetLufs === 'ref' && opts.reference?.lufs ? opts.reference.lufs : Number(opts.targetLufs ?? (speechLike ? -16 : -14));
   steps.push({ id: 'loudness', targetLufs: target });
@@ -148,6 +161,19 @@ async function runStep(s, chans, sr, prog, ctx) {
     case 'bwe':
       for (let c = 0; c < chans.length; c += 1) chans[c] = extendBandwidth(chans[c], sr, s.cutoffHz, { amount: s.amount, onProgress: (p) => prog((c + p) / chans.length) });
       return { cutoffHz: s.cutoffHz };
+    case 'apollo': {
+      if (ctx.apollo) {
+        try {
+          const out = await ctx.apollo(chans, sr, prog);
+          out.forEach((c, i) => { chans[i] = c; });
+          return { cutoffHz: s.cutoffHz, engine: 'apollo' };
+        } catch (e) {
+          ctx.onWarn?.(`Apollo: ${e.message || e}`);
+        }
+      }
+      for (let c = 0; c < chans.length; c += 1) chans[c] = extendBandwidth(chans[c], sr, s.cutoffHz, { amount: s.amount, onProgress: (p) => prog((c + p) / chans.length) });
+      return { cutoffHz: s.cutoffHz, engine: 'sbr' };
+    }
     case 'match': {
       const prof = profileOf(chans, sr);
       const curve = correctionCurve(prof, s.reference, { strength: s.strength, cutoffHz: s.cutoffHz });

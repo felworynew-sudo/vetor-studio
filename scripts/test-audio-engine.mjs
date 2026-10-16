@@ -251,5 +251,17 @@ for (const mode of ['voice', 'restore', 'music', 'ai']) {
   check('Громкий мастер: −9 LUFS ±0.3 при ≤ −1 dBTP', Math.abs(l + 9) < 0.3 && tp <= -0.95, `${l.toFixed(2)} LUFS, ${tp.toFixed(2)} dBTP`);
 }
 
+// 18. Музыка со срезом MP3 → Apollo первым шагом; без модели — честный откат на SBR
+{
+  const sr = 44100; const n = sr * 12; const N = 1 << 19; const re = new Float64Array(N); const im = new Float64Array(N);
+  for (let i = 0; i < n; i += 1) re[i] = 0.3 * gauss() * 0.5 + 0.3 * Math.sin(i / 30);
+  fft(re, im); const kc = Math.round(16000 / (sr / N)); for (let k = kc; k <= N - kc; k += 1) { re[k] = 0; im[k] = 0; } fft(re, im, true);
+  const L = Float32Array.from(re.subarray(0, n)); const R = L.map((v) => v * 0.9);
+  const a = analyze([L, R], sr); const p = plan(a, 'ai', {});
+  const res = await run([L, R], sr, p);
+  const ap = res.log.find((l) => l.id === 'apollo');
+  check('Срез MP3 → Apollo первым шагом после DC, без модели откат на SBR', p.steps[1]?.id === 'apollo' && ap?.engine === 'sbr', `срез ${a.cutoffHz} Гц, шаги: ${p.steps.map((x) => x.id).join('→')}`);
+}
+
 console.log(fails ? `\n❌ Провалено: ${fails}` : '\n✅ Все проверки пройдены');
 process.exit(fails ? 1 : 0);

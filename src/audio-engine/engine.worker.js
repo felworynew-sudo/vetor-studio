@@ -3,9 +3,9 @@
 
 import { analyze, measure, plan, profileOf, run } from './pipeline.js';
 import { combineProfiles } from './match.js';
-import { integratedLufs } from './analysis.js';
 import { encodeMp3, encodeWav } from './encode.js';
 import { loadDfn } from './neural.js';
+import { apolloRestore, hasWebGpu, loadApollo } from './apollo.js';
 
 let neuralBase = '';
 let dfnState = 'idle'; // idle | loading | ready | failed
@@ -39,14 +39,19 @@ self.onmessage = async (ev) => {
     }
     if (msg.type === 'profile') {
       const p = profileOf(msg.chans, msg.sr);
-      p.lufs = integratedLufs(msg.chans, msg.sr);
+      // громкость + динамика референса: разброс (LRA) и запас пика над громкостью (PLR)
+      const m = measure(msg.chans, msg.sr);
+      p.lufs = m.lufs; p.lra = m.lra; p.plr = m.truePeakDb - m.lufs;
       self.postMessage({ type: 'profile', id, profile: p });
       return;
     }
     if (msg.type === 'combine') {
       const p = combineProfiles(msg.profiles);
-      const ls = msg.profiles.map((x) => x.lufs).filter(Number.isFinite);
-      p.lufs = ls.length ? ls.reduce((s, v) => s + v, 0) / ls.length : undefined;
+      const avg = (key) => {
+        const v = msg.profiles.map((x) => x[key]).filter(Number.isFinite);
+        return v.length ? v.reduce((s, x) => s + x, 0) / v.length : undefined;
+      };
+      p.lufs = avg('lufs'); p.lra = avg('lra'); p.plr = avg('plr');
       self.postMessage({ type: 'combined', id, profile: p });
       return;
     }
@@ -60,7 +65,26 @@ self.onmessage = async (ev) => {
         if (!ok) planned.steps.forEach((s) => { if (s.id === 'denoise') s.engine = 'rnnoise'; });
       }
       const warnings = [];
+      let apollo = null;
+      if (planned.steps.some((s) => s.id === 'apollo')) {
+        if (!(await hasWebGpu())) {
+          warnings.push(msg.lang === 'en'
+            ? 'No WebGPU in this browser — neural restoration (Apollo) replaced by SBR'
+            : 'В браузере нет WebGPU — вместо нейро-реставрации Apollo использован SBR');
+        } else {
+          try {
+            self.postMessage({ type: 'neural', model: 'apollo', state: 'loading' });
+            await loadApollo(new URL('../apollo/', neuralBase).href);
+            self.postMessage({ type: 'neural', model: 'apollo', state: 'ready' });
+            apollo = (c, rate, onP) => apolloRestore(c, rate, { onProgress: onP });
+          } catch (e) {
+            self.postMessage({ type: 'neural', model: 'apollo', state: 'failed', error: String(e && e.message ? e.message : e) });
+            warnings.push(`Apollo: ${e && e.message ? e.message : e}`);
+          }
+        }
+      }
       const { chans: out, log } = await run(chans, sr, planned, {
+        apollo,
         onStep: (step, i, n) => self.postMessage({ type: 'progress', id, step, i, n }),
         onProgress: (p) => self.postMessage({ type: 'progress', id, p }),
         onWarn: (w) => warnings.push(w),

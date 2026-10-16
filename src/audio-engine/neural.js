@@ -15,7 +15,7 @@ export const DFN_DELAY = 1440;
 let dfn = null; let dfnPromise = null; let modelBytes = null;
 const dfnStates = [];
 
-async function fetchCached(url) {
+export async function fetchCached(url) {
   try {
     if (typeof caches !== 'undefined') {
       const cache = await caches.open(CACHE);

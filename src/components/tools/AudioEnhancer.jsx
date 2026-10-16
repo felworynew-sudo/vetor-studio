@@ -40,6 +40,7 @@ const STEP_LABEL = {
   'spectral-denoise': { ru: 'Шипение', en: 'Hiss' },
   resonance: { ru: 'Резонансы', en: 'Resonances' },
   bwe: { ru: 'Верх (SBR)', en: 'Highs (SBR)' },
+  apollo: { ru: 'Нейро-реставрация', en: 'Neural restore' },
   match: { ru: 'Референс', en: 'Reference' },
   dyneq: { ru: 'Динам. EQ', en: 'Dynamic EQ' },
   drift: { ru: 'Дрейф тембра', en: 'Tone drift' },
@@ -57,7 +58,7 @@ const TEXT = {
     mode: 'Режим', target: 'Целевая громкость, LUFS', asRef: 'как у референса', ceiling: 'Потолок', format: 'Формат',
     intensity: 'Интенсивность', soft: 'мягко', strong: 'сильно',
     advanced: 'Тонкая настройка', auto: 'авто', on: 'вкл', off: 'выкл',
-    opt: { denoise: 'Шумоподавление', dereverb: 'Удаление эха комнаты', declip: 'Восстановление клиппинга', declick: 'Удаление щелчков', bwe: 'Восстановление верха (SBR)', leveler: 'Лэвелер голоса', dehum: 'Подавление гула' },
+    opt: { denoise: 'Шумоподавление', dereverb: 'Удаление эха комнаты', declip: 'Восстановление клиппинга', declick: 'Удаление щелчков', apollo: 'Нейро-реставрация музыки (Apollo)', bwe: 'Восстановление верха без нейросети (SBR)', leveler: 'Лэвелер голоса', dehum: 'Подавление гула' },
     neural: 'Нейросеть для речи', dfn: 'DeepFilterNet3 · качество', rnn: 'RNNoise · лёгкая',
     monoBass: 'Моно-бас ниже 120 Гц', album: 'Единый профиль для всех файлов (альбом)',
     warmth: 'Тепло', presence: 'Разборчивость', air: 'Воздух',
@@ -75,13 +76,14 @@ const TEXT = {
     play: 'Слушать', pause: 'Пауза', seek: 'Позиция в треке', abHint: 'Переключение мгновенное, в той же точке трека',
     changes: 'Что изменилось', explainHint: 'ⓘ Наведите или нажмите на показатель или шаг цепочки — расскажу, что он значит.',
     local: 'Всё считается в вашем браузере, файлы никуда не отправляются.',
-    honest: 'Восстановление верха — SBR-реконструкция (как в HE-AAC), а не нейросеть: «воздух» правдоподобный, но это не возврат утерянного оригинала.',
+    honest: 'Музыку после MP3/AAC восстанавливает нейросеть Apollo (на видеокарте через WebGPU, модель ~33 МБ скачивается один раз). Без WebGPU верх достраивается SBR — правдоподобно, но без нейросети.',
+    apolloLoading: 'Загружаю нейросеть Apollo (~33 МБ, один раз — дальше из кеша)…', apolloFailed: 'Нейросеть Apollo не запустилась — верх восстановлен через SBR',
   },
   en: {
     mode: 'Mode', target: 'Target loudness, LUFS', asRef: 'match reference', ceiling: 'Ceiling', format: 'Format',
     intensity: 'Intensity', soft: 'gentle', strong: 'strong',
     advanced: 'Fine tuning', auto: 'auto', on: 'on', off: 'off',
-    opt: { denoise: 'Noise reduction', dereverb: 'Room echo removal', declip: 'Clipping repair', declick: 'Click removal', bwe: 'High-end restoration (SBR)', leveler: 'Voice leveler', dehum: 'Hum removal' },
+    opt: { denoise: 'Noise reduction', dereverb: 'Room echo removal', declip: 'Clipping repair', declick: 'Click removal', apollo: 'Neural music restoration (Apollo)', bwe: 'High-end restoration without AI (SBR)', leveler: 'Voice leveler', dehum: 'Hum removal' },
     neural: 'Speech network', dfn: 'DeepFilterNet3 · quality', rnn: 'RNNoise · light',
     monoBass: 'Mono bass below 120 Hz', album: 'Shared profile for all files (album)',
     warmth: 'Warmth', presence: 'Presence', air: 'Air',
@@ -99,11 +101,12 @@ const TEXT = {
     play: 'Play', pause: 'Pause', seek: 'Track position', abHint: 'Switches instantly, at the same point in the track',
     changes: 'What changed', explainHint: 'ⓘ Hover or tap a value or a chain step to see what it means.',
     local: 'Everything runs in your browser, files are never uploaded.',
-    honest: 'High-end restoration is SBR reconstruction (as in HE-AAC), not a neural net: the “air” is plausible, but it is not the lost original.',
+    honest: 'Music damaged by MP3/AAC is restored by the Apollo neural net (on the GPU via WebGPU, ~33 MB model downloaded once). Without WebGPU the top end is rebuilt with SBR — plausible, but not a neural net.',
+    apolloLoading: 'Loading the Apollo neural net (~33 MB, once — cached afterwards)…', apolloFailed: 'Apollo could not start — the top end was rebuilt with SBR',
   },
 };
 
-const OPT_KEYS = ['denoise', 'dereverb', 'declip', 'declick', 'bwe', 'leveler', 'dehum'];
+const OPT_KEYS = ['denoise', 'dereverb', 'declip', 'declick', 'apollo', 'bwe', 'leveler', 'dehum'];
 
 let engine = null;
 let msgSeq = 0;
@@ -268,7 +271,10 @@ function patchItem(id, p) {
 const planKeyOf = (s) => JSON.stringify([s.mode, s.targetLufs, s.ceilingDb, s.intensity, s.opts, s.neuralEngine, s.tone, s.monoBass, s.refs.length]);
 const hasWork = () => store.busy || store.items.length > 0 || store.refs.length > 0;
 
-listeners.add((m) => { if (m.type === 'neural') setStore({ neural: m.state }); });
+listeners.add((m) => {
+  if (m.type !== 'neural') return;
+  if (m.model === 'apollo') setStore({ apolloState: m.state }); else setStore({ neural: m.state });
+});
 if (typeof window !== 'undefined') {
   window.addEventListener('beforeunload', (e) => {
     if (!hasWork()) return;
@@ -342,7 +348,7 @@ async function processAll() {
       patchItem(it.id, { status: 'processing', step: null, stepIndex: null, p: 0, after: null, error: '', warnings: [], planKey });
       try {
         // eslint-disable-next-line no-await-in-loop
-        const res = await call({ type: 'process', chans: d.chans, sr: d.sr, mode: s0.mode, opts: engineOpts, format: s0.format, analysis: it.analysis }, (m) => {
+        const res = await call({ type: 'process', chans: d.chans, sr: d.sr, mode: s0.mode, opts: engineOpts, format: s0.format, analysis: it.analysis, lang: s0.lang }, (m) => {
           if (m.step && m.i != null) patchItem(it.id, { step: m.step, stepIndex: m.i });
           if (m.p != null) patchItem(it.id, { p: m.p });
         });
@@ -439,6 +445,7 @@ const STEP_HELP = {
   expander: L('Прижимает остаток шума в паузах между фразами.', 'Pushes down leftover noise in pauses between phrases.'),
   'spectral-denoise': L('Бережно убирает шипение по профилю шума, не трогая тон.', 'Gently removes hiss using a noise profile, leaving tonal content.'),
   resonance: L('Динамически прижимает узкие резонансы и «металлический» звон.', 'Dynamically tames narrow resonances and metallic ringing.'),
+  apollo: L('Нейросеть Apollo восстанавливает середину и верх, съеденные MP3/AAC-сжатием. Работает на видеокарте (WebGPU).', 'The Apollo network restores mids and highs eaten by MP3/AAC compression. Runs on the GPU (WebGPU).'),
   bwe: L('Достраивает срезанный верх продолжением спектра (SBR) — возвращает «воздух».', 'Rebuilds the cut-off top end by extending the spectrum (SBR) — brings back “air”.'),
   match: L('Подгоняет тональный баланс под ваши референсы.', 'Matches tonal balance to your references.'),
   dyneq: L('Динамический EQ: прижимает бубнение, резкость и сибилянты только в моменты, когда они выпирают.', 'Dynamic EQ: tames boom, harshness and sibilance only when they stick out.'),
@@ -464,6 +471,9 @@ function changeText(l, lang) {
     case 'expander': return r('Паузы между фразами стали чище.', 'Pauses between phrases are cleaner.');
     case 'spectral-denoise': return l.label === 'fizz' ? r(`Прижат «физ» выше ${l.fMin / 1000} кГц (до −${l.reductionDb} дБ).`, `Fizz above ${l.fMin / 1000} kHz reduced (up to −${l.reductionDb} dB).`) : r(`Шипение снижено до −${l.reductionDb} дБ.`, `Hiss reduced by up to ${l.reductionDb} dB.`);
     case 'resonance': return r('Прижаты резонансы и металлический звон.', 'Resonances and metallic ringing tamed.');
+    case 'apollo': return l.engine === 'apollo'
+      ? r(`Нейросеть Apollo восстановила звук после сжатия (срез был на ${(l.cutoffHz / 1000).toFixed(1)} кГц).`, `Apollo restored the codec-damaged audio (cutoff was at ${(l.cutoffHz / 1000).toFixed(1)} kHz).`)
+      : r(`Apollo недоступен — верх выше ${(l.cutoffHz / 1000).toFixed(1)} кГц достроен через SBR.`, `Apollo unavailable — top end above ${(l.cutoffHz / 1000).toFixed(1)} kHz rebuilt with SBR.`);
     case 'bwe': return r(`Достроен верх выше ${(l.cutoffHz / 1000).toFixed(1)} кГц.`, `Top end rebuilt above ${(l.cutoffHz / 1000).toFixed(1)} kHz.`);
     case 'match': return r(`Баланс подогнан под референс (подъём до +${l.maxBoostDb} дБ, срез до ${l.maxCutDb} дБ).`, `Balance matched to reference (boost up to +${l.maxBoostDb} dB, cut down to ${l.maxCutDb} dB).`);
     case 'dyneq': {
@@ -644,6 +654,7 @@ function AudioEnhancer({ language = 'ru' }) {
     busy, neural, matchLevel, showAdv,
   } = st;
   const [tip, setTip] = useState({ id: '', text: '' });
+  useEffect(() => { if (store.lang !== language) setStore({ lang: language }); }, [language]);
   const showTip = (id, text) => setTip({ id, text });
 
   // Предпросмотр цепочки — тот же роутер, что в воркере, но без тяжёлых данных.
@@ -792,6 +803,8 @@ function AudioEnhancer({ language = 'ru' }) {
       {needRefs && items.length > 0 && <p className="ae2-warn">{t.refsNeed}</p>}
       {neural === 'loading' && busy && <p className="ae2-neural">⏳ {t.neuralLoading}</p>}
       {neural === 'failed' && <p className="ae2-neural is-warn">⚠ {t.neuralFailed}</p>}
+      {st.apolloState === 'loading' && busy && <p className="ae2-neural">⏳ {t.apolloLoading}</p>}
+      {st.apolloState === 'failed' && <p className="ae2-neural is-warn">⚠ {t.apolloFailed}</p>}
 
       <ul className="ae2-list">
         {items.map((it) => {
