@@ -3,7 +3,8 @@
 // на процессоре модель слишком тяжёлая. Трек режется на куски с контекстом
 // по краям, куски склеиваются плавным переходом.
 
-import ortWasmUrl from 'onnxruntime-web/ort-wasm-simd-threaded.jsep.wasm?url';
+// WebGPU-сборка onnxruntime-web 1.26 работает на asyncify-ядре (не jsep)
+import ortWasmUrl from 'onnxruntime-web/ort-wasm-simd-threaded.asyncify.wasm?url';
 import { resample } from './dsp.js';
 import { fetchCached } from './neural.js';
 
