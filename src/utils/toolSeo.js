@@ -160,6 +160,16 @@ const SPECIFIC_FAQS = {
       { q: 'Can I get pixel art as a vector?', a: 'Yes — besides PNG the tool exports SVG where each pixel is its own square, scalable without losing sharpness.' },
     ],
   },
+  'pixel-generator': {
+    ru: [
+      { q: 'Куда отправляются мои запросы?', a: 'Никуда: нейросеть скачивается в браузер один раз (около 56 МБ) и работает на вашем устройстве.' },
+      { q: 'Почему результат не всегда похож на запрос?', a: 'Это бета-версия: модель маленькая и обучена на ограниченном наборе. Лучше всего получаются зелья, оружие, сундуки, монстры и персонажи. Попробуйте английский запрос и несколько вариантов.' },
+    ],
+    en: [
+      { q: 'Where do my prompts go?', a: 'Nowhere: the neural network downloads to your browser once (about 56 MB) and runs on your device.' },
+      { q: 'Why does the result not always match the prompt?', a: 'This is a beta: the model is small and trained on a limited set. Potions, weapons, chests, monsters and characters work best. Try an English prompt and several variants.' },
+    ],
+  },
   'smart-crop': {
     ru: [
       { q: 'Как инструмент выбирает область кадрирования?', a: 'ИИ находит лицо или главный объект и центрирует кадр под нужный формат: квадрат, сторис, широкий или круглый аватар.' },

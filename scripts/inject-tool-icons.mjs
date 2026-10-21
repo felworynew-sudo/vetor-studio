@@ -20,7 +20,7 @@ const TOOL_ICONS = {
   'blur-analyzer': 'glaz', 'audio-trimmer': 'naushniki', 'image-metadata': 'pipidastr',
   'ai-detector': 'lupaii', 'ascii-art': 'monitor', 'css-from-svg': 'svg',
   isometry: 't-izometriya', 'glyph-map': 'abv', 'yt-thumbnail': 'yutub',
-  'audio-metadata': 'birka', pixelizer: 'monitor',
+  'audio-metadata': 'birka', pixelizer: 'monitor', 'pixel-generator': 'monitor',
 };
 const CAT_ICONS = {
   image: 'foto', color: 'palitra', svg: 'svg', generators: 'zvezdy',

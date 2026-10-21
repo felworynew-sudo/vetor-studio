@@ -760,6 +760,21 @@
       "img": "apskeyl.png"
     },
     {
+      "slug": "pixel-generator",
+      "categoryId": "ai",
+      "status": "ready",
+      "icon": "🧪",
+      "ru": {
+        "title": "Генератор спрайтов (бета)",
+        "desc": "Рисует пиксельные иконки и спрайты 16–64 px по тексту: нейросеть работает прямо в вашем браузере, запросы никуда не отправляются. Бета-версия."
+      },
+      "en": {
+        "title": "Sprite generator (beta)",
+        "desc": "Draws pixel-art icons and sprites 16–64 px from text: the neural network runs right in your browser, prompts never leave your device. Beta."
+      },
+      "img": "mozg.png"
+    },
+    {
       "slug": "smart-crop",
       "categoryId": "ai",
       "status": "ready",
