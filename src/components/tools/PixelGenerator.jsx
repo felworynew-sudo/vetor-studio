@@ -60,7 +60,11 @@ function download(canvas, name) {
   }, 'image/png');
 }
 
-function Sprite({ img, zoom, t, name }) {
+// Масштаб и имя файла берутся из самой картинки: выбранный размер мог поменяться уже после генерации.
+const zoomFor = (w) => (w <= 16 ? 12 : w <= 32 ? 8 : 5);
+
+function Sprite({ img, t, slug, index }) {
+  const zoom = zoomFor(img.width); const name = `${slug}-${img.width}px-${index}`;
   const ref = useRef(null);
   useEffect(() => {
     const c = toCanvas(img, zoom); const cv = ref.current;
@@ -126,7 +130,6 @@ function PixelGenerator({ language = 'ru' }) {
     }
   }
 
-  const zoom = size <= 16 ? 12 : size <= 32 ? 8 : 5;
   const slug = (text || 'sprite').toLowerCase().replace(/[^a-zа-яё0-9]+/g, '-').slice(0, 30) || 'sprite';
 
   return (
@@ -158,7 +161,7 @@ function PixelGenerator({ language = 'ru' }) {
         <div className="tool-field">
           <span className="tool-field-label">{t.variants}</span>
           <div className="segmented">
-            {[1, 2, 4].map((c) => (
+            {(gpu === false ? [1, 2] : [1, 2, 4]).map((c) => (
               <button key={c} type="button" className={`segmented-btn${count === c ? ' is-active' : ''}`} onClick={() => setCount(c)}>{c}</button>
             ))}
           </div>
@@ -215,7 +218,7 @@ function PixelGenerator({ language = 'ru' }) {
 
       <div className="pg-results">
         {results.length === 0 && !busy && <p className="pg-empty">{t.empty}</p>}
-        {results.map((img, i) => <Sprite key={`${seed}-${i}-${img.pixels[0]}-${img.pixels.length}`} img={img} zoom={zoom} t={t} name={`${slug}-${size}px-${i + 1}`} />)}
+        {results.map((img, i) => <Sprite key={`${seed}-${i}-${img.width}-${img.pixels[0]}-${img.pixels[img.pixels.length - 2]}`} img={img} t={t} slug={slug} index={i + 1} />)}
       </div>
 
       <details className="pg-about">

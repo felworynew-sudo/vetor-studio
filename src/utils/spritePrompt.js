@@ -5,7 +5,7 @@
 // категорией, типичными деталями, материалом и ракурсом. Цвета берутся из запроса.
 // Модель знает английские слова: русские названия переводятся словарём ниже.
 
-// [en, ru-основы через запятую, категория, детали, материалы, ракурс, [стиль: 'potion' = цвет в названии]]
+// [en, ru-основы через запятую (префикс «=» — только точное слово), категория, детали, материалы, ракурс, [стиль: 'potion' = цвет в названии]]
 const SUBJECTS = [
   // оружие
   ['sword', 'меч,клинок,сабл', 'weapon', 'long blade,hilt with guard,pointed tip', 'metal', 'side'],
@@ -63,7 +63,7 @@ const SUBJECTS = [
   ['skeleton', 'скелет', 'creature', 'skull,rib cage,bones', 'bone', 'front'],
   ['dragon', 'дракон', 'creature', 'wings,horns,tail,sharp teeth', 'scale', 'side'],
   ['cat', 'кот,кош', 'creature', 'pointed ears,tail curled,eyes', 'fur', 'front'],
-  ['dog', 'собак,пес,пёс', 'creature', 'floppy ears,tail,snout', 'fur', 'side'],
+  ['dog', 'собак,=пес,=пёс,=пса,=псы', 'creature', 'floppy ears,tail,snout', 'fur', 'side'],
   ['wolf', 'волк', 'creature', 'pointed ears,snout,tail', 'fur', 'side'],
   ['bat', 'летуч', 'creature', 'spread wings,pointed ears', 'fur', 'front'],
   ['spider', 'паук', 'creature', 'eight legs,round body', '', 'top-down'],
@@ -82,8 +82,8 @@ const SUBJECTS = [
   ['boy', 'мальчик,парень', 'character', 'short hair,shirt', 'cloth', 'front'],
   // природа и окружение
   ['tree', 'дерев,ёлк,ель', 'plant', 'trunk,leafy canopy', 'wood', 'front'],
-  ['flower', 'цвет', 'plant', 'petals,green stem,leaves', '', 'front'],
-  ['rock', 'камен,валун,скал', 'terrain tile', 'rough surface,cracks', 'stone', 'front'],
+  ['flower', 'цветок,цветк,цветы,цветов,цветоч', 'plant', 'petals,green stem,leaves', '', 'front'],
+  ['rock', 'камень,камн,валун,скал,булыжник', 'terrain tile', 'rough surface,cracks', 'stone', 'front'],
   ['bush', 'куст', 'plant', 'leafy,round shape', '', 'front'],
   ['cactus', 'кактус', 'plant', 'spikes,arms', '', 'front'],
   ['crystal', 'кристал', 'gem', 'pointed crystal cluster', 'crystal', 'front'],
@@ -137,7 +137,7 @@ function matchSubject(tokens) {
       const slice = tokens.slice(i, i + words.length).join(' ');
       const plural = (slice.endsWith('s') ? slice.slice(0, -1) : slice);
       const hit = slice === s.en || plural === s.en || (words.length === 1 && (tokens[i] === `${s.en}es` || tokens[i] === `${s.en}s`))
-        || (words.length === 1 && s.ru.some((r) => tokens[i].startsWith(r) && tokens[i].length <= r.length + 4));
+        || (words.length === 1 && s.ru.some((r) => (r.startsWith('=') ? tokens[i] === r.slice(1) : tokens[i].startsWith(r) && tokens[i].length <= r.length + 3)));
       if (hit && (!best || words.length > best.len)) best = { s, at: i, len: words.length };
     }
   }
