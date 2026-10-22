@@ -2004,3 +2004,21 @@ button.ae2-chip:hover, button.ae2-chip:focus-visible { border-color: var(--t-acc
   .ae2-seek { flex-basis: 100%; order: 3; }
 }
 .ae2-apollo-status { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; font-size: 12.5px; color: var(--text-muted); }
+.ae2-ms { color: var(--text-soft); }
+
+/* --- Улучшение аудио: ручные настройки --- */
+.ae2-man { display: flex; flex-direction: column; gap: 12px; min-width: 0; width: 100%; }
+.ae2-man-title { margin: 0; font-family: var(--px); font-size: 15px; }
+.ae2-man-note { margin: 0; font-size: 12.5px; color: var(--text-soft); line-height: 1.5; }
+.ae2-man-group { margin: 0; min-width: 0; border: 2px solid var(--stroke); padding: 8px 14px 14px; background: var(--surface); }
+.ae2-man-group.is-on { border-color: var(--t-accent); }
+.ae2-man-group legend { padding: 0 8px; font-family: var(--px); font-weight: 700; font-size: 13px; }
+.ae2-man-hint { margin: 0 0 10px; font-size: 12.5px; color: var(--text-muted); line-height: 1.5; }
+.ae2-man-fields { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px 20px; }
+.ae2-man-group:not(.is-on) .ae2-man-fields { opacity: 0.55; }
+.ae2-man-field { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--text-muted); min-width: 0; }
+.ae2-man-field b { color: var(--text); }
+.ae2-man-field input[type="range"] { width: 100%; accent-color: var(--t-accent); }
+.ae2-man-field small { font-size: 11.5px; color: var(--text-soft); line-height: 1.4; }
+.ae2-strength { align-self: flex-start; }
+.ae2-strength .segmented-btn { padding: 5px 11px; font-size: 11px; }

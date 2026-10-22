@@ -10,6 +10,7 @@ import { getAudioCtx } from '../../utils/wav';
 const MODES = [
   { id: 'auto', ru: 'Авто', en: 'Auto', hint: { ru: 'Сам определит речь или музыку и соберёт цепочку под найденные дефекты.', en: 'Detects speech or music and builds a chain for the defects it finds.' } },
   { id: 'voice', ru: 'Голос', en: 'Voice', hint: { ru: 'Подкаст, видео, войс: DeepFilterNet3, динамический EQ, ровная громкость.', en: 'Podcast, video, voice-over: DeepFilterNet3, dynamic EQ, even loudness.' } },
+  { id: 'podcast', ru: 'Подкаст', en: 'Podcast', hint: { ru: 'Шире полоса, чем у «Голоса»: 60 Гц – 16 кГц, естественнее тембр. Для подкастов, интервью, закадра.', en: 'A wider band than “Voice”: 60 Hz – 16 kHz, more natural tone. For podcasts, interviews, voice-over.' } },
   { id: 'restore', ru: 'Реставрация речи', en: 'Speech restore', hint: { ru: 'Тяжёлые записи: клиппинг, эхо комнаты, щелчки, сильный шум — всё агрессивнее.', en: 'Rough recordings: clipping, room echo, clicks, heavy noise — everything stronger.' } },
   { id: 'music', ru: 'Музыка', en: 'Music', hint: { ru: 'Бережно: без речевой нейросети, которая ест тарелки и пэды. Шипение, резкость, срез MP3, финал.', en: 'Gentle: no speech network that eats cymbals and pads. Hiss, harshness, MP3 cutoff, finish.' } },
   { id: 'ai', ru: 'AI-музыка', en: 'AI music', hint: { ru: 'Suno / Udio: металлический звон, «физ» на верху, сибилянты, плывущий тембр, срез экспорта.', en: 'Suno / Udio: metallic ringing, top-end fizz, sibilance, drifting tone, export cutoff.' } },
@@ -17,6 +18,7 @@ const MODES = [
 ];
 
 const TARGETS = [
+  { v: 'auto', ru: 'авто', en: 'auto' },
   { v: -14, ru: '−14 · стриминг', en: '−14 · streaming' },
   { v: -16, ru: '−16 · подкаст', en: '−16 · podcast' },
   { v: -19, ru: '−19 · тихо', en: '−19 · quiet' },
@@ -45,6 +47,7 @@ const STEP_LABEL = {
   dyneq: { ru: 'Динам. EQ', en: 'Dynamic EQ' },
   drift: { ru: 'Дрейф тембра', en: 'Tone drift' },
   tone: { ru: 'Тон', en: 'Tone' },
+  meq: { ru: 'EQ (ручной)', en: 'EQ (manual)' },
   stereo: { ru: 'Стерео', en: 'Stereo' },
   leveler: { ru: 'Лэвелер', en: 'Leveler' },
   compressor: { ru: 'Компрессор', en: 'Compressor' },
@@ -55,6 +58,8 @@ const STEP_LABEL = {
 
 const TEXT = {
   ru: {
+    light: 'Лёгкая', medium: 'Средняя', heavy: 'Сильная',
+    manualTitle: 'Ручные настройки', manualNote: 'Включите нужную группу — она заменит свой блок в цепочке, остальное останется от выбранного режима.',
     mode: 'Режим', target: 'Целевая громкость, LUFS', asRef: 'как у референса', ceiling: 'Потолок', format: 'Формат',
     intensity: 'Интенсивность', soft: 'мягко', strong: 'сильно',
     advanced: 'Тонкая настройка', auto: 'авто', on: 'вкл', off: 'выкл',
@@ -82,6 +87,8 @@ const TEXT = {
     apolloLoading: 'Загружаю нейросеть Apollo (~38 МБ, один раз — дальше из кеша)…', apolloFailed: 'Нейросеть Apollo не запустилась — верх восстановлен через SBR',
   },
   en: {
+    light: 'Gentle', medium: 'Medium', heavy: 'Strong',
+    manualTitle: 'Manual settings', manualNote: 'Switch a group on — it replaces its block in the chain, everything else stays as the chosen mode builds it.',
     mode: 'Mode', target: 'Target loudness, LUFS', asRef: 'match reference', ceiling: 'Ceiling', format: 'Format',
     intensity: 'Intensity', soft: 'gentle', strong: 'strong',
     advanced: 'Fine tuning', auto: 'auto', on: 'on', off: 'off',
@@ -131,6 +138,14 @@ function getEngine() {
   };
   return engine;
 }
+// Браузер запоминает неудачный динамический импорт до конца жизни воркера: одна
+// случайная сетевая ошибка «отравляет» все повторы. Лечится новым воркером.
+function restartEngine() {
+  try { engine?.terminate(); } catch { /* уже остановлен */ }
+  engine = null;
+}
+const IMPORT_FAIL = /Failed to fetch dynamically imported module|error loading dynamically imported module|Importing a module script failed/i;
+
 function call(msg, onProgress) {
   const id = `m${msgSeq += 1}`;
   return new Promise((resolve, reject) => {
@@ -269,11 +284,57 @@ function TriState({ value, onChange, t }) {
 // уход на другой инструмент и возврат ничего не сбрасывает, а начатая обработка
 // продолжается в фоне (воркер тоже модульный). Теряется только при перезагрузке
 // вкладки — и об этом браузер спросит заранее (beforeunload).
+const DEFAULT_MANUAL = {
+  eq: { on: false, hp: 20, lp: 20000, bass: 0, warmth: 0, mid: 0, presence: 0, clarity: 0, air: 0 },
+  comp: { on: false, threshold: -24, ratio: 3, attackMs: 10, releaseMs: 150, kneeDb: 6 },
+  gate: { on: false, threshold: -55 },
+  deess: { on: false, depthDb: 4 },
+  noise: { on: false, amount: 0.5 },
+  out: { on: false, gainDb: 0 },
+};
+
+// Группы ручных настроек: поля, диапазоны и пояснения (что значит и как выставлять).
+const MANUAL_GROUPS = [
+  { id: 'eq', ru: 'Фильтры и 6-полосный эквалайзер', en: 'Filters and 6-band EQ',
+    hint: { ru: 'Фильтры убирают низ и верх, полосы подкрашивают тембр. Для голоса: верхний фильтр 80–100 Гц; для музыки оставьте 20 Гц.', en: 'Filters cut lows and highs, the bands shape tone. For voice: high-pass 80–100 Hz; for music leave it at 20 Hz.' },
+    fields: [
+      { k: 'hp', ru: 'Верхний фильтр (срез низа)', en: 'High-pass (cuts lows)', min: 20, max: 500, step: 5, unit: ' Гц', unitEn: ' Hz', tip: { ru: 'Убирает гул комнаты, ветер, вибрации ниже этой частоты.', en: 'Removes room rumble, wind and vibration below this frequency.' } },
+      { k: 'lp', ru: 'Нижний фильтр (срез верха)', en: 'Low-pass (cuts highs)', min: 2000, max: 20000, step: 100, unit: ' Гц', unitEn: ' Hz', tip: { ru: 'Убирает шипение и резкость выше этой частоты. Для речи 12–14 кГц, для музыки 20 кГц.', en: 'Removes hiss and harshness above this frequency. 12–14 kHz for speech, 20 kHz for music.' } },
+      { k: 'bass', ru: 'Бас, 100 Гц', en: 'Bass, 100 Hz', min: -12, max: 12, step: 0.5, unit: ' дБ', unitEn: ' dB', tip: { ru: 'Глубина и полнота. Поднимите у тонких записей, опустите при гулкости.', en: 'Depth and fullness. Raise for thin recordings, lower if boomy.' } },
+      { k: 'warmth', ru: 'Теплота, 250 Гц', en: 'Warmth, 250 Hz', min: -12, max: 12, step: 0.5, unit: ' дБ', unitEn: ' dB', tip: { ru: 'Тело звука. Поднимите для холодных записей, опустите, если звук мутный или «бочковатый».', en: 'Body of the sound. Raise for cold recordings, lower if it is muddy or boxy.' } },
+      { k: 'mid', ru: 'Середина, 1 кГц', en: 'Mids, 1 kHz', min: -12, max: 12, step: 0.5, unit: ' дБ', unitEn: ' dB', tip: { ru: 'Основной диапазон голоса. Поднимите, чтобы вывести вперёд.', en: 'The main voice range. Raise to bring it forward.' } },
+      { k: 'presence', ru: 'Присутствие, 3 кГц', en: 'Presence, 3 kHz', min: -12, max: 12, step: 0.5, unit: ' дБ', unitEn: ' dB', tip: { ru: 'Разборчивость речи. Поднимите для чёткости, опустите, чтобы смягчить резкость.', en: 'Speech intelligibility. Raise for clarity, lower to soften harshness.' } },
+      { k: 'clarity', ru: 'Чёткость, 5 кГц', en: 'Clarity, 5 kHz', min: -12, max: 12, step: 0.5, unit: ' дБ', unitEn: ' dB', tip: { ru: 'Детали согласных. Поднимите для тусклых записей, опустите при свисте.', en: 'Consonant detail. Raise for dull recordings, lower for whistly ones.' } },
+      { k: 'air', ru: 'Воздух, 10 кГц', en: 'Air, 10 kHz', min: -12, max: 12, step: 0.5, unit: ' дБ', unitEn: ' dB', tip: { ru: 'Открытость и «искорка». Опустите, если запись слишком яркая или шумная.', en: 'Openness and sparkle. Lower if the recording is too bright or noisy.' } },
+    ] },
+  { id: 'comp', ru: 'Компрессор', en: 'Compressor',
+    hint: { ru: 'Выравнивает громкость: тихое громче, громкое тише. 2–4:1 — мягко, 8–20:1 — сильно.', en: 'Evens out loudness: quiet louder, loud quieter. 2–4:1 is gentle, 8–20:1 is heavy.' },
+    fields: [
+      { k: 'threshold', ru: 'Порог', en: 'Threshold', min: -60, max: 0, step: 1, unit: ' дБ', unitEn: ' dB', tip: { ru: 'Уровень, выше которого включается сжатие. Чем ниже, тем больше сигнала сжимается.', en: 'The level above which compression starts. The lower, the more signal is compressed.' } },
+      { k: 'ratio', ru: 'Степень', en: 'Ratio', min: 1, max: 20, step: 0.5, unit: ':1', unitEn: ':1', tip: { ru: 'Во сколько раз уменьшить превышение порога.', en: 'How many times to reduce the part above the threshold.' } },
+      { k: 'attackMs', ru: 'Атака', en: 'Attack', min: 0.5, max: 100, step: 0.5, unit: ' мс', unitEn: ' ms', tip: { ru: 'Скорость реакции. Короткая (1–10 мс) ловит удары, длинная (20–100 мс) их пропускает.', en: 'Reaction speed. Short (1–10 ms) catches transients, long (20–100 ms) lets them through.' } },
+      { k: 'releaseMs', ru: 'Восстановление', en: 'Release', min: 10, max: 1000, step: 10, unit: ' мс', unitEn: ' ms', tip: { ru: 'Как быстро компрессор отпускает. 50–100 мс для речи, 200–500 мс для музыки.', en: 'How fast the compressor lets go. 50–100 ms for speech, 200–500 ms for music.' } },
+      { k: 'kneeDb', ru: 'Колено', en: 'Knee', min: 0, max: 40, step: 1, unit: ' дБ', unitEn: ' dB', tip: { ru: '0 — резкий переход, 20–40 — плавный, звучит естественнее.', en: '0 is an abrupt transition, 20–40 is smooth and sounds more natural.' } },
+    ] },
+  { id: 'gate', ru: 'Шумовой порог', en: 'Noise gate',
+    hint: { ru: 'Прижимает звук в паузах. Подберите порог чуть выше уровня фонового шума.', en: 'Pushes down the sound in pauses. Set the threshold just above the background noise level.' },
+    fields: [{ k: 'threshold', ru: 'Порог', en: 'Threshold', min: -90, max: -20, step: 1, unit: ' дБ', unitEn: ' dB', tip: { ru: 'Всё, что тише порога, считается паузой и приглушается.', en: 'Anything quieter than the threshold counts as a pause and is turned down.' } }] },
+  { id: 'deess', ru: 'Де-эссер', en: 'De-esser',
+    hint: { ru: 'Снижает свистящие «с», «ш», «ц» на 6.5 кГц, только когда они выпирают. Начните с 3–6 дБ.', en: 'Reduces sibilant “s”, “sh”, “ts” at 6.5 kHz, only when they stick out. Start with 3–6 dB.' },
+    fields: [{ k: 'depthDb', ru: 'Глубина', en: 'Depth', min: 0, max: 12, step: 0.5, unit: ' дБ', unitEn: ' dB', tip: { ru: 'Максимальное подавление свистящих.', en: 'The maximum sibilance reduction.' } }] },
+  { id: 'noise', ru: 'Шумоподавление', en: 'Noise reduction',
+    hint: { ru: 'Сила нейросети (речь) или спектрального шумодава (музыка). Больше — чище, но риск «подводного» звука.', en: 'Strength of the neural net (speech) or the spectral denoiser (music). More is cleaner, but risks an underwater sound.' },
+    fields: [{ k: 'amount', ru: 'Сила', en: 'Amount', min: 0, max: 1, step: 0.05, pct: true, tip: { ru: '0% — почти не трогать, 100% — максимум.', en: '0% barely touches it, 100% is the maximum.' } }] },
+  { id: 'out', ru: 'Громкость на выходе', en: 'Output level',
+    hint: { ru: 'Сдвигает итоговую громкость относительно цели в LUFS. Потолок пиков при этом сохраняется.', en: 'Shifts the final loudness relative to the LUFS target. The peak ceiling is kept.' },
+    fields: [{ k: 'gainDb', ru: 'Сдвиг', en: 'Offset', min: -12, max: 12, step: 0.5, unit: ' дБ', unitEn: ' dB', tip: { ru: 'Плюс — громче, минус — тише. Не выше потолка пиков.', en: 'Plus is louder, minus is quieter. Never above the peak ceiling.' } }] },
+];
+
 const INITIAL = {
-  items: [], refs: [], mode: 'auto', targetLufs: -14, ceilingDb: -1, format: 'wav24', intensity: 0.6,
+  items: [], refs: [], mode: 'auto', targetLufs: 'auto', ceilingDb: -1, format: 'wav24', intensity: 0.6,
   opts: Object.fromEntries(OPT_KEYS.map((k) => [k, 'auto'])), neuralEngine: 'dfn', apolloDevice: 'auto',
   tone: { warmth: 0, presence: 0, air: 0 }, monoBass: false, album: false, busy: false, neural: '',
-  matchLevel: true, showAdv: false, player: { id: '', which: 'after', playing: false },
+  manual: DEFAULT_MANUAL, matchLevel: true, showAdv: false, player: { id: '', which: 'after', playing: false },
 };
 let store = INITIAL;
 const subs = new Set();
@@ -287,7 +348,7 @@ function setStore(patch) {
 function patchItem(id, p) {
   setStore((s) => ({ items: s.items.map((it) => (it.id === id ? { ...it, ...(typeof p === 'function' ? p(it) : p) } : it)) }));
 }
-const planKeyOf = (s) => JSON.stringify([s.mode, s.targetLufs, s.ceilingDb, s.intensity, s.opts, s.neuralEngine, s.tone, s.monoBass, s.refs.length]);
+const planKeyOf = (s) => JSON.stringify([s.mode, s.targetLufs, s.ceilingDb, s.intensity, s.opts, s.neuralEngine, s.tone, s.monoBass, s.refs.length, s.manual]);
 const hasWork = () => store.busy || store.items.length > 0 || store.refs.length > 0;
 
 listeners.add((m) => {
@@ -358,7 +419,7 @@ async function processAll() {
     }
     const engineOpts = {
       targetLufs: s0.targetLufs, ceilingDb: s0.ceilingDb, intensity: s0.intensity, ...s0.opts, neural: s0.neuralEngine,
-      tone: s0.tone, monoBass: s0.monoBass, apolloDevice: s0.apolloDevice, reference, albumProfile,
+      tone: s0.tone, monoBass: s0.monoBass, apolloDevice: s0.apolloDevice, manual: s0.manual, reference, albumProfile,
     };
     const planKey = planKeyOf(s0);
     for (const it of s0.items) {
@@ -367,10 +428,20 @@ async function processAll() {
       patchItem(it.id, { status: 'processing', step: null, stepIndex: null, p: 0, after: null, error: '', warnings: [], planKey });
       try {
         // eslint-disable-next-line no-await-in-loop
-        const res = await call({ type: 'process', chans: d.chans, sr: d.sr, mode: s0.mode, opts: engineOpts, format: s0.format, analysis: it.analysis, lang: s0.lang }, (m) => {
+        const onProg = (m) => {
           if (m.step && m.i != null) patchItem(it.id, (prev) => (prev.step === m.step ? {} : { step: m.step, stepIndex: m.i, stepN: m.n, stepT0: Date.now() }));
           if (m.p != null) patchItem(it.id, { p: m.p });
-        });
+        };
+        const job = { type: 'process', chans: d.chans, sr: d.sr, mode: s0.mode, opts: engineOpts, format: s0.format, analysis: it.analysis, lang: s0.lang };
+        // eslint-disable-next-line no-await-in-loop
+        let res = await call(job, onProg);
+        // модуль не скачался (сеть моргнула) → свежий воркер и ещё одна попытка с нуля
+        if ((res.warnings || []).some((w) => IMPORT_FAIL.test(w))) {
+          restartEngine();
+          patchItem(it.id, { step: null, stepIndex: null, p: 0 });
+          // eslint-disable-next-line no-await-in-loop
+          res = await call(job, onProg);
+        }
         const blob = new Blob([res.bytes], { type: res.mime });
         forgetItemAudio(it.id);
         patchItem(it.id, (prev) => {
@@ -413,9 +484,9 @@ function download(item) {
 
 // Сеттер поля хранилища, совместимый с useState: значение или функция от прежнего.
 const setter = (key) => (v) => setStore((s) => ({ [key]: typeof v === 'function' ? v(s[key]) : v }));
-const setMode = (v) => setStore((s) => ({ mode: v, targetLufs: v !== 'master' && s.targetLufs === 'ref' ? -14 : s.targetLufs })); const setTargetLufs = setter('targetLufs'); const setCeilingDb = setter('ceilingDb');
+const setMode = (v) => setStore((s) => ({ mode: v, targetLufs: v !== 'master' && s.targetLufs === 'ref' ? 'auto' : s.targetLufs })); const setTargetLufs = setter('targetLufs'); const setCeilingDb = setter('ceilingDb');
 const setFormat = setter('format'); const setIntensity = setter('intensity'); const setOpts = setter('opts');
-const setNeuralEngine = setter('neuralEngine'); const setApolloDevice = setter('apolloDevice'); const setTone = setter('tone'); const setMonoBass = setter('monoBass');
+const setManual = setter('manual'); const setNeuralEngine = setter('neuralEngine'); const setApolloDevice = setter('apolloDevice'); const setTone = setter('tone'); const setMonoBass = setter('monoBass');
 const setAlbum = setter('album'); const setMatchLevel = setter('matchLevel'); const setShowAdv = setter('showAdv');
 const setRefs = setter('refs');
 
@@ -470,6 +541,7 @@ const STEP_HELP = {
   dyneq: L('Динамический EQ: прижимает бубнение, резкость и сибилянты только в моменты, когда они выпирают.', 'Dynamic EQ: tames boom, harshness and sibilance only when they stick out.'),
   drift: L('Выравнивает тембр по ходу трека, если он «плывёт».', 'Evens out tone that drifts over the track.'),
   tone: L('Лёгкая коррекция тембра: срез низа, разборчивость, воздух.', 'Gentle tone shaping: low cut, presence, air.'),
+  meq: L('Ваши фильтры и 6-полосный эквалайзер вместо автоматической коррекции тембра.', 'Your filters and 6-band EQ instead of the automatic tone correction.'),
   stereo: L('Ширина стерео и моно-бас.', 'Stereo width and mono bass.'),
   leveler: L('Выравнивает громкость фраз: тихие поднимает, громкие опускает.', 'Evens out phrase loudness: lifts quiet, lowers loud.'),
   compressor: L('Уплотняет звук, уменьшая разницу между тихим и громким.', 'Adds density by narrowing the gap between quiet and loud.'),
@@ -491,8 +563,8 @@ function changeText(l, lang) {
     case 'spectral-denoise': return l.label === 'fizz' ? r(`Прижат «физ» выше ${l.fMin / 1000} кГц (до −${l.reductionDb} дБ).`, `Fizz above ${l.fMin / 1000} kHz reduced (up to −${l.reductionDb} dB).`) : r(`Шипение снижено до −${l.reductionDb} дБ.`, `Hiss reduced by up to ${l.reductionDb} dB.`);
     case 'resonance': return r('Прижаты резонансы и металлический звон.', 'Resonances and metallic ringing tamed.');
     case 'apollo': return l.engine === 'apollo'
-      ? r(`Нейросеть Apollo восстановила звук после сжатия (срез был на ${(l.cutoffHz / 1000).toFixed(1)} кГц).`, `Apollo restored the codec-damaged audio (cutoff was at ${(l.cutoffHz / 1000).toFixed(1)} kHz).`)
-      : r(`Apollo недоступен — верх выше ${(l.cutoffHz / 1000).toFixed(1)} кГц достроен через SBR.`, `Apollo unavailable — top end above ${(l.cutoffHz / 1000).toFixed(1)} kHz rebuilt with SBR.`);
+      ? r(`Нейросеть Apollo восстановила звук после сжатия (срез был на ${(l.cutoffHz / 1000).toFixed(1)} кГц), ${l.device === 'wasm' ? 'на процессоре' : 'на видеокарте'}.`, `Apollo restored the codec-damaged audio (cutoff was at ${(l.cutoffHz / 1000).toFixed(1)} kHz), ${l.device === 'wasm' ? 'on the CPU' : 'on the GPU'}.`)
+      : r(`Верх выше ${(l.cutoffHz / 1000).toFixed(1)} кГц достроен быстрым методом SBR (глубокая нейро-реставрация не использовалась — причина в предупреждении выше).`, `Top end above ${(l.cutoffHz / 1000).toFixed(1)} kHz rebuilt with the fast SBR method (deep neural restoration was not used — see the warning above).`);
     case 'bwe': return r(`Достроен верх выше ${(l.cutoffHz / 1000).toFixed(1)} кГц.`, `Top end rebuilt above ${(l.cutoffHz / 1000).toFixed(1)} kHz.`);
     case 'match': return r(`Баланс подогнан под референс (подъём до +${l.maxBoostDb} дБ, срез до ${l.maxCutDb} дБ).`, `Balance matched to reference (boost up to +${l.maxBoostDb} dB, cut down to ${l.maxCutDb} dB).`);
     case 'dyneq': {
@@ -500,6 +572,7 @@ function changeText(l, lang) {
       const act = (l.bands || []).filter((b) => b.maxCutDb < -0.5);
       return act.length ? act.map((b) => r(`${names[b.id]}: до ${b.maxCutDb} дБ, ${b.activePct}% времени`, `${names[b.id]}: down to ${b.maxCutDb} dB, ${b.activePct}% of the time`)).join('; ') + '.' : r('Ничего не выпирало — EQ не вмешивался.', 'Nothing stuck out — EQ stayed idle.');
     }
+    case 'meq': return r('Фильтры и эквалайзер применены по вашим настройкам.', 'Filters and EQ applied from your settings.');
     case 'drift': return (l.bands || []).length ? r(`Выровнен дрейф тембра (до ±${Math.max(...l.bands.map((b) => b.maxDb))} дБ).`, `Tone drift evened out (up to ±${Math.max(...l.bands.map((b) => b.maxDb))} dB).`) : r('Тембр стабильный — правок не понадобилось.', 'Tone is stable — no correction needed.');
     case 'stereo': return r(`Ширина стерео ×${l.width}${l.monoBassHz ? `, бас ниже ${l.monoBassHz} Гц в моно` : ''}.`, `Stereo width ×${l.width}${l.monoBassHz ? `, bass below ${l.monoBassHz} Hz in mono` : ''}.`);
     case 'leveler': return l?.maxDb ? r(`Громкость фраз выровнена (до ±${l.maxDb} дБ).`, `Phrase loudness evened out (up to ±${l.maxDb} dB).`) : null;
@@ -665,6 +738,43 @@ function ABPlayer({ item, t }) {
   );
 }
 
+function ManualPanel({ manual, setManual, t, language }) {
+  const en = language === 'en';
+  const upd = (g, k, v) => setManual((m) => ({ ...m, [g]: { ...m[g], [k]: v } }));
+  return (
+    <div className="ae2-man">
+      <h3 className="ae2-man-title">{t.manualTitle}</h3>
+      <p className="ae2-man-note">{t.manualNote}</p>
+      {MANUAL_GROUPS.map((g) => {
+        const grp = manual[g.id];
+        return (
+          <fieldset key={g.id} className={grp.on ? 'ae2-man-group is-on' : 'ae2-man-group'}>
+            <legend>
+              <label className="tool-check">
+                <input type="checkbox" checked={grp.on} onChange={(e) => upd(g.id, 'on', e.target.checked)} /> {en ? g.en : g.ru}
+              </label>
+            </legend>
+            <p className="ae2-man-hint">{pick(g.hint, language)}</p>
+            <div className="ae2-man-fields">
+              {g.fields.map((f) => {
+                const val = grp[f.k];
+                const shown = f.pct ? `${Math.round(val * 100)}%` : `${val > 0 && f.min < 0 ? '+' : ''}${val}${en ? f.unitEn : f.unit}`;
+                return (
+                  <label key={f.k} className="ae2-man-field" title={pick(f.tip, language)}>
+                    <span>{en ? f.en : f.ru}: <b>{shown}</b></span>
+                    <input type="range" min={f.min} max={f.max} step={f.step} value={val} disabled={!grp.on} onChange={(e) => upd(g.id, f.k, Number(e.target.value))} aria-label={en ? f.en : f.ru} />
+                    <small>{pick(f.tip, language)}</small>
+                  </label>
+                );
+              })}
+            </div>
+          </fieldset>
+        );
+      })}
+    </div>
+  );
+}
+
 function ApolloStatus({ item, t, device }) {
   const [, tick] = useState(0);
   useEffect(() => { const id = setInterval(() => tick((x) => x + 1), 1000); return () => clearInterval(id); }, []);
@@ -709,7 +819,7 @@ function AudioEnhancer({ language = 'ru' }) {
         const ready = refs.filter((r) => r.profile).map((r) => r.profile);
         const avg = (k) => { const v = ready.map((p) => p[k]).filter(Number.isFinite); return v.length ? v.reduce((x, y) => x + y, 0) / v.length : undefined; };
         const fakeRef = mode === 'master' && ready.length ? { sideToMid: avg('sideToMid'), lra: avg('lra'), plr: avg('plr'), lufs: avg('lufs'), db: [] } : null;
-        next[it.id] = plan(it.analysis, mode, { targetLufs, ceilingDb, intensity, ...opts, neural: neuralEngine, tone, monoBass, reference: fakeRef });
+        next[it.id] = plan(it.analysis, mode, { targetLufs, ceilingDb, intensity, ...opts, neural: neuralEngine, tone, monoBass, manual: st.manual, reference: fakeRef });
       }
       setPreviews(next);
     });
@@ -720,7 +830,7 @@ function AudioEnhancer({ language = 'ru' }) {
   const readyCount = items.filter((it) => it.status === 'ready' || it.status === 'done').length;
   const doneCount = items.filter((it) => it.status === 'done').length;
   const needRefs = mode === 'master' && !refs.some((r) => r.profile);
-  const speechMode = mode === 'voice' || mode === 'restore';
+  const speechMode = mode === 'voice' || mode === 'podcast' || mode === 'restore';
 
   return (
     <div className="tool-panel audio-enhancer ae2">
@@ -745,7 +855,7 @@ function AudioEnhancer({ language = 'ru' }) {
         <div className="tool-field">
           <span className="tool-field-label">{t.ceiling}</span>
           <div className="segmented">
-            {[-1, -2].map((v) => <button key={v} type="button" className={ceilingDb === v ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => setCeilingDb(v)}>{`${v === -1 ? '−1' : '−2'} dBTP`}</button>)}
+            {[-1, -1.5, -2].map((v) => <button key={v} type="button" className={ceilingDb === v ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => setCeilingDb(v)}>{`${String(v).replace('-', '−')} dBTP`}</button>)}
           </div>
         </div>
         <div className="tool-field">
@@ -756,6 +866,11 @@ function AudioEnhancer({ language = 'ru' }) {
         </div>
         <div className="tool-field ae2-intensity">
           <span className="tool-field-label">{t.intensity}: {Math.round(intensity * 100)}%</span>
+          <div className="segmented ae2-strength">
+            {[[0.3, t.light], [0.6, t.medium], [0.9, t.heavy]].map(([v, label]) => (
+              <button key={v} type="button" className={Math.abs(intensity - v) < 0.06 ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => setIntensity(v)}>{label}</button>
+            ))}
+          </div>
           <input type="range" min="0" max="1" step="0.05" value={intensity} onChange={(e) => setIntensity(Number(e.target.value))} aria-label={t.intensity} />
           <span className="ae2-range-ends"><span>{t.soft}</span><span>{t.strong}</span></span>
         </div>
@@ -795,6 +910,7 @@ function AudioEnhancer({ language = 'ru' }) {
               </div>
             ))}
           </div>
+          <ManualPanel manual={st.manual} setManual={setManual} t={t} language={language} />
           {!speechMode && (
             <div className="ae2-adv-row">
               <label className="tool-check"><input type="checkbox" checked={monoBass} onChange={(e) => setMonoBass(e.target.checked)} /> {t.monoBass}</label>
@@ -902,7 +1018,8 @@ function AudioEnhancer({ language = 'ru' }) {
                   <ul>
                     {it.log.map((l, i) => {
                       const text = changeText(l, language);
-                      return text ? <li key={`${l.id}-${i}`}><b>{(STEP_LABEL[l.id] || { ru: l.id })[language] || STEP_LABEL[l.id]?.ru}.</b> {text}</li> : null;
+                      const secs = l.ms >= 1000 ? ` (${l.ms >= 60000 ? `${(l.ms / 60000).toFixed(1)} ${t.min}` : `${Math.round(l.ms / 1000)} ${t.sec}`})` : '';
+                      return text ? <li key={`${l.id}-${i}`}><b>{(STEP_LABEL[l.id] || { ru: l.id })[language] || STEP_LABEL[l.id]?.ru}.</b> {text}<span className="ae2-ms">{secs}</span></li> : null;
                     })}
                   </ul>
                 </details>

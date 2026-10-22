@@ -5,8 +5,7 @@
 
 // Классический бандл onnxruntime-web (JSEP): WebGPU и CPU в одном ядре. Новая
 // «нативная» WebGPU-сборка (asyncify) в 1.26 теряла устройство посреди счёта.
-import ortWasmUrl from 'onnxruntime-web/ort-wasm-simd-threaded.jsep.wasm?url';
-import { resample } from './dsp.js';
+import { biquad, filter, resample } from './dsp.js';
 import { fetchCached } from './neural.js';
 
 const SR = 44100;
@@ -16,6 +15,9 @@ const FADE = Math.round(SR * 0.05);
 
 let session = null;
 
+// Для тестов: подставить поддельную сессию (без загрузки модели).
+export function setApolloSessionForTest(s) { session = s; }
+
 export async function hasWebGpu() {
   try {
     return typeof navigator !== 'undefined' && !!navigator.gpu && !!(await navigator.gpu.requestAdapter());
@@ -24,10 +26,39 @@ export async function hasWebGpu() {
   }
 }
 
+export async function gpuInfo() {
+  try {
+    const a = await navigator.gpu.requestAdapter();
+    const i = a?.info || {};
+    return [i.vendor, i.architecture || i.device].filter(Boolean).join(' ') || 'gpu';
+  } catch {
+    return 'gpu';
+  }
+}
+
+// Предохранитель: Apollo лишь достраивает верх, низ спектра (ниже 0.6 среза) он менять
+// не должен. Если после ФНЧ вход и выход не коррелируют или энергия уехала — это
+// мусор (сбой видеокарты, драйвера, fp16): считаем кусок негодным.
+function lowBandOk(inp, out, cutoffHz, sr) {
+  const f = Math.max(300, Math.min(0.6 * (cutoffHz || 8000), 3500));
+  const c = biquad('lowpass', f, sr, { q: 0.7071 });
+  const x = filter(inp, c); const y = filter(out, c);
+  let xy = 0; let xx = 0; let yy = 0;
+  for (let i = 0; i < x.length; i += 1) {
+    if (!Number.isFinite(y[i])) return { ok: false, why: 'NaN' };
+    xy += x[i] * y[i]; xx += x[i] * x[i]; yy += y[i] * y[i];
+  }
+  if (xx < 1e-8) return { ok: true }; // тишина
+  const corr = xy / Math.sqrt(xx * yy + 1e-30);
+  const ratio = yy / xx;
+  return { ok: corr > 0.9 && ratio > 0.4 && ratio < 2.5, why: `corr ${corr.toFixed(2)}, энергия ×${ratio.toFixed(2)}` };
+}
+
 // device: 'webgpu' — видеокарта, 'wasm' — процессор (в ~20 раз медленнее реального времени)
 export async function loadApollo(base, device = 'webgpu') {
   if (session && session.device === device) return session;
   const ort = await import('onnxruntime-web');
+  const ortWasmUrl = (await import('onnxruntime-web/ort-wasm-simd-threaded.jsep.wasm?url')).default;
   ort.env.wasm.wasmPaths = { wasm: ortWasmUrl };
   ort.env.wasm.numThreads = 1;
   const bytes = new Uint8Array(await fetchCached(`${base}apollo-44k-fp16.onnx`));
@@ -54,7 +85,8 @@ async function runChunk(s, chans, start, end, onChannel) {
 
 // chans — каналы на частоте sr; возвращает восстановленные каналы той же длины.
 // shouldStop() — проверяется между кусками: пользователь может пропустить долгий CPU-счёт.
-export async function apolloRestore(chans, sr, { onProgress, shouldStop } = {}) {
+// cutoffHz — срез трека (для проверки куска), limitSec — потолок прогнозного времени.
+export async function apolloRestore(chans, sr, { onProgress, shouldStop, cutoffHz = 0, limitSec = Infinity } = {}) {
   const s = session;
   if (!s) throw new Error('Apollo не загружен');
   const src = sr === SR ? chans : chans.map((c) => resample(c, sr, SR));
@@ -62,11 +94,26 @@ export async function apolloRestore(chans, sr, { onProgress, shouldStop } = {}) 
   const res = src.map(() => new Float32Array(n));
   const weight = new Float32Array(n);
   const units = Math.ceil(n / CORE) * src.length; let done = 0;
+  const t0 = Date.now(); let checked = false;
   for (let start = 0; start < n; start += CORE) {
     if (shouldStop?.()) throw new Error('skipped');
     const end = Math.min(n, start + CORE);
     // eslint-disable-next-line no-await-in-loop
     const { out, a, len } = await runChunk(s, src, Math.max(0, start - FADE), Math.min(n, end + FADE), () => { done += 1; onProgress?.(done / units); });
+    // проверка куска ДО того, как он попадёт в результат (первый — обязательно, потом выборочно)
+    const idx = Math.floor(start / CORE);
+    if (!checked || idx % 4 === 0) {
+      for (let c = 0; c < src.length; c += 1) {
+        const lo = start - a; const hi = end - a;
+        const chk = lowBandOk(src[c].subarray(start, end), out.subarray(c * len + lo, c * len + hi), cutoffHz, SR);
+        if (!chk.ok) throw new Error(`bad-output: ${chk.why}`);
+      }
+      checked = true;
+    }
+    if (idx === 0 && Number.isFinite(limitSec) && done > 0) {
+      const projected = ((Date.now() - t0) / 1000) * (units / done);
+      if (projected > limitSec) throw new Error(`too-slow:${Math.round(projected)}`);
+    }
     for (let i = Math.max(0, start - FADE); i < Math.min(n, end + FADE); i += 1) {
       let w = 1;
       if (start > 0 && i < start + FADE) w = (i - (start - FADE)) / (2 * FADE);

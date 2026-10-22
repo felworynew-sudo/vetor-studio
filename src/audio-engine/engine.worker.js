@@ -5,7 +5,7 @@ import { analyze, measure, plan, profileOf, run } from './pipeline.js';
 import { combineProfiles } from './match.js';
 import { encodeMp3, encodeWav } from './encode.js';
 import { loadDfn } from './neural.js';
-import { apolloRestore, hasWebGpu, loadApollo } from './apollo.js';
+import { apolloRestore, gpuInfo, hasWebGpu, loadApollo } from './apollo.js';
 
 let neuralBase = '';
 let apolloSkip = false;
@@ -68,13 +68,26 @@ self.onmessage = async (ev) => {
       }
       const warnings = [];
       let apollo = null;
-      if (planned.steps.some((s) => s.id === 'apollo')) {
-        // Адаптивно: видеокарта (WebGPU), если есть и не запрещена; иначе — процессор.
+      let apolloUsed = '';
+      const apolloStep = planned.steps.find((x) => x.id === 'apollo');
+      if (apolloStep) {
+        // Выбор устройства по железу и длине трека. Глубокая нейро-реставрация идёт на
+        // видеокарте (WebGPU). На процессоре Apollo считает ~45 с на секунду канала:
+        // трек из часов не делаем без явного согласия — берём быстрый SBR и говорим об этом.
         const en = msg.lang === 'en';
         const pref = opts.apolloDevice || 'auto'; // auto | gpu | cpu
+        const channelSec = (chans.length * chans[0].length) / sr;
+        const cpuMin = Math.max(1, Math.round((channelSec * 45) / 60));
+        const gpuOk = pref !== 'cpu' && (await hasWebGpu());
         const devices = [];
-        if (pref !== 'cpu' && (await hasWebGpu())) devices.push('webgpu');
-        if (pref !== 'gpu' || !devices.length) devices.push('wasm');
+        if (gpuOk) devices.push('webgpu');
+        if (pref === 'cpu') devices.push('wasm');
+        if (!devices.length) {
+          if (pref === 'gpu') warnings.push(en ? 'No usable GPU (WebGPU) — the top end was rebuilt with the fast SBR method' : 'Видеокарта (WebGPU) недоступна — верх достроен быстрым методом SBR');
+          else warnings.push(en
+            ? `No GPU: neural restoration on the CPU would take about ${cpuMin} min — used the fast SBR method. Pick “CPU” in the settings if you are ready to wait.`
+            : `Нет видеокарты: нейро-реставрация на процессоре заняла бы около ${cpuMin} мин — использован быстрый SBR. Выберите «процессоре» в настройках, если готовы ждать.`);
+        }
         for (const device of devices) {
           try {
             self.postMessage({ type: 'neural', model: 'apollo', state: 'loading', device });
@@ -82,38 +95,35 @@ self.onmessage = async (ev) => {
             await loadApollo(new URL('../apollo/', neuralBase).href, device);
             self.postMessage({ type: 'neural', model: 'apollo', state: 'ready', device });
             apolloSkip = false;
-            apollo = async (c, rate, onP) => {
-              const runOn = () => apolloRestore(c, rate, { onProgress: onP, shouldStop: () => apolloSkip });
-              try {
-                return await runOn();
-              } catch (e) {
-                const why = String(e && e.message ? e.message : e);
-                if (why === 'skipped' || device !== 'webgpu') throw e;
-                // видеокарта упала посреди счёта — пересчитываем на процессоре
-                warnings.push(en ? `Apollo on the GPU failed mid-run (${why.slice(0, 160)}) — finished on the CPU` : `Apollo на видеокарте упал во время счёта (${why.slice(0, 160)}) — досчитан на процессоре`);
-                self.postMessage({ type: 'neural', model: 'apollo', state: 'loading', device: 'wasm' });
-                await loadApollo(new URL('../apollo/', neuralBase).href, 'wasm');
-                self.postMessage({ type: 'neural', model: 'apollo', state: 'ready', device: 'wasm' });
-                return runOn();
-              }
+            const gpuName = device === 'webgpu' ? await gpuInfo() : 'CPU';
+            apollo = async (c, rate, onP, extra = {}) => {
+              const r = await apolloRestore(c, rate, {
+                onProgress: onP, shouldStop: () => apolloSkip, cutoffHz: extra.cutoffHz, limitSec: device === 'wasm' ? Infinity : 1500,
+              });
+              apolloUsed = device;
+              return r;
             };
+            apollo.deviceName = gpuName;
             break;
           } catch (e) {
             const why = String(e && e.message ? e.message : e);
-            warnings.push(device === 'webgpu'
-              ? (en ? `Apollo on the GPU failed (${why}) — trying the CPU` : `Apollo на видеокарте не запустился (${why}) — пробую процессор`)
-              : `Apollo: ${why}`);
+            warnings.push(en ? `Apollo on ${device === 'webgpu' ? 'the GPU' : 'the CPU'} did not start (${why.slice(0, 160)}) — used SBR` : `Apollo на ${device === 'webgpu' ? 'видеокарте' : 'процессоре'} не запустился (${why.slice(0, 160)}) — использован SBR`);
           }
         }
-        if (!apollo) self.postMessage({ type: 'neural', model: 'apollo', state: 'failed' });
+        if (!apollo && devices.length) self.postMessage({ type: 'neural', model: 'apollo', state: 'failed' });
       }
       const { chans: out, log } = await run(chans, sr, planned, {
         apollo,
+        apolloDevice: () => apolloUsed,
         onStep: (step, i, n) => self.postMessage({ type: 'progress', id, step, i, n }),
         onProgress: (p) => self.postMessage({ type: 'progress', id, p }),
         onWarn: (w) => warnings.push(w === 'Apollo: skipped'
           ? (msg.lang === 'en' ? 'Neural restoration skipped — top end rebuilt with SBR' : 'Нейро-реставрация пропущена — верх достроен через SBR')
-          : w),
+          : /bad-output/.test(w)
+            ? (msg.lang === 'en' ? `Apollo output failed the sanity check (${w.replace(/^.*bad-output: /, '')}) on ${apollo?.deviceName || 'this device'} — used SBR instead; nothing was damaged` : `Результат Apollo не прошёл проверку (${w.replace(/^.*bad-output: /, '')}) на устройстве ${apollo?.deviceName || ''} — вместо него использован SBR, трек не испорчен`)
+            : /too-slow/.test(w)
+              ? (msg.lang === 'en' ? `Neural restoration would take about ${Math.round(Number(w.split(':').pop()) / 60)} min on this device — used the fast SBR method` : `Нейро-реставрация на этом устройстве заняла бы около ${Math.round(Number(w.split(':').pop()) / 60)} мин — использован быстрый SBR`)
+              : w),
       });
       self.postMessage({ type: 'progress', id, step: 'encode', p: 0.99 });
       const after = measure(out, sr);

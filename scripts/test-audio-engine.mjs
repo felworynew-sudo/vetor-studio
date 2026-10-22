@@ -4,7 +4,7 @@ import { analyze, integratedLufs, detectCutoff } from '../src/audio-engine/analy
 import {
   averageSpectrum, fft, resample, samplePeakDb, stftProcess, truePeakDb, linToDb,
 } from '../src/audio-engine/dsp.js';
-import { dynamicEq, truePeakLimit } from '../src/audio-engine/dynamics.js';
+import { dynamicEq, manualEq, truePeakLimit } from '../src/audio-engine/dynamics.js';
 import { applyCurve, correctionCurve, fftConvolve, profileOf } from '../src/audio-engine/match.js';
 import { declick, declip } from '../src/audio-engine/restore.js';
 import {
@@ -261,6 +261,63 @@ for (const mode of ['voice', 'restore', 'music', 'ai']) {
   const res = await run([L, R], sr, p);
   const ap = res.log.find((l) => l.id === 'apollo');
   check('Срез MP3 → Apollo первым шагом после DC, без модели откат на SBR', p.steps[1]?.id === 'apollo' && ap?.engine === 'sbr', `срез ${a.cutoffHz} Гц, шаги: ${p.steps.map((x) => x.id).join('→')}`);
+}
+
+// 19. Ручной EQ: полоса поднимается ровно на заданное, фильтр режет низ 24 дБ/окт
+{
+  const x = noise(0.1, 6); const y = Float32Array.from(x);
+  manualEq([y], SR, { bands: { presence: 6 } });
+  const d = bandEnergyDb(y, 2700, 3300) - bandEnergyDb(x, 2700, 3300);
+  check('Ручной EQ: присутствие +6 дБ на 3 кГц', Math.abs(d - 6) < 1, `+${d.toFixed(2)} дБ`);
+  const keep = bandEnergyDb(y, 400, 800) - bandEnergyDb(x, 400, 800);
+  check('…и не трогает далёкие полосы', Math.abs(keep) < 0.6, `Δ ${keep.toFixed(2)} дБ`);
+  const hum = sine(50, 0.3, 4); const z = Float32Array.from(hum);
+  manualEq([z], SR, { hp: 200 });
+  const cut = bandEnergyDb(hum, 45, 55) - bandEnergyDb(z, 45, 55);
+  check('Верхний фильтр 200 Гц гасит 50 Гц больше чем на 30 дБ', cut > 30, `−${cut.toFixed(1)} дБ`);
+}
+
+// 20. Ручной слой плана: группы подменяют блоки, остальное от пресета
+{
+  const a = analyze([sine(220, 0.3, 8), sine(220, 0.3, 8)], SR);
+  const m = { eq: { on: true, hp: 90, lp: 14000, presence: 3 }, comp: { on: true, threshold: -30, ratio: 6, attackMs: 5, releaseMs: 120, kneeDb: 10 },
+    gate: { on: true, threshold: -50 }, deess: { on: true, depthDb: 7 }, noise: { on: true, amount: 0.8 }, out: { on: true, gainDb: 2 } };
+  const base = plan(a, 'voice', { targetLufs: -16 }); const man = plan(a, 'voice', { targetLufs: -16, manual: m });
+  const ids = man.steps.map((x) => x.id);
+  const comp = man.steps.find((x) => x.id === 'compressor'); const gate = man.steps.find((x) => x.id === 'expander');
+  const dyn = man.steps.find((x) => x.id === 'dyneq'); const load = man.steps.find((x) => x.id === 'loudness');
+  check('Ручной слой: EQ заменяет «тон», компрессор и гейт — ручные', ids.includes('meq') && !ids.includes('tone') && comp.manual?.ratio === 6 && gate.manual?.thresholdDb === -50 && ids.indexOf('expander') > ids.indexOf('compressor'), ids.join('→'));
+  check('Де-эссер: 6.5 кГц, глубина 7 дБ; цель громкости +2 дБ', dyn.bands.find((b) => b.id === 'sibilance')?.f === 6500 && dyn.bands.find((b) => b.id === 'sibilance')?.maxCut === 7 && load.targetLufs === -14, `цель ${load.targetLufs}`);
+  check('Без ручного слоя план прежний', !base.steps.some((x) => x.manual) && base.steps.some((x) => x.id === 'tone'), '');
+  const p2 = plan(a, 'podcast', { targetLufs: -16 }); const tone = p2.steps.find((x) => x.id === 'tone');
+  check('Подкаст: полоса 60 Гц – 16 кГц', tone.lowCutHz === 60 && tone.highCutHz === 16000, `${tone.lowCutHz}–${tone.highCutHz} Гц`);
+  const bad = plan(a, 'voice', { manual: { comp: { on: true, threshold: 'абв', ratio: NaN }, out: { on: true, gainDb: 99 } } });
+  const bc = bad.steps.find((x) => x.id === 'compressor').manual;
+  check('Мусор в ручных настройках → безопасные значения', bc.thresholdDb === -24 && bc.ratio === 3 && bad.steps.find((x) => x.id === 'loudness').targetLufs === -4, JSON.stringify(bc));
+  const res = await run([sine(220, 0.3, 8), sine(220, 0.3, 8)], SR, man);
+  check('Ручная цепочка выполняется, цель −14 LUFS ±0.3', Math.abs(integratedLufs(res.chans, SR) + 14) < 0.3 && !res.chans.some((c) => c.some((v) => !Number.isFinite(v))), `${integratedLufs(res.chans, SR).toFixed(2)} LUFS`);
+}
+
+// 21. Предохранитель Apollo: мусор/NaN/медленно — отказ ДО попадания в результат
+{
+  const { apolloRestore, setApolloSessionForTest } = await import('../src/audio-engine/apollo.js');
+  const mk = (transform, delayMs = 0) => ({
+    ort: { Tensor: class { constructor(t, d, dims) { this.data = d; this.dims = dims; } } },
+    sess: { run: async ({ audio }) => { if (delayMs) await new Promise((r) => setTimeout(r, delayMs)); return { restored: { data: transform(audio.data) } }; } },
+  });
+  const sr = 44100; const tone = Float32Array.from({ length: sr * 10 }, (_, i) => 0.3 * Math.sin(2 * Math.PI * 440 * i / sr) + 0.05 * Math.sin(2 * Math.PI * 1500 * i / sr));
+  setApolloSessionForTest(mk((d) => Float32Array.from(d, (v, i) => v + 0.01 * Math.sin(i * 1.7))));
+  const good = await apolloRestore([tone, tone], sr, { cutoffHz: 8000 });
+  check('Apollo-обёртка: нормальный выход проходит, длина и низ сохранены', good[0].length === tone.length && snrDb(tone, good[0], 4000, 40000) > 20, `SNR низа ${snrDb(tone, good[0], 4000, 40000).toFixed(1)} дБ`);
+  const fails = async (transform, re, label, opt = {}, delay = 0) => {
+    setApolloSessionForTest(mk(transform, delay));
+    try { await apolloRestore([tone], sr, { cutoffHz: 8000, ...opt }); check(label, false, 'не отказал'); } catch (e) { check(label, re.test(e.message), e.message.slice(0, 60)); }
+  };
+  await fails((d) => Float32Array.from(d, () => 0.3 * gauss()), /bad-output/, 'Предохранитель: шум вместо музыки отклоняется с первого куска');
+  await fails((d) => Float32Array.from(d, () => NaN), /bad-output/, 'Предохранитель: NaN на выходе отклоняется');
+  await fails((d) => Float32Array.from(d, (v) => v * 0.001), /bad-output/, 'Предохранитель: «затухание» выхода отклоняется');
+  await fails((d) => d, /too-slow/, 'Предохранитель: слишком долгий прогноз прерывает счёт', { limitSec: 0.05 }, 60);
+  setApolloSessionForTest(null);
 }
 
 console.log(fails ? `\n❌ Провалено: ${fails}` : '\n✅ Все проверки пройдены');

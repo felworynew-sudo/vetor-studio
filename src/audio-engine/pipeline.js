@@ -10,7 +10,7 @@ import {
   averageSpectrum, clamp, frameRms, linToDb, mixMono, percentile, smoothOctave, truePeakDb,
 } from './dsp.js';
 import {
-  applyGain, compressor, dynamicEq, expander, leveler, stereoTools, toneEq, tonalDrift, truePeakLimit,
+  applyGain, compressor, dynamicEq, expander, leveler, manualEq, stereoTools, toneEq, tonalDrift, truePeakLimit,
 } from './dynamics.js';
 import { applyCurve, correctionCurve, profileOf } from './match.js';
 import { dfnDenoise, rnnoiseDenoise } from './neural.js';
@@ -19,7 +19,7 @@ import {
   extendBandwidth, spectralDenoise, suppressLateReverb, suppressResonances,
 } from './spectral.js';
 
-export const MODES = ['auto', 'voice', 'restore', 'music', 'ai', 'master'];
+export const MODES = ['auto', 'voice', 'podcast', 'restore', 'music', 'ai', 'master'];
 
 const VOICE_BANDS = [
   { id: 'mud', f: 300, q: 1.2, thresh: 4, maxCut: 4, ratio: 3, attack: 0.008, release: 0.12 },
@@ -38,10 +38,11 @@ const MUSIC_BANDS = [
 export function plan(a, mode, opts = {}) {
   const k = 0.4 + clamp(opts.intensity ?? 0.6, 0, 1); // множитель интенсивности 0.4…1.4
   const kind = mode === 'auto' ? (a.content.kind === 'speech' ? 'voice' : 'music') : mode;
+  const podcast = kind === 'podcast';
   const nyq = a.sampleRate / 2;
   const steps = [];
   const on = (v, auto) => (v === 'on' ? true : v === 'off' ? false : auto);
-  const speechLike = kind === 'voice' || kind === 'restore';
+  const speechLike = kind === 'voice' || kind === 'podcast' || kind === 'restore';
   const restore = kind === 'restore';
 
   steps.push({ id: 'dc' });
@@ -61,7 +62,8 @@ export function plan(a, mode, opts = {}) {
       atten = clamp(atten * k, 8, 100);
       steps.push({ id: 'denoise', engine: opts.neural || 'dfn', attenLimDb: Math.round(atten), postFilterBeta: a.snrDb < 20 ? 0.02 : 0 });
     }
-    steps.push({ id: 'tone', lowCutHz: 75, warmthDb: opts.tone?.warmth || 0, presenceDb: 1.2 * k + (opts.tone?.presence || 0), airDb: (a.cutoffHz > 12500 ? 1.2 * k : 0) + (opts.tone?.air || 0) });
+    // «Речь»: полоса уже (низ режем до 110 Гц, верх до 14 кГц), «Подкаст»: шире (60 Гц – 16 кГц)
+    steps.push({ id: 'tone', lowCutHz: podcast ? 60 : 110, highCutHz: podcast ? 16000 : 14000, warmthDb: opts.tone?.warmth || 0, presenceDb: 1.2 * k + (opts.tone?.presence || 0), airDb: (a.cutoffHz > 12500 ? 1.2 * k : 0) + (opts.tone?.air || 0) });
     steps.push({ id: 'dyneq', bands: VOICE_BANDS, amount: k });
     if (on(opts.leveler, a.lra > 5 || restore)) steps.push({ id: 'leveler', amount: clamp(0.7 * k, 0.3, 1) });
     steps.push({ id: 'compressor', kind: 'voice', ratio: 2 + 1.2 * k });
@@ -109,9 +111,53 @@ export function plan(a, mode, opts = {}) {
   // «как у референса» без референса (или мусор в настройке) → безопасная цель, а не NaN
   let target = opts.targetLufs === 'ref' ? opts.reference?.lufs : Number(opts.targetLufs);
   if (!Number.isFinite(target)) target = speechLike ? -16 : -14;
+  target += applyManual(steps, opts.manual);
   steps.push({ id: 'loudness', targetLufs: target });
   steps.push({ id: 'limiter', ceilingDb: opts.ceilingDb ?? -1, releaseMs: speechLike ? 60 : 120, targetLufs: target });
   return { kind, steps };
+}
+
+// Ручные настройки — слой поверх пресета: каждая включённая группа подменяет свой
+// блок цепочки, остальное остаётся от выбранного режима. Возвращает сдвиг цели (дБ).
+export function applyManual(steps, m) {
+  if (!m) return 0;
+  const num = (v, lo, hi, d) => (Number.isFinite(Number(v)) ? clamp(Number(v), lo, hi) : d);
+  if (m.eq?.on) {
+    const at = steps.findIndex((x) => x.id === 'dyneq');
+    for (let i = steps.length - 1; i >= 0; i -= 1) if (steps[i].id === 'tone') steps.splice(i, 1);
+    const bands = {};
+    for (const id of ['bass', 'warmth', 'mid', 'presence', 'clarity', 'air']) bands[id] = num(m.eq[id], -12, 12, 0);
+    steps.splice(at < 0 ? 1 : at, 0, { id: 'meq', hp: num(m.eq.hp, 20, 500, 20), lp: num(m.eq.lp, 2000, 20000, 20000), bands });
+  }
+  if (m.noise?.on) {
+    const amount = num(m.noise.amount, 0, 1, 0.5);
+    for (const x of steps) {
+      if (x.id === 'denoise') { x.attenLimDb = Math.round(6 + amount * 94); x.manual = true; }
+      if (x.id === 'spectral-denoise' && x.label !== 'fizz') { x.reductionDb = Math.round(amount * 18); x.manual = true; }
+    }
+  }
+  if (m.comp?.on) {
+    const c = steps.map((x) => x.id).lastIndexOf('compressor');
+    const manual = {
+      thresholdDb: num(m.comp.threshold, -60, 0, -24), ratio: num(m.comp.ratio, 1, 20, 3),
+      attack: num(m.comp.attackMs, 0.1, 100, 10) / 1000, release: num(m.comp.releaseMs, 10, 1000, 150) / 1000, kneeDb: num(m.comp.kneeDb, 0, 40, 6),
+    };
+    if (c >= 0) steps[c] = { ...steps[c], manual }; else steps.splice(Math.max(1, steps.length - 1), 0, { id: 'compressor', kind: 'voice', manual });
+  }
+  if (m.gate?.on) {
+    for (let i = steps.length - 1; i >= 0; i -= 1) if (steps[i].id === 'expander') steps.splice(i, 1);
+    const c = steps.map((x) => x.id).lastIndexOf('compressor');
+    steps.splice(c < 0 ? steps.length : c + 1, 0, { id: 'expander', manual: { thresholdDb: num(m.gate.threshold, -90, -20, -55) } });
+  }
+  if (m.deess?.on) {
+    const dyn = steps.find((x) => x.id === 'dyneq');
+    const depth = num(m.deess.depthDb, 0, 12, 4);
+    if (dyn) {
+      const rest = dyn.bands.filter((b) => b.id !== 'sibilance');
+      dyn.bands = depth > 0 ? [...rest, { id: 'sibilance', f: 6500, q: 2.2, thresh: 2, maxCut: depth, ratio: 4, attack: 0.001, release: 0.05 }] : rest;
+    }
+  }
+  return m.out?.on ? num(m.out.gainDb, -12, 12, 0) : 0;
 }
 
 // Исполнение. ctx: { onStep(id, i, n), onProgress(p), neuralBase }
@@ -145,6 +191,10 @@ async function runStep(s, chans, sr, prog, ctx) {
       return { rt60: Math.round(s.rt60 * 100) / 100, strength: Math.round(s.strength * 100) / 100 };
     case 'denoise': return denoiseStep(s, chans, sr, prog, ctx);
     case 'expander': {
+      if (s.manual) {
+        expander(chans, sr, { thresholdDb: s.manual.thresholdDb, ratio: 3, rangeDb: 24 });
+        return { thresholdDb: Math.round(s.manual.thresholdDb), manual: true };
+      }
       const env = frameRms(mixMono(chans), Math.round(sr * 0.02));
       const db = Array.from(env, (v) => linToDb(v + 1e-9)).filter((v) => v > -110);
       // порог — на 30 дБ ниже уровня речи (но не ниже шумового пола + 9)
@@ -166,9 +216,9 @@ async function runStep(s, chans, sr, prog, ctx) {
     case 'apollo': {
       if (ctx.apollo) {
         try {
-          const out = await ctx.apollo(chans, sr, prog);
+          const out = await ctx.apollo(chans, sr, prog, { cutoffHz: s.cutoffHz });
           out.forEach((c, i) => { chans[i] = c; });
-          return { cutoffHz: s.cutoffHz, engine: 'apollo' };
+          return { cutoffHz: s.cutoffHz, engine: 'apollo', device: ctx.apolloDevice?.() };
         } catch (e) {
           ctx.onWarn?.(`Apollo: ${e.message || e}`);
         }
@@ -188,12 +238,14 @@ async function runStep(s, chans, sr, prog, ctx) {
     case 'dyneq': return { bands: dynamicEq(chans, sr, s.bands, { amount: s.amount }) };
     case 'drift': return { bands: tonalDrift(chans, sr, { amount: s.amount }) };
     case 'tone': toneEq(chans, sr, s); return null;
+    case 'meq': return manualEq(chans, sr, s);
     case 'stereo': stereoTools(chans, sr, s); return { width: Math.round(s.width * 100) / 100, monoBassHz: s.monoBassHz };
     case 'leveler': {
       const pre = loudnessPrefix(chans, sr);
       return leveler(chans, sr, loudnessCurve(pre, sr, 0.4, 0.1), 0.1, { amount: s.amount });
     }
     case 'compressor': {
+      if (s.manual) return { ...compressor(chans, sr, { ...s.manual, rmsSec: 0.01 }), manual: true };
       const env = frameRms(mixMono(chans), Math.round(sr * 0.05));
       const db = Array.from(env, (v) => linToDb(v + 1e-9)).filter((v) => v > -80);
       const voice = s.kind === 'voice';

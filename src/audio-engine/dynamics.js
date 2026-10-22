@@ -254,12 +254,34 @@ export function stereoTools(chans, sr, { width = 1, monoBassHz = 0 } = {}) {
 }
 
 // ---------- Статичный тон ----------
-export function toneEq(chans, sr, { lowCutHz = 0, warmthDb = 0, presenceDb = 0, airDb = 0, mudDb = 0 } = {}) {
+export function toneEq(chans, sr, { lowCutHz = 0, highCutHz = 0, warmthDb = 0, presenceDb = 0, airDb = 0, mudDb = 0 } = {}) {
   const cs = [];
   if (lowCutHz > 0) cs.push(biquad('highpass', lowCutHz, sr, { q: 0.7071 }));
+  if (highCutHz > 0 && highCutHz < sr * 0.45) cs.push(biquad('lowpass', highCutHz, sr, { q: 0.7071 }));
   if (warmthDb) cs.push(biquad('lowshelf', 160, sr, { gainDb: warmthDb, q: 0.7071 }));
   if (mudDb) cs.push(biquad('peaking', 320, sr, { gainDb: mudDb, q: 1.1 }));
   if (presenceDb) cs.push(biquad('peaking', 3200, sr, { gainDb: presenceDb, q: 0.9 }));
   if (airDb && sr > 24000) cs.push(biquad('highshelf', 10000, sr, { gainDb: airDb, q: 0.7071 }));
   for (const x of chans) for (const c of cs) filter(x, c, x);
+}
+
+// ---------- Ручной EQ: фильтры 24 дБ/окт и 6 полос ----------
+// Бас 100 Гц (полка), теплота 250, середина 1 к, присутствие 3 к, чёткость 5 к,
+// воздух 10 кГц (полка). Верхний/нижний фильтры — Баттерворт 4-го порядка.
+const BUTTERWORTH4_Q = [0.5412, 1.3066];
+
+export function manualEq(chans, sr, { hp = 0, lp = 0, bands = {} } = {}) {
+  const cs = [];
+  if (hp > 20) BUTTERWORTH4_Q.forEach((q) => cs.push(biquad('highpass', hp, sr, { q })));
+  if (lp > 0 && lp < sr * 0.45) BUTTERWORTH4_Q.forEach((q) => cs.push(biquad('lowpass', lp, sr, { q })));
+  const def = [
+    ['bass', 'lowshelf', 100, 0.7071], ['warmth', 'peaking', 250, 0.9], ['mid', 'peaking', 1000, 0.9],
+    ['presence', 'peaking', 3000, 1.0], ['clarity', 'peaking', 5000, 1.0], ['air', 'highshelf', 10000, 0.7071],
+  ];
+  for (const [id, type, f, q] of def) {
+    const g = bands[id] || 0;
+    if (Math.abs(g) >= 0.05 && f < sr * 0.45) cs.push(biquad(type, f, sr, { gainDb: g, q }));
+  }
+  for (const x of chans) for (const c of cs) filter(x, c, x);
+  return { filters: cs.length };
 }
