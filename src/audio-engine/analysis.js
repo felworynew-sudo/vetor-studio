@@ -297,3 +297,29 @@ export function analyze(chans, sr) {
     spectrum: { N, db: Array.from(smoothOctave(specDb, sr, N, 6)) },
   };
 }
+
+// Самый «живой» отрывок для быстрого предпросмотра: не тишина и не ровный гул, а
+// место, где много динамики и событий (удары, фразы, смена громкости). Окно
+// скользит с шагом 1 с; оценка — разброс огибающей (дБ) плюс уровень относительно
+// медианы трека. Короткий трек берём целиком.
+export function pickFragment(chans, sr, lenSec = 12) {
+  const n = chans[0].length;
+  if (n / sr <= lenSec + 2) return { start: 0, end: n };
+  const frame = Math.round(sr * 0.05);
+  const db = Array.from(frameRms(mixMono(chans), frame), (v) => linToDb(v + 1e-9));
+  const W = Math.round(lenSec / 0.05); const step = 20;
+  const pre = new Float64Array(db.length + 1); const pre2 = new Float64Array(db.length + 1);
+  for (let i = 0; i < db.length; i += 1) { pre[i + 1] = pre[i] + db[i]; pre2[i + 1] = pre2[i] + db[i] * db[i]; }
+  const med = percentile(db.filter((v) => v > -90), 0.5);
+  let best = null;
+  for (let s = 0; s + W <= db.length; s += step) {
+    const m = (pre[s + W] - pre[s]) / W;
+    if (m < med - 4) continue;
+    const sd = Math.sqrt(Math.max(0, (pre2[s + W] - pre2[s]) / W - m * m));
+    const score = sd + 0.2 * (m - med);
+    if (!best || score > best.score) best = { s, score };
+  }
+  const s0 = best ? best.s : Math.max(0, Math.floor((db.length - W) / 2));
+  const start = s0 * frame;
+  return { start, end: Math.min(n, start + Math.round(lenSec * sr)) };
+}

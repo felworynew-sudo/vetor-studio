@@ -59,6 +59,7 @@ const STEP_LABEL = {
 const TEXT = {
   ru: {
     light: 'Лёгкая', medium: 'Средняя', heavy: 'Сильная',
+    previewRun: 'Быстрый предпросмотр (12 с)', previewAgain: 'Обновить предпросмотр', previewing: 'Считаю фрагмент…', previewFrag: 'Фрагмент', previewHint: 'самый динамичный кусок трека, с вашими текущими настройками', previewStale: 'Настройки изменились — обновите предпросмотр', previewDone: 'Предпросмотр готов — послушайте До/После ниже',
     manualTitle: 'Ручные настройки', manualNote: 'Включите нужную группу — она заменит свой блок в цепочке, остальное останется от выбранного режима.',
     mode: 'Режим', target: 'Целевая громкость, LUFS', asRef: 'как у референса', ceiling: 'Потолок', format: 'Формат',
     intensity: 'Интенсивность', soft: 'мягко', strong: 'сильно',
@@ -88,6 +89,7 @@ const TEXT = {
   },
   en: {
     light: 'Gentle', medium: 'Medium', heavy: 'Strong',
+    previewRun: 'Quick preview (12 s)', previewAgain: 'Refresh preview', previewing: 'Processing the clip…', previewFrag: 'Clip', previewHint: 'the most dynamic part of the track, with your current settings', previewStale: 'Settings changed — refresh the preview', previewDone: 'Preview ready — compare Before/After below',
     manualTitle: 'Manual settings', manualNote: 'Switch a group on — it replaces its block in the chain, everything else stays as the chosen mode builds it.',
     mode: 'Mode', target: 'Target loudness, LUFS', asRef: 'match reference', ceiling: 'Ceiling', format: 'Format',
     intensity: 'Intensity', soft: 'gentle', strong: 'strong',
@@ -399,28 +401,63 @@ async function addRefs(fileList) {
   }
 }
 
+// Параметры движка из состояния + профили референсов/альбома.
+async function buildEngineOpts(s0, { album }) {
+  const readyRefs = s0.refs.filter((r) => r.profile).map((r) => r.profile);
+  let reference = null;
+  if (readyRefs.length && s0.mode === 'master') reference = (await call({ type: 'combine', profiles: readyRefs })).profile;
+  let albumProfile = null;
+  if (album && s0.album && !['voice', 'podcast', 'restore'].includes(s0.mode)) {
+    const profs = [];
+    for (const it of s0.items) {
+      const d = audioData.get(it.id); if (!d) continue;
+      // eslint-disable-next-line no-await-in-loop
+      profs.push((await call({ type: 'profile', chans: d.chans, sr: d.sr })).profile);
+    }
+    if (profs.length > 1) albumProfile = (await call({ type: 'combine', profiles: profs })).profile;
+  }
+  return {
+    targetLufs: s0.targetLufs, ceilingDb: s0.ceilingDb, intensity: s0.intensity, ...s0.opts, neural: s0.neuralEngine,
+    tone: s0.tone, monoBass: s0.monoBass, apolloDevice: s0.apolloDevice, manual: s0.manual, reference, albumProfile,
+  };
+}
+
+// Быстрый предпросмотр: тот же план на самом динамичном фрагменте ~12 с.
+async function previewItem(id) {
+  const s0 = store;
+  const it = s0.items.find((x) => x.id === id); const d = audioData.get(id);
+  if (!it || !d || it.status === 'analyzing' || it.status === 'processing' || it.previewing) return;
+  if (s0.mode === 'master' && !s0.refs.some((r) => r.profile)) return;
+  patchItem(id, { previewing: true, previewError: '', step: null, stepIndex: null, p: 0 });
+  try {
+    const engineOpts = await buildEngineOpts(s0, { album: false });
+    const onProg = (m) => {
+      if (m.step && m.i != null) patchItem(id, (prev) => (prev.step === m.step ? {} : { step: m.step, stepIndex: m.i, stepN: m.n, stepT0: Date.now() }));
+      if (m.p != null) patchItem(id, { p: m.p });
+    };
+    const job = { type: 'preview', chans: d.chans, sr: d.sr, mode: s0.mode, opts: engineOpts, analysis: it.analysis, lang: s0.lang };
+    let res = await call(job, onProg);
+    if ((res.warnings || []).some((w) => IMPORT_FAIL.test(w))) { restartEngine(); res = await call(job, onProg); }
+    forgetItemAudio(`${id}:p`);
+    patchItem(id, {
+      previewing: false,
+      preview: {
+        before: res.before, after: res.after, sr: res.sr, startSec: res.startSec, lenSec: res.lenSec, beforeLufs: res.beforeLufs,
+        afterM: res.afterM, log: res.log, warnings: res.warnings || [], planKey: planKeyOf(s0),
+      },
+    });
+  } catch (e) {
+    patchItem(id, { previewing: false, previewError: e.message });
+  }
+}
+
 async function processAll() {
   const s0 = store;
   const readyRefs = s0.refs.filter((r) => r.profile).map((r) => r.profile);
   if (s0.busy || (s0.mode === 'master' && !readyRefs.length)) return;
   setStore({ busy: true });
   try {
-    let reference = null;
-    if (readyRefs.length && s0.mode === 'master') reference = (await call({ type: 'combine', profiles: readyRefs })).profile;
-    let albumProfile = null;
-    if (s0.album && s0.mode !== 'voice' && s0.mode !== 'restore') {
-      const profs = [];
-      for (const it of s0.items) {
-        const d = audioData.get(it.id); if (!d) continue;
-        // eslint-disable-next-line no-await-in-loop
-        profs.push((await call({ type: 'profile', chans: d.chans, sr: d.sr })).profile);
-      }
-      if (profs.length > 1) albumProfile = (await call({ type: 'combine', profiles: profs })).profile;
-    }
-    const engineOpts = {
-      targetLufs: s0.targetLufs, ceilingDb: s0.ceilingDb, intensity: s0.intensity, ...s0.opts, neural: s0.neuralEngine,
-      tone: s0.tone, monoBass: s0.monoBass, apolloDevice: s0.apolloDevice, manual: s0.manual, reference, albumProfile,
-    };
+    const engineOpts = await buildEngineOpts(s0, { album: true });
     const planKey = planKeyOf(s0);
     for (const it of s0.items) {
       const d = audioData.get(it.id);
@@ -462,6 +499,7 @@ async function processAll() {
 
 function revokeItem(it) {
   forgetItemAudio(it.id);
+  forgetItemAudio(`${it.id}:p`);
   if (it.beforeUrl) URL.revokeObjectURL(it.beforeUrl);
   if (it.outUrl) URL.revokeObjectURL(it.outUrl);
   audioData.delete(it.id);
@@ -598,11 +636,19 @@ const XFADE = 0.025;
 function setPlayer(p) { Object.assign(player, p); setStore({ player: { id: player.id, which: player.which, playing: player.playing } }); }
 function playerPos() {
   if (!player.playing) return player.offset;
-  return Math.min(player.duration, player.offset + (getAudioCtx().currentTime - player.startedAt));
+  return Math.max(0, Math.min(player.duration, player.offset + (getAudioCtx().currentTime - player.startedAt)));
 }
 
 async function buffersFor(item) {
   const ctx = getAudioCtx();
+  if (item.previewData) {
+    const pd = item.previewData;
+    if (!beforeBuffers.has(item.id)) {
+      const mk = (chs) => { const b = ctx.createBuffer(chs.length, chs[0].length, pd.sr); chs.forEach((c, i) => b.copyToChannel(c, i)); return b; };
+      beforeBuffers.set(item.id, mk(pd.before)); afterBuffers.set(item.id, mk(pd.after));
+    }
+    return [beforeBuffers.get(item.id), afterBuffers.get(item.id)];
+  }
   if (!beforeBuffers.has(item.id)) {
     const d = audioData.get(item.id);
     const b = ctx.createBuffer(d.chans.length, d.chans[0].length, d.sr);
@@ -681,7 +727,7 @@ function forgetItemAudio(id) {
   afterBuffers.delete(id); beforeBuffers.delete(id);
 }
 
-const fmtTime = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+const fmtTime = (v) => { const s = Math.max(0, v || 0); return `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`; };
 
 function ABPlayer({ item, t }) {
   const st = useSyncExternalStore(subscribe, getStore);
@@ -997,6 +1043,28 @@ function AudioEnhancer({ language = 'ru' }) {
                   <span className="ae2-chain-label">{t.chain}</span>
                   <Chain steps={steps} language={language} current={it.status === 'processing' ? it.stepIndex : null} done={it.status === 'done' && fresh} onTip={(text) => showTip(it.id, text)} />
                 </div>
+              )}
+              {(it.status === 'ready' || it.status === 'done') && (
+                <div className="ae2-preview">
+                  <button type="button" className="tool-btn small" disabled={it.previewing || busy} onClick={() => previewItem(it.id)}>
+                    {it.previewing ? t.previewing : it.preview ? t.previewAgain : t.previewRun}
+                  </button>
+                  <span className="ae2-preview-note">
+                    {it.previewing
+                      ? (it.step && STEP_LABEL[it.step] ? (STEP_LABEL[it.step][language] || STEP_LABEL[it.step].ru) : '')
+                      : it.preview
+                        ? `${t.previewFrag} ${fmtTime(it.preview.startSec)}–${fmtTime(it.preview.startSec + it.preview.lenSec)}${it.preview.planKey !== previewKey ? ` · ${t.previewStale}` : ''}`
+                        : t.previewHint}
+                  </span>
+                  {it.previewError && <p className="ae2-warn">⚠ {it.previewError}</p>}
+                  {it.preview?.warnings?.length > 0 && <p className="ae2-warn">⚠ {it.preview.warnings.join(' · ')}</p>}
+                </div>
+              )}
+              {it.preview && it.status !== 'done' && it.status !== 'processing' && (
+                <ABPlayer
+                  item={{ id: `${it.id}:p`, previewData: it.preview, analysis: { duration: it.preview.lenSec, lufs: it.preview.beforeLufs }, after: { lufs: it.preview.afterM.lufs } }}
+                  t={t}
+                />
               )}
               {it.status === 'processing' && (
                 <div className="bgr-progress ae2-progress">

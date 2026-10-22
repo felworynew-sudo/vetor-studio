@@ -320,5 +320,22 @@ for (const mode of ['voice', 'restore', 'music', 'ai']) {
   setApolloSessionForTest(null);
 }
 
+// 22. Быстрый предпросмотр: выбирается самый динамичный фрагмент, а не начало
+{
+  const { pickFragment } = await import('../src/audio-engine/analysis.js');
+  const sec = 70; const x = new Float32Array(sec * SR);
+  for (let i = 0; i < x.length; i += 1) {
+    const tt = i / SR;
+    const hum = 0.05 * Math.sin(2 * Math.PI * 200 * tt);
+    const hit = tt >= 40 && tt < 55 ? Math.exp(-((tt % 0.5) * 14)) * (rnd() - 0.5) * 1.6 : 0; // динамичный кусок 40–55 с
+    x[i] = hum + hit;
+  }
+  const f = pickFragment([x], SR, 12);
+  const s0 = f.start / SR;
+  check('Предпросмотр берёт самый динамичный фрагмент (не начало)', s0 >= 38 && s0 <= 44 && Math.abs((f.end - f.start) / SR - 12) < 0.1, `старт ${s0.toFixed(1)} с, длина ${((f.end - f.start) / SR).toFixed(1)} с`);
+  const short = pickFragment([x.subarray(0, SR * 8)], SR, 12);
+  check('Короткий трек — целиком', short.start === 0 && short.end === SR * 8, '');
+}
+
 console.log(fails ? `\n❌ Провалено: ${fails}` : '\n✅ Все проверки пройдены');
 process.exit(fails ? 1 : 0);

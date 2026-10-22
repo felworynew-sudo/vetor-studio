@@ -2,6 +2,7 @@
 // Протокол: { type, id, ... } → ответы { type: 'progress'|'analysis'|'profile'|'done'|'error', id, ... }
 
 import { analyze, measure, plan, profileOf, run } from './pipeline.js';
+import { pickFragment } from './analysis.js';
 import { combineProfiles } from './match.js';
 import { encodeMp3, encodeWav } from './encode.js';
 import { loadDfn } from './neural.js';
@@ -57,8 +58,15 @@ self.onmessage = async (ev) => {
       self.postMessage({ type: 'combined', id, profile: p });
       return;
     }
-    if (msg.type === 'process') {
-      const { chans, sr, mode, opts, format } = msg;
+    if (msg.type === 'process' || msg.type === 'preview') {
+      const isPreview = msg.type === 'preview';
+      let { chans } = msg;
+      const {
+        sr, mode, opts, format,
+      } = msg;
+      let frag = null;
+      // предпросмотр: тот же план (по анализу всего трека), но на самом динамичном фрагменте
+      if (isPreview) { frag = pickFragment(chans, sr, 12); chans = chans.map((c) => c.slice(frag.start, frag.end)); }
       const a = msg.analysis || analyze(chans, sr);
       const opt = { ...opts };
       const planned = plan(a, mode, opt);
@@ -125,6 +133,13 @@ self.onmessage = async (ev) => {
               ? (msg.lang === 'en' ? `Neural restoration would take about ${Math.round(Number(w.split(':').pop()) / 60)} min on this device — used the fast SBR method` : `Нейро-реставрация на этом устройстве заняла бы около ${Math.round(Number(w.split(':').pop()) / 60)} мин — использован быстрый SBR`)
               : w),
       });
+      if (isPreview) {
+        const afterM = measure(out, sr); const beforeM = measure(chans, sr);
+        self.postMessage({
+          type: 'preview-done', id, kind: planned.kind, log, warnings, startSec: frag.start / sr, lenSec: (frag.end - frag.start) / sr, sr, before: chans, after: out, beforeLufs: beforeM.lufs, afterM,
+        }, [...chans.map((c) => c.buffer), ...out.map((c) => c.buffer)]);
+        return;
+      }
       self.postMessage({ type: 'progress', id, step: 'encode', p: 0.99 });
       const after = measure(out, sr);
       let bytes; let mime; let ext;
