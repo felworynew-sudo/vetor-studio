@@ -1,0 +1,5 @@
+Training data includes CC0 and CC-BY sprites. Required credits (CC-BY):
+- GreenBear8 - "Potions Pack" (CC-BY 4.0) https://greenbear8.itch.io/potions-pack-pixelart
+- Houston "1AC" Boxler - "Potion sprites" (CC-BY 4.0) https://opengameart.org/content/potion-sprites
+- BizmasterStudios - "Potion Icons (From PixelTime Videos)" (CC-BY 3.0) https://opengameart.org/content/potion-icons-from-pixeltime-videos
+CC0 (no credit required): ChrisPpop Colorful Potion and Elixir Pack, GentleCatStudio RPG Items, CC0 Potion Icons (OpenGameArt), Procedural Potion Icons, Potions Pack (FunnyDude).

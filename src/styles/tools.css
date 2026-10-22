@@ -1220,6 +1220,52 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
 .pix-actions { flex-wrap: wrap; }
 @media (max-width: 820px) { .pix-layout { grid-template-columns: 1fr; } }
 
+/* --- Генератор спрайтов (бета) --- */
+.pixelgen { display: flex; flex-direction: column; gap: 14px; }
+.pg-beta { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; font-size: 13px; line-height: 1.45;
+  background: var(--surface-strong); border: 1px solid var(--stroke); color: var(--text-muted); }
+.pg-badge { flex: none; padding: 2px 8px; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: #fff; background: var(--t-accent); }
+.pg-input { width: 100%; padding: 10px 12px; font-size: 15px; border-radius: 0; background: var(--bg); border: 1px solid var(--stroke-strong); color: var(--text); }
+.pg-input:focus, .pg-prompt:focus { outline: none; border-color: var(--t-accent); }
+.pg-input::placeholder { color: var(--text-muted); opacity: 0.7; }
+/* Выпадающие списки в стиле Верстака: тёмный фон, острые углы, пиксельный шрифт, свой шеврон. Список открывается тем же цветом,
+   а не белым системным (раньше светлый текст на белом был нечитаем). */
+.pixelgen select {
+  appearance: none; -webkit-appearance: none; cursor: pointer; min-width: 190px;
+  padding: 9px 34px 9px 12px; border-radius: 0; border: 1px solid var(--stroke-strong);
+  background-color: var(--bg); color: var(--text); font-family: var(--px); font-weight: 700; font-size: 15px;
+  background-image: linear-gradient(45deg, transparent 50%, var(--text) 50%), linear-gradient(135deg, var(--text) 50%, transparent 50%);
+  background-position: calc(100% - 17px) 50%, calc(100% - 11px) 50%; background-size: 6px 6px, 6px 6px; background-repeat: no-repeat;
+}
+.pixelgen select:hover, .pixelgen select:focus { border-color: var(--t-accent); outline: none; }
+.pixelgen select option { background-color: var(--bg); color: var(--text); font-family: var(--px); font-weight: 700; }
+.pixelgen select option:checked { background-color: var(--t-accent); color: #fff; }
+.pg-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.pg-row { display: flex; flex-wrap: wrap; gap: 14px 22px; align-items: flex-end; }
+.pg-seed { display: flex; gap: 6px; align-items: center; }
+.pg-seed input { width: 96px; padding: 9px 10px; border-radius: 0; border: 1px solid var(--stroke-strong); background: var(--bg); color: var(--text); font-family: var(--px); font-weight: 700; font-size: 15px; }
+.pg-seed input:focus { outline: none; border-color: var(--t-accent); }
+.pg-check { display: flex; gap: 8px; align-items: center; font-size: 13.5px; cursor: pointer; }
+.pg-prompt { width: 100%; padding: 8px 10px; font: 12.5px/1.4 ui-monospace, Menlo, Consolas, monospace; border-radius: 0; background: var(--bg);
+  border: 1px solid var(--stroke-strong); color: var(--text); resize: vertical; }
+.pg-run { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.pg-progress { display: inline-flex; flex-direction: column; gap: 4px; min-width: 200px; font-size: 13px; color: var(--text-muted); }
+.pg-bar { display: block; height: 4px; background: var(--stroke); }
+.pg-bar > span { display: block; height: 100%; background: var(--t-accent); transition: width 0.2s; }
+.pg-hint { margin: 0; font-size: 12.5px; line-height: 1.45; color: var(--text-muted); }
+.pg-error { margin: 0; padding: 8px 10px; font-size: 13px; color: #ff8a8f; border: 1px solid #ff5c63; }
+.pg-results { display: flex; flex-wrap: wrap; gap: 14px; min-height: 120px; align-items: flex-start; }
+.pg-empty { margin: 0; align-self: center; font-size: 14px; color: var(--text-muted); }
+.pg-sprite { margin: 0; display: flex; flex-direction: column; gap: 8px; align-items: center; }
+.pg-canvas { max-width: 100%; height: auto; image-rendering: pixelated; border: 1px solid var(--stroke);
+  background:
+    linear-gradient(45deg, #1b1d27 25%, transparent 25%, transparent 75%, #1b1d27 75%) 0 0 / 16px 16px,
+    linear-gradient(45deg, #1b1d27 25%, transparent 25%, transparent 75%, #1b1d27 75%) 8px 8px / 16px 16px,
+    var(--surface-strong); }
+.pg-actions { display: flex; gap: 6px; }
+.pg-about { font-size: 13px; line-height: 1.5; color: var(--text-muted); }
+.pg-about summary { cursor: pointer; color: inherit; font-weight: 600; }
+
 /* Подсветка зон загрузки, пока над окном тащат файл (глобальный drag-отклик). */
 .tools-studio.is-dragging .tool-dropzone {
   border-color: var(--t-accent);
