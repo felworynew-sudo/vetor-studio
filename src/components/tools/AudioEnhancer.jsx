@@ -76,7 +76,7 @@ const TEXT = {
     analyzing: 'Анализ…', ready: 'Готов к обработке', process: 'Улучшить всё', processing: 'Обработка…',
     download: 'Скачать', downloadAll: 'Скачать всё', clear: 'Очистить', remove: 'Убрать',
     before: 'До', after: 'После', matchLevel: 'Сравнивать на равной громкости',
-    diag: { speech: 'речь', music: 'музыка', lufs: 'Громкость', tp: 'Пик', lra: 'Динамика', clip: 'Клиппинг', cut: 'Срез', noise: 'Шумовой пол', reverb: 'Эхо комнаты', hum: 'Гул', stereo: 'Стерео', mono: 'моно' },
+    diag: { byTag: 'по тегу', speech: 'речь', music: 'музыка', lufs: 'Громкость', tp: 'Пик', lra: 'Динамика', clip: 'Клиппинг', cut: 'Срез', noise: 'Шумовой пол', reverb: 'Эхо комнаты', hum: 'Гул', stereo: 'Стерео', mono: 'моно' },
     spectrum: 'Спектр: до и после (форма, выровнено по середине)',
     neuralLoading: 'Загружаю DeepFilterNet3 (~16 МБ, один раз — дальше из кеша)…',
     neuralReady: 'DeepFilterNet3 готов', neuralFailed: 'DeepFilterNet3 недоступен в этом браузере — использую RNNoise',
@@ -106,7 +106,7 @@ const TEXT = {
     analyzing: 'Analysing…', ready: 'Ready', process: 'Enhance all', processing: 'Processing…',
     download: 'Download', downloadAll: 'Download all', clear: 'Clear', remove: 'Remove',
     before: 'Before', after: 'After', matchLevel: 'Compare at equal loudness',
-    diag: { speech: 'speech', music: 'music', lufs: 'Loudness', tp: 'Peak', lra: 'Range', clip: 'Clipping', cut: 'Cutoff', noise: 'Noise floor', reverb: 'Room echo', hum: 'Hum', stereo: 'Stereo', mono: 'mono' },
+    diag: { byTag: 'by tag', speech: 'speech', music: 'music', lufs: 'Loudness', tp: 'Peak', lra: 'Range', clip: 'Clipping', cut: 'Cutoff', noise: 'Noise floor', reverb: 'Room echo', hum: 'Hum', stereo: 'Stereo', mono: 'mono' },
     spectrum: 'Spectrum: before and after (shape, aligned at mids)',
     neuralLoading: 'Loading DeepFilterNet3 (~16 MB, once — cached afterwards)…',
     neuralReady: 'DeepFilterNet3 ready', neuralFailed: 'DeepFilterNet3 is unavailable in this browser — using RNNoise',
@@ -158,32 +158,37 @@ function call(msg, onProgress) {
 
 // Исходная частота из заголовка: decodeAudioData пересэмплирует в частоту
 // контекста, поэтому декодируем в контексте ровно с частотой файла.
-async function sourceRate(file) {
+async function probeFile(file) {
   try {
     const mm = await import('music-metadata');
-    const sr = (await mm.parseBlob(file, { duration: false, skipCovers: true })).format.sampleRate;
-    return sr >= 8000 && sr <= 192000 ? sr : null;
+    const meta = await mm.parseBlob(file, { duration: false, skipCovers: true });
+    const sr = meta.format.sampleRate;
+    // генераторы пишут себя в теги («made with suno; created=…»): авто-режим выберет AI-цепочку
+    const tags = JSON.stringify([meta.common.comment, meta.common.encodersettings, meta.common.software, meta.common.copyright, meta.common.albumartist, meta.common.label]);
+    const ai = /suno/i.test(tags) ? 'Suno' : /\budio\b/i.test(tags) ? 'Udio' : null;
+    return { sr: sr >= 8000 && sr <= 192000 ? sr : null, ai };
   } catch {
-    return null;
+    return { sr: null, ai: null };
   }
 }
 
 async function decode(file) {
   const data = await file.arrayBuffer();
-  const sr = await sourceRate(file);
+  const { sr, ai } = await probeFile(file);
   const ctx = sr ? new OfflineAudioContext(1, 1, sr) : getAudioCtx();
   const buf = await ctx.decodeAudioData(data.slice(0));
   const chans = [];
   for (let c = 0; c < Math.min(2, buf.numberOfChannels); c += 1) chans.push(buf.getChannelData(c).slice());
-  return { chans, sr: buf.sampleRate };
+  return { chans, sr: buf.sampleRate, aiTag: ai };
 }
 
 const fmt = (v, d = 1) => (Number.isFinite(v) ? v.toFixed(d) : '—');
 function fmtBytes(b) { return b < 1048576 ? `${(b / 1024).toFixed(0)} KB` : `${(b / 1048576).toFixed(1)} MB`; }
 
-function Diagnostics({ a, t, language, onTip }) {
+function Diagnostics({ a, t, language, onTip, aiTag }) {
   const chips = [];
   const push = (key, label, value, warn) => chips.push({ key, label, value, warn });
+  if (aiTag) push('aitag', aiTag, t.diag.byTag);
   push('kind', a.content.kind === 'speech' ? t.diag.speech : t.diag.music, `${Math.round(a.content.confidence * 100)}%`);
   push('lufs', t.diag.lufs, `${fmt(a.lufs)} LUFS`);
   push('tp', t.diag.tp, `${fmt(a.truePeakDb)} dBTP`, a.truePeakDb > -1);
@@ -372,12 +377,12 @@ async function addFiles(fileList) {
     setStore((s) => ({ items: [...s.items, { id, name: file.name, size: file.size, status: 'analyzing', beforeUrl: URL.createObjectURL(file) }] }));
     try {
       // eslint-disable-next-line no-await-in-loop
-      const { chans, sr } = await decode(file);
+      const { chans, sr, aiTag } = await decode(file);
       if (!store.items.some((it) => it.id === id)) continue; // убрали, пока декодировали
       audioData.set(id, { chans, sr });
       // eslint-disable-next-line no-await-in-loop
       const { analysis } = await call({ type: 'analyze', chans, sr });
-      patchItem(id, { status: 'ready', analysis, sr });
+      patchItem(id, { status: 'ready', analysis, sr, aiTag });
     } catch {
       patchItem(id, { status: 'error' });
     }
@@ -435,7 +440,7 @@ async function previewItem(id) {
       if (m.step && m.i != null) patchItem(id, (prev) => (prev.step === m.step ? {} : { step: m.step, stepIndex: m.i, stepN: m.n, stepT0: Date.now() }));
       if (m.p != null) patchItem(id, { p: m.p });
     };
-    const job = { type: 'preview', chans: d.chans, sr: d.sr, mode: s0.mode, opts: engineOpts, analysis: it.analysis, lang: s0.lang };
+    const job = { type: 'preview', chans: d.chans, sr: d.sr, mode: s0.mode === 'auto' && it.aiTag ? 'ai' : s0.mode, opts: engineOpts, analysis: it.analysis, lang: s0.lang };
     let res = await call(job, onProg);
     if ((res.warnings || []).some((w) => IMPORT_FAIL.test(w))) { restartEngine(); res = await call(job, onProg); }
     forgetItemAudio(`${id}:p`);
@@ -469,7 +474,7 @@ async function processAll() {
           if (m.step && m.i != null) patchItem(it.id, (prev) => (prev.step === m.step ? {} : { step: m.step, stepIndex: m.i, stepN: m.n, stepT0: Date.now() }));
           if (m.p != null) patchItem(it.id, { p: m.p });
         };
-        const job = { type: 'process', chans: d.chans, sr: d.sr, mode: s0.mode, opts: engineOpts, format: s0.format, analysis: it.analysis, lang: s0.lang };
+        const job = { type: 'process', chans: d.chans, sr: d.sr, mode: s0.mode === 'auto' && it.aiTag ? 'ai' : s0.mode, opts: engineOpts, format: s0.format, analysis: it.analysis, lang: s0.lang };
         // eslint-disable-next-line no-await-in-loop
         let res = await call(job, onProg);
         // модуль не скачался (сеть моргнула) → свежий воркер и ещё одна попытка с нуля
@@ -534,6 +539,7 @@ const pick = (o, lang) => o[lang] || o.ru;
 
 function diagHelp(key, a) {
   switch (key) {
+    case 'aitag': return L('В тегах файла указано, что трек сгенерирован нейросетью (Suno/Udio). В режиме «Авто» включена цепочка «AI-музыка»: подавление «физа» и металлического звона, дрейф тембра.', 'The file tags say the track was generated by an AI service (Suno/Udio). In “Auto” mode the “AI music” chain is used: fizz and metallic ringing suppression, tone drift.');
     case 'kind': return a.content.kind === 'speech'
       ? L(`Запись похожа на речь (уверенность ${Math.round(a.content.confidence * 100)}%): слоговый ритм, паузы, почти нет баса. В авто-режиме пойдёт голосовая цепочка с нейро-шумодавом.`,
         `Looks like speech (${Math.round(a.content.confidence * 100)}% sure): syllable rhythm, pauses, little bass. Auto mode uses the voice chain with neural denoising.`)
@@ -865,7 +871,7 @@ function AudioEnhancer({ language = 'ru' }) {
         const ready = refs.filter((r) => r.profile).map((r) => r.profile);
         const avg = (k) => { const v = ready.map((p) => p[k]).filter(Number.isFinite); return v.length ? v.reduce((x, y) => x + y, 0) / v.length : undefined; };
         const fakeRef = mode === 'master' && ready.length ? { sideToMid: avg('sideToMid'), lra: avg('lra'), plr: avg('plr'), lufs: avg('lufs'), db: [] } : null;
-        next[it.id] = plan(it.analysis, mode, { targetLufs, ceilingDb, intensity, ...opts, neural: neuralEngine, tone, monoBass, manual: st.manual, reference: fakeRef });
+        next[it.id] = plan(it.analysis, mode === 'auto' && it.aiTag ? 'ai' : mode, { targetLufs, ceilingDb, intensity, ...opts, neural: neuralEngine, tone, monoBass, manual: st.manual, reference: fakeRef });
       }
       setPreviews(next);
     });
@@ -1036,7 +1042,7 @@ function AudioEnhancer({ language = 'ru' }) {
               {it.status === 'analyzing' && <p className="ae2-status">{t.analyzing}</p>}
               {it.warnings?.length > 0 && <p className="ae2-warn">⚠ {it.warnings.join(' · ')}</p>}
               {it.status === 'error' && <p className="ae2-warn">⚠ {t.error}{it.error ? `: ${it.error}` : ''}</p>}
-              {it.analysis && <Diagnostics a={it.analysis} t={t} language={language} onTip={(text) => showTip(it.id, text)} />}
+              {it.analysis && <Diagnostics a={it.analysis} aiTag={it.aiTag} t={t} language={language} onTip={(text) => showTip(it.id, text)} />}
               {it.analysis && <p className="ae2-explain" aria-live="polite">{tip.id === it.id && tip.text ? tip.text : t.explainHint}</p>}
               {steps.length > 0 && (
                 <div className="ae2-chain-wrap">
