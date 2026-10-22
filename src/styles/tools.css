@@ -2026,6 +2026,8 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
 .ae2-progress { margin: 0; }
 .ae2-result { margin: 0; font-size: 13px; color: var(--text-muted); }
 .ae2-result b { color: var(--text); }
+.ae2-diff { margin: 0; font-size: 13px; line-height: 1.5; color: var(--text-muted); }
+.ae2-diff b { color: var(--text); }
 .ae2-spectrum { margin: 0; }
 .ae2-spectrum canvas { display: block; width: 100%; height: 130px; background: var(--surface); border: 1px solid var(--stroke); }
 .ae2-spectrum figcaption { margin-top: 6px; font-size: 11.5px; color: var(--text-soft); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }

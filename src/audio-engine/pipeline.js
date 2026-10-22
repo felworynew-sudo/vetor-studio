@@ -10,9 +10,11 @@ import {
   averageSpectrum, clamp, frameRms, linToDb, mixMono, percentile, smoothOctave, truePeakDb,
 } from './dsp.js';
 import {
-  applyGain, compressor, dynamicEq, expander, leveler, manualEq, stereoTools, toneEq, tonalDrift, truePeakLimit,
+  applyGain, compressor, dynamicEq, exciter, expander, leveler, manualEq, stereoTools, toneEq, tonalDrift, truePeakLimit,
 } from './dynamics.js';
-import { applyCurve, correctionCurve, profileOf } from './match.js';
+import {
+  applyCurve, autoToneCurve, correctionCurve, profileOf,
+} from './match.js';
 import { dfnDenoise, rnnoiseDenoise } from './neural.js';
 import { declick, declip, dehum, removeDc } from './restore.js';
 import {
@@ -87,10 +89,14 @@ export function plan(a, mode, opts = {}) {
     const ref = opts.reference || (opts.albumProfile ? opts.albumProfile : null);
     if (kind === 'master' && ref) steps.push({ id: 'match', strength: clamp(0.8 * k, 0.3, 1), reference: ref, cutoffHz: a.bandLimited ? a.cutoffHz : 0 });
     else if (opts.albumProfile) steps.push({ id: 'match', strength: 0.45, reference: opts.albumProfile, cutoffHz: a.bandLimited ? a.cutoffHz : 0 });
+    // автобаланс тембра: без референса подводим спектр к типичному для музыки (мягко, до ±3 дБ)
+    if (!(kind === 'master' && ref) && !opts.albumProfile && on(opts.autotone, true)) steps.push({ id: 'autotone', strength: clamp(0.45 * k, 0.15, 0.7), cutoffHz: a.bandLimited ? a.cutoffHz : 0 });
     const bands = MUSIC_BANDS.map((b) => (kind === 'ai' && b.id !== 'boom' ? { ...b, maxCut: b.maxCut + 2 } : b));
     steps.push({ id: 'dyneq', bands, amount: k });
     if (a.duration > 30) steps.push({ id: 'drift', amount: clamp((kind === 'ai' ? 0.8 : 0.5) * k, 0.2, 1) });
     if (opts.tone && (opts.tone.warmth || opts.tone.presence || opts.tone.air)) steps.push({ id: 'tone', warmthDb: opts.tone.warmth || 0, presenceDb: opts.tone.presence || 0, airDb: opts.tone.air || 0 });
+    // гармоники верха: только если верх настоящий (нет среза MP3 ниже ~15 кГц)
+    if (on(opts.exciter, !a.bandLimited || a.cutoffHz > 15000) && a.sampleRate >= 40000) steps.push({ id: 'exciter', amount: clamp(0.5 * k, 0.15, 0.9) });
     if (a.channels > 1) {
       let width = 1;
       if (kind === 'master' && ref && ref.sideToMid > 0 && a.stereo.sideToMidDb > -40) {
@@ -110,7 +116,8 @@ export function plan(a, mode, opts = {}) {
   }
   // «как у референса» без референса (или мусор в настройке) → безопасная цель, а не NaN
   let target = opts.targetLufs === 'ref' ? opts.reference?.lufs : Number(opts.targetLufs);
-  if (!Number.isFinite(target)) target = speechLike ? -16 : -14;
+  // музыка в «авто»: не тише оригинала (но не выше −8 и не ниже −14), речь — −16
+  if (!Number.isFinite(target)) target = speechLike ? -16 : Number.isFinite(a.lufs) ? clamp(a.lufs, -14, -8) : -14;
   target += applyManual(steps, opts.manual);
   steps.push({ id: 'loudness', targetLufs: target });
   steps.push({ id: 'limiter', ceilingDb: opts.ceilingDb ?? -1, releaseMs: speechLike ? 60 : 120, targetLufs: target });
@@ -123,8 +130,8 @@ export function applyManual(steps, m) {
   if (!m) return 0;
   const num = (v, lo, hi, d) => (Number.isFinite(Number(v)) ? clamp(Number(v), lo, hi) : d);
   if (m.eq?.on) {
+    for (let i = steps.length - 1; i >= 0; i -= 1) if (steps[i].id === 'tone' || steps[i].id === 'autotone') steps.splice(i, 1);
     const at = steps.findIndex((x) => x.id === 'dyneq');
-    for (let i = steps.length - 1; i >= 0; i -= 1) if (steps[i].id === 'tone') steps.splice(i, 1);
     const bands = {};
     for (const id of ['bass', 'warmth', 'mid', 'presence', 'clarity', 'air']) bands[id] = num(m.eq[id], -12, 12, 0);
     steps.splice(at < 0 ? 1 : at, 0, { id: 'meq', hp: num(m.eq.hp, 20, 500, 20), lp: num(m.eq.lp, 2000, 20000, 20000), bands });
@@ -235,6 +242,15 @@ async function runStep(s, chans, sr, prog, ctx) {
       for (const v of curve) { if (v > maxBoost) maxBoost = v; if (v < maxCut) maxCut = v; }
       return { maxBoostDb: Math.round(maxBoost * 10) / 10, maxCutDb: Math.round(maxCut * 10) / 10 };
     }
+    case 'autotone': {
+      const curve = autoToneCurve(profileOf(chans, sr), { strength: s.strength, cutoffHz: s.cutoffHz });
+      const out = applyCurve(chans, sr, curve);
+      out.forEach((c, i) => { chans[i] = c; });
+      let maxBoost = 0; let maxCut = 0;
+      for (const v of curve) { if (v > maxBoost) maxBoost = v; if (v < maxCut) maxCut = v; }
+      return { maxBoostDb: Math.round(maxBoost * 10) / 10, maxCutDb: Math.round(maxCut * 10) / 10 };
+    }
+    case 'exciter': return exciter(chans, sr, { amount: s.amount });
     case 'dyneq': return { bands: dynamicEq(chans, sr, s.bands, { amount: s.amount }) };
     case 'drift': return { bands: tonalDrift(chans, sr, { amount: s.amount }) };
     case 'tone': toneEq(chans, sr, s); return null;
@@ -325,6 +341,35 @@ export function measure(chans, sr) {
   return {
     lufs: integratedFromPrefix(pre, sr), lra: lraFromPrefix(pre, sr), truePeakDb: truePeakDb(chans),
     spectrum: { N: 4096, db: Array.from(smoothOctave(averageSpectrum(mixMono(chans), 4096), sr, 4096, 6)) },
+  };
+}
+
+// Что обработка реально изменила, при выровненной громкости: сдвиг по октавам (дБ),
+// громкость/пик и «остаток» — энергия разницы сигналов относительно самого сигнала.
+const REPORT_BANDS = [63, 125, 250, 500, 1000, 2000, 4000, 8000, 16000];
+export function compareReport(before, after, sr, {
+  beforeLufs, afterLufs, beforePeak, afterPeak,
+} = {}) {
+  const N = 4096; const b = mixMono(before); const a = mixMono(after);
+  const sb = averageSpectrum(b, N); const sa = averageSpectrum(a, N);
+  const energy = (db, f0, f1) => {
+    let e = 0;
+    for (let k = Math.max(1, Math.round((f0 * N) / sr)); k <= Math.round((f1 * N) / sr) && k < db.length; k += 1) e += 10 ** (db[k] / 10);
+    return 10 * Math.log10(e + 1e-20);
+  };
+  const raw = REPORT_BANDS.filter((f) => f * 1.41 < sr * 0.47).map((f) => ({ f, d: energy(sa, f / 1.41, f * 1.41) - energy(sb, f / 1.41, f * 1.41) }));
+  const ref = raw.filter((x) => x.f >= 125 && x.f <= 4000); const mean = ref.reduce((t, x) => t + x.d, 0) / (ref.length || 1);
+  const bands = raw.map((x) => ({ f: x.f, db: Math.round((x.d - mean) * 10) / 10 }));
+  const lufsOk = Number.isFinite(beforeLufs) && Number.isFinite(afterLufs);
+  const g = lufsOk ? 10 ** ((beforeLufs - afterLufs) / 20) : 1;
+  let se = 0; let sd = 0; const n = Math.min(a.length, b.length);
+  for (let i = 0; i < n; i += 1) { se += b[i] * b[i]; const d = a[i] * g - b[i]; sd += d * d; }
+  return {
+    bands,
+    maxBandDb: Math.max(0, ...bands.map((x) => Math.abs(x.db))),
+    lufsDelta: lufsOk ? Math.round((afterLufs - beforeLufs) * 10) / 10 : null,
+    peakDelta: Number.isFinite(beforePeak) && Number.isFinite(afterPeak) ? Math.round((afterPeak - beforePeak) * 10) / 10 : null,
+    residualDb: se > 0 ? Math.round(10 * Math.log10(sd / se + 1e-12) * 10) / 10 : null,
   };
 }
 

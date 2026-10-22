@@ -1,7 +1,9 @@
 // Воркер аудио-движка: вся тяжёлая обработка вне основного потока.
 // Протокол: { type, id, ... } → ответы { type: 'progress'|'analysis'|'profile'|'done'|'error', id, ... }
 
-import { analyze, measure, plan, profileOf, run } from './pipeline.js';
+import {
+  analyze, compareReport, measure, plan, profileOf, run,
+} from './pipeline.js';
 import { pickFragment } from './analysis.js';
 import { combineProfiles } from './match.js';
 import { encodeMp3, encodeWav } from './encode.js';
@@ -135,18 +137,24 @@ self.onmessage = async (ev) => {
       });
       if (isPreview) {
         const afterM = measure(out, sr); const beforeM = measure(chans, sr);
+        const report = compareReport(chans, out, sr, {
+          beforeLufs: beforeM.lufs, afterLufs: afterM.lufs, beforePeak: beforeM.truePeakDb, afterPeak: afterM.truePeakDb,
+        });
         self.postMessage({
-          type: 'preview-done', id, kind: planned.kind, log, warnings, startSec: frag.start / sr, lenSec: (frag.end - frag.start) / sr, sr, before: chans, after: out, beforeLufs: beforeM.lufs, afterM,
+          type: 'preview-done', id, kind: planned.kind, log, warnings, startSec: frag.start / sr, lenSec: (frag.end - frag.start) / sr, sr, before: chans, after: out, beforeLufs: beforeM.lufs, afterM, report,
         }, [...chans.map((c) => c.buffer), ...out.map((c) => c.buffer)]);
         return;
       }
       self.postMessage({ type: 'progress', id, step: 'encode', p: 0.99 });
       const after = measure(out, sr);
+      const report = compareReport(chans, out, sr, {
+        beforeLufs: a.lufs, afterLufs: after.lufs, beforePeak: a.truePeakDb, afterPeak: after.truePeakDb,
+      });
       let bytes; let mime; let ext;
       if (format === 'mp3') { bytes = await encodeMp3(out, sr, 320); mime = 'audio/mpeg'; ext = 'mp3'; } else {
         bytes = encodeWav(out, sr, format === 'wav16' ? 16 : 24); mime = 'audio/wav'; ext = 'wav';
       }
-      self.postMessage({ type: 'done', id, kind: planned.kind, log, after, warnings, bytes, mime, ext }, [bytes]);
+      self.postMessage({ type: 'done', id, kind: planned.kind, log, after, report, warnings, bytes, mime, ext }, [bytes]);
     }
   } catch (e) {
     self.postMessage({ type: 'error', id, error: String(e && e.message ? e.message : e), stack: e && e.stack });

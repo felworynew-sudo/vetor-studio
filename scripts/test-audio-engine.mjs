@@ -4,13 +4,17 @@ import { analyze, integratedLufs, detectCutoff } from '../src/audio-engine/analy
 import {
   averageSpectrum, fft, resample, samplePeakDb, stftProcess, truePeakDb, linToDb,
 } from '../src/audio-engine/dsp.js';
-import { dynamicEq, manualEq, truePeakLimit } from '../src/audio-engine/dynamics.js';
-import { applyCurve, correctionCurve, fftConvolve, profileOf } from '../src/audio-engine/match.js';
+import {
+  dynamicEq, exciter, manualEq, truePeakLimit,
+} from '../src/audio-engine/dynamics.js';
+import {
+  applyCurve, autoToneCurve, correctionCurve, fftConvolve, genericMusicProfile, profileOf,
+} from '../src/audio-engine/match.js';
 import { declick, declip } from '../src/audio-engine/restore.js';
 import {
   extendBandwidth, spectralDenoise, suppressLateReverb, suppressResonances,
 } from '../src/audio-engine/spectral.js';
-import { plan, run } from '../src/audio-engine/pipeline.js';
+import { compareReport, plan, run } from '../src/audio-engine/pipeline.js';
 
 const SR = 48000;
 let fails = 0;
@@ -335,6 +339,62 @@ for (const mode of ['voice', 'restore', 'music', 'ai']) {
   check('Предпросмотр берёт самый динамичный фрагмент (не начало)', s0 >= 38 && s0 <= 44 && Math.abs((f.end - f.start) / SR - 12) < 0.1, `старт ${s0.toFixed(1)} с, длина ${((f.end - f.start) / SR).toFixed(1)} с`);
   const short = pickFragment([x.subarray(0, SR * 8)], SR, 12);
   check('Короткий трек — целиком', short.start === 0 && short.end === SR * 8, '');
+}
+
+// 23. Автобаланс тембра, гармоники верха, громкость «не тише оригинала», отчёт сравнения
+{
+  const sec = 20;
+  const white = (a = 0.1) => noise(a, sec);
+  // трек уже на «типичной» кривой → почти ничего не трогаем
+  const prof0 = genericMusicProfile(SR);
+  const typical = applyCurve([white(0.2)], SR, prof0.db.map((v) => v + 28))[0];
+  const cTyp = autoToneCurve(profileOf([typical], SR), {});
+  check('Автобаланс: трек на типичной кривой почти не правится', Math.max(...cTyp.map(Math.abs)) < 1.2, `макс ${Math.max(...cTyp.map(Math.abs)).toFixed(2)} дБ`);
+  // слишком яркий (белый шум: +3 дБ/окт по энергии октав) → верх прижимается, низ поднимается, но не больше ±3 дБ
+  const bright = white();
+  const cBr = autoToneCurve(profileOf([bright], SR), {});
+  check('Автобаланс: кривая ограничена ±3 дБ', Math.max(...cBr.map(Math.abs)) <= 3.001, `макс ${Math.max(...cBr.map(Math.abs)).toFixed(2)} дБ`);
+  const fixed = applyCurve([bright], SR, cBr)[0];
+  const tilt = (x) => bandEnergyDb(x, 8000, 16000) - bandEnergyDb(x, 250, 500);
+  const shift = tilt(fixed) - tilt(bright);
+  check('Автобаланс: слишком яркий трек становится темнее (на 2–6 дБ)', shift < -2 && shift > -6.5, `наклон ${shift.toFixed(1)} дБ`);
+  const cLow = autoToneCurve(profileOf([bright], SR), {});
+  check('Автобаланс: суббас не поднимается (ниже 30 Гц — ноль, до 35 Гц — меньше 0,7 дБ)', cLow.slice(0, 3).every((v) => v <= 0.001) && Math.max(...cLow.slice(0, 4)) < 0.7, `${Math.max(...cLow.slice(0, 4)).toFixed(2)} дБ`);
+
+  // гармоники верха
+  const mix = (...parts) => Float32Array.from({ length: parts[0].length }, (_, i) => parts.reduce((s, p) => s + p[i], 0));
+  const music = mix(sine(500, 0.2, sec), sine(5000, 0.08, sec), sine(7000, 0.08, sec), sine(13000, 0.01, sec));
+  const ex = Float32Array.from(music);
+  const info = exciter([ex], SR, { amount: 0.6 });
+  const dTop = bandEnergyDb(ex, 11700, 20000) - bandEnergyDb(music, 11700, 20000);
+  const dLow = bandEnergyDb(ex, 300, 1000) - bandEnergyDb(music, 300, 1000);
+  check('Гармоники: верх выше 11,7 кГц поднят на 0,3–2,7 дБ', dTop > 0.3 && dTop < 2.7, `+${dTop.toFixed(2)} дБ (отчёт ${info.addedDb})`);
+  check('Гармоники: низ и середина не тронуты', Math.abs(dLow) < 0.05, `${dLow.toFixed(3)} дБ`);
+  const dull = mix(sine(500, 0.2, sec), sine(3000, 0.08, sec));
+  const exd = Float32Array.from(dull); const infoD = exciter([exd], SR, { amount: 0.6 });
+  check('Гармоники: нет верха — ничего не выдумываем', infoD.addedDb === 0 && exd.every((v, i) => v === dull[i]), '');
+
+  // политика громкости музыки в «авто»
+  const base = analyze([typical], SR);
+  const tgt = (lufs) => plan({ ...base, lufs }, 'music', { targetLufs: 'auto' }).steps.find((x) => x.id === 'loudness').targetLufs;
+  check('Громкость музыки «авто»: −10 остаётся −10', Math.abs(tgt(-10) + 10) < 1e-9, '');
+  check('Громкость музыки «авто»: тихий трек поднимается до −14', tgt(-22) === -14, '');
+  check('Громкость музыки «авто»: очень громкий не выше −8', tgt(-5) === -8, '');
+  check('Речь «авто» по-прежнему −16', plan({ ...base, lufs: -10, content: { ...base.content, kind: 'speech' } }, 'voice', { targetLufs: 'auto' }).steps.find((x) => x.id === 'loudness').targetLufs === -16, '');
+  check('Явная цель −14 слушается', plan({ ...base, lufs: -9 }, 'music', { targetLufs: -14 }).steps.find((x) => x.id === 'loudness').targetLufs === -14, '');
+  // ручной EQ заменяет автобаланс
+  const withAuto = plan(base, 'music', {}).steps.map((x) => x.id);
+  const withManual = plan(base, 'music', { manual: { eq: { on: true, bass: 2 } } }).steps.map((x) => x.id);
+  check('Музыка: автобаланс в цепочке, ручной EQ его заменяет', withAuto.includes('autotone') && !withManual.includes('autotone') && withManual.includes('meq'), `${withAuto.join(',')} | ${withManual.join(',')}`);
+
+  // отчёт сравнения
+  const same = compareReport([typical], [Float32Array.from(typical)], SR, { beforeLufs: -14, afterLufs: -14, beforePeak: -1, afterPeak: -1 });
+  check('Отчёт: идентичные сигналы → нулевая разница', same.maxBandDb < 0.05 && same.residualDb < -60 && same.lufsDelta === 0, `макс ${same.maxBandDb} дБ, остаток ${same.residualDb} дБ`);
+  const loud = Float32Array.from(typical, (v) => v * 2); // +6 дБ — это громкость, не тембр
+  const rLoud = compareReport([typical], [loud], SR, { beforeLufs: -20, afterLufs: -14 });
+  check('Отчёт: чистое усиление не считается разницей тембра', rLoud.maxBandDb < 0.1 && rLoud.residualDb < -45 && rLoud.lufsDelta === 6, `макс ${rLoud.maxBandDb} дБ, остаток ${rLoud.residualDb} дБ`);
+  const rEq = compareReport([bright], [fixed], SR, { beforeLufs: -20, afterLufs: -20 });
+  check('Отчёт: правку тембра видно по полосам', rEq.maxBandDb > 1.5, `макс ${rEq.maxBandDb} дБ`);
 }
 
 console.log(fails ? `\n❌ Провалено: ${fails}` : '\n✅ Все проверки пройдены');

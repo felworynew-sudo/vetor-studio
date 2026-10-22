@@ -59,6 +59,36 @@ export function correctionCurve(target, reference, { strength = 0.8, maxDb = 6, 
   return smoothOctave(raw, sr, SPEC_N, 3).map((v) => clamp(v, -maxDb, maxDb));
 }
 
+// Типичный тональный баланс современной музыки: энергия по октавам (дБ) относительно
+// друг друга. Это «цель по умолчанию» для автобаланса, когда референса нет.
+const MUSIC_OCTAVE_DB = [[31, -10], [63, -3], [125, 1], [250, 0.5], [500, -0.5], [1000, -1.5], [2000, -3], [4000, -4.8], [8000, -7.5], [16000, -12.5]];
+
+export function genericMusicProfile(sr) {
+  const bins = SPEC_N / 2 + 1; const binHz = sr / SPEC_N; const db = new Array(bins);
+  const last = MUSIC_OCTAVE_DB[MUSIC_OCTAVE_DB.length - 1];
+  for (let k = 0; k < bins; k += 1) {
+    const f = Math.max(k * binHz, 20);
+    let e;
+    if (f <= MUSIC_OCTAVE_DB[0][0]) e = MUSIC_OCTAVE_DB[0][1];
+    else if (f >= last[0]) e = last[1];
+    else {
+      let i = 0; while (MUSIC_OCTAVE_DB[i + 1][0] < f) i += 1;
+      const [f0, e0] = MUSIC_OCTAVE_DB[i]; const [f1, e1] = MUSIC_OCTAVE_DB[i + 1];
+      e = e0 + ((e1 - e0) * Math.log(f / f0)) / Math.log(f1 / f0);
+    }
+    db[k] = e - 10 * Math.log10(f); // энергия на октаву → плотность на бин
+  }
+  return { sr, db };
+}
+
+// Мягкий автобаланс: меньше половины отклонения от типичной кривой, не больше ±3 дБ;
+// подъёма ниже 60 Гц нет (суббас не «выдумываем»), выше среза исходника тоже.
+export function autoToneCurve(prof, { strength = 0.45, maxDb = 3, cutoffHz } = {}) {
+  const curve = correctionCurve(prof, genericMusicProfile(prof.sr), { strength, maxDb, cutoffHz });
+  const binHz = prof.sr / SPEC_N;
+  return curve.map((v, k) => { const f = k * binHz; return v > 0 && f < 60 ? v * clamp((f - 30) / 30, 0, 1) : v; });
+}
+
 // Линейно-фазовый FIR по кривой (дБ на бинах SPEC_N) + свёртка через БПФ.
 export function applyCurve(chans, sr, curveDb) {
   const taps = 8192; const half = taps / 2;

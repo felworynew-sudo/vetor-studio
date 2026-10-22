@@ -18,7 +18,7 @@ const MODES = [
 ];
 
 const TARGETS = [
-  { v: 'auto', ru: 'авто', en: 'auto' },
+  { v: 'auto', ru: 'авто', en: 'auto', hint: { ru: 'Музыка: не тише оригинала (в пределах −14…−8 LUFS). Речь: −16.', en: 'Music: not quieter than the original (within −14…−8 LUFS). Speech: −16.' } },
   { v: -14, ru: '−14 · стриминг', en: '−14 · streaming' },
   { v: -16, ru: '−16 · подкаст', en: '−16 · podcast' },
   { v: -19, ru: '−19 · тихо', en: '−19 · quiet' },
@@ -44,6 +44,8 @@ const STEP_LABEL = {
   bwe: { ru: 'Верх (SBR)', en: 'Highs (SBR)' },
   apollo: { ru: 'Нейро-реставрация', en: 'Neural restore' },
   match: { ru: 'Референс', en: 'Reference' },
+  autotone: { ru: 'Автобаланс', en: 'Auto balance' },
+  exciter: { ru: 'Гармоники верха', en: 'Top harmonics' },
   dyneq: { ru: 'Динам. EQ', en: 'Dynamic EQ' },
   drift: { ru: 'Дрейф тембра', en: 'Tone drift' },
   tone: { ru: 'Тон', en: 'Tone' },
@@ -64,7 +66,7 @@ const TEXT = {
     mode: 'Режим', target: 'Целевая громкость, LUFS', asRef: 'как у референса', ceiling: 'Потолок', format: 'Формат',
     intensity: 'Интенсивность', soft: 'мягко', strong: 'сильно',
     advanced: 'Тонкая настройка', auto: 'авто', on: 'вкл', off: 'выкл',
-    opt: { denoise: 'Шумоподавление', dereverb: 'Удаление эха комнаты', declip: 'Восстановление клиппинга', declick: 'Удаление щелчков', apollo: 'Нейро-реставрация музыки (Apollo)', bwe: 'Восстановление верха без нейросети (SBR)', leveler: 'Лэвелер голоса', dehum: 'Подавление гула' },
+    opt: { denoise: 'Шумоподавление', dereverb: 'Удаление эха комнаты', declip: 'Восстановление клиппинга', declick: 'Удаление щелчков', apollo: 'Нейро-реставрация музыки (Apollo)', bwe: 'Восстановление верха без нейросети (SBR)', leveler: 'Лэвелер голоса', dehum: 'Подавление гула', autotone: 'Автобаланс тембра (музыка)', exciter: 'Гармоники верха — «воздух» (музыка)' },
     neural: 'Нейросеть для речи', dfn: 'DeepFilterNet3 · качество', rnn: 'RNNoise · лёгкая',
     apolloDevice: 'Нейро-реставрация считается на', devAuto: 'авто', devGpu: 'видеокарте', devCpu: 'процессоре',
     onGpu: 'на видеокарте', onCpu: 'на процессоре — это долго', left: 'осталось', skip: 'Пропустить (достроить верх через SBR)', min: 'мин', sec: 'с',
@@ -94,7 +96,7 @@ const TEXT = {
     mode: 'Mode', target: 'Target loudness, LUFS', asRef: 'match reference', ceiling: 'Ceiling', format: 'Format',
     intensity: 'Intensity', soft: 'gentle', strong: 'strong',
     advanced: 'Fine tuning', auto: 'auto', on: 'on', off: 'off',
-    opt: { denoise: 'Noise reduction', dereverb: 'Room echo removal', declip: 'Clipping repair', declick: 'Click removal', apollo: 'Neural music restoration (Apollo)', bwe: 'High-end restoration without AI (SBR)', leveler: 'Voice leveler', dehum: 'Hum removal' },
+    opt: { denoise: 'Noise reduction', dereverb: 'Room echo removal', declip: 'Clipping repair', declick: 'Click removal', apollo: 'Neural music restoration (Apollo)', bwe: 'High-end restoration without AI (SBR)', leveler: 'Voice leveler', dehum: 'Hum removal', autotone: 'Auto tonal balance (music)', exciter: 'Top-end harmonics — “air” (music)' },
     neural: 'Speech network', dfn: 'DeepFilterNet3 · quality', rnn: 'RNNoise · light',
     apolloDevice: 'Neural restoration runs on', devAuto: 'auto', devGpu: 'GPU', devCpu: 'CPU',
     onGpu: 'on the GPU', onCpu: 'on the CPU — this is slow', left: 'left', skip: 'Skip (rebuild the top end with SBR)', min: 'min', sec: 's',
@@ -119,7 +121,7 @@ const TEXT = {
   },
 };
 
-const OPT_KEYS = ['denoise', 'dereverb', 'declip', 'declick', 'apollo', 'bwe', 'leveler', 'dehum'];
+const OPT_KEYS = ['denoise', 'dereverb', 'declip', 'declick', 'apollo', 'bwe', 'leveler', 'dehum', 'autotone', 'exciter'];
 
 let engine = null;
 let msgSeq = 0;
@@ -448,7 +450,7 @@ async function previewItem(id) {
       previewing: false,
       preview: {
         before: res.before, after: res.after, sr: res.sr, startSec: res.startSec, lenSec: res.lenSec, beforeLufs: res.beforeLufs,
-        afterM: res.afterM, log: res.log, warnings: res.warnings || [], planKey: planKeyOf(s0),
+        afterM: res.afterM, report: res.report, log: res.log, warnings: res.warnings || [], planKey: planKeyOf(s0),
       },
     });
   } catch (e) {
@@ -490,7 +492,7 @@ async function processAll() {
           if (prev.outUrl) URL.revokeObjectURL(prev.outUrl);
           return {
             status: 'done', outUrl: URL.createObjectURL(blob), outSize: blob.size,
-            outName: `${it.name.replace(/\.[^.]+$/, '')}-enhanced.${res.ext}`, after: res.after, log: res.log, kind: res.kind, warnings: res.warnings || [],
+            outName: `${it.name.replace(/\.[^.]+$/, '')}-enhanced.${res.ext}`, after: res.after, report: res.report, log: res.log, kind: res.kind, warnings: res.warnings || [],
           };
         });
       } catch (e) {
@@ -582,6 +584,8 @@ const STEP_HELP = {
   apollo: L('Нейросеть Apollo восстанавливает середину и верх, съеденные MP3/AAC-сжатием. Работает на видеокарте (WebGPU).', 'The Apollo network restores mids and highs eaten by MP3/AAC compression. Runs on the GPU (WebGPU).'),
   bwe: L('Достраивает срезанный верх продолжением спектра (SBR) — возвращает «воздух».', 'Rebuilds the cut-off top end by extending the spectrum (SBR) — brings back “air”.'),
   match: L('Подгоняет тональный баланс под ваши референсы.', 'Matches tonal balance to your references.'),
+  autotone: L('Сравнивает средний спектр трека с типичным для музыки и мягко подгоняет баланс низа, середины и верха (не больше ±3 дБ). Без референса — «как у мастеринг-ассистента».', 'Compares the track’s average spectrum with a typical music balance and gently nudges lows, mids and highs (never more than ±3 dB) — like a mastering assistant, without a reference.'),
+  exciter: L('Добавляет тонкие гармоники выше 9 кГц на основе звучания 4,5–9 кГц: больше «воздуха» и блеска без подъёма шума. Включается, только если верх в треке настоящий.', 'Adds subtle harmonics above 9 kHz derived from the 4.5–9 kHz range: more air and sparkle without raising noise. Only runs when the track has a real top end.'),
   dyneq: L('Динамический EQ: прижимает бубнение, резкость и сибилянты только в моменты, когда они выпирают.', 'Dynamic EQ: tames boom, harshness and sibilance only when they stick out.'),
   drift: L('Выравнивает тембр по ходу трека, если он «плывёт».', 'Evens out tone that drifts over the track.'),
   tone: L('Лёгкая коррекция тембра: срез низа, разборчивость, воздух.', 'Gentle tone shaping: low cut, presence, air.'),
@@ -611,6 +615,10 @@ function changeText(l, lang) {
       : r(`Верх выше ${(l.cutoffHz / 1000).toFixed(1)} кГц достроен быстрым методом SBR (глубокая нейро-реставрация не использовалась — причина в предупреждении выше).`, `Top end above ${(l.cutoffHz / 1000).toFixed(1)} kHz rebuilt with the fast SBR method (deep neural restoration was not used — see the warning above).`);
     case 'bwe': return r(`Достроен верх выше ${(l.cutoffHz / 1000).toFixed(1)} кГц.`, `Top end rebuilt above ${(l.cutoffHz / 1000).toFixed(1)} kHz.`);
     case 'match': return r(`Баланс подогнан под референс (подъём до +${l.maxBoostDb} дБ, срез до ${l.maxCutDb} дБ).`, `Balance matched to reference (boost up to +${l.maxBoostDb} dB, cut down to ${l.maxCutDb} dB).`);
+    case 'autotone': return (l.maxBoostDb > 0.3 || l.maxCutDb < -0.3)
+      ? r(`Тональный баланс подправлен (подъём до +${l.maxBoostDb} дБ, срез до ${l.maxCutDb} дБ).`, `Tonal balance nudged (boost up to +${l.maxBoostDb} dB, cut down to ${l.maxCutDb} dB).`)
+      : r('Баланс уже близок к типичному — правок не понадобилось.', 'Balance is already close to typical — no change needed.');
+    case 'exciter': return l.addedDb > 0.1 ? r(`Добавлены гармоники верха (+${l.addedDb} дБ выше 12 кГц).`, `Top harmonics added (+${l.addedDb} dB above 12 kHz).`) : r('Верха для гармоник в треке нет — пропущено.', 'No top end to excite — skipped.');
     case 'dyneq': {
       const names = { mud: r('Бубнение', 'Mud'), boom: r('Гул низа', 'Boom'), harsh: r('Резкость', 'Harshness'), sibilance: r('Сибилянты', 'Sibilance') };
       const act = (l.bands || []).filter((b) => b.maxCutDb < -0.5);
@@ -790,6 +798,28 @@ function ABPlayer({ item, t }) {
   );
 }
 
+// Честная сводка «что реально изменилось» при одинаковой громкости — чтобы не гадать на слух.
+function bandName(f, en) { return f >= 1000 ? `${f / 1000} ${en ? 'kHz' : 'кГц'}` : `${f} ${en ? 'Hz' : 'Гц'}`; }
+function DiffNote({ report, language }) {
+  if (!report) return null;
+  const en = language === 'en';
+  const top = [...report.bands].sort((a, b) => Math.abs(b.db) - Math.abs(a.db))[0];
+  const sign = (v) => (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v);
+  const tiny = report.maxBandDb < 1 && report.residualDb != null && report.residualDb < -30;
+  const parts = [
+    en ? `tone: up to ±${report.maxBandDb.toFixed(1)} dB${report.maxBandDb >= 0.5 && top ? ` (most at ${bandName(top.f, true)}: ${sign(top.db)} dB)` : ''}`
+      : `тембр: до ±${report.maxBandDb.toFixed(1)} дБ${report.maxBandDb >= 0.5 && top ? ` (сильнее всего на ${bandName(top.f, false)}: ${sign(top.db)} дБ)` : ''}`,
+    report.lufsDelta != null ? (en ? `loudness ${sign(report.lufsDelta)} LU` : `громкость ${sign(report.lufsDelta)} LU`) : null,
+    report.residualDb != null ? (en ? `signal difference ${report.residualDb} dB` : `разница сигналов ${report.residualDb} дБ`) : null,
+  ].filter(Boolean);
+  return (
+    <p className="ae2-diff">
+      <b>{en ? 'What really changed (at equal loudness):' : 'Что реально изменилось (при равной громкости):'}</b> {parts.join(' · ')}.
+      {tiny && <span> {en ? 'The difference is tiny: this track is already in good shape, so there was little to fix. Loudness is usually what makes “enhanced” sound better — try the Intensity slider or the manual EQ for a stronger result.' : 'Разница очень мала: трек уже в хорошем состоянии, чинить почти нечего. «Улучшение» на слух часто сводится к громкости — для заметного эффекта подвигайте «Интенсивность» или ручной EQ.'}</span>}
+    </p>
+  );
+}
+
 function ManualPanel({ manual, setManual, t, language }) {
   const en = language === 'en';
   const upd = (g, k, v) => setManual((m) => ({ ...m, [g]: { ...m[g], [k]: v } }));
@@ -900,7 +930,7 @@ function AudioEnhancer({ language = 'ru' }) {
         <div className="tool-field">
           <span className="tool-field-label">{t.target}</span>
           <div className="segmented">
-            {TARGETS.map((x) => <button key={x.v} type="button" className={targetLufs === x.v ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => setTargetLufs(x.v)}>{x[language] || x.ru}</button>)}
+            {TARGETS.map((x) => <button key={x.v} type="button" className={targetLufs === x.v ? 'segmented-btn is-active' : 'segmented-btn'} title={x.hint ? (x.hint[language] || x.hint.ru) : undefined} onClick={() => setTargetLufs(x.v)}>{x[language] || x.ru}</button>)}
             {mode === 'master' && <button type="button" className={targetLufs === 'ref' ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => setTargetLufs('ref')}>{t.asRef}</button>}
           </div>
         </div>
@@ -1072,6 +1102,7 @@ function AudioEnhancer({ language = 'ru' }) {
                   t={t}
                 />
               )}
+              {it.preview && it.status !== 'done' && it.status !== 'processing' && <DiffNote report={it.preview.report} language={language} />}
               {it.status === 'processing' && (
                 <div className="bgr-progress ae2-progress">
                   <span>{t.processing} {it.step && STEP_LABEL[it.step] ? `· ${STEP_LABEL[it.step][language] || STEP_LABEL[it.step].ru}` : ''}</span>
@@ -1086,6 +1117,7 @@ function AudioEnhancer({ language = 'ru' }) {
                 </p>
               )}
               {it.status === 'done' && it.after && <ABPlayer item={it} t={t} />}
+              {it.status === 'done' && it.after && <DiffNote report={it.report} language={language} />}
               {it.status === 'done' && it.log && (
                 <details className="ae2-changes" open>
                   <summary>{t.changes}</summary>

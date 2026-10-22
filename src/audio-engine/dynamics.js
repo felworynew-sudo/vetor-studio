@@ -285,3 +285,35 @@ export function manualEq(chans, sr, { hp = 0, lp = 0, bands = {} } = {}) {
   for (const x of chans) for (const c of cs) filter(x, c, x);
   return { filters: cs.length };
 }
+
+// ---------- Гармоники верха («воздух») ----------
+// Полоса 4,5–9 кГц слегка насыщается (tanh + чётная составляющая), из результата берётся
+// только то, что выше 9 кГц, — это добавочные гармоники, а не копия самой полосы. Уровень
+// добавки ≤ ~−16 дБ от полосы, а выше 11,7 кГц верх поднимается не больше чем на ~2,6 дБ.
+export function exciter(chans, sr, { amount = 0.5, fromHz = 4500, toHz = 9000 } = {}) {
+  if (sr < 40000) return { addedDb: 0 };
+  const rms = (x) => { let e = 0; for (let i = 0; i < x.length; i += 1) e += x[i] * x[i]; return Math.sqrt(e / (x.length || 1)); };
+  const hpAt = (f) => BUTTERWORTH4_Q.map((q) => biquad('highpass', f, sr, { q }));
+  const run = (x, cs) => { let y = x; for (const c of cs) y = filter(y, c); return y; };
+  const hp = hpAt(toHz); const hpRef = hpAt(toHz * 1.3);
+  const bandHp = biquad('highpass', fromHz, sr, { q: 0.7071 });
+  const bandLp = biquad('lowpass', toHz, sr, { q: 0.7071 });
+  let worst = 0;
+  for (const x of chans) {
+    const band = filter(filter(x, bandHp), bandLp);
+    const r = rms(band);
+    const hfRms = rms(run(x, hpRef)); // «настоящий» верх, без хвоста самой полосы
+    if (r < 1e-5 || hfRms < 0.01 * r) continue; // верха почти нет (< −40 дБ от полосы) — гармоник не выдумываем
+    const harm = new Float32Array(x.length);
+    const inv = 1 / (3 * r);
+    for (let i = 0; i < x.length; i += 1) { const u = band[i] * inv; harm[i] = Math.tanh(2.5 * u) + 0.35 * u * u; }
+    const h = run(harm, hp);
+    const hRef = rms(run(h, hpRef));
+    const hRms = rms(h);
+    if (hRms < 1e-9 || hRef < 1e-9) continue;
+    const g = Math.min((amount * 0.16 * r) / hRms, (0.9 * hfRms) / hRef);
+    for (let i = 0; i < x.length; i += 1) x[i] += g * h[i];
+    worst = Math.max(worst, 20 * Math.log10(Math.sqrt(hfRms * hfRms + (g * hRef) ** 2) / hfRms));
+  }
+  return { addedDb: Math.round(worst * 10) / 10 };
+}
