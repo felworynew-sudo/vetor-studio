@@ -7,6 +7,7 @@ import {
 } from '../../data/toolsCatalog';
 import { buildToolPath } from '../../utils/routing';
 import { toolHowto, toolFaqs } from '../../utils/toolSeo';
+import TipJar from './TipJar';
 import '../../styles/tools.css';
 
 // РАБОЧЕЕ НАЗВАНИЕ саб-бренда студии инструментов. Меняется в одном месте.
@@ -363,6 +364,8 @@ function ToolsStudio({
                 )}
               </section>
 
+              <TipJar lang={lang} />
+
               <section className="tools-offline">
                 <strong>🔌 {ui.offlineTitle}.</strong> {ui.offlineText}
               </section>
@@ -452,6 +455,7 @@ function ToolView({ tool, lang, ui, onBack, go }) {
           </>
         )}
       </section>
+      <TipJar lang={lang} />
     </div>
   );
 }
