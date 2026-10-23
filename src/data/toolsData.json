@@ -894,6 +894,21 @@
       "img": "nozhnicy.png"
     },
     {
+      "slug": "audio-equalizer",
+      "categoryId": "audio",
+      "status": "ready",
+      "icon": "🎚️",
+      "ru": {
+        "title": "Эквалайзер",
+        "desc": "10 полос с живым спектром, пресеты (голос, жанры, под устройство), параметрический режим, срезы HP/LP. Звук меняется на лету; экспорт в исходном формате. Локально."
+      },
+      "en": {
+        "title": "Equalizer",
+        "desc": "10 bands with a live spectrum, presets (voice, genres, devices), parametric mode, HP/LP cuts. Sound changes in real time; exports in the source format. Local."
+      },
+      "img": "panelupravleniya.png"
+    },
+    {
       "slug": "silence-remover",
       "categoryId": "audio",
       "status": "ready",

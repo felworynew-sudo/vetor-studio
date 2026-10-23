@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { AUDIO_FORMATS, ffmpegRun } from '../../utils/ffmpeg';
-import { decodeAudioFile, downloadBlob, encodeMp3, encodeWAV, getAudioCtx } from '../../utils/wav';
+import { downloadBlob, getAudioCtx } from '../../utils/wav';
+import {
+  FORMAT_INFO, decodeNative, encodeLike, nearest, pickBitrate, probeAudio, resolveTarget,
+} from '../../utils/audioFormat';
+import FormatPicker from './shared/FormatPicker';
 import { drawWave } from '../../utils/audioPeaks';
 import {
   cutsFromSilences, equalCuts, everyCuts, findSilences, fmtStamp, parseTracklist, partFileName, sliceBuffer, snapToZero, suggestThreshold,
@@ -24,7 +27,7 @@ const TEXT = {
     format: 'Формат', quality: 'Битрейт, кбит/с', fade: 'Фейд на краях, мс', snap: 'Резать по нулю (без щелчков)',
     zip: (n) => `Скачать ZIP (${n})`, encoding: (i, n) => `Кодирую ${i} из ${n}…`, est: (s) => `≈ ${s}`,
     keys: 'Клавиши: Пробел — играть/пауза · S — разрезать здесь · ←/→ — ±1 с (Shift — ±10 с) · Ctrl+Z — отменить · колесо мыши — зум, Shift+колесо — прокрутка · двойной клик — добавить рез · правый клик по резу — удалить.',
-    zoomIn: 'Приблизить', zoomOut: 'Отдалить', zoomFit: 'Весь трек', noneIncluded: 'Нет частей для экспорта', wavNote: 'WAV и MP3 кодируются сразу, остальные форматы — через FFmpeg (≈30 МБ, один раз).',
+    zoomIn: 'Приблизить', zoomOut: 'Отдалить', zoomFit: 'Весь трек', noneIncluded: 'Нет частей для экспорта', wavNote: 'По умолчанию части сохраняются в исходном формате (MP3 → MP3, FLAC → FLAC, WAV той же битности). WAV и MP3 кодируются сразу, остальные форматы — через FFmpeg (≈30 МБ, один раз).',
   },
   en: {
     drop: 'Upload audio — a mix, album, podcast, recording', hint: 'MP3, WAV, M4A, OGG, FLAC — all local, nothing is uploaded', decoding: 'Reading audio…', change: 'Another file',
@@ -39,7 +42,7 @@ const TEXT = {
     format: 'Format', quality: 'Bitrate, kbps', fade: 'Edge fade, ms', snap: 'Cut at zero crossings (no clicks)',
     zip: (n) => `Download ZIP (${n})`, encoding: (i, n) => `Encoding ${i} of ${n}…`, est: (s) => `≈ ${s}`,
     keys: 'Keys: Space — play/pause · S — cut here · ←/→ — ±1 s (Shift — ±10 s) · Ctrl+Z — undo · mouse wheel — zoom, Shift+wheel — scroll · double-click — add a cut · right-click a cut — delete it.',
-    zoomIn: 'Zoom in', zoomOut: 'Zoom out', zoomFit: 'Whole track', noneIncluded: 'No parts to export', wavNote: 'WAV and MP3 encode instantly, other formats go through FFmpeg (≈30 MB, once).',
+    zoomIn: 'Zoom in', zoomOut: 'Zoom out', zoomFit: 'Whole track', noneIncluded: 'No parts to export', wavNote: 'Parts are saved in the source format by default (MP3 → MP3, FLAC → FLAC, WAV at the same bit depth). WAV and MP3 encode instantly, other formats go through FFmpeg (≈30 MB, once).',
   },
 };
 
@@ -47,7 +50,7 @@ const plural = (n, one, few, many) => { const m = n % 100; const d = n % 10; ret
 const MIN_GAP = 0.05; // не ближе 50 мс друг к другу и к краям
 const RULER = 18;
 const WAVE_H = 150;
-const FORMATS = ['mp3', 'wav', 'flac', 'aac', 'opus', 'ogg'];
+const QUALITY = [96, 128, 192, 256, 320];
 const chansOf = (b) => Array.from({ length: b.numberOfChannels }, (_, c) => b.getChannelData(c));
 const stamp = (s) => fmtStamp(s, 1);
 const humanSize = (b) => (b > 1048576 ? `${(b / 1048576).toFixed(1)} МБ` : `${Math.max(1, Math.round(b / 1024))} КБ`);
@@ -90,7 +93,8 @@ function AudioSlicer({ language = 'ru' }) {
   const [eqEvery, setEqEvery] = useState(60);
   const [listText, setListText] = useState('');
   const [listMsg, setListMsg] = useState('');
-  const [fmt, setFmt] = useState('mp3');
+  const [fmt, setFmt] = useState('source');
+  const [probe, setProbe] = useState(null);
   const [bitrate, setBitrate] = useState(192);
   const [fade, setFade] = useState(5);
   const [snap, setSnap] = useState(true);
@@ -112,7 +116,8 @@ function AudioSlicer({ language = 'ru' }) {
     if (!file) return;
     stopPlay(); setDecoding(true);
     try {
-      const b = await decodeAudioFile(file);
+      const info = await probeAudio(file); setProbe(info);
+      const b = await decodeNative(file, info, getAudioCtx());
       undoRef.current = []; setCanUndo(false);
       setBuf(b); setName(file.name.replace(/\.[^.]+$/, '')); setMarkers([]); setMeta({}); setSelected(0); setPos(0);
       setView({ t0: 0, span: b.duration });
@@ -386,17 +391,15 @@ function AudioSlicer({ language = 'ru' }) {
   }
 
   // ---------- экспорт ----------
-  const fmtDef = AUDIO_FORMATS[fmt];
-  const bitrates = fmt === 'mp3' ? [128, 192, 256, 320] : fmtDef.bitrates;
-  useEffect(() => { if (bitrates.length && !bitrates.includes(bitrate)) setBitrate(bitrates[Math.min(1, bitrates.length - 1)]); }, [fmt]); // eslint-disable-line react-hooks/exhaustive-deps
+  const targetId = resolveTarget(fmt, probe).id;
+  const lossyExplicit = fmt !== 'source' && !!FORMAT_INFO[targetId]?.rates.length;
+  const qualityList = lossyExplicit ? QUALITY.filter((q) => FORMAT_INFO[targetId].rates.includes(q) || q === 128) : [];
+  useEffect(() => { if (qualityList.length && !qualityList.includes(bitrate)) setBitrate(nearest(qualityList, bitrate)); }, [fmt]); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function encodePart(s) {
     const slice = sliceBuffer(buf, s.a, s.b, fade);
-    if (fmt === 'wav') return { blob: encodeWAV(slice), ext: 'wav' };
-    if (fmt === 'mp3') return { blob: await encodeMp3(slice, bitrate), ext: 'mp3' };
-    const wav = encodeWAV(slice);
-    const data = await ffmpegRun(new File([wav], 'part.wav', { type: 'audio/wav' }), fmtDef.args(bitrate), `out.${fmtDef.ext}`);
-    return { blob: new Blob([data], { type: fmtDef.mime }), ext: fmtDef.ext };
+    const r = await encodeLike(slice, { ...probe, size: 0 }, { target: fmt, bitrate: lossyExplicit ? bitrate : undefined });
+    return { blob: r.blob, ext: r.ext };
   }
   const fileName = (s, ext) => partFileName(name, s.i, segs.length, meta[s.id]?.name, ext);
 
@@ -421,10 +424,11 @@ function AudioSlicer({ language = 'ru' }) {
     setBusy(null);
   }
   const estBytes = (s) => {
-    const d = s.b - s.a;
-    if (fmt === 'wav') return d * buf.sampleRate * Math.min(2, buf.numberOfChannels) * 2;
-    if (fmt === 'flac') return d * buf.sampleRate * Math.min(2, buf.numberOfChannels) * 1;
-    return (d * bitrate * 1000) / 8;
+    const d = s.b - s.a; const bytes = Math.min(2, buf.numberOfChannels) * buf.sampleRate * d;
+    if (targetId === 'wav') return bytes * (fmt === 'source' && probe?.bits >= 24 ? (probe.bits >= 32 ? 4 : 3) : fmt === 'source' ? 2 : 3);
+    if (targetId === 'flac') return bytes * 1.5;
+    const kbps = fmt === 'source' ? pickBitrate(targetId, probe?.bitrate, probe?.size, buf.duration) : bitrate;
+    return (d * (kbps || 192) * 1000) / 8;
   };
   const totalEst = buf ? included.reduce((a, s) => a + estBytes(s), 0) : 0;
 
@@ -513,8 +517,8 @@ function AudioSlicer({ language = 'ru' }) {
       <div className="as-parts-head">
         <h3>{t.parts} <span className="as-count">{segs.length}</span></h3>
         <div className="as-export">
-          {seg(fmt, setFmt, FORMATS.map((f) => [f, AUDIO_FORMATS[f].label.replace(' (M4A)', '')]))}
-          {bitrates.length > 0 && <label className="as-inl">{t.quality} {seg(bitrate, setBitrate, bitrates.map((b) => [b, String(b)]))}</label>}
+          <FormatPicker probe={probe} value={fmt} onChange={setFmt} language={language} label={t.format} />
+          {qualityList.length > 0 && <label className="as-inl">{t.quality} {seg(bitrate, setBitrate, qualityList.map((b) => [b, String(b)]))}</label>}
           <label className="as-inl">{t.fade} {num(fade, setFade, 0, 500)}</label>
           <label className="tool-check"><input type="checkbox" checked={snap} onChange={(e) => setSnap(e.target.checked)} /> {t.snap}</label>
         </div>

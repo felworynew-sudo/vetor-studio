@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { decodeAudioFile, downloadBlob, encodeMp3, encodeWAV, getAudioCtx } from '../../utils/wav';
+import { downloadBlob, getAudioCtx } from '../../utils/wav';
+import { decodeNative, encodeLike, outputName, probeAudio } from '../../utils/audioFormat';
+import FormatPicker from './shared/FormatPicker';
 import { getPeaks } from '../../utils/audioPeaks';
 
 // Удаление тишины: находит паузы тише порога дольше заданной длины и вырезает их
@@ -9,12 +11,12 @@ import { getPeaks } from '../../utils/audioPeaks';
 const TEXT = {
   ru: {
     drop: 'Загрузите аудио — подкаст, голосовое, лекцию', hint: 'MP3, WAV, M4A, OGG — всё локально', threshold: 'Порог тишины', minDur: 'Паузы длиннее', keep: 'Оставлять от паузы',
-    result: (a, b, n) => `Было ${a} → стало ${b} · вырезано пауз: ${n}`, play: 'Прослушать результат', stop: 'Стоп', wav: 'Скачать WAV', mp3: 'Скачать MP3', change: 'Другой файл', auto: 'Подобрать порог',
+    result: (a, b, n) => `Было ${a} → стало ${b} · вырезано пауз: ${n}`, play: 'Прослушать результат', stop: 'Стоп', wav: 'Скачать WAV', mp3: 'Скачать MP3', download: 'Скачать', saving: 'Кодирую…', format: 'Формат экспорта', change: 'Другой файл', auto: 'Подобрать порог',
     note: 'Паузы подсвечены красным. Для речи хорошо работает «оставлять 150–250 мс» — темп ускоряется, а речь не звучит рубленой.',
   },
   en: {
     drop: 'Upload audio — a podcast, voice note, lecture', hint: 'MP3, WAV, M4A, OGG — all local', threshold: 'Silence threshold', minDur: 'Pauses longer than', keep: 'Keep of each pause',
-    result: (a, b, n) => `Was ${a} → now ${b} · pauses cut: ${n}`, play: 'Preview result', stop: 'Stop', wav: 'Download WAV', mp3: 'Download MP3', change: 'Another file', auto: 'Auto threshold',
+    result: (a, b, n) => `Was ${a} → now ${b} · pauses cut: ${n}`, play: 'Preview result', stop: 'Stop', wav: 'Download WAV', mp3: 'Download MP3', download: 'Download', saving: 'Encoding…', format: 'Export format', change: 'Another file', auto: 'Auto threshold',
     note: 'Pauses are highlighted in red. For speech, “keep 150–250 ms” works well — the pace picks up without sounding choppy.',
   },
 };
@@ -77,11 +79,22 @@ function SilenceRemover({ language = 'ru' }) {
   const [keep, setKeep] = useState(0.2);
   const [res, setRes] = useState(null);
   const [playing, setPlaying] = useState(false);
+  const [probe, setProbe] = useState(null);
+  const [target, setTarget] = useState('source');
+  const [saving, setSaving] = useState(false);
+  const [fullName, setFullName] = useState('audio');
 
   async function load(f) {
     if (!f) return;
-    setName(f.name.replace(/\.[^.]+$/, ''));
-    const b = await decodeAudioFile(f); setBuf(b);
+    setName(f.name.replace(/\.[^.]+$/, '')); setFullName(f.name);
+    const info = await probeAudio(f); setProbe(info);
+    const b = await decodeNative(f, info, getAudioCtx()); setBuf(b);
+  }
+
+  async function save() {
+    setSaving(true);
+    try { const r = await encodeLike(res.out, probe, { target }); downloadBlob(r.blob, outputName(fullName, 'nosilence', r.ext)); } catch (e) { console.error(e); }
+    setSaving(false);
   }
 
   // Порог: 15-й перцентиль громкости окон + 6 дБ (ниже речи, выше фона).
@@ -135,10 +148,10 @@ function SilenceRemover({ language = 'ru' }) {
             <label className="tool-field"><span className="tool-field-label">{t.minDur}: {minDur.toFixed(2)} s</span><input type="range" min="0.1" max="3" step="0.05" value={minDur} onChange={(e) => setMinDur(Number(e.target.value))} /></label>
             <label className="tool-field"><span className="tool-field-label">{t.keep}: {Math.round(keep * 1000)} ms</span><input type="range" min="0" max="1" step="0.01" value={keep} onChange={(e) => setKeep(Number(e.target.value))} /></label>
           </div>
+          <FormatPicker probe={probe} value={target} onChange={setTarget} language={language} label={t.format} />
           <div className="tool-actions">
             <button type="button" className="tool-btn" onClick={play} disabled={!res}>{playing ? `⏹ ${t.stop}` : `▶ ${t.play}`}</button>
-            <button type="button" className="tool-btn primary" onClick={async () => downloadBlob(await encodeMp3(res.out, 192), `${name}-nosilence.mp3`)} disabled={!res}>{t.mp3}</button>
-            <button type="button" className="tool-btn" onClick={() => downloadBlob(encodeWAV(res.out), `${name}-nosilence.wav`)} disabled={!res}>{t.wav}</button>
+            <button type="button" className="tool-btn primary" onClick={save} disabled={!res || saving}>{saving ? t.saving : t.download}</button>
             <button type="button" className="tool-btn ghost" onClick={() => inputRef.current?.click()}>{t.change}</button>
           </div>
         </>

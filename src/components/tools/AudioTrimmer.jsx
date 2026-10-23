@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { AUDIO_FORMATS, ffmpegRun } from '../../utils/ffmpeg';
-import { encodeMp3 } from '../../utils/wav';
+import { encodeWAV } from '../../utils/wav';
+import { decodeNative, encodeLike, outputName, probeAudio } from '../../utils/audioFormat';
+import FormatPicker from './shared/FormatPicker';
 
 // Обрезка аудио: загрузка → волновая форма → выбор фрагмента ручками → экспорт с
 // фейдами в WAV/MP3 (локально) или FLAC/AAC/Opus/OGG и рингтон iPhone M4R (FFmpeg).
@@ -10,31 +12,19 @@ const TEXT = {
     drop: 'Загрузите аудио', hint: 'MP3, WAV, M4A, OGG — обрабатывается локально',
     play: 'Прослушать фрагмент', stop: 'Стоп', fade: 'Фейд (сек)', trim: 'Обрезать и скачать', format: 'Формат', saving: 'Кодирую…', ringtone: 'Рингтон iPhone (M4R)', ringNote: 'Рингтон iPhone — не длиннее 40 секунд.',
     change: 'Другой файл', from: 'Начало', to: 'Конец', dur: 'Длина', decoding: 'Читаю аудио…',
-    hint2: 'Тяните ручки по краям выделения. WAV и MP3 кодируются сразу, остальные форматы — через FFmpeg (≈30 МБ, один раз).',
+    hint2: 'Тяните ручки по краям выделения. Файл сохраняется в исходном формате (или выберите другой). WAV и MP3 кодируются сразу, остальные форматы — через FFmpeg (≈30 МБ, один раз).',
   },
   en: {
     drop: 'Upload audio', hint: 'MP3, WAV, M4A, OGG — processed locally',
     play: 'Preview selection', stop: 'Stop', fade: 'Fade (sec)', trim: 'Trim & download', format: 'Format', saving: 'Encoding…', ringtone: 'iPhone ringtone (M4R)', ringNote: 'An iPhone ringtone must be 40 seconds or shorter.',
     change: 'Another file', from: 'Start', to: 'End', dur: 'Length', decoding: 'Reading audio…',
-    hint2: 'Drag the handles at the edges. WAV and MP3 encode instantly, other formats go through FFmpeg (≈30 MB, once).',
+    hint2: 'Drag the handles at the edges. The file is saved in its source format (or pick another). WAV and MP3 encode instantly, other formats go through FFmpeg (≈30 MB, once).',
   },
 };
 
 function fmtTime(s) {
   const m = Math.floor(s / 60); const sec = (s % 60).toFixed(1);
   return `${m}:${sec.padStart(4, '0')}`;
-}
-
-function encodeWAV(buffer) {
-  const nc = buffer.numberOfChannels; const sr = buffer.sampleRate; const len = buffer.length;
-  const dataSize = len * nc * 2; const ab = new ArrayBuffer(44 + dataSize); const dv = new DataView(ab);
-  let p = 0;
-  const wS = (s) => { for (let i = 0; i < s.length; i += 1) { dv.setUint8(p, s.charCodeAt(i)); p += 1; } };
-  const w32 = (v) => { dv.setUint32(p, v, true); p += 4; }; const w16 = (v) => { dv.setUint16(p, v, true); p += 2; };
-  wS('RIFF'); w32(36 + dataSize); wS('WAVE'); wS('fmt '); w32(16); w16(1); w16(nc); w32(sr); w32(sr * nc * 2); w16(nc * 2); w16(16); wS('data'); w32(dataSize);
-  const ch = []; for (let c = 0; c < nc; c += 1) ch.push(buffer.getChannelData(c));
-  for (let i = 0; i < len; i += 1) for (let c = 0; c < nc; c += 1) { const s = Math.max(-1, Math.min(1, ch[c][i])); dv.setInt16(p, s < 0 ? s * 0x8000 : s * 0x7fff, true); p += 2; }
-  return new Blob([ab], { type: 'audio/wav' });
 }
 
 let ctx = null;
@@ -53,7 +43,9 @@ function AudioTrimmer({ language = 'ru' }) {
   const [fade, setFade] = useState(0.05);
   const [playing, setPlaying] = useState(false);
   const [decoding, setDecoding] = useState(false);
-  const [outFmt, setOutFmt] = useState('mp3');
+  const [outFmt, setOutFmt] = useState('source');
+  const [probe, setProbe] = useState(null);
+  const fileNameRef = useRef('audio');
   const [saving, setSaving] = useState(false);
 
   function drawWave() {
@@ -84,8 +76,8 @@ function AudioTrimmer({ language = 'ru' }) {
     if (!file) return;
     setDecoding(true);
     try {
-      const ab = await file.arrayBuffer();
-      const buf = await getCtx().decodeAudioData(ab.slice(0));
+      const info = await probeAudio(file); setProbe(info); fileNameRef.current = file.name;
+      const buf = await decodeNative(file, info, getCtx());
       bufferRef.current = buf; setName(file.name); setDuration(buf.duration); setSel({ a: 0, b: 1 });
     } catch { /* */ }
     setDecoding(false);
@@ -140,28 +132,25 @@ function AudioTrimmer({ language = 'ru' }) {
         dst[i] = v;
       }
     }
-    const wav = encodeWAV(out);
-    let blob = wav; let ext = 'wav';
     setSaving(true);
     try {
-      if (outFmt === 'mp3') { blob = await encodeMp3(out, 192); ext = 'mp3'; }
-      else if (outFmt !== 'wav') {
-        const ring = outFmt === 'm4r';
-        const f = AUDIO_FORMATS[ring ? 'aac' : outFmt];
-        const q = f.bitrates.length ? f.bitrates[Math.min(2, f.bitrates.length - 1)] : 0;
-        ext = ring ? 'm4r' : f.ext;
-        const data = await ffmpegRun(new File([wav], 'trim.wav', { type: 'audio/wav' }), [...f.args(q), ...(ring ? ['-f', 'ipod'] : [])], `out.${ring ? 'm4a' : f.ext}`);
-        blob = new Blob([data], { type: f.mime });
+      let blob; let ext;
+      if (outFmt === 'm4r') {
+        // рингтон iPhone: AAC в контейнере m4a с тегом ipod
+        const wav = encodeWAV(out); const f = AUDIO_FORMATS.aac;
+        const data = await ffmpegRun(new File([wav], 'trim.wav', { type: 'audio/wav' }), [...f.args(f.bitrates[2]), '-f', 'ipod'], 'out.m4a');
+        blob = new Blob([data], { type: f.mime }); ext = 'm4r';
+      } else {
+        const r = await encodeLike(out, { ...probe, size: 0 }, { target: outFmt }); blob = r.blob; ext = r.ext;
       }
       const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob); a.download = `${name.replace(/\.[^.]+$/, '')}-trim.${ext}`;
+      a.href = URL.createObjectURL(blob); a.download = outputName(fileNameRef.current, 'trim', ext);
       document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 3000);
     } catch (e) { console.error(e); }
     setSaving(false);
   }
 
   const startT = sel.a * duration; const endT = sel.b * duration;
-  const FORMATS_UI = [['wav', 'WAV'], ['mp3', 'MP3'], ['flac', 'FLAC'], ['aac', 'AAC'], ['opus', 'Opus'], ['ogg', 'OGG'], ['m4r', t.ringtone]];
 
   return (
     <div className="tool-panel audio-trimmer">
@@ -186,10 +175,7 @@ function AudioTrimmer({ language = 'ru' }) {
             <span>{t.dur}: <strong>{fmtTime(endT - startT)}</strong></span>
           </div>
           <div className="tool-controls">
-            <div className="tool-field">
-              <span className="tool-field-label">{t.format}</span>
-              <div className="segmented dm-seg">{FORMATS_UI.map(([id, l]) => <button key={id} type="button" className={outFmt === id ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => setOutFmt(id)}>{l}</button>)}</div>
-            </div>
+            <FormatPicker probe={probe} value={outFmt} onChange={setOutFmt} language={language} label={t.format} extra={<button type="button" className={outFmt === 'm4r' ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => setOutFmt('m4r')}>{t.ringtone}</button>} />
             <div className="tool-field">
               <span className="tool-field-label">{t.fade}: {fade.toFixed(2)}</span>
               <input type="range" min="0" max="1" step="0.01" value={fade} onChange={(e) => setFade(Number(e.target.value))} />

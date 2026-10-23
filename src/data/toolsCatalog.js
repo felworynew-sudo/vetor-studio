@@ -37,6 +37,7 @@ const READY_COMPONENTS = {
   'blur-analyzer': lazy(() => import('../components/tools/BlurAnalyzer')),
   'audio-trimmer': lazy(() => import('../components/tools/AudioTrimmer')),
   'audio-slicer': lazy(() => import('../components/tools/AudioSlicer')),
+  'audio-equalizer': lazy(() => import('../components/tools/AudioEqualizer')),
   multitrack: lazy(() => import('../components/tools/MultitrackEditor')),
   'audio-converter': lazy(() => import('../components/tools/AudioConverter')),
   'image-metadata': lazy(() => import('../components/tools/ImageMetadata')),

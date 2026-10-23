@@ -150,6 +150,12 @@ self.onmessage = async (ev) => {
       const report = compareReport(chans, out, sr, {
         beforeLufs: a.lufs, afterLufs: after.lufs, beforePeak: a.truePeakDb, afterPeak: after.truePeakDb,
       });
+      if (format === 'raw') { // сэмплы без кодирования: формат выберет основной поток (как у исходника)
+        self.postMessage({
+          type: 'done', id, kind: planned.kind, log, after, report, warnings, chans: out, sr,
+        }, out.map((c) => c.buffer));
+        return;
+      }
       let bytes; let mime; let ext;
       if (format === 'mp3') { bytes = await encodeMp3(out, sr, 320); mime = 'audio/mpeg'; ext = 'mp3'; } else {
         bytes = encodeWav(out, sr, format === 'wav16' ? 16 : 24); mime = 'audio/wav'; ext = 'wav';

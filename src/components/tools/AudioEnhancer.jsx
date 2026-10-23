@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { getAudioCtx } from '../../utils/wav';
+import { encodeLike, probeAudio } from '../../utils/audioFormat';
 
 // Улучшение аудио 2.0 — локальный движок в Web Worker (src/audio-engine):
 // диагностика → роутер → специализированные стадии. Речь: declip → подавление эха комнаты →
@@ -26,6 +27,7 @@ const TARGETS = [
 ];
 
 const FORMATS = [
+  { v: 'source', ru: 'Как исходный', en: 'Same as source' },
   { v: 'wav24', ru: 'WAV 24 бит', en: 'WAV 24-bit' },
   { v: 'wav16', ru: 'WAV 16 бит', en: 'WAV 16-bit' },
   { v: 'mp3', ru: 'MP3 320', en: 'MP3 320' },
@@ -340,7 +342,7 @@ const MANUAL_GROUPS = [
 ];
 
 const INITIAL = {
-  items: [], refs: [], mode: 'auto', targetLufs: 'auto', ceilingDb: -1, format: 'wav24', intensity: 0.6,
+  items: [], refs: [], mode: 'auto', targetLufs: 'auto', ceilingDb: -1, format: 'source', intensity: 0.6,
   opts: Object.fromEntries(OPT_KEYS.map((k) => [k, 'auto'])), neuralEngine: 'dfn', apolloDevice: 'auto',
   tone: { warmth: 0, presence: 0, air: 0 }, monoBass: false, album: false, busy: false, neural: '',
   manual: DEFAULT_MANUAL, matchLevel: true, showAdv: false, player: { id: '', which: 'after', playing: false },
@@ -380,11 +382,12 @@ async function addFiles(fileList) {
     try {
       // eslint-disable-next-line no-await-in-loop
       const { chans, sr, aiTag } = await decode(file);
+      const probe = await probeAudio(file); // формат исходника: на нём строится «как исходный»
       if (!store.items.some((it) => it.id === id)) continue; // убрали, пока декодировали
       audioData.set(id, { chans, sr });
       // eslint-disable-next-line no-await-in-loop
       const { analysis } = await call({ type: 'analyze', chans, sr });
-      patchItem(id, { status: 'ready', analysis, sr, aiTag });
+      patchItem(id, { status: 'ready', analysis, sr, aiTag, probe });
     } catch {
       patchItem(id, { status: 'error' });
     }
@@ -476,7 +479,7 @@ async function processAll() {
           if (m.step && m.i != null) patchItem(it.id, (prev) => (prev.step === m.step ? {} : { step: m.step, stepIndex: m.i, stepN: m.n, stepT0: Date.now() }));
           if (m.p != null) patchItem(it.id, { p: m.p });
         };
-        const job = { type: 'process', chans: d.chans, sr: d.sr, mode: s0.mode === 'auto' && it.aiTag ? 'ai' : s0.mode, opts: engineOpts, format: s0.format, analysis: it.analysis, lang: s0.lang };
+        const job = { type: 'process', chans: d.chans, sr: d.sr, mode: s0.mode === 'auto' && it.aiTag ? 'ai' : s0.mode, opts: engineOpts, format: s0.format === 'source' ? 'raw' : s0.format, analysis: it.analysis, lang: s0.lang };
         // eslint-disable-next-line no-await-in-loop
         let res = await call(job, onProg);
         // модуль не скачался (сеть моргнула) → свежий воркер и ещё одна попытка с нуля
@@ -486,13 +489,17 @@ async function processAll() {
           // eslint-disable-next-line no-await-in-loop
           res = await call(job, onProg);
         }
-        const blob = new Blob([res.bytes], { type: res.mime });
+        let blob; let ext = res.ext;
+        if (res.chans) { // «как исходный»: воркер отдал сэмплы, кодируем в формат файла-источника
+          const r = await encodeLike({ chans: res.chans, sr: res.sr }, { ...it.probe, size: it.size }, { target: 'source' }); // eslint-disable-line no-await-in-loop
+          blob = r.blob; ext = r.ext;
+        } else blob = new Blob([res.bytes], { type: res.mime });
         forgetItemAudio(it.id);
         patchItem(it.id, (prev) => {
           if (prev.outUrl) URL.revokeObjectURL(prev.outUrl);
           return {
             status: 'done', outUrl: URL.createObjectURL(blob), outSize: blob.size,
-            outName: `${it.name.replace(/\.[^.]+$/, '')}-enhanced.${res.ext}`, after: res.after, report: res.report, log: res.log, kind: res.kind, warnings: res.warnings || [],
+            outName: `${it.name.replace(/\.[^.]+$/, '')}-enhanced.${ext}`, after: res.after, report: res.report, log: res.log, kind: res.kind, warnings: res.warnings || [],
           };
         });
       } catch (e) {
