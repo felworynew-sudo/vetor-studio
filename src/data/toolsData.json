@@ -879,6 +879,21 @@
       "img": "naushniki.png"
     },
     {
+      "slug": "audio-slicer",
+      "categoryId": "audio",
+      "status": "ready",
+      "icon": "✂️",
+      "ru": {
+        "title": "Нарезка аудио",
+        "desc": "Разрезать трек, микс или запись на части: по паузам с настройкой, равными кусками или по списку таймкодов с названиями. Зум, резы на лету клавишей S, ZIP. Локально."
+      },
+      "en": {
+        "title": "Audio slicer",
+        "desc": "Split a track, mix or recording into parts: by silence with live tuning, into equal pieces or from a timestamp list with names. Zoom, cut on the fly with S, ZIP. Local."
+      },
+      "img": "nozhnicy.png"
+    },
+    {
       "slug": "silence-remover",
       "categoryId": "audio",
       "status": "ready",

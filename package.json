@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "test:audio": "node --max-old-space-size=3000 scripts/test-audio-engine.mjs",
+    "test:audio": "node --max-old-space-size=3000 scripts/test-audio-engine.mjs && node scripts/test-audio-slice.mjs",
     "dev": "vite",
     "dev:full": "node scripts/generate-favicons.mjs && node scripts/generate-seo-files.mjs && node scripts/optimize-images.mjs && node scripts/sync-public-data.mjs && node scripts/run-eleventy.mjs && vite",
     "build": "node scripts/generate-favicons.mjs && node scripts/generate-seo-files.mjs && node scripts/optimize-images.mjs && node scripts/generate-tool-og.mjs && node scripts/sync-public-data.mjs && node scripts/run-eleventy.mjs && vite build && node scripts/generate-route-shells.mjs && node scripts/inline-app-assets.mjs && node scripts/prune-dist-media.mjs",
