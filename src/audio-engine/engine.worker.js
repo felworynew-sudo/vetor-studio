@@ -8,7 +8,9 @@ import { pickFragment } from './analysis.js';
 import { combineProfiles } from './match.js';
 import { encodeMp3, encodeWav } from './encode.js';
 import { loadDfn } from './neural.js';
-import { apolloRestore, gpuInfo, hasWebGpu, loadApollo } from './apollo.js';
+import {
+  apolloRestore, apolloVariant, gpuInfo, hasWebGpu, loadApollo,
+} from './apollo.js';
 
 let neuralBase = '';
 let apolloSkip = false;
@@ -109,6 +111,7 @@ self.onmessage = async (ev) => {
             apollo = async (c, rate, onP, extra = {}) => {
               const r = await apolloRestore(c, rate, {
                 onProgress: onP, shouldStop: () => apolloSkip, cutoffHz: extra.cutoffHz, limitSec: device === 'wasm' ? Infinity : 1500,
+                reload: () => loadApollo(new URL('../apollo/', neuralBase).href, device, { variant: 'fp32' }),
               });
               apolloUsed = device;
               return r;
@@ -125,12 +128,15 @@ self.onmessage = async (ev) => {
       const { chans: out, log } = await run(chans, sr, planned, {
         apollo,
         apolloDevice: () => apolloUsed,
+        apolloVariant: () => apolloVariant(),
         onStep: (step, i, n) => self.postMessage({ type: 'progress', id, step, i, n }),
         onProgress: (p) => self.postMessage({ type: 'progress', id, p }),
         onWarn: (w) => warnings.push(w === 'Apollo: skipped'
           ? (msg.lang === 'en' ? 'Neural restoration skipped — top end rebuilt with SBR' : 'Нейро-реставрация пропущена — верх достроен через SBR')
           : /bad-output/.test(w)
-            ? (msg.lang === 'en' ? `Apollo output failed the sanity check (${w.replace(/^.*bad-output: /, '')}) on ${apollo?.deviceName || 'this device'} — used SBR instead; nothing was damaged` : `Результат Apollo не прошёл проверку (${w.replace(/^.*bad-output: /, '')}) на устройстве ${apollo?.deviceName || ''} — вместо него использован SBR, трек не испорчен`)
+            ? (/bad-output: silent/.test(w)
+              ? (msg.lang === 'en' ? `The GPU (${apollo?.deviceName || 'this device'}) returned silence for the neural model even in precise mode — used SBR instead; nothing was damaged` : `Видеокарта (${apollo?.deviceName || 'это устройство'}) вернула пустой результат нейросети даже в точном режиме — вместо неё использован SBR, трек не испорчен`)
+              : (msg.lang === 'en' ? `Apollo output failed the sanity check (${w.replace(/^.*bad-output: /, '')}) on ${apollo?.deviceName || 'this device'} — used SBR instead; nothing was damaged` : `Результат Apollo не прошёл проверку (${w.replace(/^.*bad-output: /, '')}) на устройстве ${apollo?.deviceName || ''} — вместо него использован SBR, трек не испорчен`))
             : /too-slow/.test(w)
               ? (msg.lang === 'en' ? `Neural restoration would take about ${Math.round(Number(w.split(':').pop()) / 60)} min on this device — used the fast SBR method` : `Нейро-реставрация на этом устройстве заняла бы около ${Math.round(Number(w.split(':').pop()) / 60)} мин — использован быстрый SBR`)
               : w),

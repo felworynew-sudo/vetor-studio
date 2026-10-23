@@ -321,6 +321,18 @@ for (const mode of ['voice', 'restore', 'music', 'ai']) {
   await fails((d) => Float32Array.from(d, () => NaN), /bad-output/, 'Предохранитель: NaN на выходе отклоняется');
   await fails((d) => Float32Array.from(d, (v) => v * 0.001), /bad-output/, 'Предохранитель: «затухание» выхода отклоняется');
   await fails((d) => d, /too-slow/, 'Предохранитель: слишком долгий прогноз прерывает счёт', { limitSec: 0.05 }, 60);
+  // fp16 на видеокарте без shader-f16 отдаёт тишину → один раз пробуем fp32 с самого начала
+  const withVariant = (variant, transform, device = 'webgpu') => ({ ...mk(transform), variant, device });
+  let reloads = 0;
+  setApolloSessionForTest(withVariant('fp16', (d) => new Float32Array(d.length)));
+  const fixed = await apolloRestore([tone], sr, { cutoffHz: 8000, reload: async () => { reloads += 1; return withVariant('fp32', (d) => Float32Array.from(d)); } });
+  check('Видеокарта вернула тишину в fp16 → автопереход на fp32, результат верный', reloads === 1 && fixed[0].length === tone.length && snrDb(tone, fixed[0], 4000, 40000) > 40, `reload ×${reloads}, SNR ${snrDb(tone, fixed[0], 4000, 40000).toFixed(1)} дБ`);
+  reloads = 0;
+  setApolloSessionForTest(withVariant('fp16', (d) => new Float32Array(d.length)));
+  try { await apolloRestore([tone], sr, { cutoffHz: 8000, reload: async () => { reloads += 1; return withVariant('fp32', (d) => new Float32Array(d.length)); } }); check('fp32 тоже тишина → отказ', false, 'не отказал'); } catch (e) { check('fp32 тоже тишина → отказ «silent», повторов не больше одного', /bad-output: silent/.test(e.message) && reloads === 1, `${e.message}, reload ×${reloads}`); }
+  reloads = 0;
+  setApolloSessionForTest(withVariant('fp16', (d) => new Float32Array(d.length), 'wasm'));
+  try { await apolloRestore([tone], sr, { cutoffHz: 8000, reload: async () => { reloads += 1; return null; } }); check('CPU: без перехода на fp32', false, 'не отказал'); } catch (e) { check('CPU (wasm) не переключается на fp32', /bad-output/.test(e.message) && reloads === 0, e.message); }
   setApolloSessionForTest(null);
 }
 

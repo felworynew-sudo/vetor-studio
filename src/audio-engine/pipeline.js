@@ -225,7 +225,7 @@ async function runStep(s, chans, sr, prog, ctx) {
         try {
           const out = await ctx.apollo(chans, sr, prog, { cutoffHz: s.cutoffHz });
           out.forEach((c, i) => { chans[i] = c; });
-          return { cutoffHz: s.cutoffHz, engine: 'apollo', device: ctx.apolloDevice?.() };
+          return { cutoffHz: s.cutoffHz, engine: 'apollo', device: ctx.apolloDevice?.(), variant: ctx.apolloVariant?.() };
         } catch (e) {
           ctx.onWarn?.(`Apollo: ${e.message || e}`);
         }
