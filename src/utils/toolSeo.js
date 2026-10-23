@@ -120,6 +120,18 @@ const SPECIFIC_FAQS = {
       { q: 'How much does the upscaler enlarge?', a: '2× on each side with the Swin2SR neural network, keeping details and avoiding plain-stretch artifacts.' },
     ],
   },
+  'photo-restore': {
+    ru: [
+      { q: 'Как работает реставрация старых фото?', a: 'Нейросеть находит лица, выравнивает и восстанавливает каждое, затем мягко вклеивает обратно; весь кадр можно увеличить в 4 раза. Всё считается в вашем браузере, снимок никуда не отправляется.' },
+      { q: 'Чем отличаются два режима?', a: '«Классический» использует открытые модели RestoreFormer++ и Real-ESRGAN и работает уже сейчас. Vetor Restore — наша собственная нейросеть для царапин, заломов, выцветания и раскраски; она обучается, и режим включится, когда веса будут готовы.' },
+      { q: 'Нужна ли видеокарта?', a: 'Нет, но с WebGPU (Chrome, Edge) обработка заметно быстрее. Без неё всё считается на процессоре и занимает больше времени.' },
+    ],
+    en: [
+      { q: 'How does old photo restoration work?', a: 'The network finds faces, aligns and restores each one, then softly blends it back; the whole frame can be upscaled 4×. Everything runs in your browser and the photo is never uploaded.' },
+      { q: 'What is the difference between the two modes?', a: '“Classic” uses the open RestoreFormer++ and Real-ESRGAN models and works today. Vetor Restore is our own network for scratches, creases, fading and colorization; it is in training and the mode switches on once the weights are ready.' },
+      { q: 'Do I need a graphics card?', a: 'No, but with WebGPU (Chrome, Edge) processing is much faster. Without it everything runs on the CPU and takes longer.' },
+    ],
+  },
   watermark: {
     ru: [
       { q: 'Можно ли наложить водяной знак сразу на много фото?', a: 'Да, пакетно: логотип или текст добавляется на все загруженные изображения с настройкой позиции и прозрачности.' },

@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
+    "test:restore": "node scripts/test-photo-restore.mjs",
     "test:audio": "node --max-old-space-size=3000 scripts/test-audio-engine.mjs && node scripts/test-audio-slice.mjs && node scripts/test-eq.mjs",
     "dev": "vite",
     "dev:full": "node scripts/generate-favicons.mjs && node scripts/generate-seo-files.mjs && node scripts/optimize-images.mjs && node scripts/sync-public-data.mjs && node scripts/run-eleventy.mjs && vite",

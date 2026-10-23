@@ -760,6 +760,21 @@
       "img": "apskeyl.png"
     },
     {
+      "slug": "photo-restore",
+      "categoryId": "ai",
+      "status": "ready",
+      "icon": "📷",
+      "ru": {
+        "title": "Реставрация старых фото (AI)",
+        "desc": "Чинит лица на старых снимках и увеличивает кадр прямо в браузере: два режима — открытые модели RestoreFormer++ и Real-ESRGAN или наша нейросеть Vetor Restore, которая сейчас обучается. Фото не покидает устройство."
+      },
+      "en": {
+        "title": "Old photo restoration (AI)",
+        "desc": "Fixes faces in old photos and upscales the frame right in your browser: two modes — the open RestoreFormer++ and Real-ESRGAN models, or our own Vetor Restore network, currently in training. The photo never leaves your device."
+      },
+      "img": "kamera.png"
+    },
+    {
       "slug": "pixel-generator",
       "categoryId": "ai",
       "status": "ready",

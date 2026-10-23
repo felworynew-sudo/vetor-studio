@@ -1,0 +1,4 @@
+YuNet face detector — OpenCV Zoo (face_detection_yunet_2023mar.onnx), MIT License, https://github.com/opencv/opencv_zoo
+RestoreFormer++ — Wang et al., Apache-2.0, https://github.com/wzhouxiaohang/RestoreFormerPlusPlus (ONNX: huggingface.co/facefusion/models-3.0.0)
+Real-ESRGAN x4 — xinntao, BSD-3-Clause, https://github.com/xinntao/Real-ESRGAN (ONNX: huggingface.co/facefusion/models-3.0.0)
+Vetor Restore — own networks (restore-lab), weights published via vetor-restore.json when ready.

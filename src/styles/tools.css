@@ -2192,3 +2192,18 @@ button.ae2-chip:hover, button.ae2-chip:focus-visible { border-color: var(--t-acc
 }
 .fmt-picker { display: flex; flex-direction: column; gap: 6px; }
 .fmt-note { margin: 0; font-size: 12.5px; line-height: 1.5; color: var(--text-soft); max-width: 62ch; }
+
+/* --- Реставрация старых фото --- */
+.pr-modes { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.pr-opts { display: flex; flex-direction: column; gap: 12px; margin-bottom: 14px; }
+.pr-opts input[type="range"] { width: min(320px, 100%); }
+.pr-training { display: flex; flex-direction: column; gap: 10px; padding: 14px 16px; margin-bottom: 14px; border: 1px dashed var(--stroke-strong); background: var(--t-accent-soft); }
+.pr-training h3 { margin: 0; font-size: 15px; }
+.pr-training p { margin: 0; font-size: 13.5px; line-height: 1.5; color: var(--text-muted); }
+.pr-stages { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.pr-stages li { display: grid; grid-template-columns: 110px 1fr auto; gap: 4px 12px; align-items: baseline; padding: 8px 10px; border: 1px solid var(--stroke); background: var(--bg); }
+.pr-stages li b { font-size: 13px; }
+.pr-stages li span { font-size: 12.5px; color: var(--text-muted); line-height: 1.4; }
+.pr-stages li em { font-style: normal; font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-soft); white-space: nowrap; }
+.pr-stages li.is-ready em { color: var(--t-accent); font-weight: 700; }
+@media (max-width: 560px) { .pr-stages li { grid-template-columns: 1fr; } }

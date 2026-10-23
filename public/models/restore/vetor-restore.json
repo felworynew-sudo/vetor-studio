@@ -1,0 +1,6 @@
+{
+  "status": "training",
+  "note": "Сети Vetor Restore обучаются. Когда веса будут готовы: status → ready, в nets добавляются { file, mb } для texture / repair / faces / colorize (путь file считается от base).",
+  "base": ".",
+  "nets": {}
+}

@@ -30,6 +30,7 @@ const READY_COMPONENTS = {
   'karma-counter': lazy(() => import('../components/tools/KarmaCounter')),
   'background-remover': lazy(() => import('../components/tools/BackgroundRemover')),
   upscaler: lazy(() => import('../components/tools/Upscaler')),
+  'photo-restore': lazy(() => import('../components/tools/PhotoRestore')),
   'smart-crop': lazy(() => import('../components/tools/SmartCrop')),
   'pixel-generator': lazy(() => import('../components/tools/PixelGenerator')),
   'lofi-radio': lazy(() => import('../components/tools/LofiRadio')),
