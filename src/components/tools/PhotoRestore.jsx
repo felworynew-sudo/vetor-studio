@@ -41,6 +41,8 @@ const TEXT = {
       inpaint: 'Достраивает места, где изображения уже нет, по соседним областям.', faces: 'Находит лица, выравнивает, восстанавливает и мягко вклеивает обратно.', colorize: 'Для чёрно-белых снимков: яркость остаётся оригинальной, добавляется только цвет.',
     },
     waiting: 'ждёт обучения', haveNet: 'готово',
+    betaVetor: 'Бета: готовы пока две сети из четырёх — шум и зерно, повреждения (с достройкой). Лица и раскраска ещё обучаются и появятся здесь сами. Сеть уверенно убирает пыль, точки и лёгкие царапины, но крупные отслоения и дыры ей пока не по силам. Результат смотрите по ползунку «до/после».',
+    pendingNets: 'Ещё обучаются:',
     about: 'О моделях и лицензиях',
     aboutBody: 'Классический режим повторяет типовую схему онлайн-реставраторов: YuNet (OpenCV Zoo, MIT) находит лица, RestoreFormer++ (Wang и др., Apache-2.0) восстанавливает каждое выровненное лицо, Real-ESRGAN (xinntao, BSD-3-Clause) увеличивает кадр. ONNX-версии моделей публикует сообщество FaceFusion на Hugging Face. Vetor Restore — наши собственные сети (NAFNet-архитектура, ResNet-UNet для цвета), обученные на данных с открытыми лицензиями.',
     expert: 'Не устроил результат нейросети? Старое фото можно доверить специалисту — напишите в Telegram:',
@@ -75,6 +77,8 @@ const TEXT = {
       inpaint: 'Fills in places where the image is gone, using neighboring areas.', faces: 'Finds faces, aligns, restores and softly blends them back.', colorize: 'For black-and-white shots: the luminance stays original, only color is added.',
     },
     waiting: 'waiting for training', haveNet: 'ready',
+    betaVetor: 'Beta: two of four networks are ready so far — noise and grain, damage (with fill-in). Faces and colorization are still training and will appear here by themselves. The network reliably removes dust, specks and light scratches, but large flaking and holes are beyond it for now. Judge the result with the before/after slider.',
+    pendingNets: 'Still training:',
     about: 'About the models and licenses',
     aboutBody: 'Classic mode follows the typical online-restorer scheme: YuNet (OpenCV Zoo, MIT) finds faces, RestoreFormer++ (Wang et al., Apache-2.0) restores every aligned face, Real-ESRGAN (xinntao, BSD-3-Clause) upscales the frame. ONNX versions of the models are published by the FaceFusion community on Hugging Face. Vetor Restore is our own networks (NAFNet architecture, ResNet-UNet for color) trained on openly licensed data.',
     expert: 'Not happy with the network’s result? You can hand the photo to a specialist — message on Telegram:',
@@ -225,6 +229,8 @@ function PhotoRestore({ language = 'ru' }) {
 
       {mode === 'vetor' && vetorReady && (
         <div className="pr-opts">
+          <p className="pg-hint">{t.betaVetor}</p>
+          {VETOR_STAGES.some((k) => !have(k)) && <p className="pg-hint">{t.pendingNets} {VETOR_STAGES.filter((k) => !have(k)).map((k) => t.stageNames[k].toLowerCase()).join(', ')}.</p>}
           <div className="tool-field">
             <span className="tool-field-label">{t.strength}: {strength}%</span>
             <input type="range" min="0" max="100" value={strength} onChange={(e) => setStrength(Number(e.target.value))} disabled={busy} />

@@ -1,6 +1,10 @@
 {
-  "status": "training",
-  "note": "Сети Vetor Restore обучаются. Когда веса будут готовы: status → ready, в nets добавляются { file, mb } для texture / repair / faces / colorize (путь file считается от base).",
-  "base": ".",
-  "nets": {}
+  "status": "ready",
+  "version": "2026-10-24-r1",
+  "note": "Первый раунд: готовы texture и repair. faces и colorize обучаются — добавить в nets как { file, mb } и они появятся на сайте сами.",
+  "base": "vetor/",
+  "nets": {
+    "texture": { "file": "texture.onnx", "mb": 35 },
+    "repair": { "file": "repair.onnx", "mb": 35 }
+  }
 }
