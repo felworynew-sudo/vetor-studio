@@ -1,10 +1,12 @@
 {
   "status": "ready",
-  "version": "2026-10-24-r1",
-  "note": "Первый раунд: готовы texture и repair. faces и colorize обучаются — добавить в nets как { file, mb } и они появятся на сайте сами.",
+  "version": "2026-10-24-r2",
+  "note": "Первый раунд обучения: texture, repair, faces, colorize. Модели >100 МБ лежат кусками (<file>.0, .1, …; parts — их число).",
   "base": "vetor/",
   "nets": {
     "texture": { "file": "texture.onnx", "mb": 35 },
-    "repair": { "file": "repair.onnx", "mb": 35 }
+    "repair": { "file": "repair.onnx", "mb": 35 },
+    "faces": { "file": "faces.onnx", "mb": 137, "parts": 3 },
+    "colorize": { "file": "colorize.onnx", "mb": 98, "parts": 2 }
   }
 }

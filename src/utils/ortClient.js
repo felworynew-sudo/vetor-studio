@@ -29,7 +29,7 @@ const sessions = new Map();
 
 // Возвращает { device, inputName, outputNames, run(data, dims, names?) → { имя: { data, dims } } }. Повторная загрузка того же key/url/device — мгновенная.
 export function loadSession(key, url, device, onProgress) {
-  const id = `${key}:${device}:${url}`;
+  const id = `${key}:${device}:${Array.isArray(url) ? url.join('|') : url}`;
   if (sessions.has(id)) return sessions.get(id);
   const p = call({ type: 'load', key, url, device }, [], onProgress).then((m) => ({
     device: m.device, inputName: m.inputName, outputNames: m.outputNames,

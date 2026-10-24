@@ -88,12 +88,27 @@ async function fetchBytes(url, onProgress) {
   return bytes;
 }
 
+// url — строка или массив частей одного файла (модель >100 МБ режется на куски для GitHub): части качаются по очереди и склеиваются.
+async function fetchModel(url, onProgress) {
+  if (!Array.isArray(url)) return fetchBytes(url, onProgress);
+  const sizes = url.map(() => 0); const got = url.map(() => 0);
+  const report = () => onProgress(got.reduce((a, b) => a + b, 0), Math.max(sizes.reduce((a, b) => a + b, 0), 1));
+  const parts = [];
+  for (let i = 0; i < url.length; i += 1) {
+    // eslint-disable-next-line no-await-in-loop
+    parts.push(await fetchBytes(url[i], (g, t) => { got[i] = g; sizes[i] = t; report(); }));
+  }
+  const out = new Uint8Array(parts.reduce((a, p) => a + p.length, 0)); let at = 0;
+  parts.forEach((p) => { out.set(p, at); at += p.length; });
+  return out;
+}
+
 async function load({ id, key, url, device }) {
   const old = sessions.get(key);
-  if (old && old.device === device && old.url === url) return { ok: true, device: old.device, inputName: old.inputName, outputNames: old.outputNames };
+  if (old && old.device === device && JSON.stringify(old.url) === JSON.stringify(url)) return { ok: true, device: old.device, inputName: old.inputName, outputNames: old.outputNames };
   if (old) { try { await old.sess.release(); } catch { /* */ } sessions.delete(key); }
   const ort = await getOrt();
-  const bytes = await fetchBytes(url, (got, total) => self.postMessage({ id, progress: [got, total] }));
+  const bytes = await fetchModel(url, (got, total) => self.postMessage({ id, progress: [got, total] }));
   let used = device; let sess;
   try {
     sess = await ort.InferenceSession.create(bytes, { executionProviders: [device], graphOptimizationLevel: 'all' });

@@ -272,7 +272,11 @@ export async function loadVetorManifest(url = VETOR_MANIFEST_URL) {
   }
 }
 
-const netUrl = (man, name) => new URL(man.nets[name].file, man.base).href;
+// Модель >100 МБ лежит кусками (<файл>.0, .1, …): parts — их число; воркер склеит.
+const netUrl = (man, name) => {
+  const n = man.nets[name]; const full = new URL(n.file, man.base).href;
+  return n.parts > 1 ? Array.from({ length: n.parts }, (_, i) => `${full}.${i}`) : full;
+};
 
 // Расширение маски «потеряно»: максимум в окне (2r+1)², порог уже применён.
 function dilate(mask, w, h, r) {
