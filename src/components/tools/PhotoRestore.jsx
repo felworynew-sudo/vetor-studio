@@ -43,6 +43,7 @@ const TEXT = {
     waiting: 'ждёт обучения', haveNet: 'готово',
     about: 'О моделях и лицензиях',
     aboutBody: 'Классический режим повторяет типовую схему онлайн-реставраторов: YuNet (OpenCV Zoo, MIT) находит лица, RestoreFormer++ (Wang и др., Apache-2.0) восстанавливает каждое выровненное лицо, Real-ESRGAN (xinntao, BSD-3-Clause) увеличивает кадр. ONNX-версии моделей публикует сообщество FaceFusion на Hugging Face. Vetor Restore — наши собственные сети (NAFNet-архитектура, ResNet-UNet для цвета), обученные на данных с открытыми лицензиями.',
+    expert: 'Не устроил результат нейросети? Старое фото можно доверить специалисту — напишите в Telegram:',
     aboutNote: 'Результат — вероятностная дорисовка: на сильно повреждённых лицах нейросеть может придумать черты, которых не было. Для документов и архива сохраняйте оригинал.',
   },
   en: {
@@ -76,6 +77,7 @@ const TEXT = {
     waiting: 'waiting for training', haveNet: 'ready',
     about: 'About the models and licenses',
     aboutBody: 'Classic mode follows the typical online-restorer scheme: YuNet (OpenCV Zoo, MIT) finds faces, RestoreFormer++ (Wang et al., Apache-2.0) restores every aligned face, Real-ESRGAN (xinntao, BSD-3-Clause) upscales the frame. ONNX versions of the models are published by the FaceFusion community on Hugging Face. Vetor Restore is our own networks (NAFNet architecture, ResNet-UNet for color) trained on openly licensed data.',
+    expert: 'Not happy with the network’s result? You can hand the photo to a specialist — message on Telegram:',
     aboutNote: 'The result is a probabilistic reconstruction: on badly damaged faces the network may invent features that were not there. For documents and archives keep the original.',
   },
 };
@@ -287,6 +289,7 @@ function PhotoRestore({ language = 'ru' }) {
       {gpu !== null && <p className="tool-local-note">{gpu ? t.gpuYes : t.gpuNo}</p>}
       {mode === 'classic' && <p className="tool-local-note">{t.firstLoad}</p>}
       <p className="tool-local-note">🔒 {t.local}</p>
+      {srcUrl && <p className="tool-local-note pr-expert">{t.expert} <a href="https://t.me/felwory" target="_blank" rel="noopener noreferrer">@felwory</a></p>}
 
       <details className="pg-about">
         <summary>{t.about}</summary>

@@ -2207,3 +2207,4 @@ button.ae2-chip:hover, button.ae2-chip:focus-visible { border-color: var(--t-acc
 .pr-stages li em { font-style: normal; font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-soft); white-space: nowrap; }
 .pr-stages li.is-ready em { color: var(--t-accent); font-weight: 700; }
 @media (max-width: 560px) { .pr-stages li { grid-template-columns: 1fr; } }
+.pr-expert a { color: var(--t-accent); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
