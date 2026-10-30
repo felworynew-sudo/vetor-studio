@@ -1552,8 +1552,8 @@ a.tool-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(-
 .tools-vravio-text p { margin: 0; color: var(--text-muted); font-size: 14px; max-width: 56ch; }
 .tools-vravio-btn { flex: none; white-space: nowrap; }
 
-@media (max-width: 640px) {
-  .tools-vravio { flex-direction: column; align-items: flex-start; }
+@media (max-width: 640px), (max-width: 900px) and (max-height: 500px) and (pointer: coarse) {
+  .tools-vravio { display: none; }
 }
 
 /* Левая группа шапки (кнопка панели + лого) — держит лого у левого края. */
