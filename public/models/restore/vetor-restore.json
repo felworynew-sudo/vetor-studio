@@ -1,12 +1,12 @@
 {
   "status": "ready",
-  "version": "2026-10-30-repair-r2-best",
-  "note": "Repair: лучший EMA-чекпойнт второго раунда (шаг 1000). Texture, faces и colorize: первый раунд. Модели >100 МБ лежат кусками (<file>.0, .1, …; parts — их число).",
+  "version": "2026-10-31-faces-r3-clean-best",
+  "note": "Faces: лучший EMA-чекпойнт бережной очистки третьего раунда (шаг 3000). Repair: лучший EMA второго раунда (шаг 1000). Texture и colorize: первый раунд. Модели >100 МБ лежат кусками (<file>.0, .1, …; parts — их число).",
   "base": "vetor/",
   "nets": {
     "texture": { "file": "texture.onnx", "mb": 35 },
     "repair": { "file": "repair.onnx?v=2026-10-30-r2-best", "mb": 35 },
-    "faces": { "file": "faces.onnx", "mb": 137, "parts": 3 },
+    "faces": { "file": "faces-r3-clean-20261031.onnx", "mb": 137, "parts": 3 },
     "colorize": { "file": "colorize.onnx", "mb": 98, "parts": 2 }
   }
 }
