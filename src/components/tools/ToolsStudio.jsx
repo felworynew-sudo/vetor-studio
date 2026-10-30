@@ -35,7 +35,7 @@ const UI = {
     count: (n) => `${n} инструментов`,
     vravioEyebrow: 'Отдельный проект',
     vravioTitle: 'VRAVIO — полноценный редактор',
-    vravioText: 'Растр, вектор, аудио и видео на одном движке. Более мощная версия наших beta-редакторов, отдельным приложением.',
+    vravioText: 'Растр, вектор, аудио и видео в одной программе. Выберите среду при создании документа и переключайтесь между ними во вкладках.',
     vravioBtn: 'Открыть редактор',
     offlineTitle: 'Работает без интернета',
     offlineText: 'Все инструменты считаются прямо в вашем браузере — файлы никуда не уходят. После первой загрузки страницы обычные инструменты работают офлайн. AI-инструменты один раз скачивают модель (она кешируется браузером), а дальше тоже работают без сети. Чтобы гарантированно иметь всё офлайн: откройте нужные инструменты один раз при интернете — браузер сохранит их в кеш.',
@@ -60,7 +60,7 @@ const UI = {
     count: (n) => `${n} tools`,
     vravioEyebrow: 'Separate project',
     vravioTitle: 'VRAVIO — a full editor',
-    vravioText: 'Raster, vector, audio and video on one engine. A more powerful version of our beta editors, as a standalone app.',
+    vravioText: 'Raster, vector, audio and video in one app. Choose an environment for each document and switch between them in tabs.',
     vravioBtn: 'Open the editor',
     offlineTitle: 'Works offline',
     offlineText: 'Every tool runs right in your browser — files never leave your device. After the page loads once, regular tools work offline. AI tools download a model once (cached by the browser) and then work without a network too. To be sure everything is available offline: open the tools you need once while online — the browser will cache them.',
@@ -331,7 +331,7 @@ function ToolsStudio({
                   <h2>{ui.vravioTitle}</h2>
                   <p>{ui.vravioText}</p>
                 </div>
-                <a className="tools-btn primary tools-vravio-btn" href="https://felworynew-sudo.github.io/VRAVIO/" target="_blank" rel="noopener noreferrer">
+                <a className="tools-btn primary tools-vravio-btn" href="https://felworynew-sudo.github.io/VRAVIO-unified/" target="_blank" rel="noopener noreferrer">
                   {ui.vravioBtn} ↗
                 </a>
               </section>
