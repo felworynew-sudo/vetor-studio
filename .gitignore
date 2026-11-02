@@ -25,3 +25,6 @@ tmp-live-*
 .portable/
 github-token.txt
 .github-token
+
+# Манифест зеркала моделей для VPS — собирается при сборке (scripts/model-mirror.mjs)
+public/model-mirror.json

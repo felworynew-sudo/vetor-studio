@@ -379,6 +379,7 @@ const TOOL_USP = {
 const SEO_TOOLS = {
   ru: {
     'image-converter': { title: 'Конвертер изображений онлайн — PNG, JPG, WebP, HEIC, TIFF, PSD и др.', keywords: 'конвертер изображений, конвертировать webp в png, jpg в png, heic в jpg, конвертер картинок онлайн, изменить формат изображения' },
+    'stem-splitter': { title: 'Разделить песню на вокал и минус онлайн — стемы нейросетью бесплатно', keywords: 'разделить песню на дорожки, отделить вокал от музыки, сделать минус онлайн, разделение на стемы, demucs онлайн, убрать голос из песни' },
     compressor: { title: 'Сжать изображение до нужного размера онлайн — бесплатно', keywords: 'сжать изображение, сжать фото онлайн, уменьшить размер картинки, сжать jpg, сжать png, компрессор изображений до кб' },
     'background-remover': { title: 'Удалить фон с фото онлайн — бесплатно, без регистрации', keywords: 'удалить фон, убрать фон с фото, удалить фон онлайн, вырезать фон, фон прозрачный онлайн бесплатно' },
     upscaler: { title: 'Увеличить изображение без потери качества онлайн (AI)', keywords: 'увеличить изображение, апскейл фото, улучшить качество фото, увеличить картинку без потери качества, ai upscale' },
@@ -401,6 +402,7 @@ const SEO_TOOLS = {
     'mesh-gradient': { title: 'Генератор mesh-градиента онлайн — CSS и PNG', keywords: 'mesh gradient generator, меш градиент, многоцветный градиент css, сетчатый градиент онлайн' },
   },
   en: {
+    'stem-splitter': { title: 'Stem splitter online — separate vocals, drums and bass with AI, free', keywords: 'stem splitter, vocal remover, separate vocals from music, make instrumental, demucs online, split song into stems' },
     'image-converter': { title: 'Image converter online — PNG, JPG, WebP, HEIC, TIFF, PSD and more', keywords: 'image converter, convert webp to png, heic to jpg, change image format online, free image converter' },
     'background-remover': { title: 'Remove background from image online — free, no sign-up', keywords: 'remove background, background remover, remove bg online, transparent background, cut out background free' },
     compressor: { title: 'Compress image to target size online — free', keywords: 'compress image, reduce image size, compress jpg png, image compressor to kb online' },
@@ -541,8 +543,8 @@ function collectMeta(lang, { videos, music, blog, gallery, tags, tools = [], abs
       heading: t(lang, 'Инструменты для дизайнеров', 'Tools for designers'),
       description: t(
         lang,
-        'Более 50 бесплатных онлайн-инструментов для дизайнеров: конвертер изображений, сжатие фото, удаление фона, работа с цветом, CSS-генераторы, пиксель-арт и 3D. Всё считается прямо в браузере — без регистрации и загрузки файлов на сервер.',
-        'Over 50 free online tools for designers: image converter, photo compression, background removal, color tools, CSS generators, pixel art and 3D. Everything runs in your browser — no sign-up, nothing uploaded.',
+        `Более ${Math.floor(tools.filter((x) => x.status === 'ready' && x.listed !== false).length / 10) * 10} бесплатных онлайн-инструментов для дизайнеров: конвертер изображений, сжатие фото, удаление фона, работа с цветом, CSS-генераторы, пиксель-арт и 3D. Всё считается прямо в браузере — без регистрации и загрузки файлов на сервер.`,
+        `Over ${Math.floor(tools.filter((x) => x.status === 'ready' && x.listed !== false).length / 10) * 10} free online tools for designers: image converter, photo compression, background removal, color tools, CSS generators, pixel art and 3D. Everything runs in your browser — no sign-up, nothing uploaded.`,
       ),
       keywords: t(lang, 'инструменты для дизайнера, онлайн инструменты, конвертер изображений, генератор css, удалить фон, сжать фото, работа с цветом, бесплатно в браузере', 'designer tools, online tools, image converter, css generator, remove background, compress image, color tools, free in browser'),
       image: '/og/tools.png',
@@ -799,7 +801,7 @@ async function main() {
     // ко всем страницам тулов и релевантный контент для ранжирования хаба.
     let extraHtml = '';
     if (logicalPath === '/tools') {
-      const ready = tools.filter((tool) => tool.status === 'ready');
+      const ready = tools.filter((tool) => tool.status === 'ready' && tool.listed !== false);
       const groups = toolCategories.map((cat) => {
         const items = ready.filter((tool) => tool.categoryId === cat.id);
         if (!items.length) return '';

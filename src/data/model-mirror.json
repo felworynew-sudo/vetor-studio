@@ -1,0 +1,245 @@
+{
+ "base": "https://api.vetor-studio.ru/models/",
+ "files": {
+  "ext/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite": {
+   "size": 229746,
+   "sha256": "b4578f35940bf5a1a655214a1cce5cab13eba73c1297cd78e1a04c2380b0152f",
+   "src": "https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite"
+  },
+  "hf/Organika/sdxl-detector/config.json": {
+   "size": 1130,
+   "sha256": "731cf7e077d0176022a89c542169bbee58a0b77ad7311d77deb1c5720c2ab6c2",
+   "src": "https://huggingface.co/Organika/sdxl-detector/resolve/b37fede8562cb72b89ec201c0987f96ba21b518a/config.json"
+  },
+  "hf/Organika/sdxl-detector/onnx/model.onnx": {
+   "size": 353735517,
+   "sha256": "966487e0b8e43d35c803e7e6b794fb7164b1d9e23329388773a55f2b2bd4d1e4",
+   "src": "https://huggingface.co/Organika/sdxl-detector/resolve/b37fede8562cb72b89ec201c0987f96ba21b518a/onnx/model.onnx"
+  },
+  "hf/Organika/sdxl-detector/preprocessor_config.json": {
+   "size": 337,
+   "sha256": "5f37dd312775083c2ca1bd85b5935989cb128eb7f803aae5ba88381e4a4786b5",
+   "src": "https://huggingface.co/Organika/sdxl-detector/resolve/b37fede8562cb72b89ec201c0987f96ba21b518a/preprocessor_config.json"
+  },
+  "hf/Xenova/2x_APISR_RRDB_GAN_generator-onnx/config.json": {
+   "size": 30,
+   "sha256": "91f76c771a8d7b0c08f8e25b3bb324ec652f293788d7e2010dc2cdb20310da30",
+   "src": "https://huggingface.co/Xenova/2x_APISR_RRDB_GAN_generator-onnx/resolve/6361f81701564a71fe9aed63b1f1a150e0340e8f/config.json"
+  },
+  "hf/Xenova/2x_APISR_RRDB_GAN_generator-onnx/onnx/model.onnx": {
+   "size": 17963855,
+   "sha256": "c0c1bd343db0da03de28c5eb82c1cadfd5c77f909c9351fffda047dd116a3a24",
+   "src": "https://huggingface.co/Xenova/2x_APISR_RRDB_GAN_generator-onnx/resolve/6361f81701564a71fe9aed63b1f1a150e0340e8f/onnx/model.onnx"
+  },
+  "hf/Xenova/2x_APISR_RRDB_GAN_generator-onnx/preprocessor_config.json": {
+   "size": 152,
+   "sha256": "4fd9093c1a864c921b41fdc4dfcf2737997878cf794c1bfb2934b4fbcf930a9c",
+   "src": "https://huggingface.co/Xenova/2x_APISR_RRDB_GAN_generator-onnx/resolve/6361f81701564a71fe9aed63b1f1a150e0340e8f/preprocessor_config.json"
+  },
+  "hf/Xenova/4x_APISR_GRL_GAN_generator-onnx/config.json": {
+   "size": 30,
+   "sha256": "91f76c771a8d7b0c08f8e25b3bb324ec652f293788d7e2010dc2cdb20310da30",
+   "src": "https://huggingface.co/Xenova/4x_APISR_GRL_GAN_generator-onnx/resolve/5e55535f4fce1f4b3e4ab1c24835b86f08e7ba8f/config.json"
+  },
+  "hf/Xenova/4x_APISR_GRL_GAN_generator-onnx/onnx/model.onnx": {
+   "size": 6488522,
+   "sha256": "fcd4116ebbfadc958e443d07a87b97494a06b2e0f6db1c3811335ba7b21edcfb",
+   "src": "https://huggingface.co/Xenova/4x_APISR_GRL_GAN_generator-onnx/resolve/5e55535f4fce1f4b3e4ab1c24835b86f08e7ba8f/onnx/model.onnx"
+  },
+  "hf/Xenova/4x_APISR_GRL_GAN_generator-onnx/preprocessor_config.json": {
+   "size": 152,
+   "sha256": "4fd9093c1a864c921b41fdc4dfcf2737997878cf794c1bfb2934b4fbcf930a9c",
+   "src": "https://huggingface.co/Xenova/4x_APISR_GRL_GAN_generator-onnx/resolve/5e55535f4fce1f4b3e4ab1c24835b86f08e7ba8f/preprocessor_config.json"
+  },
+  "hf/Xenova/detr-resnet-50/config.json": {
+   "size": 4812,
+   "sha256": "2daaf8af0b4fe9d075fd728a6967b89a1084849d1b25de26338f97cd6ef41466",
+   "src": "https://huggingface.co/Xenova/detr-resnet-50/resolve/8be7ab59ff663484ee9ba2e8d8f267330d5ad03e/config.json"
+  },
+  "hf/Xenova/detr-resnet-50/onnx/model.onnx": {
+   "size": 166789212,
+   "sha256": "5dffb3205e68b0be1686eea283ecf87e7592d3dceed5dfc83249f7303e9e95e8",
+   "src": "https://huggingface.co/Xenova/detr-resnet-50/resolve/8be7ab59ff663484ee9ba2e8d8f267330d5ad03e/onnx/model.onnx"
+  },
+  "hf/Xenova/detr-resnet-50/onnx/model_quantized.onnx": {
+   "size": 43102531,
+   "sha256": "cae09a307ed9247da7e2ce8bcf81522a6817f1ea2e82b9c4dde59f5964b62b4f",
+   "src": "https://huggingface.co/Xenova/detr-resnet-50/resolve/8be7ab59ff663484ee9ba2e8d8f267330d5ad03e/onnx/model_quantized.onnx"
+  },
+  "hf/Xenova/detr-resnet-50/preprocessor_config.json": {
+   "size": 455,
+   "sha256": "fd7b4c38d03d99e37f75eebba889e064db89fed8fd451139442d010a11f2dc5e",
+   "src": "https://huggingface.co/Xenova/detr-resnet-50/resolve/8be7ab59ff663484ee9ba2e8d8f267330d5ad03e/preprocessor_config.json"
+  },
+  "hf/Xenova/modnet/config.json": {
+   "size": 83,
+   "sha256": "e144d8af9b1f09649785c77f592a76bbc69504ae02e43700663b2a9f00d9c8a2",
+   "src": "https://huggingface.co/Xenova/modnet/resolve/fa2fa546052fba4c08921230a26cc69a333fca12/config.json"
+  },
+  "hf/Xenova/modnet/onnx/model.onnx": {
+   "size": 25888640,
+   "sha256": "07c308cf0fc7e6e8b2065a12ed7fc07e1de8febb7dc7839d7b7f15dd66584df9",
+   "src": "https://huggingface.co/Xenova/modnet/resolve/fa2fa546052fba4c08921230a26cc69a333fca12/onnx/model.onnx"
+  },
+  "hf/Xenova/modnet/onnx/model_quantized.onnx": {
+   "size": 6632188,
+   "sha256": "92e49898c3e05a6d7a944fc67a8cb87c4aad754ffb6ebd949528c7d1105fee3a",
+   "src": "https://huggingface.co/Xenova/modnet/resolve/fa2fa546052fba4c08921230a26cc69a333fca12/onnx/model_quantized.onnx"
+  },
+  "hf/Xenova/modnet/preprocessor_config.json": {
+   "size": 365,
+   "sha256": "07d83634b1fdd20142ca6e3fe55ab92b558f56d1b0f005ff3a7926f1c9e1165d",
+   "src": "https://huggingface.co/Xenova/modnet/resolve/fa2fa546052fba4c08921230a26cc69a333fca12/preprocessor_config.json"
+  },
+  "hf/Xenova/swin2SR-classical-sr-x2-64/config.json": {
+   "size": 825,
+   "sha256": "e9ff87b27272c528232332f9c9d454d899940def893d3b53e3b76ef0b486a59f",
+   "src": "https://huggingface.co/Xenova/swin2SR-classical-sr-x2-64/resolve/93dfc9089abda257351d3a58d5771e2c1ff69442/config.json"
+  },
+  "hf/Xenova/swin2SR-classical-sr-x2-64/onnx/model.onnx": {
+   "size": 54428699,
+   "sha256": "6dde3fe2440543ccae7c40d175609f83c18aeaa3d8456745c4329ef97ae744bd",
+   "src": "https://huggingface.co/Xenova/swin2SR-classical-sr-x2-64/resolve/93dfc9089abda257351d3a58d5771e2c1ff69442/onnx/model.onnx"
+  },
+  "hf/Xenova/swin2SR-classical-sr-x2-64/preprocessor_config.json": {
+   "size": 152,
+   "sha256": "cbc36266fcc93d5bc1e9ca69bcc648ae9d268918ad14cd3507216740f129cc4d",
+   "src": "https://huggingface.co/Xenova/swin2SR-classical-sr-x2-64/resolve/93dfc9089abda257351d3a58d5771e2c1ff69442/preprocessor_config.json"
+  },
+  "hf/Xenova/swin2SR-lightweight-x2-64/config.json": {
+   "size": 801,
+   "sha256": "4d240283b55a5178c89555aecde586cf3ac6a5a4a2386515cd2c145aa2f5bdf8",
+   "src": "https://huggingface.co/Xenova/swin2SR-lightweight-x2-64/resolve/92a21aca5713f20faf9a87590cdfbdce2e34112c/config.json"
+  },
+  "hf/Xenova/swin2SR-lightweight-x2-64/onnx/model.onnx": {
+   "size": 8078888,
+   "sha256": "c2abbfe0cc8e685b5e11964970f8ebe3d24072e904fd5545a30ac31ec1e110db",
+   "src": "https://huggingface.co/Xenova/swin2SR-lightweight-x2-64/resolve/92a21aca5713f20faf9a87590cdfbdce2e34112c/onnx/model.onnx"
+  },
+  "hf/Xenova/swin2SR-lightweight-x2-64/preprocessor_config.json": {
+   "size": 152,
+   "sha256": "cbc36266fcc93d5bc1e9ca69bcc648ae9d268918ad14cd3507216740f129cc4d",
+   "src": "https://huggingface.co/Xenova/swin2SR-lightweight-x2-64/resolve/92a21aca5713f20faf9a87590cdfbdce2e34112c/preprocessor_config.json"
+  },
+  "hf/Xenova/swin2SR-realworld-sr-x4-64-bsrgan-psnr/config.json": {
+   "size": 837,
+   "sha256": "96dd766fe3e4139fc1b5cc3eb940e940bd97ad28072168bd015f05cafd818994",
+   "src": "https://huggingface.co/Xenova/swin2SR-realworld-sr-x4-64-bsrgan-psnr/resolve/d0e9926970c93e472ce2392373d72597fc849027/config.json"
+  },
+  "hf/Xenova/swin2SR-realworld-sr-x4-64-bsrgan-psnr/onnx/model.onnx": {
+   "size": 52772645,
+   "sha256": "f496dc73dcc01d778b1a12eb4c4038d6b27cd1c0b5bcd4258455ed6d7816c835",
+   "src": "https://huggingface.co/Xenova/swin2SR-realworld-sr-x4-64-bsrgan-psnr/resolve/d0e9926970c93e472ce2392373d72597fc849027/onnx/model.onnx"
+  },
+  "hf/Xenova/swin2SR-realworld-sr-x4-64-bsrgan-psnr/preprocessor_config.json": {
+   "size": 152,
+   "sha256": "cbc36266fcc93d5bc1e9ca69bcc648ae9d268918ad14cd3507216740f129cc4d",
+   "src": "https://huggingface.co/Xenova/swin2SR-realworld-sr-x4-64-bsrgan-psnr/resolve/d0e9926970c93e472ce2392373d72597fc849027/preprocessor_config.json"
+  },
+  "hf/facefusion/models-3.0.0/real_esrgan_x4.onnx": {
+   "size": 69539503,
+   "sha256": "afa7fa42eed0315a3d7b2a54e79e4e44a672d3c0889c2828c4f84c9ab91edb0b",
+   "src": "https://huggingface.co/facefusion/models-3.0.0/resolve/728b9659bd9691bf32cbf7f61af478d94b7ba81e/real_esrgan_x4.onnx"
+  },
+  "hf/facefusion/models-3.0.0/real_esrgan_x4_fp16.onnx": {
+   "size": 36144084,
+   "sha256": "223c117884ed92526ba1f89fbc09c663f15786c1049802c1a0ac8895b09a9cbc",
+   "src": "https://huggingface.co/facefusion/models-3.0.0/resolve/728b9659bd9691bf32cbf7f61af478d94b7ba81e/real_esrgan_x4_fp16.onnx"
+  },
+  "hf/facefusion/models-3.0.0/restoreformer_plus_plus.onnx": {
+   "size": 294264232,
+   "sha256": "164818b70d1745da4108a45c9263b05452236d14ac0ffab2202af0ac4a438195",
+   "src": "https://huggingface.co/facefusion/models-3.0.0/resolve/728b9659bd9691bf32cbf7f61af478d94b7ba81e/restoreformer_plus_plus.onnx"
+  },
+  "hf/onnx-community/BiRefNet_lite-ONNX/config.json": {
+   "size": 81,
+   "sha256": "50acd2d700ee3d5facdcf3aab2312bb586372726dce8bdd5741bdae0ca6eb84f",
+   "src": "https://huggingface.co/onnx-community/BiRefNet_lite-ONNX/resolve/de15b22ba131738a16dff04aab8bdf8dc32e3ac1/config.json"
+  },
+  "hf/onnx-community/BiRefNet_lite-ONNX/onnx/model.onnx": {
+   "size": 224005088,
+   "sha256": "5600024376f572a557870a5eb0afb1e5961636bef4e1e22132025467d0f03333",
+   "src": "https://huggingface.co/onnx-community/BiRefNet_lite-ONNX/resolve/de15b22ba131738a16dff04aab8bdf8dc32e3ac1/onnx/model.onnx"
+  },
+  "hf/onnx-community/BiRefNet_lite-ONNX/preprocessor_config.json": {
+   "size": 391,
+   "sha256": "447d9ccb2c4129ab0ca045fc293e7d79dbc45e293ac1e94818d865db77f65a54",
+   "src": "https://huggingface.co/onnx-community/BiRefNet_lite-ONNX/resolve/de15b22ba131738a16dff04aab8bdf8dc32e3ac1/preprocessor_config.json"
+  },
+  "site/apollo/apollo-44k-fp16.onnx": {
+   "size": 38392987,
+   "sha256": "535d0b369610e4ee69935dfa06016739505dcc60a50bd7ffb59abfe95e6e9a56",
+   "src": "https://vetor-studio.ru/models/apollo/apollo-44k-fp16.onnx"
+  },
+  "site/apollo/apollo-44k-fp32.onnx": {
+   "size": 73927321,
+   "sha256": "9600fe089574a5184ffa12d8a2f232e3aa9c8fc18531a8ec0e974cfb5987bd2c",
+   "src": "https://vetor-studio.ru/models/apollo/apollo-44k-fp32.onnx"
+  },
+  "site/dfn3/df_bg.wasm": {
+   "size": 8984197,
+   "sha256": "810622789eacc059b03ef8b3462180c0cb3fc49f80a17854ed7931c51e8bbd40",
+   "src": "https://vetor-studio.ru/models/dfn3/df_bg.wasm"
+  },
+  "site/dfn3/dfn3-model.tar.gz.bin": {
+   "size": 7983136,
+   "sha256": "c94d91f70911001c946e0fabb4aa9adc37045f45a03b56008cb0c8244cb63616",
+   "src": "https://vetor-studio.ru/models/dfn3/dfn3-model.tar.gz.bin"
+  },
+  "site/pixelgen/pixelgen.onnx": {
+   "size": 56160394,
+   "sha256": "d384d311f4f35e1cd2c71f7d304fc9945dc505824e9ce83c2b171168f7aaac90",
+   "src": "https://vetor-studio.ru/models/pixelgen/pixelgen.onnx"
+  },
+  "site/restore/vetor/colorize.onnx.0": {
+   "size": 49036771,
+   "sha256": "87f781fc53011fcd86262fa6b7578453dcbe857c067fa1b88de47b0421cf1d78",
+   "src": "https://vetor-studio.ru/models/restore/vetor/colorize.onnx.0"
+  },
+  "site/restore/vetor/colorize.onnx.1": {
+   "size": 49036770,
+   "sha256": "b4fe38e962848b94c5436ca5eb5a61bbf303307c7b3a343d679a9170affcf796",
+   "src": "https://vetor-studio.ru/models/restore/vetor/colorize.onnx.1"
+  },
+  "site/restore/vetor/faces-r3-clean-20261031.onnx.0": {
+   "size": 45794119,
+   "sha256": "0a5e16f20bd614379e838f9eade827276abe6f76170162e37cc5d827aff83017",
+   "src": "https://vetor-studio.ru/models/restore/vetor/faces-r3-clean-20261031.onnx.0"
+  },
+  "site/restore/vetor/faces-r3-clean-20261031.onnx.1": {
+   "size": 45794119,
+   "sha256": "2a1c74ce515abeb58730352817088294f28f88fa2cce0267ac0d5a7dbea47de1",
+   "src": "https://vetor-studio.ru/models/restore/vetor/faces-r3-clean-20261031.onnx.1"
+  },
+  "site/restore/vetor/faces-r3-clean-20261031.onnx.2": {
+   "size": 45794118,
+   "sha256": "1b3a418b40fb169f15e92757b0c02191e9962e1dbf264e12d0f896e77005d766",
+   "src": "https://vetor-studio.ru/models/restore/vetor/faces-r3-clean-20261031.onnx.2"
+  },
+  "site/restore/vetor/repair.onnx": {
+   "size": 34770323,
+   "sha256": "bacac1241f5e34992b57c21436e68c4bf873da28087fb18c8af79df404e22ae0",
+   "src": "https://vetor-studio.ru/models/restore/vetor/repair.onnx"
+  },
+  "site/restore/vetor/texture.onnx": {
+   "size": 34763041,
+   "sha256": "f7a016b057297ce30adecd73d9dc80e2bafed3c7e1f8735bc9ea431d5ef30e27",
+   "src": "https://vetor-studio.ru/models/restore/vetor/texture.onnx"
+  },
+  "site/restore/yunet.onnx": {
+   "size": 232589,
+   "sha256": "8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4",
+   "src": "https://vetor-studio.ru/models/restore/yunet.onnx"
+  },
+  "site/stems/htdemucs-v4.onnx.0": {
+   "size": 87131763,
+   "sha256": "ce9058582e023026ccc314b18086b2dfeb061eb937b7235b3a04b41571efbb02",
+   "src": "https://vetor-studio.ru/models/stems/htdemucs-v4.onnx.0"
+  },
+  "site/stems/htdemucs-v4.onnx.1": {
+   "size": 87131763,
+   "sha256": "a8dd33a6f1eeacf282da5e6d4cc50886239eb5cfe2b9c5cc22a658014be523ca",
+   "src": "https://vetor-studio.ru/models/stems/htdemucs-v4.onnx.1"
+  }
+ }
+}

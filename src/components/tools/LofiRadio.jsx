@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 // по окончании трека — следующий, битый трек пропускаем. Громкость на лету,
 // мягкий fade-in при старте трека. Музыка из /lofi, всё локально.
 
-const TRACKS = [
+export const TRACKS = [
   { src: '/lofi/after-rain-window.mp3', title: 'After Rain Window' },
   { src: '/lofi/after-the-briefing.mp3', title: 'After the Briefing' },
   { src: '/lofi/bayou-dust-loop.mp3', title: 'Bayou Dust Loop' },

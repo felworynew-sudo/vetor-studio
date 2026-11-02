@@ -1,8 +1,10 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 // Обрезка изображения рамкой: перетаскивание и ресайз за уголки/грани, пресеты
 // пропорций (свободно, 1:1, 4:3, 16:9 и др.), затемнение вне кадра и сетка
-// третей. Всё локально: пиксели режутся из оригинала в полном разрешении.
+// третей. Поворот на 90°, отражение, наклон на любой угол (пустые углы срезаются)
+// и выравнивание горизонта по линии; точный размер рамки в пикселях.
+// Всё локально: пиксели режутся из оригинала в полном разрешении.
 
 const RATIOS = [
   { id: 'free', label: '⤢', ru: 'Свободно', en: 'Free', r: null },
@@ -21,18 +23,61 @@ const TEXT = {
     drop: 'Перетащите изображение или нажмите', hint: 'PNG, JPG, WebP, GIF, BMP — обрабатывается локально',
     ratio: 'Пропорции', reset: 'Сбросить рамку', change: 'Другое', download: 'Скачать',
     format: 'Формат', size: 'Размер кадра', apply: 'Обрезать и скачать',
+    rotL: 'Повернуть влево', rotR: 'Повернуть вправо', flipH: 'Отразить по горизонтали', flipV: 'Отразить по вертикали',
+    angle: 'Наклон', trim: 'Срезать пустые углы', horizon: 'Выровнять по горизонту', horizonCancel: 'Отмена',
+    horizonHint: 'Проведите линию вдоль горизонта или любой линии, которая должна стать ровной.',
+    width: 'Ширина', height: 'Высота', px: 'px',
     note: 'Перетаскивайте рамку и тяните за уголки. Обрезка в исходном качестве, без загрузки на сервер.',
   },
   en: {
     drop: 'Drop an image or click', hint: 'PNG, JPG, WebP, GIF, BMP — processed locally',
     ratio: 'Aspect', reset: 'Reset frame', change: 'Another', download: 'Download',
     format: 'Format', size: 'Crop size', apply: 'Crop & download',
+    rotL: 'Rotate left', rotR: 'Rotate right', flipH: 'Flip horizontally', flipV: 'Flip vertically',
+    angle: 'Tilt', trim: 'Trim empty corners', horizon: 'Straighten by horizon', horizonCancel: 'Cancel',
+    horizonHint: 'Draw a line along the horizon or any line that should become level.',
+    width: 'Width', height: 'Height', px: 'px',
     note: 'Drag the frame and pull the corners. Cropped at full quality, nothing is uploaded.',
   },
 };
 
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const HANDLES = ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'];
+const NO_XF = { rot: 0, flipH: false, flipV: false, angle: 0, trim: true };
+const isIdentity = (x) => !x.rot && !x.flipH && !x.flipV && !x.angle;
+
+// Самый большой прямоугольник без пустых углов внутри повёрнутого кадра w×h.
+function innerRect(w, h, rad) {
+  const s = Math.abs(Math.sin(rad)); const c = Math.abs(Math.cos(rad));
+  if (s < 1e-9) return [w, h];
+  const long = Math.max(w, h); const short = Math.min(w, h);
+  if (short <= 2 * s * c * long || Math.abs(s - c) < 1e-10) {
+    const x = short / 2;
+    return w >= h ? [x / s, x / c] : [x / c, x / s];
+  }
+  const c2 = c * c - s * s;
+  return [(w * c - h * s) / c2, (h * c - w * s) / c2];
+}
+
+// Рабочий холст: поворот на 90°, отражения и наклон применяются к оригиналу один раз.
+function transformImage(img, x) {
+  const W = img.naturalWidth; const H = img.naturalHeight;
+  const quarter = x.rot % 180 !== 0;
+  const bw = quarter ? H : W; const bh = quarter ? W : H; // после поворота на 90°
+  const rad = (x.angle * Math.PI) / 180;
+  let cw = bw; let ch = bh;
+  if (rad) {
+    if (x.trim) [cw, ch] = innerRect(bw, bh, rad);
+    else { cw = bw * Math.abs(Math.cos(rad)) + bh * Math.abs(Math.sin(rad)); ch = bw * Math.abs(Math.sin(rad)) + bh * Math.abs(Math.cos(rad)); }
+  }
+  const c = document.createElement('canvas'); c.width = Math.max(1, Math.floor(cw)); c.height = Math.max(1, Math.floor(ch));
+  const ctx = c.getContext('2d'); ctx.imageSmoothingQuality = 'high';
+  ctx.translate(c.width / 2, c.height / 2);
+  ctx.rotate(rad + (x.rot * Math.PI) / 180);
+  ctx.scale(x.flipH ? -1 : 1, x.flipV ? -1 : 1);
+  ctx.drawImage(img, -W / 2, -H / 2);
+  return c;
+}
 
 function CropTool({ language = 'ru' }) {
   const t = TEXT[language] || TEXT.ru;
@@ -42,6 +87,10 @@ function CropTool({ language = 'ru' }) {
   const drag = useRef(null);
 
   const [src, setSrc] = useState('');
+  const [orig, setOrig] = useState(null); // { img, url } — исходник
+  const [xf, setXf] = useState(NO_XF);
+  const workRef = useRef(null); // холст или <img>, из которого режем
+  const [horizon, setHorizon] = useState(null); // null | { a, b } — линия в display px
   const [nat, setNat] = useState({ w: 0, h: 0 });
   const [box, setBox] = useState({ w: 0, h: 0 }); // размер отображаемой картинки (display px)
   const [ratioId, setRatioId] = useState('free');
@@ -52,9 +101,27 @@ function CropTool({ language = 'ru' }) {
 
   function loadFile(file) {
     if (!file || !file.type.startsWith('image/')) return;
-    setSrc(URL.createObjectURL(file));
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => { setOrig((prev) => { if (prev) URL.revokeObjectURL(prev.url); return { img, url }; }); setXf(NO_XF); };
+    img.src = url;
     setCrop(null);
   }
+
+  // Пересобираем рабочую картинку при каждом повороте/отражении/наклоне.
+  useEffect(() => {
+    if (!orig) return undefined;
+    if (isIdentity(xf)) { workRef.current = orig.img; setSrc(orig.url); return undefined; }
+    let alive = true; let url = '';
+    const id = setTimeout(() => {
+      const c = transformImage(orig.img, xf); workRef.current = c;
+      c.toBlob((b) => { if (!alive || !b) return; url = URL.createObjectURL(b); setSrc(url); }, 'image/webp', 0.9);
+    }, 60);
+    return () => { alive = false; clearTimeout(id); if (url) setTimeout(() => URL.revokeObjectURL(url), 2000); };
+  }, [orig, xf]);
+
+  const setX = (patch) => { setHorizon(null); setXf((p) => ({ ...p, ...patch })); };
+  const rotate = (d) => setX({ rot: (xf.rot + d + 360) % 360 });
 
   // Когда картинка отрисовалась — считаем её отображаемый размер и ставим рамку.
   const onImgLoad = useCallback(() => {
@@ -95,6 +162,41 @@ function CropTool({ language = 'ru' }) {
   }
 
   // --- Drag / resize ---
+  // Выравнивание горизонта: пользователь проводит линию, она становится ровной.
+  const lineRef = useRef(null); // { a, b } — линия, пока её тянут (ref: события идут быстрее рендера)
+  function onHorizonDown(e) {
+    e.preventDefault(); e.currentTarget.setPointerCapture?.(e.pointerId);
+    const p = pointer(e); lineRef.current = { a: p, b: p }; setHorizon({ a: p, b: p, drawing: true });
+  }
+  function onHorizonMove(e) {
+    if (!lineRef.current) return;
+    lineRef.current = { ...lineRef.current, b: pointer(e) }; setHorizon({ ...lineRef.current, drawing: true });
+  }
+  function onHorizonUp(e) {
+    const line = lineRef.current; if (!line) return;
+    lineRef.current = null;
+    const b = pointer(e); const dx = b.x - line.a.x; const dy = b.y - line.a.y;
+    if (Math.hypot(dx, dy) < 12) { setHorizon({ a: line.a, b: line.a, drawing: false }); return; }
+    let deg = (Math.atan2(dy, dx) * 180) / Math.PI;
+    if (deg > 90) deg -= 180; if (deg < -90) deg += 180;
+    if (Math.abs(deg) > 45) deg -= Math.sign(deg) * 90; // почти вертикальная линия — выравниваем по вертикали
+    setHorizon(null);
+    setXf((x) => ({ ...x, angle: clamp(Math.round((x.angle - deg) * 10) / 10, -45, 45) }));
+  }
+
+  // Точный размер рамки: в пикселях исходника, центр рамки остаётся на месте.
+  function setExact(dim, value) {
+    const v = Number(value); if (!crop || !v || v < 1) return;
+    const sx = nat.w / box.w; const sy = nat.h / box.h;
+    let w = crop.right - crop.left; let h = crop.bottom - crop.top;
+    if (dim === 'w') { w = Math.min(box.w, v / sx); if (ratio) h = w / ratio; } else { h = Math.min(box.h, v / sy); if (ratio) w = h * ratio; }
+    if (w > box.w) { w = box.w; if (ratio) h = w / ratio; }
+    if (h > box.h) { h = box.h; if (ratio) w = h * ratio; }
+    const cx = (crop.left + crop.right) / 2; const cy = (crop.top + crop.bottom) / 2;
+    const left = clamp(cx - w / 2, 0, box.w - w); const top = clamp(cy - h / 2, 0, box.h - h);
+    setCrop({ left, top, right: left + w, bottom: top + h });
+  }
+
   function pointer(e) {
     const rect = wrapRef.current.getBoundingClientRect();
     return { x: clamp(e.clientX - rect.left, 0, box.w), y: clamp(e.clientY - rect.top, 0, box.h) };
@@ -152,12 +254,12 @@ function CropTool({ language = 'ru' }) {
     const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
     const ctx = cv.getContext('2d');
     if (fmt === 'image/jpeg') { ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h); }
-    ctx.drawImage(imgRef.current, crop.left * sx, crop.top * sy, w, h, 0, 0, w, h);
+    ctx.drawImage(workRef.current || imgRef.current, crop.left * sx, crop.top * sy, w, h, 0, 0, w, h);
     if (!download) return cv;
     cv.toBlob((blob) => {
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = `crop-${w}x${h}.${fmt === 'image/jpeg' ? 'jpg' : 'png'}`;
+      a.download = `crop-${w}x${h}.${{ 'image/jpeg': 'jpg', 'image/webp': 'webp' }[fmt] || 'png'}`;
       document.body.appendChild(a); a.click(); a.remove();
       setTimeout(() => URL.revokeObjectURL(a.href), 1000);
     }, fmt, 0.92);
@@ -199,10 +301,31 @@ function CropTool({ language = 'ru' }) {
             </div>
           </div>
 
+          <div className="crop-xf">
+            <button type="button" className="tool-btn small" title={t.rotL} aria-label={t.rotL} onClick={() => rotate(-90)}>⟲ 90°</button>
+            <button type="button" className="tool-btn small" title={t.rotR} aria-label={t.rotR} onClick={() => rotate(90)}>⟳ 90°</button>
+            <button type="button" className={xf.flipH ? 'tool-btn small is-active' : 'tool-btn small'} title={t.flipH} aria-label={t.flipH} onClick={() => setX({ flipH: !xf.flipH })}>⇋</button>
+            <button type="button" className={xf.flipV ? 'tool-btn small is-active' : 'tool-btn small'} title={t.flipV} aria-label={t.flipV} onClick={() => setX({ flipV: !xf.flipV })}>⥮</button>
+            <label className="tool-field crop-angle">
+              <span className="tool-field-label">{t.angle}: {xf.angle.toFixed(1)}°</span>
+              <input type="range" min="-45" max="45" step="0.1" value={xf.angle} onChange={(e) => setX({ angle: Number(e.target.value) })} onDoubleClick={() => setX({ angle: 0 })} />
+            </label>
+            <label className="wm-check"><input type="checkbox" checked={xf.trim} onChange={(e) => setX({ trim: e.target.checked })} />{t.trim}</label>
+            {horizon
+              ? <button type="button" className="tool-btn small ghost" onClick={() => setHorizon(null)}>{t.horizonCancel}</button>
+              : <button type="button" className="tool-btn small" onClick={() => setHorizon({ a: { x: 0, y: 0 }, b: { x: 0, y: 0 }, drawing: false })}>📐 {t.horizon}</button>}
+          </div>
+          {horizon && <p className="tool-local-note">{t.horizonHint}</p>}
+
           <div className="crop-stage">
             <div className="crop-wrap" ref={wrapRef} onPointerMove={onMove} onPointerUp={onUp} onPointerLeave={onUp}>
               <img ref={imgRef} src={src} alt="" className="crop-img" onLoad={onImgLoad} draggable="false" />
-              {crop && (
+              {horizon && (
+                <svg className="crop-horizon" width={box.w} height={box.h} onPointerDown={onHorizonDown} onPointerMove={onHorizonMove} onPointerUp={onHorizonUp}>
+                  <line x1={horizon.a.x} y1={horizon.a.y} x2={horizon.b.x} y2={horizon.b.y} />
+                </svg>
+              )}
+              {crop && !horizon && (
                 <>
                   {/* затемнение вне рамки — 4 полосы */}
                   <div className="crop-shade" style={{ left: 0, top: 0, width: box.w, height: crop.top }} />
@@ -231,6 +354,15 @@ function CropTool({ language = 'ru' }) {
               <div className="segmented">
                 <button type="button" className={fmt === 'image/png' ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => setFmt('image/png')}>PNG</button>
                 <button type="button" className={fmt === 'image/jpeg' ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => setFmt('image/jpeg')}>JPG</button>
+                <button type="button" className={fmt === 'image/webp' ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => setFmt('image/webp')}>WebP</button>
+              </div>
+            </div>
+            <div className="tool-field">
+              <span className="tool-field-label">{t.size}, {t.px}</span>
+              <div className="crop-exact">
+                <input type="number" min="1" max={nat.w} value={cw || ''} aria-label={t.width} onChange={(e) => setExact('w', e.target.value)} />
+                <span>×</span>
+                <input type="number" min="1" max={nat.h} value={ch || ''} aria-label={t.height} onChange={(e) => setExact('h', e.target.value)} />
               </div>
             </div>
             <button type="button" className="tool-btn ghost" onClick={resetFrame}>{t.reset}</button>

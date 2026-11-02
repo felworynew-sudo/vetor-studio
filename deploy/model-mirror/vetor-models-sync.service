@@ -1,0 +1,28 @@
+[Unit]
+Description=Синхронизация зеркала моделей vetor-studio
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=vetormodels
+Group=vetormodels
+ExecStart=/usr/bin/python3 /opt/vetor-models/sync.py
+Nice=15
+IOSchedulingClass=idle
+CPUQuota=40%
+MemoryMax=120M
+TimeoutStartSec=3h
+NoNewPrivileges=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+LockPersonality=yes
+CapabilityBoundingSet=
+ReadWritePaths=/var/www/vetor-models /var/lib/vetor-models

@@ -1,6 +1,8 @@
 import { useRef, useState } from 'react';
 import { aiBrowserHint, aiErrorHint } from '../../utils/aiSupport';
 import { buildEvidence, elaMap, inspectMetadata } from '../../utils/imageForensics';
+import { loadTransformers } from '../../utils/transformersLib';
+import { withMirrorRetry } from '../../utils/modelMirror';
 
 // Экспертиза изображения (бывший «Детектор AI»). Не выносит бинарный приговор
 // и не рисует фальшивую точность «87% AI»: показывает независимые улики —
@@ -85,13 +87,12 @@ let clsPromise = null;
 async function getClassifier(onProgress) {
   if (clsPromise) return clsPromise;
   clsPromise = (async () => {
-    const lib = await import('@huggingface/transformers');
-    lib.env.allowLocalModels = false;
+    const lib = await loadTransformers();
     let device = 'wasm';
     try { if (typeof navigator !== 'undefined' && navigator.gpu && await navigator.gpu.requestAdapter()) device = 'webgpu'; } catch { /* wasm */ }
     // В репозитории модели есть только fp32 (onnx/model.onnx) — без явного dtype на WASM
     // transformers.js ищет несуществующий model_quantized.onnx и падает.
-    return lib.pipeline('image-classification', MODEL_ID, { device, dtype: 'fp32', progress_callback: onProgress });
+    return withMirrorRetry(() => lib.pipeline('image-classification', MODEL_ID, { device, dtype: 'fp32', progress_callback: onProgress }));
   })().catch((e) => { clsPromise = null; throw e; });
   return clsPromise;
 }

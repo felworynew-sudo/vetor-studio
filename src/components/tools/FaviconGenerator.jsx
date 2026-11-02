@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { buildIco } from '../../utils/ico';
 
 // Генератор фавиконок по современному минимальному набору: favicon.ico
 // (16/32/48 внутри, PNG-кадры), icon.svg (из SVG-исходника или текста/эмодзи),
@@ -28,21 +29,6 @@ const TEXT = {
 };
 
 const FONT = 'system-ui, -apple-system, "Segoe UI", Roboto, "Apple Color Emoji", "Segoe UI Emoji", sans-serif';
-
-// ICO-контейнер с PNG-кадрами (поддерживается браузерами и Windows Vista+).
-function buildIco(frames) {
-  const head = 6 + frames.length * 16; const total = head + frames.reduce((s, f) => s + f.data.length, 0);
-  const buf = new Uint8Array(total); const dv = new DataView(buf.buffer);
-  dv.setUint16(0, 0, true); dv.setUint16(2, 1, true); dv.setUint16(4, frames.length, true);
-  let off = head;
-  frames.forEach((f, i) => {
-    const e = 6 + i * 16;
-    buf[e] = f.size >= 256 ? 0 : f.size; buf[e + 1] = f.size >= 256 ? 0 : f.size; buf[e + 2] = 0; buf[e + 3] = 0;
-    dv.setUint16(e + 4, 1, true); dv.setUint16(e + 6, 32, true); dv.setUint32(e + 8, f.data.length, true); dv.setUint32(e + 12, off, true);
-    buf.set(f.data, off); off += f.data.length;
-  });
-  return buf;
-}
 
 function roundRect(ctx, x, y, w, h, r) {
   ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);

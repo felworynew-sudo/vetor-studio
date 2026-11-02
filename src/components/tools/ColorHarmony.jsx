@@ -1,16 +1,22 @@
 import { useMemo, useState } from 'react';
 import { hexToRgb, oklabToOklch, oklchToRgbClamped, rgbToHex, rgbToOklab } from '../../utils/oklab';
+import { buildAse } from '../../utils/ase';
 
 // Цветовые схемы (круг Иттена): по базовому цвету строит гармоничные сочетания
 // вращением тона. По умолчанию — в OKLCH: светлота и насыщенность воспринимаются
 // одинаковыми у всех цветов схемы (в HSL жёлтый «светлее» синего при тех же L/S),
 // выход за sRGB аккуратно сжимается по хроме. HSL оставлен для сравнения.
+// Для каждого цвета схемы строится шкала оттенков 50–950 (как в Tailwind) в OKLCH;
+// экспорт — CSS-переменные, Tailwind (v3 и v4), JSON и .ase для Adobe/Figma-плагинов.
 
 const TEXT = {
   ru: {
     base: 'Базовый цвет', scheme: 'Схема', copy: 'Копировать все', copied: 'Скопировано',
     hint: 'Схемы строятся вращением тона по цветовому кругу — как в круге Иттена. В режиме OKLCH все цвета схемы визуально одной светлоты и насыщенности.',
     space: 'Пространство', oklch: 'OKLCH (перцептивно)', hsl: 'HSL (классика)',
+    shades: 'Шкала оттенков', shadesHint: 'Клик по плашке — скопировать. Рамкой отмечен исходный цвет схемы.',
+    export: 'Экспорт', prefix: 'Имена', download: 'Скачать .ase', copyCode: 'Копировать код',
+    names: ['primary', 'secondary', 'accent', 'highlight', 'extra'],
     schemes: {
       complementary: 'Комплементарная', analogous: 'Аналоговая', triadic: 'Триада',
       tetradic: 'Тетрада', split: 'Сплит-комплементарная', mono: 'Монохромная',
@@ -20,6 +26,9 @@ const TEXT = {
     base: 'Base color', scheme: 'Scheme', copy: 'Copy all', copied: 'Copied',
     hint: 'Schemes are built by rotating hue around the color wheel — like Itten’s wheel. In OKLCH mode all colors look equally light and saturated.',
     space: 'Space', oklch: 'OKLCH (perceptual)', hsl: 'HSL (classic)',
+    shades: 'Shade scale', shadesHint: 'Click a swatch to copy. The outlined one is the scheme color itself.',
+    export: 'Export', prefix: 'Names', download: 'Download .ase', copyCode: 'Copy code',
+    names: ['primary', 'secondary', 'accent', 'highlight', 'extra'],
     schemes: {
       complementary: 'Complementary', analogous: 'Analogous', triadic: 'Triadic',
       tetradic: 'Tetradic', split: 'Split-complementary', mono: 'Monochromatic',
@@ -97,18 +106,62 @@ function buildScheme(base, scheme) {
   }
 }
 
+// Шкала 50–950 в OKLCH: светлота по фиксированной лестнице, хрома тише у краёв
+// (очень светлые и очень тёмные оттенки не вылезают за гамут), тон — как у цвета.
+const STEPS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
+const STEP_L = [0.975, 0.94, 0.88, 0.8, 0.71, 0.62, 0.53, 0.45, 0.37, 0.29, 0.21];
+
+function shadeScale(hex) {
+  const [L, C, h] = oklabToOklch(...rgbToOklab(...hexToRgb(hex)));
+  let baseIdx = 0; STEP_L.forEach((l, i) => { if (Math.abs(l - L) < Math.abs(STEP_L[baseIdx] - L)) baseIdx = i; });
+  return STEPS.map((step, i) => {
+    if (i === baseIdx) return { step, hex, base: true };
+    const l = STEP_L[i];
+    const k = 1 - Math.abs(l - 0.6) ** 1.6 * 1.6; // тише к краям
+    return { step, hex: rgbToHex(...oklchToRgbClamped(l, C * Math.max(0.12, k), h)), base: false };
+  });
+}
+
+function exportCode(fmt, rows) {
+  if (fmt === 'css') {
+    return `:root {\n${rows.map((r) => r.scale.map((s) => `  --${r.name}-${s.step}: ${s.hex};`).join('\n')).join('\n\n')}\n}`;
+  }
+  if (fmt === 'tw4') {
+    return `@theme {\n${rows.map((r) => r.scale.map((s) => `  --color-${r.name}-${s.step}: ${s.hex};`).join('\n')).join('\n\n')}\n}`;
+  }
+  const obj = Object.fromEntries(rows.map((r) => [r.name, Object.fromEntries(r.scale.map((s) => [s.step, s.hex]))]));
+  if (fmt === 'tw3') {
+    const body = JSON.stringify(obj, null, 2).replace(/"(\d+)":/g, '$1:').replace(/"([a-z][\w-]*)":/g, (m, k) => (/^[a-z]\w*$/.test(k) ? `${k}:` : m)).replace(/"/g, "'");
+    return `// tailwind.config.js\nmodule.exports = {\n  theme: {\n    extend: {\n      colors: ${body.replace(/\n/g, '\n      ')},\n    },\n  },\n};`;
+  }
+  return JSON.stringify(obj, null, 2);
+}
+
 function ColorHarmony({ language = 'ru' }) {
   const t = TEXT[language] || TEXT.ru;
   const [raw, setRaw] = useState('#6166ff');
   const [scheme, setScheme] = useState('complementary');
   const [copied, setCopied] = useState('');
   const [space, setSpace] = useState('oklch');
+  const [fmt, setFmt] = useState('css');
 
   const hex = normalizeHex(raw);
   const colors = useMemo(() => {
     if (!hex) return [];
     return space === 'oklch' ? buildSchemeOk(hex, scheme) : buildScheme(hexToHsl(hex), scheme);
   }, [hex, scheme, space]);
+
+  // у монохромной схемы один тон — достаточно одной шкалы от базового цвета
+  const rows = useMemo(() => (scheme === 'mono' ? [hex].filter(Boolean) : colors).map((c, i) => ({ name: t.names[i] || `color-${i + 1}`, hex: c, scale: shadeScale(c) })), [colors, scheme, hex, t.names]);
+  const code = useMemo(() => exportCode(fmt, rows), [fmt, rows]);
+
+  function downloadAse() {
+    const groups = rows.map((r) => ({ name: r.name, colors: r.scale.map((s) => ({ name: `${r.name}-${s.step}`, hex: s.hex })) }));
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([buildAse(groups)], { type: 'application/octet-stream' }));
+    a.download = `palette-${scheme}.ase`;
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  }
 
   function copyOne(c) {
     if (navigator.clipboard) navigator.clipboard.writeText(c).then(() => { setCopied(c); setTimeout(() => setCopied(''), 1200); }).catch(() => {});
@@ -155,6 +208,38 @@ function ColorHarmony({ language = 'ru' }) {
         <div className="tool-actions">
           <button type="button" className="tool-btn primary" onClick={copyAll}>{copied === 'all' ? `✓ ${t.copied}` : t.copy}</button>
         </div>
+      )}
+
+      {rows.length > 0 && (
+        <>
+          <span className="tool-field-label">{t.shades}</span>
+          <div className="ch-scale">
+            {rows.map((r) => (
+              <div key={r.name} className="ch-scale-row">
+                <span className="ch-scale-name">{r.name}</span>
+                {r.scale.map((sh) => (
+                  <button key={sh.step} type="button" className={sh.base ? 'ch-shade is-base' : 'ch-shade'} style={{ background: sh.hex, color: sh.step >= 500 ? '#fff' : '#111' }} title={`${r.name}-${sh.step} ${sh.hex}`} onClick={() => copyOne(sh.hex)}>
+                    <span>{copied === sh.hex ? '✓' : sh.step}</span>
+                  </button>
+                ))}
+              </div>
+            ))}
+          </div>
+          <p className="tool-local-note">{t.shadesHint}</p>
+
+          <div className="code-export">
+            <div className="code-export-head">
+              <div className="segmented">
+                {[['css', 'CSS'], ['tw4', 'Tailwind 4'], ['tw3', 'Tailwind 3'], ['json', 'JSON']].map(([k, l]) => (
+                  <button key={k} type="button" className={fmt === k ? 'segmented-btn is-active' : 'segmented-btn'} onClick={() => setFmt(k)}>{l}</button>
+                ))}
+              </div>
+              <button type="button" className="tool-btn primary small" onClick={() => copyOne(code)}>{copied === code ? `✓ ${t.copied}` : t.copyCode}</button>
+              <button type="button" className="tool-btn small" onClick={downloadAse}>⬇ {t.download}</button>
+            </div>
+            <pre className="code-export-code"><code>{code}</code></pre>
+          </div>
+        </>
       )}
 
       <p className="tool-local-note">🎨 {t.hint}</p>

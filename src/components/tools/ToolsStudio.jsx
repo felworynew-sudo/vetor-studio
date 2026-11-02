@@ -245,7 +245,7 @@ function ToolsStudio({
             className={!activeTool ? 'tools-side-all is-active' : 'tools-side-all'}
             onClick={go('/tools')}
           >
-            📂 {ui.all} <span className="tools-side-count">{TOOLS.length}</span>
+            <PxIcon src="papka-zheltaya.png" emoji="📂" className="tools-side-icon" /> {ui.all} <span className="tools-side-count">{TOOLS.length}</span>
           </a>
           {TOOL_CATEGORIES.map((cat) => {
             const catTools = getToolsByCategory(cat.id);
@@ -396,7 +396,7 @@ function ToolCard({ tool, lang, ui, onOpen }) {
       <PxIcon src={tool.img} emoji={tool.icon} className="tool-card-icon" />
       <h3>{tool[lang].title}</h3>
       <p>{tool[lang].desc}</p>
-      {cat && <span className="tool-card-cat">{cat.icon} {cat[lang]}</span>}
+      {cat && <span className="tool-card-cat"><PxIcon src={cat.img} emoji={cat.icon} className="tools-side-icon" /> {cat[lang]}</span>}
     </a>
   );
 }

@@ -2208,3 +2208,130 @@ button.ae2-chip:hover, button.ae2-chip:focus-visible { border-color: var(--t-acc
 .pr-stages li.is-ready em { color: var(--t-accent); font-weight: 700; }
 @media (max-width: 560px) { .pr-stages li { grid-template-columns: 1fr; } }
 .pr-expert a { color: var(--t-accent); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+
+/* ===== Доработки ноября 2026: общие блоки ===== */
+.tool-btn.is-active { background: var(--t-accent); color: #fff; border-color: var(--t-accent); }
+.tool-input, .qr-input {
+  padding: 7px 10px; border-radius: 8px; border: 1px solid var(--stroke-strong);
+  background: var(--bg); color: var(--text); font-size: 13px; min-width: 0;
+}
+.code-export { margin: 6px 0 16px; }
+.code-export-head { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 8px; }
+.code-export-code {
+  margin: 0; padding: 12px 14px; border-radius: 10px; background: var(--surface-strong);
+  border: 1px solid var(--stroke); font-family: monospace; font-size: 12.5px; color: var(--text);
+  white-space: pre-wrap; word-break: break-all; max-height: 320px; overflow: auto;
+}
+
+/* --- Масштабатор иконок --- */
+.is-bg-row { display: flex; align-items: center; gap: 10px; min-height: 34px; }
+.icon-scaler .tool-input { width: 220px; }
+
+/* --- Генератор градиентов --- */
+.gg-bar-wrap { margin: 0 0 16px; }
+.gg-bar {
+  position: relative; height: 34px; border-radius: 10px; border: 1px solid var(--stroke-strong);
+  cursor: copy; touch-action: none; margin: 0 10px 6px;
+}
+.gg-handle {
+  position: absolute; top: 50%; width: 20px; height: 40px; transform: translate(-50%, -50%);
+  border-radius: 7px; border: 3px solid #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.5), 0 2px 6px rgba(0,0,0,.4);
+  cursor: grab; padding: 0; touch-action: none;
+}
+.gg-handle.is-active { border-color: var(--t-accent); outline: 2px solid #fff; z-index: 2; }
+.gg-handle:active { cursor: grabbing; }
+.gg-stop.is-active { outline: 1px solid var(--t-accent); outline-offset: 4px; border-radius: 8px; }
+
+/* --- ASCII --- */
+.ascii-custom { margin: -6px 0 12px; }
+.ascii-custom .gg-stop-hex { width: 260px; }
+
+/* --- Таймер 20-20-20 --- */
+.bt-options { justify-content: center; }
+
+/* --- Обрезка --- */
+.crop-xf { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px 14px; margin-bottom: 12px; }
+.crop-angle input[type="range"] { width: 220px; }
+.crop-horizon { position: absolute; left: 0; top: 0; cursor: crosshair; touch-action: none; z-index: 5; }
+.crop-horizon line { stroke: #ffd400; stroke-width: 2; stroke-dasharray: 6 4; }
+.crop-exact { display: flex; align-items: center; gap: 6px; }
+.crop-exact input {
+  width: 86px; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--stroke-strong);
+  background: var(--bg); color: var(--text); font-family: monospace; font-size: 13px;
+}
+
+/* --- QR --- */
+.qr-tpls { flex-wrap: wrap; }
+.qr-fields { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px 14px; align-items: end; }
+.qr-field .qr-input { width: 100%; }
+.qr-payload {
+  display: block; padding: 8px 10px; border-radius: 8px; background: var(--surface-strong); border: 1px dashed var(--stroke-strong);
+  font-family: monospace; font-size: 12px; color: var(--text-muted); white-space: pre-wrap; word-break: break-all;
+}
+.qr-preview-col { display: flex; flex-direction: column; gap: 8px; }
+.qr-check { margin: 0; font-size: 13px; font-weight: 700; }
+.qr-check.is-ok { color: #3ec98a; }
+.qr-check.is-bad { color: #ff8a8f; }
+
+/* --- Цветовой вес --- */
+.cw-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 22px; align-items: start; }
+.cw-canvas { width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--stroke); display: block; margin-bottom: 10px; }
+.cw-verdict { padding: 12px 14px; border-radius: 12px; border: 1px solid var(--stroke); background: var(--bg); margin-bottom: 14px; }
+.cw-verdict ul { margin: 8px 0 0; padding-left: 18px; font-size: 13.5px; color: var(--text-muted); }
+.cw-verdict.is-pass { border-color: rgba(62, 201, 138, .6); } .cw-verdict.is-pass strong { color: #3ec98a; }
+.cw-verdict.is-near { border-color: rgba(255, 183, 3, .6); } .cw-verdict.is-near strong { color: #ffb703; }
+.cw-verdict.is-fail { border-color: rgba(255, 92, 99, .6); } .cw-verdict.is-fail strong { color: #ff8a8f; }
+.cw-roles { display: flex; flex-direction: column; gap: 6px; margin: 8px 0 16px; }
+.cw-role-row {
+  display: grid; grid-template-columns: 130px 1fr 48px; align-items: center; gap: 10px; padding: 6px 10px;
+  border-radius: 8px; background: var(--bg); border: 1px solid var(--stroke); color: var(--text); cursor: pointer; text-align: left;
+}
+.cw-role-row.is-active, .cw-row.is-active { border-color: var(--t-accent); }
+.cw-role-name { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; }
+.cw-role-name i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.cw-role-track { position: relative; height: 12px; border-radius: 6px; background: var(--surface-strong); overflow: visible; }
+.cw-role-fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 6px; border: 1px solid var(--stroke-strong); }
+.cw-role-target { position: absolute; top: -4px; bottom: -4px; width: 2px; background: #fff; opacity: .7; }
+.cw-bar-seg { border: 0; padding: 0; cursor: pointer; }
+.cw-swatch { cursor: pointer; padding: 0; }
+@media (max-width: 760px) { .cw-layout { grid-template-columns: 1fr; } .cw-role-row { grid-template-columns: 100px 1fr 44px; } }
+
+/* --- Цветовые схемы: шкала оттенков --- */
+.ch-scale { display: flex; flex-direction: column; gap: 6px; margin: 8px 0 6px; overflow-x: auto; }
+.ch-scale-row { display: grid; grid-template-columns: 82px repeat(11, minmax(40px, 1fr)); gap: 4px; align-items: stretch; min-width: 560px; }
+.ch-scale-name { font-family: monospace; font-size: 12px; color: var(--text-muted); align-self: center; }
+.ch-shade { height: 40px; border-radius: 6px; border: 0; cursor: pointer; font-size: 10.5px; font-family: monospace; padding: 0; }
+.ch-shade.is-base { outline: 2px solid var(--text); outline-offset: 1px; }
+
+/* --- CSS-студия --- */
+.cs-scene {
+  position: relative; min-height: 340px; border-radius: 16px; border: 1px solid var(--stroke);
+  display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 16px; padding: 30px 16px;
+}
+.cs-blob { position: absolute; inset: 0; margin: auto; aspect-ratio: 1; height: auto; pointer-events: none; }
+.cs-blob svg { width: 100%; height: 100%; display: block; }
+.cs-card {
+  position: relative; width: min(320px, 100%); min-height: 170px; padding: 22px;
+  display: flex; flex-direction: column; gap: 8px; justify-content: flex-end; font-size: 14px;
+}
+.cs-card strong { font-size: 20px; }
+.cs-tabs { flex-wrap: wrap; margin-bottom: 12px; }
+.cs-panel { display: flex; flex-direction: column; gap: 12px; padding: 14px; border-radius: 12px; border: 1px solid var(--stroke); background: var(--bg); margin-bottom: 18px; }
+
+/* --- Разделение на стемы --- */
+.ss-file { margin: 0 0 14px; color: var(--text-muted); }
+.ss-file strong { color: var(--text); }
+.ss-progress { display: flex; flex-direction: column; gap: 8px; padding: 14px; border-radius: 12px; border: 1px solid var(--stroke); background: var(--bg); margin: 8px 0 16px; }
+.ss-progress-head { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; }
+.ss-progress .tool-btn { align-self: flex-start; }
+.ss-bar { height: 10px; border-radius: 5px; background: var(--surface-strong); overflow: hidden; border: 1px solid var(--stroke); }
+.ss-bar span { display: block; height: 100%; background: var(--t-accent); transition: width .3s; }
+.ss-mixer { display: flex; flex-direction: column; gap: 6px; margin: 16px 0; }
+.ss-row {
+  display: grid; grid-template-columns: minmax(150px, 1fr) auto auto minmax(90px, 180px) auto; gap: 10px; align-items: center;
+  padding: 8px 12px; border-radius: 10px; border: 1px solid var(--stroke); background: var(--bg);
+}
+.ss-row.is-off { opacity: .5; }
+.ss-row input[type="range"] { width: 100%; accent-color: var(--t-accent); }
+.ss-name { font-weight: 700; font-size: 14px; }
+@media (max-width: 640px) { .ss-row { grid-template-columns: 1fr auto auto; } .ss-row input[type="range"] { grid-column: 1 / -1; } }

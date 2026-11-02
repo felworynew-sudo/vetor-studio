@@ -7,6 +7,7 @@
 // Обе модели работают на 48 кГц, моно-кадрами.
 
 import { resample } from './dsp.js';
+import { modelFetch, withMirrorRetry } from '../utils/modelMirror';
 
 const CACHE = 'vetor-audio-models-v1';
 // Алгоритмическая задержка DFN3 (STFT 960/480 + lookahead), измерена кросс-корреляцией на речи.
@@ -15,13 +16,17 @@ export const DFN_DELAY = 1440;
 let dfn = null; let dfnPromise = null; let modelBytes = null;
 const dfnStates = [];
 
-export async function fetchCached(url) {
+export function fetchCached(url) {
+  return withMirrorRetry(() => fetchCachedOnce(url));
+}
+
+async function fetchCachedOnce(url) {
   try {
     if (typeof caches !== 'undefined') {
       const cache = await caches.open(CACHE);
       const hit = await cache.match(url);
       if (hit) return hit.arrayBuffer();
-      const res = await fetch(url);
+      const res = await modelFetch(url);
       if (!res.ok) throw new Error(`${res.status} ${url}`);
       await cache.put(url, res.clone());
       return res.arrayBuffer();
@@ -29,7 +34,7 @@ export async function fetchCached(url) {
   } catch (e) {
     if (String(e.message || '').match(/^\d{3} /)) throw e;
   }
-  const res = await fetch(url);
+  const res = await modelFetch(url);
   if (!res.ok) throw new Error(`${res.status} ${url}`);
   return res.arrayBuffer();
 }

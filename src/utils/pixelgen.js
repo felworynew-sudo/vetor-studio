@@ -4,6 +4,7 @@
 // условную/безусловную ветки в одном батче.
 
 import ortWasmUrl from 'onnxruntime-web/ort-wasm-simd-threaded.jsep.wasm?url';
+import { modelFetch, withMirrorRetry } from './modelMirror';
 
 const CACHE = 'pixelgen-model-v1';
 const BASE = `${import.meta.env.BASE_URL || '/'}models/pixelgen/`;
@@ -26,7 +27,7 @@ async function fetchBytes(url, onProgress) {
     const hit = await cache.match(url);
     if (hit) { onProgress?.(1, 1); return new Uint8Array(await hit.arrayBuffer()); }
   }
-  const res = await fetch(url);
+  const res = await modelFetch(url);
   if (!res.ok) throw new Error(`${res.status} ${url}`);
   const total = Number(res.headers.get('content-length')) || 0;
   const copy = cache ? res.clone() : null;
@@ -66,7 +67,7 @@ export function loadPixelGen(device, onProgress) {
       fetch(`${BASE}browser-config.json`).then((r) => { if (!r.ok) throw new Error('config'); return r.json(); }),
       fetch(`${BASE}vocabulary.json`).then((r) => { if (!r.ok) throw new Error('vocabulary'); return r.json(); }),
     ]);
-    const bytes = await fetchBytes(`${BASE}${cfg.model}`, onProgress);
+    const bytes = await withMirrorRetry(() => fetchBytes(`${BASE}${cfg.model}`, onProgress));
     const session = await ort.InferenceSession.create(bytes, { executionProviders: [device], graphOptimizationLevel: 'all' });
     return { ort, session, cfg, vocab, vocabSet: new Set(Object.keys(vocab)), device };
   })().catch((e) => { loaded = null; throw e; });

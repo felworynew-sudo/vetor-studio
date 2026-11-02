@@ -94,7 +94,7 @@ AGPL/NC-лицензии не тащим.
 - [x] **D11. Cover Art Extractor** (обложка из MP3/FLAC/M4A).
 - [x] **D12. Audio Tag Editor** — редактирование ID3 (объединить с C2).
 - [ ] **D13. Subtitle Editor** — видео + waveform + SRT/VTT.
-- [ ] **D14. Stem Splitter** — вокал/барабаны/бас (Demucs WebGPU) — сначала проверить вес модели и скорость.
+- [x] **D14. Stem Splitter** — Demucs v4 (ONNX, порт bakkot/demucs-js) на WebGPU/WASM + своя дочистка стемов (маски Винера, просачивание, гейт).
 - [ ] **D15. Relight / Time of Day** — depth-aware relight фото.
 - [ ] **D16. Procedural Lab** — объединение генераторов в единый стек (долгосрочно, после C10/C15).
 - [ ] **D17. Audio Super-Resolution** — исследовать (AudioSR тяжёлый для браузера), делать только если реально запускается.

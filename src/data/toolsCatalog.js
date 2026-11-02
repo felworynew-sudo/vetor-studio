@@ -1,9 +1,15 @@
-import { lazy } from 'react';
+import { createElement, lazy } from 'react';
 import toolsData from './toolsData.json';
 
 // Единый источник данных студии инструментов — toolsData.json (его же читают
 // сборочные скрипты для sitemap/шеллов). Здесь к готовым тулам подключаются
 // ленивые компоненты. Всё считается в браузере пользователя (client-side).
+
+// Прежние отдельные CSS-генераторы теперь вкладки CSS-студии: их адреса остаются
+// рабочими и открывают студию сразу на нужной вкладке.
+const studioTab = (tab) => lazy(() => import('../components/tools/CssStudio').then((m) => ({
+  default: (props) => createElement(m.default, { ...props, initialTab: tab }),
+})));
 
 const READY_COMPONENTS = {
   'image-converter': lazy(() => import('../components/tools/ImageConverter')),
@@ -57,12 +63,13 @@ const READY_COMPONENTS = {
   'text-3d': lazy(() => import('../components/tools/Text3D')),
   'fire-smoke': lazy(() => import('../components/tools/FireSmoke')),
   'blob-lab': lazy(() => import('../components/tools/BlobLab')),
-  'box-shadow': lazy(() => import('../components/tools/BoxShadow')),
-  glassmorphism: lazy(() => import('../components/tools/Glassmorphism')),
-  blob: lazy(() => import('../components/tools/BlobGen')),
+  'css-studio': lazy(() => import('../components/tools/CssStudio')),
+  'box-shadow': studioTab('shadow'),
+  glassmorphism: studioTab('card'),
+  blob: studioTab('blob'),
   compressor: lazy(() => import('../components/tools/ImageCompressor')),
   duotone: lazy(() => import('../components/tools/Duotone')),
-  'pattern-gen': lazy(() => import('../components/tools/PatternGen')),
+  'pattern-gen': studioTab('bg'),
   'mesh-gradient': lazy(() => import('../components/tools/MeshGradient')),
   'cubic-bezier': lazy(() => import('../components/tools/CubicBezier')),
   'crt-glitch': lazy(() => import('../components/tools/CrtGlitch')),
@@ -90,6 +97,7 @@ const READY_COMPONENTS = {
   'object-remover': lazy(() => import('../components/tools/ObjectRemover')),
   'cover-art-extractor': lazy(() => import('../components/tools/CoverExtractor')),
   'silence-remover': lazy(() => import('../components/tools/SilenceRemover')),
+  'stem-splitter': lazy(() => import('../components/tools/StemSplitter')),
   'waveform-image': lazy(() => import('../components/tools/WaveformImage')),
   'svg-to-jsx': lazy(() => import('../components/tools/SvgToJsx')),
   'svg-path-simplifier': lazy(() => import('../components/tools/PathSimplifier')),
@@ -103,15 +111,18 @@ const READY_COMPONENTS = {
 
 export const TOOL_CATEGORIES = toolsData.categories;
 
-export const TOOLS = toolsData.tools.map((tool) => ({
+const ALL_TOOLS = toolsData.tools.map((tool) => ({
   ...tool,
   // Тул считается готовым только если для него реально есть компонент.
   status: tool.status === 'ready' && READY_COMPONENTS[tool.slug] ? 'ready' : (tool.status === 'ready' ? 'soon' : tool.status),
   component: READY_COMPONENTS[tool.slug] || null,
 }));
 
+// В каталоге и поиске — только видимые; по адресу открывается любой (listed: false — старые адреса).
+export const TOOLS = ALL_TOOLS.filter((tool) => tool.listed !== false);
+
 export function getToolBySlug(slug) {
-  return TOOLS.find((tool) => tool.slug === slug) || null;
+  return ALL_TOOLS.find((tool) => tool.slug === slug) || null;
 }
 
 export function getToolsByCategory(categoryId) {

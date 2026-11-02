@@ -62,20 +62,24 @@ const SPECIFIC_FAQS = {
   },
   crop: {
     ru: [
-      { q: 'Какие пропорции обрезки доступны?', a: 'Пресеты 1:1, 4:3, 16:9 и свободная рамка. Результат сохраняется в исходном качестве.' },
+      { q: 'Какие пропорции обрезки доступны?', a: 'Пресеты 1:1, 4:3, 3:2, 16:9, 9:16 и свободная рамка, а также точный размер в пикселях. Результат сохраняется в исходном качестве.' },
+      { q: 'Можно ли повернуть фото и выровнять горизонт?', a: 'Да: поворот на 90°, отражение, наклон на любой угол и выравнивание по линии — проведите её вдоль горизонта. Пустые углы срезаются автоматически.' },
     ],
     en: [
-      { q: 'Which crop ratios are available?', a: 'Presets 1:1, 4:3, 16:9 and a free frame. The result is saved at full quality.' },
+      { q: 'Which crop ratios are available?', a: 'Presets 1:1, 4:3, 3:2, 16:9, 9:16 and a free frame, plus an exact size in pixels. The result is saved at full quality.' },
+      { q: 'Can I rotate a photo and straighten the horizon?', a: 'Yes: 90° rotation, flip, tilt by any angle and straightening by a line — draw it along the horizon. Empty corners are trimmed automatically.' },
     ],
   },
   'qr-generator': {
     ru: [
       { q: 'В каком формате скачивается QR-код?', a: 'SVG (векторный, для печати любого размера) или PNG. Цвет и фон настраиваются.' },
-      { q: 'Можно ли отсканировать QR-код?', a: 'Да, встроен сканер: наведите камеру или загрузите картинку с кодом.' },
+      { q: 'Можно ли отсканировать QR-код?', a: 'Да, встроен сканер: загрузите картинку или скриншот с кодом.' },
+      { q: 'Как сделать QR-код для Wi-Fi или визитки с логотипом?', a: 'Выберите шаблон Wi-Fi или «Контакт», заполните поля и добавьте логотип. Коррекция ошибок поднимется до H, а инструмент сам проверит, что код читается.' },
     ],
     en: [
       { q: 'What format is the QR code downloaded in?', a: 'SVG (vector, prints at any size) or PNG. Color and background are adjustable.' },
-      { q: 'Can I scan a QR code too?', a: 'Yes, a scanner is built in: point your camera or upload an image with a code.' },
+      { q: 'Can I scan a QR code too?', a: 'Yes, a scanner is built in: upload an image or a screenshot with a code.' },
+      { q: 'How do I make a Wi-Fi or contact QR code with a logo?', a: 'Pick the Wi-Fi or Contact template, fill in the fields and add a logo. Error correction is raised to H, and the tool checks that the code still scans.' },
     ],
   },
   'favicon-generator': {
@@ -142,18 +146,20 @@ const SPECIFIC_FAQS = {
   },
   'ascii-art': {
     ru: [
-      { q: 'Как сделать ASCII-арт из картинки?', a: 'Загрузите изображение, задайте ширину и набор символов — инструмент построит текстовый арт, который можно скопировать.' },
+      { q: 'Как сделать ASCII-арт из картинки?', a: 'Загрузите изображение, задайте ширину и набор символов — инструмент построит текстовый арт. Его можно скопировать или скачать как HTML, PNG и SVG, в том числе цветным.' },
     ],
     en: [
-      { q: 'How do I make ASCII art from an image?', a: 'Upload an image, set the width and charset — the tool builds text art you can copy.' },
+      { q: 'How do I make ASCII art from an image?', a: 'Upload an image, set the width and charset — the tool builds text art. Copy it or download it as HTML, PNG or SVG, in color too.' },
     ],
   },
   'gradient-generator': {
     ru: [
-      { q: 'Как получить CSS-код градиента?', a: 'Настройте стопы, угол и тип (линейный или радиальный) — готовый background копируется одной кнопкой.' },
+      { q: 'Как получить CSS-код градиента?', a: 'Настройте цвета, угол и тип (линейный, радиальный или конический) — готовый background копируется одной кнопкой, есть вариант для Tailwind.' },
+      { q: 'Зачем смешивание в OKLCH?', a: 'В sRGB переход между яркими цветами проваливается в серую «грязь». OKLCH держит яркость и насыщенность ровными; для старых браузеров в код добавляется запасной вариант.' },
     ],
     en: [
-      { q: 'How do I get the CSS for a gradient?', a: 'Set the stops, angle and type (linear or radial) — the ready background copies with one button.' },
+      { q: 'How do I get the CSS for a gradient?', a: 'Set the colors, angle and type (linear, radial or conic) — the ready background copies with one button, Tailwind too.' },
+      { q: 'Why blend in OKLCH?', a: 'In sRGB a transition between bright colors dips into a muddy gray. OKLCH keeps lightness and chroma even; the code also includes a fallback for older browsers.' },
     ],
   },
   'svg-cleaner': {
@@ -204,6 +210,18 @@ const SPECIFIC_FAQS = {
     ],
     en: [
       { q: 'How do I download a YouTube thumbnail?', a: 'Paste a video link — the tool shows the thumbnail in every available size. The link never leaves your device.' },
+    ],
+  },
+  'stem-splitter': {
+    ru: [
+      { q: 'Как отделить вокал от музыки?', a: 'Загрузите песню и нажмите «Разделить» — нейросеть Demucs v4 разложит её на вокал, барабаны, бас и остальное. Минус (без вокала) скачивается отдельной кнопкой.' },
+      { q: 'Что делает дочистка стемов?', a: 'Убирает просачивание соседних инструментов и шорох в паузах. Всё убранное попадает в дорожку «Остаток» — его можно прослушать и убедиться, что ничего нужного не потерялось.' },
+      { q: 'Загружается ли песня на сервер?', a: 'Нет. Нейросеть скачивается один раз и работает прямо в браузере — на видеокарте (WebGPU) или на процессоре.' },
+    ],
+    en: [
+      { q: 'How do I separate vocals from music?', a: 'Upload a song and press Split — the Demucs v4 neural net splits it into vocals, drums, bass and other. The instrumental downloads with a separate button.' },
+      { q: 'What does stem cleanup do?', a: 'It removes bleed from neighboring instruments and hiss in pauses. Everything removed goes into the Residual track so you can check nothing useful was lost.' },
+      { q: 'Is the song uploaded to a server?', a: 'No. The neural net downloads once and runs right in your browser — on the GPU (WebGPU) or the CPU.' },
     ],
   },
   duotone: {

@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { aiBrowserHint } from '../../utils/aiSupport';
 import { guidedFilter } from '../../utils/guidedFilter';
+import { loadTransformers } from '../../utils/transformersLib';
+import { withMirrorRetry } from '../../utils/modelMirror';
 
 // Вырезатель фона: сегментация в браузере через transformers.js. Модели на выбор:
 // BiRefNet lite (MIT, лучшие края), MODNet (быстрые портреты), RMBG 1.4. Маска
@@ -51,15 +53,14 @@ async function getModel(spec, onProgress) {
   const modelId = spec.id;
   if (modelCache[modelId]) return modelCache[modelId];
   modelCache[modelId] = (async () => {
-    const lib = await import('@huggingface/transformers');
-    const { AutoModel, AutoProcessor, env } = lib;
-    env.allowLocalModels = false;
+    const lib = await loadTransformers();
+    const { AutoModel, AutoProcessor } = lib;
     let device = 'wasm';
     try { if (typeof navigator !== 'undefined' && navigator.gpu && await navigator.gpu.requestAdapter()) device = 'webgpu'; } catch { /* wasm */ }
     const opts = { device, progress_callback: onProgress };
     if (spec.dtype) opts.dtype = spec.dtype;
-    const model = await AutoModel.from_pretrained(modelId, opts);
-    const processor = await AutoProcessor.from_pretrained(modelId);
+    const model = await withMirrorRetry(() => AutoModel.from_pretrained(modelId, opts));
+    const processor = await withMirrorRetry(() => AutoProcessor.from_pretrained(modelId));
     return { model, processor, RawImage: lib.RawImage };
   })().catch((e) => { delete modelCache[modelId]; throw e; });
   return modelCache[modelId];

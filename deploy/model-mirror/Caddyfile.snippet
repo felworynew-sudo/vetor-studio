@@ -1,0 +1,31 @@
+# Вставить внутрь блока api.vetor-studio.ru { … } ПЕРЕД последним `handle { reverse_proxy … }`.
+# Только чтение статики: без листинга каталогов, без скрытых файлов, только GET/HEAD/OPTIONS,
+# CORS только для сайта (и localhost для разработки), без сжатия (веса должны прийти байт в байт).
+	handle_path /models/* {
+		@badmethod not method GET HEAD OPTIONS
+		respond @badmethod 405
+
+		@hidden path_regexp hidden (^|/)\.
+		respond @hidden 404
+
+		@cors header_regexp Origin ^(https://(www\.)?vetor-studio\.ru|http://(localhost|127\.0\.0\.1)(:[0-9]+)?)$
+		header @cors Access-Control-Allow-Origin "{http.request.header.Origin}"
+		header @cors Access-Control-Allow-Methods "GET, HEAD, OPTIONS"
+		header @cors Access-Control-Expose-Headers "Content-Length, ETag"
+		header @cors Access-Control-Max-Age "86400"
+		@preflight method OPTIONS
+		respond @preflight 204
+
+		header {
+			Vary Origin
+			Content-Type application/octet-stream
+			X-Content-Type-Options nosniff
+			Cross-Origin-Resource-Policy cross-origin
+			Cache-Control "public, max-age=604800"
+			Content-Security-Policy "default-src 'none'; sandbox"
+			-Server
+		}
+
+		root * /var/www/vetor-models
+		file_server
+	}

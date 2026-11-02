@@ -6,6 +6,9 @@
 //  • затем жёсткое ограничение: лица не режутся, если это геометрически возможно.
 // Используется Smart Crop и Social Media Crop Pack. Всё локально в браузере.
 
+import { loadTransformers } from './transformersLib';
+import { modelFetch, withMirrorRetry } from './modelMirror';
+
 const MP_VERSION = '1.0.1';
 const MP_WASM = `https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MP_VERSION}/wasm`;
 const MP_FACE_MODEL = 'https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite';
@@ -16,8 +19,14 @@ function getFaceDetector() {
   facePromise = (async () => {
     const { FaceDetector, FilesetResolver } = await import('@mediapipe/tasks-vision');
     const fileset = await FilesetResolver.forVisionTasks(MP_WASM);
+    // Веса BlazeFace качаем сами (через зеркало), MediaPipe получает готовый буфер.
+    const modelAssetBuffer = await withMirrorRetry(async () => {
+      const res = await modelFetch(MP_FACE_MODEL);
+      if (!res.ok) throw new Error(`${res.status} ${MP_FACE_MODEL}`);
+      return new Uint8Array(await res.arrayBuffer());
+    });
     const make = (delegate) => FaceDetector.createFromOptions(fileset, {
-      baseOptions: { modelAssetPath: MP_FACE_MODEL, delegate },
+      baseOptions: { modelAssetBuffer, delegate },
       runningMode: 'IMAGE',
       minDetectionConfidence: 0.55,
     });
@@ -30,11 +39,10 @@ let detrPromise = null;
 function getObjectDetector(onProgress) {
   if (detrPromise) return detrPromise;
   detrPromise = (async () => {
-    const lib = await import('@huggingface/transformers');
-    lib.env.allowLocalModels = false;
+    const lib = await loadTransformers();
     let device = 'wasm';
     try { if (typeof navigator !== 'undefined' && navigator.gpu && await navigator.gpu.requestAdapter()) device = 'webgpu'; } catch { /* wasm */ }
-    return lib.pipeline('object-detection', 'Xenova/detr-resnet-50', { device, progress_callback: onProgress });
+    return withMirrorRetry(() => lib.pipeline('object-detection', 'Xenova/detr-resnet-50', { device, progress_callback: onProgress }));
   })().catch((e) => { detrPromise = null; throw e; });
   return detrPromise;
 }

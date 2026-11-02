@@ -48,6 +48,13 @@
       "en": "Utilities",
       "icon": "🛠️",
       "img": "klyuch-gaechnyy.png"
+    },
+    {
+      "id": "mood",
+      "ru": "Для настроения",
+      "en": "Just for fun",
+      "icon": "☕",
+      "img": "prizrak-raduga.png"
     }
   ],
   "tools": [
@@ -71,7 +78,7 @@
       "categoryId": "image",
       "status": "ready",
       "icon": "🗜️",
-      "img": "masshtab.png",
+      "img": "szhatie.png",
       "ru": {
         "title": "Компрессор изображений",
         "desc": "Сжимает фото кодеками Squoosh (AVIF, WebP, MozJPEG, OxiPNG) до нужного размера в КБ или по качеству. Пакетно, ZIP, сравнение до/после."
@@ -86,7 +93,7 @@
       "categoryId": "image",
       "status": "ready",
       "icon": "👾",
-      "img": "monitor.png",
+      "img": "pikseli.png",
       "ru": {
         "title": "Пикселизатор",
         "desc": "Превращает картинку в пиксель-арт по соседним пикселям (без размытия) + палитра. Экспорт в PNG и SVG-вектор."
@@ -108,7 +115,8 @@
       "en": {
         "title": "Quantizer / posterizer",
         "desc": "Reduces an image to 2–64 colors: Wu/NeuQuant/RGBQuant or a preset palette, optional dithering. For print, screen printing, pixel art and vectorizing."
-      }
+      },
+      "img": "kvantizator.png"
     },
     {
       "slug": "dithering-lab",
@@ -122,7 +130,8 @@
       "en": {
         "title": "Dithering Lab",
         "desc": "13 dithering algorithms: Floyd–Steinberg, Atkinson, Bayer, blue noise and more. Retro palettes Game Boy, PICO-8, Mac, C64, e-ink, custom duotone, pixel size."
-      }
+      },
+      "img": "dizering.png"
     },
     {
       "slug": "crop",
@@ -131,11 +140,11 @@
       "icon": "✂️",
       "ru": {
         "title": "Обрезка изображения",
-        "desc": "Кадрируйте фото рамкой с пресетами 1:1, 4:3, 16:9 и свободной. В исходном качестве, локально."
+        "desc": "Кадрирование с пресетами пропорций и точным размером в пикселях, поворот, отражение и выравнивание горизонта. В исходном качестве, локально."
       },
       "en": {
         "title": "Crop image",
-        "desc": "Crop a photo with a frame and presets: 1:1, 4:3, 16:9 or free. Full quality, done locally."
+        "desc": "Crop with ratio presets and exact pixel size, rotate, flip and straighten the horizon. Full quality, local."
       },
       "img": "nozhnicy.png"
     },
@@ -151,7 +160,8 @@
       "en": {
         "title": "Image diff",
         "desc": "Two designs or screenshots: highlighted differences (pixelmatch) with the percentage of changed pixels, SSIM and a map, slider, onion skin and difference blend."
-      }
+      },
+      "img": "sravnenie.png"
     },
     {
       "slug": "object-remover",
@@ -165,7 +175,8 @@
       "en": {
         "title": "Remove objects from photos",
         "desc": "Paint over wires, passers-by, litter or text — the area is filled with background (content-aware fill, PatchMatch). No neural nets, no uploads."
-      }
+      },
+      "img": "lastik.png"
     },
     {
       "slug": "color-grade",
@@ -180,7 +191,7 @@
         "title": "Photo color grading",
         "desc": "GPU color grading: exposure and white balance in linear light, shadows/highlights, clarity, vibrance, denoise, sharpening, vignette, grain. Presets and .cube LUT export."
       },
-      "img": "foto.png"
+      "img": "cvetokor.png"
     },
     {
       "slug": "color-converter",
@@ -204,11 +215,11 @@
       "icon": "🎡",
       "ru": {
         "title": "Цветовые схемы (круг Иттена)",
-        "desc": "Гармоничные сочетания по базовому цвету: комплементарные, триады, аналоговые и другие."
+        "desc": "Гармоничные схемы по базовому цвету в OKLCH: шкала оттенков 50–950 для каждого цвета, экспорт в CSS-переменные, Tailwind, JSON и ASE."
       },
       "en": {
         "title": "Color schemes (Itten wheel)",
-        "desc": "Harmonious combinations from a base color: complementary, triadic, analogous and more."
+        "desc": "Harmonious schemes from a base color in OKLCH: a 50–950 shade scale for every color, export to CSS variables, Tailwind, JSON and ASE."
       },
       "img": "itenkrug.png"
     },
@@ -219,11 +230,11 @@
       "icon": "📊",
       "ru": {
         "title": "Анализатор цветового веса",
-        "desc": "Процентное соотношение цветов на макете для проверки правила 60-30-10."
+        "desc": "Доли цветов на макете и проверка правила 60-30-10: роли по смыслу, вердикт с подсказками и маска каждого цвета на макете."
       },
       "en": {
         "title": "Color weight analyzer",
-        "desc": "The percentage split of colors in a design to check the 60-30-10 rule."
+        "desc": "Color shares in a design and a 60-30-10 check: meaningful roles, a verdict with tips and a mask for each color."
       },
       "img": "vesy.png"
     },
@@ -284,7 +295,8 @@
       "en": {
         "title": "Palette transfer A → B",
         "desc": "Transfers the color character of a reference photo onto yours: soft (Reinhard) or precise (histogram) method in OKLab. Export PNG and a .cube LUT."
-      }
+      },
+      "img": "perenos-palitry.png"
     },
     {
       "slug": "lut-studio",
@@ -298,7 +310,8 @@
       "en": {
         "title": "LUT studio (.cube)",
         "desc": "Opens, generates and converts LUTs: .cube, .3dl, Hald CLUT PNG. Film looks (teal & orange, bleach bypass, film), photo preview, strength, 17/33/65 sizes."
-      }
+      },
+      "img": "lut.png"
     },
     {
       "slug": "contrast-checker",
@@ -327,7 +340,8 @@
       "en": {
         "title": "Accessible palette fixer",
         "desc": "Automatically and minimally fixes palette colors to WCAG AA/AAA or APCA on a chosen background: only OKLCH lightness moves. Contrast matrix of all pairs."
-      }
+      },
+      "img": "palitra-dostup.png"
     },
     {
       "slug": "colorblind-simulator",
@@ -372,7 +386,7 @@
         "title": "Watermark",
         "desc": "Batch-stamp a logo or text: angled tiling or 9 positions, keeps the source format (JPEG/WebP/PNG), ZIP download."
       },
-      "img": "birka.png"
+      "img": "vodyanoy-znak.png"
     },
     {
       "slug": "image-metadata",
@@ -387,7 +401,7 @@
         "title": "Metadata viewer & cleaner (EXIF/C2PA)",
         "desc": "All EXIF/GPS/XMP/IPTC tags and PNG prompts, a C2PA inspector (signer, AI labels). Selective lossless removal — even GPS only. JPEG/PNG/WebP, ZIP."
       },
-      "img": "pipidastr.png"
+      "img": "exif.png"
     },
     {
       "slug": "blur-analyzer",
@@ -426,13 +440,13 @@
       "icon": "🔡",
       "ru": {
         "title": "Генератор ASCII-арта",
-        "desc": "Превращает картинку в текстовый арт: ширина, набор символов, инверсия."
+        "desc": "Превращает картинку в текстовый арт: прозрачный фон сохраняется, цветной режим, свой набор символов. Экспорт в текст, HTML, PNG и SVG."
       },
       "en": {
         "title": "ASCII art generator",
-        "desc": "Turns an image into text art: width, charset, invert."
+        "desc": "Turns an image into text art: transparency is kept, color mode, custom charset. Export to text, HTML, PNG and SVG."
       },
-      "img": "monitor.png"
+      "img": "ascii.png"
     },
     {
       "slug": "rule-of-thirds",
@@ -469,7 +483,7 @@
       "categoryId": "generators",
       "status": "ready",
       "icon": "🔤",
-      "img": "abv.png",
+      "img": "3d-tekst.png",
       "ru": {
         "title": "3D-текст",
         "desc": "Объёмные буквы с экструзией, фаской и скруглением. Свой шрифт (TTF, OTF/CFF, WOFF2) с кернингом и лигатурами, несколько строк. PNG и модель GLB/STL/OBJ."
@@ -506,7 +520,8 @@
       "en": {
         "title": "3D Blob Lab",
         "desc": "Glowing shader-deformed 3D shapes: sphere, crystal, torus, capsule, petals, metaballs. Noise, wave, twist, 3 colors, bloom glow, mouse rotate, PNG export."
-      }
+      },
+      "img": "blob-3d.png"
     },
     {
       "slug": "icon-scaler",
@@ -515,11 +530,11 @@
       "icon": "🔲",
       "ru": {
         "title": "Масштабатор иконок",
-        "desc": "Вписывает иконку в стандартные размеры (16–128px) с центрированием и отступом."
+        "desc": "Вписывает иконку в наборы размеров: стандарт 16–256, iOS, Android (mipmap) или свои. Чистое уменьшение, фон и скругление, ZIP и ICO."
       },
       "en": {
         "title": "Icon scaler",
-        "desc": "Fits an icon into standard sizes (16–128px) with centering and padding."
+        "desc": "Fits an icon into size sets: standard 16–256, iOS, Android (mipmap) or custom. Clean downscaling, background and radius, ZIP and ICO."
       },
       "img": "masshtab.png"
     },
@@ -565,7 +580,8 @@
       "en": {
         "title": "Vectorizer PNG → SVG",
         "desc": "Turns logos, icons, illustrations and photos into SVG: color tracing with VTracer (an Image Trace alternative), splines or polygons, pixel art, B/W."
-      }
+      },
+      "img": "vektor.png"
     },
     {
       "slug": "svg-to-jsx",
@@ -579,7 +595,8 @@
       "en": {
         "title": "SVG → React (JSX/TSX)",
         "desc": "Turns SVG into a React component with SVGR: SVGO cleanup, 1em icon, currentColor, TypeScript, memo/forwardRef, React Native. Copy or download .jsx/.tsx."
-      }
+      },
+      "img": "jsx.png"
     },
     {
       "slug": "svg-path-simplifier",
@@ -593,7 +610,8 @@
       "en": {
         "title": "SVG path simplifier",
         "desc": "Reduces nodes in SVG outlines by a pixel tolerance (Ramer–Douglas–Peucker) and smooths with Bézier curves while keeping corners. Before/after overlay, node and size counters."
-      }
+      },
+      "img": "uproshchenie.png"
     },
     {
       "slug": "svg-path-editor",
@@ -607,7 +625,8 @@
       "en": {
         "title": "SVG path editor",
         "desc": "Edit SVG curves with the mouse: nodes and Bézier handles, snapping grid, add and delete points, straight ↔ curve, undo. Live d code and SVG export."
-      }
+      },
+      "img": "kontur.png"
     },
     {
       "slug": "css-from-svg",
@@ -631,11 +650,11 @@
       "icon": "🔳",
       "ru": {
         "title": "QR-код: генератор и сканер",
-        "desc": "Выгрузка в SVG/PNG, настройка цвета и фона."
+        "desc": "QR-код для ссылки, Wi-Fi, контакта, Telegram, почты или телефона: логотип в центре, форма точек и меток, проверка читаемости. SVG/PNG и сканер."
       },
       "en": {
         "title": "QR code: generator & scanner",
-        "desc": "Export to SVG/PNG, custom color and background."
+        "desc": "QR codes for links, Wi-Fi, contacts, Telegram, email or phone: center logo, module and corner styles, readability check. SVG/PNG plus a scanner."
       },
       "img": "kyuar.png"
     },
@@ -676,17 +695,17 @@
       "icon": "🌫️",
       "ru": {
         "title": "Генератор шума",
-        "desc": "Белый/розовый шум для концентрации в работе."
+        "desc": "Белый, розовый и коричневый шум без повторов и щелчков, таймер выключения и подмешивание лофи-радио."
       },
       "en": {
         "title": "Noise generator",
-        "desc": "White/pink noise to help you focus."
+        "desc": "White, pink and brown noise with no loops or clicks, a sleep timer and optional lo-fi mixed in."
       },
       "img": "shum.png"
     },
     {
       "slug": "design-challenge",
-      "categoryId": "generators",
+      "categoryId": "mood",
       "status": "ready",
       "icon": "🎲",
       "ru": {
@@ -706,11 +725,11 @@
       "icon": "🌅",
       "ru": {
         "title": "Генератор градиентов",
-        "desc": "Красивые CSS-градиенты: стопы, угол, тип — готовый код в клик."
+        "desc": "Линейные, радиальные и конические градиенты до 10 цветов: точки тянутся мышью, смешивание в OKLCH без «грязной» середины. CSS, Tailwind, SVG и PNG."
       },
       "en": {
         "title": "Gradient generator",
-        "desc": "Beautiful CSS gradients: stops, angle, type — copy-ready code in a click."
+        "desc": "Linear, radial and conic gradients with up to 10 colors: drag the stops, OKLCH blending without a muddy middle. CSS, Tailwind, SVG and PNG."
       },
       "img": "palitra-1.png"
     },
@@ -721,11 +740,11 @@
       "icon": "⏱️",
       "ru": {
         "title": "Таймер 20-20-20",
-        "desc": "Напоминание давать отдых глазам каждые 20 минут."
+        "desc": "Напоминание дать отдых глазам каждые 20 минут: системные уведомления, точное время даже в свёрнутой вкладке."
       },
       "en": {
         "title": "20-20-20 timer",
-        "desc": "Reminds you to rest your eyes every 20 minutes."
+        "desc": "Reminds you to rest your eyes every 20 minutes: system notifications and accurate timing even in a background tab."
       },
       "img": "taymer.png"
     },
@@ -742,7 +761,7 @@
         "title": "Background remover (AI)",
         "desc": "Removes the background right in your browser: the AI model downloads once, the photo never leaves your device."
       },
-      "img": "nozhnicy.png"
+      "img": "bez-fona.png"
     },
     {
       "slug": "upscaler",
@@ -816,7 +835,8 @@
       "en": {
         "title": "Social media crop pack",
         "desc": "One image → 22 ready sizes for YouTube, VK, Telegram, Instagram, TikTok, X, Facebook, LinkedIn, Pinterest and OG. Smart crop keeps faces, one ZIP."
-      }
+      },
+      "img": "soc-kadry.png"
     },
     {
       "slug": "ai-detector",
@@ -850,7 +870,7 @@
     },
     {
       "slug": "lofi-radio",
-      "categoryId": "audio",
+      "categoryId": "mood",
       "status": "ready",
       "icon": "📻",
       "ru": {
@@ -879,6 +899,21 @@
       "img": "zvukplyus.png"
     },
     {
+      "slug": "stem-splitter",
+      "categoryId": "audio",
+      "status": "ready",
+      "icon": "🎚️",
+      "img": "stemy.png",
+      "ru": {
+        "title": "Разделение на стемы",
+        "desc": "Вокал, барабаны, бас и остальное — нейросеть Demucs v4 прямо в браузере. Дочистка от просачивания и шума, микшер с соло, минус, WAV/MP3 и ZIP."
+      },
+      "en": {
+        "title": "Stem splitter",
+        "desc": "Vocals, drums, bass and other — the Demucs v4 neural net right in your browser. Bleed and noise cleanup, a solo mixer, instrumental, WAV/MP3 and ZIP."
+      }
+    },
+    {
       "slug": "audio-trimmer",
       "categoryId": "audio",
       "status": "ready",
@@ -891,7 +926,7 @@
         "title": "Audio trimmer",
         "desc": "Waveform, drag-handle selection, fades, WAV export. Local."
       },
-      "img": "naushniki.png"
+      "img": "obrezka-audio.png"
     },
     {
       "slug": "audio-slicer",
@@ -906,7 +941,7 @@
         "title": "Audio slicer",
         "desc": "Split a track, mix or recording into parts: by silence with live tuning, into equal pieces or from a timestamp list with names. Zoom, cut on the fly with S, ZIP. Local."
       },
-      "img": "nozhnicy.png"
+      "img": "narezka.png"
     },
     {
       "slug": "audio-equalizer",
@@ -935,7 +970,8 @@
       "en": {
         "title": "Silence remover",
         "desc": "Cuts pauses out of podcasts, voice notes and lectures or shortens them to a set length. Auto threshold, pauses highlighted on the waveform, click-free joins, MP3/WAV export."
-      }
+      },
+      "img": "tishina.png"
     },
     {
       "slug": "waveform-image",
@@ -949,7 +985,8 @@
       "en": {
         "title": "Audio waveform image",
         "desc": "Turns a track or voice into a waveform image: bars, mirror, line, dots, gradient, transparent background. Export PNG and vector SVG — for covers and merch."
-      }
+      },
+      "img": "volna.png"
     },
     {
       "slug": "multitrack",
@@ -964,7 +1001,7 @@
         "title": "Multitrack editor",
         "desc": "Several tracks on a timeline: drag clips, trim, per-track volume/pan/fades/EQ. Mix down to WAV and MP3. All local."
       },
-      "img": "zvukplyus.png"
+      "img": "dorozhki.png"
     },
     {
       "slug": "audio-converter",
@@ -979,7 +1016,7 @@
         "title": "Audio converter",
         "desc": "Any format (WAV, MP3, OGG, FLAC, M4A, AAC) to WAV or MP3 with bitrate choice. Batch, in the browser."
       },
-      "img": "naushniki.png"
+      "img": "konverter-audio.png"
     },
     {
       "slug": "audio-metadata",
@@ -1008,7 +1045,8 @@
       "en": {
         "title": "Cover art extractor",
         "desc": "Extracts embedded covers and booklets from MP3, FLAC, M4A, OGG, Opus, WMA in original quality. Batch — a whole album at once, one ZIP."
-      }
+      },
+      "img": "oblozhka.png"
     },
     {
       "slug": "yt-thumbnail",
@@ -1027,7 +1065,7 @@
     },
     {
       "slug": "karma-counter",
-      "categoryId": "utility",
+      "categoryId": "mood",
       "status": "ready",
       "icon": "🎯",
       "ru": {
@@ -1039,6 +1077,21 @@
         "desc": "A playful client-revision tracker with achievements. Stored locally."
       },
       "img": "schety.png"
+    },
+    {
+      "slug": "css-studio",
+      "categoryId": "generators",
+      "status": "ready",
+      "icon": "🧪",
+      "img": "css-studiya.png",
+      "ru": {
+        "title": "CSS-студия: тени, стекло, узоры, блобы",
+        "desc": "Фон, узор, блоб, матовое стекло и многослойная тень в одном живом превью — как на сайте. Код CSS и Tailwind, SVG узоров и блобов."
+      },
+      "en": {
+        "title": "CSS studio: shadows, glass, patterns, blobs",
+        "desc": "Background, pattern, blob, frosted glass and layered shadows in one live preview — just like on a site. CSS and Tailwind code, SVG patterns and blobs."
+      }
     },
     {
       "slug": "box-shadow",
@@ -1053,7 +1106,8 @@
       "en": {
         "title": "Box-shadow generator",
         "desc": "Layered CSS shadows with live preview and ready-to-copy code. Inset, spread, color."
-      }
+      },
+      "listed": false
     },
     {
       "slug": "glassmorphism",
@@ -1068,7 +1122,8 @@
       "en": {
         "title": "Glassmorphism generator",
         "desc": "Frosted-glass CSS: blur, opacity, saturation, border. Live preview + code."
-      }
+      },
+      "listed": false
     },
     {
       "slug": "blob",
@@ -1083,14 +1138,15 @@
       "en": {
         "title": "SVG blob generator",
         "desc": "Smooth organic shapes for backgrounds and decoration. Reroll, color or gradient, SVG export."
-      }
+      },
+      "listed": false
     },
     {
       "slug": "duotone",
       "categoryId": "image",
       "status": "ready",
       "icon": "🎭",
-      "img": "foto.png",
+      "img": "duoton.png",
       "ru": {
         "title": "Дуотон",
         "desc": "Перекрашивает фото в два или три цвета по яркости (дуотон/тритон) с чистыми переходами в OKLab. Пресеты, экспорт PNG в полном размере и LUT .cube."
@@ -1112,7 +1168,8 @@
       "en": {
         "title": "Gradient map",
         "desc": "Recolors a photo by luminance through a multicolor gradient: presets, custom stops or a gradient from another photo. Export PNG, CSS and a .cube LUT."
-      }
+      },
+      "img": "karta-gradienta.png"
     },
     {
       "slug": "mockup-perspective",
@@ -1126,7 +1183,8 @@
       "en": {
         "title": "Perspective mockup",
         "desc": "Places a design into a scene photo by 4 corners: billboard, screen, poster, wall. Homography perspective, smooth edges, a “keep light” mode for shadows and texture."
-      }
+      },
+      "img": "perspektiva.png"
     },
     {
       "slug": "device-mockup",
@@ -1140,7 +1198,8 @@
       "en": {
         "title": "Device mockups",
         "desc": "Screenshot → phone, Android, tablet, laptop, browser window or monitor. Background, shadow, 3D tilt, title and subtitle. Sizes for App Store, Google Play and social."
-      }
+      },
+      "img": "smartfon.png"
     },
     {
       "slug": "seamless-texture",
@@ -1154,7 +1213,8 @@
       "en": {
         "title": "Seamless texture maker",
         "desc": "Turns a texture photo into a seamless tile: seam feathering or 2×2 mirror, lighting flattening, 3×3 tiled preview, 512–2048 px tiles."
-      }
+      },
+      "img": "besshov.png"
     },
     {
       "slug": "pbr-maps",
@@ -1168,7 +1228,8 @@
       "en": {
         "title": "Normal / height / AO maps (PBR)",
         "desc": "Surface photo → Normal (OpenGL/DirectX), Height, Ambient Occlusion and Roughness with a live 3D preview. For Blender, Unity, Unreal, three.js. One ZIP."
-      }
+      },
+      "img": "pbr.png"
     },
     {
       "slug": "sprite-sheet",
@@ -1182,7 +1243,8 @@
       "en": {
         "title": "Sprite sheet",
         "desc": "Packs frames into an atlas + JSON (TexturePacker: Phaser, PixiJS) and a CSS sprite: trimming, padding, power-of-two, animation preview. And back — split a sheet into frames."
-      }
+      },
+      "img": "spraity.png"
     },
     {
       "slug": "contact-sheet",
@@ -1196,7 +1258,8 @@
       "en": {
         "title": "Contact sheet",
         "desc": "Dozens of photos → grid sheets with captions and numbering: A4/A3/Letter, columns, gaps, title, dark background. Export PNG and multi-page PDF."
-      }
+      },
+      "img": "kontakt-list.png"
     },
     {
       "slug": "pattern-gen",
@@ -1211,14 +1274,15 @@
       "en": {
         "title": "Pattern generator",
         "desc": "Seamless SVG patterns: dots, grid, stripes, checkers, waves, triangles. CSS and SVG in a click."
-      }
+      },
+      "listed": false
     },
     {
       "slug": "mesh-gradient",
       "categoryId": "generators",
       "status": "ready",
       "icon": "🌈",
-      "img": "cveta.png",
+      "img": "mesh.png",
       "ru": {
         "title": "Mesh-градиент",
         "desc": "Настоящий меш-градиент на WebGL: точки тянутся мышью, смешивание в OKLab, искажение, зерно, анимация, гармонии. Экспорт до 4K, CSS и SVG."
@@ -1270,7 +1334,8 @@
       "en": {
         "title": "VHS / Print Lab",
         "desc": "A GPU stack of retro effects: VHS with timestamp, CRT, glitch, riso and CMY misregistration, old film. Presets, live animation, PNG and WebM video."
-      }
+      },
+      "img": "vhs.png"
     },
     {
       "slug": "base64",
@@ -1314,7 +1379,8 @@
       "en": {
         "title": "Terrain generator",
         "desc": "Procedural terrain: simplex noise, mountain ridges, island, hydraulic erosion, water level, 3D preview. Export heightmap PNG, color map and RAW 16-bit for Unity/Unreal."
-      }
+      },
+      "img": "gory.png"
     },
     {
       "slug": "pdf-studio",
@@ -1328,7 +1394,8 @@
       "en": {
         "title": "PDF studio",
         "desc": "Merge, split, reorder, rotate and delete PDF pages, images → PDF, watermark and page numbers. All in the browser, documents never leave your device."
-      }
+      },
+      "img": "pdf.png"
     },
     {
       "slug": "ocr",
@@ -1342,7 +1409,8 @@
       "en": {
         "title": "OCR — image to text",
         "desc": "Recognizes text on scans, document photos and screenshots: 100+ languages, word boxes with confidence, copy, .txt and a PDF with a text layer."
-      }
+      },
+      "img": "ocr.png"
     },
     {
       "slug": "face-anonymizer",
@@ -1356,7 +1424,8 @@
       "en": {
         "title": "Blur faces in photos",
         "desc": "Automatically finds faces and blurs, pixelates or covers them. Manual areas for plates and badges, batch processing, EXIF and GPS are removed."
-      }
+      },
+      "img": "anonim.png"
     },
     {
       "slug": "font-subsetter",
@@ -1370,7 +1439,8 @@
       "en": {
         "title": "Font subsetter → WOFF2",
         "desc": "Keeps only the characters you need — Latin, Cyrillic, digits or your site copy — and compresses to WOFF2: 300 KB → 20–40 KB. HarfBuzz, ready @font-face with unicode-range."
-      }
+      },
+      "img": "sabset.png"
     },
     {
       "slug": "font-lab",
@@ -1384,7 +1454,8 @@
       "en": {
         "title": "Font Lab — font inspector",
         "desc": "Names, license, metrics, script coverage, OpenType features with live toggles, variable axes, every glyph with SVG export. Built on fontkit, local."
-      }
+      },
+      "img": "shrift.png"
     },
     {
       "slug": "variable-fonts",
@@ -1398,7 +1469,8 @@
       "en": {
         "title": "Variable font playground",
         "desc": "Reads wght, wdth, slnt, opsz and custom axes automatically, lets you drag and animate them, shows instances and a size waterfall, outputs ready CSS."
-      }
+      },
+      "img": "variativ.png"
     },
     {
       "slug": "font-pairs",
@@ -1412,7 +1484,8 @@
       "en": {
         "title": "Font pair finder",
         "desc": "Finds heading/body font pairs by metrics: x-height, width, stroke contrast and class pairing. 50 Google Fonts with Cyrillic, ready CSS."
-      }
+      },
+      "img": "para-shriftov.png"
     }
   ]
 }

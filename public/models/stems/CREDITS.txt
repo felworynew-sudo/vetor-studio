@@ -1,0 +1,5 @@
+htdemucs-v4.onnx.{0,1} — Demucs v4 Hybrid Transformer (4 stems: drums, bass, other, vocals).
+Model: facebookresearch/demucs (Meta, MIT code). ONNX export: bakkot/demucs-js (MIT code),
+https://github.com/bakkot/demucs-js — file htdemucs.onnx, sha256 da9e5101ee0804d04933974b59d8aae9c862e80e14f2f24e7c74cae76bdbe748.
+Split into two parts (<100 MB each for GitHub); the browser joins them back.
+bakkot/demucs-js notes that the weights are derived from Meta's file and are offered for personal and research use.

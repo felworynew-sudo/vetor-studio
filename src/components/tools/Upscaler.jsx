@@ -1,6 +1,8 @@
 import { useRef, useState } from 'react';
 import { aiBrowserHint, aiErrorHint } from '../../utils/aiSupport';
 import CompareSlider from './shared/CompareSlider';
+import { loadTransformers } from '../../utils/transformersLib';
+import { withMirrorRetry } from '../../utils/modelMirror';
 
 // AI-апскейлер с выбором модели (идея model abstraction из UpscalerJS): фото ×2/×4,
 // иллюстрации/аниме ×2/×4 (APISR), быстрый ×2 и пиксель-арт без нейросети (Scale2x).
@@ -47,12 +49,11 @@ const pipes = new Map();
 function getPipe(model, onProgress) {
   if (pipes.has(model.id)) return pipes.get(model.id);
   const p = (async () => {
-    const lib = await import('@huggingface/transformers');
-    lib.env.allowLocalModels = false;
+    const lib = await loadTransformers();
     let device = 'wasm';
     try { if (typeof navigator !== 'undefined' && navigator.gpu && await navigator.gpu.requestAdapter()) device = 'webgpu'; } catch { /* wasm */ }
     // fp32 явно: квантованные веса заметно портят мелкие детали апскейла.
-    const pipe = await lib.pipeline('image-to-image', model.repo, { device, dtype: 'fp32', progress_callback: onProgress });
+    const pipe = await withMirrorRetry(() => lib.pipeline('image-to-image', model.repo, { device, dtype: 'fp32', progress_callback: onProgress }));
     return { pipe, RawImage: lib.RawImage, fresh: true };
   })().catch((e) => { pipes.delete(model.id); throw e; });
   pipes.set(model.id, p);
